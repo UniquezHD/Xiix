@@ -24756,6 +24756,10 @@ function createWindow() {
       preload: path.join(__dirname$1, "preload.mjs")
     }
   });
+  win.once("ready-to-show", () => {
+    win == null ? void 0 : win.show();
+    win == null ? void 0 : win.focus();
+  });
   win.maximize();
   win.webContents.on("did-finish-load", () => {
     win == null ? void 0 : win.webContents.send("main-process-message", (/* @__PURE__ */ new Date()).toLocaleString());
@@ -24784,6 +24788,9 @@ io.on("connection", (socket2) => {
       Args: gameData.args
     });
   });
+  ipcMain.emit("check-status", () => {
+    socket2.emit("status", {});
+  });
   ipcMain.on("close-game", (_event, gameData) => {
     console.log("Received from React:", gameData);
     socket2.emit("close-game", {
@@ -24792,7 +24799,7 @@ io.on("connection", (socket2) => {
   });
   socket2.on("game-closed", (data) => {
     console.log("C# says:", data);
-    win == null ? void 0 : win.webContents.send("game-started", "");
+    win == null ? void 0 : win.webContents.send("game-closed", data);
     win == null ? void 0 : win.show();
   });
   socket2.on("game-started", (data) => {

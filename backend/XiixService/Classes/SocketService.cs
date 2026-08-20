@@ -44,11 +44,28 @@ namespace XiixService.Classes
                 Console.WriteLine($"close-game ProcessName: {gameData.ProcessName}");
 
                 Killer.Kill(gameData.ProcessName);
+               
+                await SendToElectron("closed-game", new
+                {
+                    name = "",
+                    processName = gameData.ProcessName,
+                    status = "closed"
+                });
+
             });
 
-            _socket.On("set-volume", async ctx =>
+            _socket.On("restart", async ctx =>
             {
+                int restart = ctx.GetValue<int>(0)!;
 
+                if (restart == 0)
+                {
+                    Restart.RestartBackend();
+                }
+                else if (restart == 1)
+                {
+                    Restart.RestartFrontend();
+                }
             });
 
             _socket.On("status", async ctx =>

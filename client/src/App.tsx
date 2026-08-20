@@ -17,7 +17,6 @@ import {
 } from "react-icons/fa6";
 import { BsUsbSymbol } from "react-icons/bs";
 
-
 type Game = {
   name: string;
   processName: string;
@@ -38,7 +37,7 @@ function App() {
   const [activeMenuBar, setActiveMenubar] = useState(0);
   const [isHeadphones, setIsHeadphones] = useState(1);
   const [isUsb, setIsUsb] = useState(1);
-  const [isEthernet, setIsEthernet] = useState();
+  const [isEthernet, setIsEthernet] = useState(true);
   const [isController, setIsController] = useState("disconnected");
   const [isMuted, setIsMuted] = useState(false);
 
@@ -50,11 +49,12 @@ function App() {
 
   const [currentVolume, setCurrentVolume] = useState<number>(0);
 
-  const [modalOpened, setModalOpened] = useState(false);
+  const [modalOpened, setModalOpened] = useState(true);
 
   type ModalTypes = "Add Game" | "Music" | "Volume" | "Settings" | "Options";
 
-  const [currentModelType, setCurrentModalType] = useState<ModalTypes>();
+  const [currentModelType, setCurrentModalType] =
+    useState<ModalTypes>("Settings");
 
   const activeControllerGroup = modalOpened
     ? currentModelType === "Options"
@@ -99,6 +99,10 @@ function App() {
     });
   };
 
+  const CheckStatus = () => {
+    window.electron.send("check-status", {});
+  };
+
   const VolumeUp = (amount: number) => {
     const newVolume = Math.min(currentVolume + amount, 100);
 
@@ -139,6 +143,11 @@ function App() {
 
   useEffect(() => {
     window.volumeAPI.get().then(setCurrentVolume);
+
+    window.electron.on("game-closed", (data) => {
+      setCurrentPlaying(null);
+      console.log("game-closed:", data);
+    });
 
     window.electron.on("game-started", (data) => {
       setCurrentPlaying(data);
@@ -500,14 +509,36 @@ function App() {
 
                 {currentModelType == "Settings" && (
                   <>
-                    <span>Settings</span>
+                    <div className="settings-container">
+                      <div className="settings-container-item">
+                        <button
+                          className="settings-container-button"
+                          data-controller-focus
+                          data-controller-group="Settings-modal"
+                        >
+                          Check Internet
+                        </button>
 
-                    <button
-                      data-controller-focus
-                      data-controller-group="Settings-modal"
-                    >
-                      Close
-                    </button>
+                        <button
+                          className="settings-container-button"
+                          data-controller-focus
+                          data-controller-group="Settings-modal"
+                          onClick={() => {
+                            CheckStatus();
+                          }}
+                        >
+                          Restart Frontend
+                        </button>
+
+                        <button
+                          className="settings-container-button"
+                          data-controller-focus
+                          data-controller-group="Settings-modal"
+                        >
+                          Restart Backend
+                        </button>
+                      </div>
+                    </div>
                   </>
                 )}
               </div>

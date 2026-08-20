@@ -44,10 +44,10 @@ function createWindow() {
     },
   });
 
-  /*   win.once('ready-to-show', () => {
-  win.show();
-  win.focus();
-}); */
+  win.once("ready-to-show", () => {
+    win?.show();
+    win?.focus();
+  });
 
   win.maximize();
 
@@ -85,6 +85,10 @@ io.on("connection", (socket) => {
     });
   });
 
+  ipcMain.emit("check-status",() => {
+    socket.emit("status", {});
+  })
+
   ipcMain.on("close-game", (_event, gameData: GameData) => {
     console.log("Received from React:", gameData);
 
@@ -95,7 +99,7 @@ io.on("connection", (socket) => {
 
   socket.on("game-closed", (data) => {
     console.log("C# says:", data);
-    win?.webContents.send("game-started", "");
+    win?.webContents.send("game-closed", data);
     win?.show();
   });
 
@@ -116,7 +120,7 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.emit("status", { });
+  socket.emit("status", {});
 
   socket.on("ethernet-status", (data) => {
     win?.webContents.send("ethernet-status", data);

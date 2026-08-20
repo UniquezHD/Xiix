@@ -212,3 +212,32 @@
 .volume-container-button[data-controller-focus]:focus {
   border: 2px solid #6f7bd9;
 }
+
+.settings-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2%;
+  height: 100%;
+}
+
+.settings-container-item {
+  width: 70%;
+  height: 5%;
+  margin: 1rem;
+  text-align: center;
+}
+
+.settings-container-button {
+  width: 100%;
+  margin-bottom: 1rem;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  background-color: #cccccc7b;
+}
+
+.settings-container-button[data-controller-focus]:focus {
+  border: 2px solid #6f7bd9;
+}
