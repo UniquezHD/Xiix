@@ -5,10 +5,19 @@ export type ControllerAction =
   | "down"
   | "left"
   | "right"
+  | "options"
+  | "cross"
+  | "circle"
+  | "square"
+  | "triangle"
+  | "L1"
+  | "L2"
+  | "L3"
+  | "R1"
+  | "R2"
+  | "R3"
   | "select"
-  | "back"
-  | "home"
-  | "options";
+  | "home";
 
 type Props = {
   onAction: (action: ControllerAction) => void;
@@ -22,7 +31,7 @@ export function useGamepad({ onAction }: Props) {
   useEffect(() => {
     let animationFrame: number;
 
-    const poll = () => {
+    const Poll = () => {
       const gamepads = navigator.getGamepads();
 
       const gamepad = Array.from(gamepads).find(
@@ -35,15 +44,51 @@ export function useGamepad({ onAction }: Props) {
         const previous = previousButtons.current;
 
         if (buttons[0] && !previous[0]) {
-          onAction("select");
+          onAction("cross");
         }
 
         if (buttons[1] && !previous[1]) {
-          onAction("back");
+          onAction("circle");
+        }
+
+        if (buttons[2] && !previous[2]) {
+          onAction("square");
+        }
+
+        if (buttons[3] && !previous[3]) {
+          onAction("triangle");
+        }
+
+        if (buttons[4] && !previous[4]) {
+          onAction("L1");
+        }
+
+        if (buttons[5] && !previous[5]) {
+          onAction("R1");
+        }
+
+        if (buttons[6] && !previous[6]) {
+          onAction("L2");
+        }
+
+        if (buttons[7] && !previous[7]) {
+          onAction("R2");
+        }
+
+        if (buttons[8] && !previous[8]) {
+          onAction("select");
         }
 
         if (buttons[9] && !previous[9]) {
           onAction("options");
+        }
+
+        if (buttons[10] && !previous[10]) {
+          onAction("L3");
+        }
+
+        if (buttons[11] && !previous[11]) {
+          onAction("R3");
         }
 
         if (buttons[12] && !previous[12]) {
@@ -90,10 +135,10 @@ export function useGamepad({ onAction }: Props) {
         previousButtons.current = buttons;
       }
 
-      animationFrame = requestAnimationFrame(poll);
+      animationFrame = requestAnimationFrame(Poll);
     };
 
-    poll();
+    Poll();
 
     return () => {
       cancelAnimationFrame(animationFrame);

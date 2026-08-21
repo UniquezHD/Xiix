@@ -17,32 +17,32 @@ export function useControllerNavigation({
   const elementsRef = useRef<HTMLElement[]>([]);
   const currentElementRef = useRef<HTMLElement | null>(null);
 
-  const updateElements = useCallback(() => {
-    const allElements = Array.from(
+  const UpdateElements = useCallback(() => {
+    const AllElements = Array.from(
       document.querySelectorAll<HTMLElement>("[data-controller-focus]"),
     );
 
     if (activeGroup) {
-      elementsRef.current = allElements.filter(
+      elementsRef.current = AllElements.filter(
         (element) => element.dataset.controllerGroup === activeGroup,
       );
 
       return;
     }
 
-    elementsRef.current = allElements.filter(
+    elementsRef.current = AllElements.filter(
       (element) =>
         element.dataset.controllerGroup === "games" ||
         element.dataset.controllerGroup === "topbar",
     );
   }, [activeGroup]);
 
-  const focusElement = useCallback((element: HTMLElement) => {
+  const FocusElement = useCallback((element: HTMLElement) => {
     currentElementRef.current = element;
     element.focus();
   }, []);
 
-  const findElementInDirection = useCallback(
+  const FindElementInDirection = useCallback(
     (direction: ControllerAction) => {
       const current = currentElementRef.current;
 
@@ -117,15 +117,15 @@ export function useControllerNavigation({
       }
 
       if (bestElement) {
-        focusElement(bestElement);
+        FocusElement(bestElement);
       }
     },
-    [focusElement],
+    [FocusElement],
   );
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      updateElements();
+      UpdateElements();
 
       currentElementRef.current = null;
 
@@ -134,7 +134,7 @@ export function useControllerNavigation({
       if (elements.length === 0) return;
 
       if (activeGroup) {
-        focusElement(elements[0]);
+        FocusElement(elements[0]);
         return;
       }
 
@@ -143,16 +143,16 @@ export function useControllerNavigation({
       );
 
       if (firstGame) {
-        focusElement(firstGame);
+        FocusElement(firstGame);
       }
     }, 50);
 
     return () => clearTimeout(timer);
-  }, [activeGroup, updateElements, focusElement]);
+  }, [activeGroup, UpdateElements, FocusElement]);
 
   const handleAction = useCallback(
     (action: ControllerAction) => {
-      updateElements();
+      UpdateElements();
 
       const elements = elementsRef.current;
 
@@ -168,7 +168,7 @@ export function useControllerNavigation({
       }
 
       if (!currentElementRef.current) {
-        focusElement(elements[0]);
+        FocusElement(elements[0]);
         return;
       }
 
@@ -177,14 +177,14 @@ export function useControllerNavigation({
         case "right":
         case "up":
         case "down":
-          findElementInDirection(action);
+          FindElementInDirection(action);
           break;
 
-        case "select":
+        case "cross":
           currentElementRef.current.click();
           break;
 
-        case "back":
+        case "circle":
           if (activeGroup) {
             onCloseModal?.();
           } else {
@@ -207,9 +207,9 @@ export function useControllerNavigation({
       modalOpen,
       onCloseModal,
       onOptions,
-      updateElements,
-      focusElement,
-      findElementInDirection,
+      UpdateElements,
+      FocusElement,
+      FindElementInDirection,
     ],
   );
 

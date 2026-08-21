@@ -1,7 +1,38 @@
 :root{
-  --main-bg-color: #091921;
-}
+  /* Solar mode */
+  --app-bg: #091921; 
+  --app-primary: #a8b4ff;
+  --app-primary-hover: #6f7bd9;
 
-* {
-  /* background-color: var(--main-bg-color); */
+  --surface: rgba(255, 255, 255, 0.08);
+  --surface-hover: rgba(255, 255, 255, 0.12);
+
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.6);
+  --text-placeholder: rgba(255, 255, 255, 0.4);
+  
+  /* Dark mode */
+ /*  --app-bg: #191b23;
+  --app-primary: #a8b4ff;
+  --app-primary-hover: #6f7bd9;
+
+  --surface: rgba(255, 255, 255, 0.08);
+  --surface-hover: rgba(255, 255, 255, 0.12);
+
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.6);
+  --text-placeholder: rgba(255, 255, 255, 0.4); */
+
+  /* Light mode */
+ /*  --app-bg: #fff;
+
+  --app-primary: #a8b4ff;
+  --app-primary-hover: #6f7bd9;
+
+  --surface: #a8b4ff;
+  --surface-hover: rgba(255, 255, 255, 0.12);
+
+  --text-primary: #191b23;
+  --text-secondary: #000;
+  --text-placeholder: #191b23; */
 }

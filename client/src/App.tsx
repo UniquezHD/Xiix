@@ -1,9 +1,27 @@
 import { useState, useEffect } from "react";
 import { useControllerNavigation } from "./hooks/useControllerNavigation";
 import "./App.css";
+import "./css/settings.css";
+import "./css/addgame.css";
+import "./css/volume.css";
+import "./css/options.css";
 import { Grid, Modal } from "@mantine/core";
 import { GameData } from "./data/GameData";
 import Clock from "./components/Clock";
+
+import SettingsIcon from "./assets/ui/settings.svg?react";
+import RestartIcon from "./assets/ui/restart.svg?react";
+import EthernetIcon from "./assets/ui/ethernet.svg?react";
+import VolumeIcon from "./assets/ui/volume.svg?react";
+import VolumeUpIcon from "./assets/ui/volumeup.svg?react";
+import VolumeDownIcon from "./assets/ui/volumedown.svg?react";
+import VolumeMuteIcon from "./assets/ui/volumemute.svg?react";
+import CloseIcon from "./assets/ui/close.svg?react";
+import PlayIcon from "./assets/ui/play.svg?react";
+import WrenchIcon from "./assets/ui/wrench.svg?react";
+import ControllerIcon from "./assets/ui/controller.svg?react";
+
+// https://allsvgicons.com/
 
 import { IoMdSettings } from "react-icons/io";
 import { GiConsoleController } from "react-icons/gi";
@@ -29,10 +47,10 @@ type Game = {
 
 // Todo: add music icon til topbar
 // Todo: add mulighed for at ;ndre lyden p[ alle processes ]
-// Todo: add ps4 like on-screen keyboard
 // Todo: add game system via usb
 
 // Todo: skift wifi icon og text til ethernet
+// Todo: change icons til .svg icons
 
 function App() {
   const [activeMenuBar, setActiveMenubar] = useState(0);
@@ -41,6 +59,7 @@ function App() {
   const [isEthernet, setIsEthernet] = useState(true);
   const [isController, setIsController] = useState("disconnected");
   const [isMuted, setIsMuted] = useState(false);
+  const [keyboardOpen, setKeyboardOpen] = useState(false);
 
   const [currentPlaying, setCurrentPlaying] = useState<Game | null>(null);
 
@@ -57,11 +76,13 @@ function App() {
   const [currentModelType, setCurrentModalType] =
     useState<ModalTypes>("Settings");
 
-  const activeControllerGroup = modalOpened
-    ? currentModelType === "Options"
-      ? "game-modal"
-      : `${currentModelType}-modal`
-    : undefined;
+  const activeControllerGroup = keyboardOpen
+    ? "keyboard"
+    : modalOpened
+      ? currentModelType === "Options"
+        ? "game-modal"
+        : `${currentModelType}-modal`
+      : undefined;
 
   useControllerNavigation({
     modalOpen: modalOpened,
@@ -75,6 +96,10 @@ function App() {
     },
 
     onCloseModal: () => {
+      if (keyboardOpen) {
+        setKeyboardOpen(false);
+        return;
+      }
       setModalOpened(false);
       setCurrentModalType(undefined);
     },
@@ -173,7 +198,15 @@ function App() {
 
   return (
     <>
-    <Keyboard/>
+      {keyboardOpen && (
+        <Keyboard
+          onSubmit={(value) => {
+            console.log("Keyboard:", value);
+
+            setKeyboardOpen(false);
+          }}
+        />
+      )}
       {isFirstBoot ? (
         <>
           <div className="boot-screen">
@@ -369,72 +402,124 @@ function App() {
                   ? focusedGame?.name
                   : currentModelType
               }
+              size="600px"
+              radius="lg"
               styles={{
+                content: {
+                  background: "var(--app-bg)",
+                  border: "1px solid rgba(255, 255, 255, 0.08)",
+                  boxShadow: "0 25px 70px rgba(0, 0, 0, 0.5)",
+                },
+
                 header: {
-                  backgroundColor: "#a8b4ff",
+                  background: "var(--app-bg)",
+                  color: "var(--text-primary)",
+                  borderBottom: "1px solid rgba(255, 255, 255, 0.06)",
+                  padding: "18px 22px",
+                },
+
+                title: {
+                  fontSize: "1rem",
+                  fontWeight: 600,
+                },
+
+                body: {
+                  background: "var(--app-bg)",
+                  padding: "22px",
                 },
               }}
             >
               <div className="controller-modal">
-                {currentModelType == "Options" && (
-                  <>
-                    <div className="options-container">
-                      <div className="options-container-item">
-                        <button
-                          className="options-container-button"
-                          data-controller-group="game-modal"
-                          data-controller-focus
-                          onClick={() => {
-                            if (!focusedGame) return;
+                {currentModelType === "Options" && (
+                  <div className="options-container">
+                    <div className="options-game">
+                      <img
+                        className="options-game-cover"
+                        src={focusedGame?.cover}
+                        alt=""
+                      />
 
-                            CloseGame(focusedGame.processName);
+                      <div className="options-game-info">
+                        <span className="options-game-label">GAME</span>
 
-                            setModalOpened(false);
-                          }}
-                        >
-                          Close Game
-                        </button>
-                        <button
-                          className="options-container-button"
-                          data-controller-group="game-modal"
-                          data-controller-focus
-                          onClick={() => {
-                            if (!focusedGame) return;
+                        <h2>{focusedGame?.name}</h2>
 
-                            StartGame(
-                              focusedGame.name,
-                              focusedGame.processName,
-                              focusedGame.exePath,
-                            );
-
-                            setModalOpened(false);
-                          }}
-                        >
-                          Start Game
-                        </button>
-                        <button
-                          className="options-container-button"
-                          data-controller-group="game-modal"
-                          data-controller-focus
-                          onClick={() => {
-                            console.log("Edit game");
-                          }}
-                        >
-                          Mods
-                        </button>
-                      </div>
-                      <div className="options-container-item">
-                        <img
-                          style={{
-                            border: "2px solid #6f7bd9",
-                            borderRadius: "15px",
-                          }}
-                          src={focusedGame?.cover}
-                          alt=""
-                        />
+                        <span className="options-game-process">
+                          {focusedGame?.processName}
+                        </span>
                       </div>
                     </div>
-                  </>
+
+                    <div className="options-section">
+                      <div className="options-section-title">Actions</div>
+
+                      <button
+                        className="options-container-button"
+                        data-controller-group="game-modal"
+                        data-controller-focus
+                        onClick={() => {
+                          if (!focusedGame) return;
+
+                          CloseGame(focusedGame.processName);
+                          setModalOpened(false);
+                        }}
+                      >
+                        <div className="options-button-icon">
+                          <CloseIcon />
+                        </div>
+
+                        <div className="options-button-content">
+                          <span>Close Game</span>
+                          <small>Close this game</small>
+                        </div>
+                      </button>
+
+                      <button
+                        className="options-container-button"
+                        data-controller-group="game-modal"
+                        data-controller-focus
+                        onClick={() => {
+                          if (!focusedGame) return;
+
+                          StartGame(
+                            focusedGame.name,
+                            focusedGame.processName,
+                            focusedGame.exePath,
+                          );
+
+                          setModalOpened(false);
+                        }}
+                      >
+                        <div className="options-button-icon">
+                          <PlayIcon />
+                        </div>
+
+                        <div className="options-button-content">
+                          <span>Start Game</span>
+                          <small>Launch this game</small>
+                        </div>
+                      </button>
+
+                      <button
+                        className="options-container-button"
+                        data-controller-group="game-modal"
+                        data-controller-focus
+                        onClick={() => {
+                          console.log("Edit game");
+                        }}
+                      >
+                        <div className="options-button-icon">
+                          <WrenchIcon />
+                        </div>
+
+                        <div className="options-button-content">
+                          <span>Mods</span>
+                          <small>Manage installed mods</small>
+                        </div>
+                        <div className="options-button-arrow">›</div>
+                      </button>
+                    </div>
+                  </div>
                 )}
 
                 {currentModelType == "Add Game" && (
@@ -468,10 +553,22 @@ function App() {
                 {currentModelType == "Volume" && (
                   <>
                     <div className="volume-container">
-                      <div className="volume-container-item">
-                        <span>Current volume: {currentVolume}%</span>
+                      <div className="volume-header">
+                        <div className="volume-title">
+                          <div className="volume-title-icon">
+                            <VolumeIcon />
+                          </div>
+
+                          <div>
+                            <h2>Volume</h2>
+                            <p>Manage volume</p>
+                          </div>
+                        </div>
                       </div>
-                      <div className="volume-container-item">
+
+                      <div className="volume-section">
+                        <div className="volume-section-title">System</div>
+
                         <button
                           className="volume-container-button"
                           data-controller-focus
@@ -480,7 +577,14 @@ function App() {
                             VolumeUp(10);
                           }}
                         >
-                          Volume Up
+                          <div className="volume-button-icon">
+                            <VolumeUpIcon />
+                          </div>
+
+                          <div className="volume-button-content">
+                            <span>Volume Up</span>
+                            <small>Turn volume up</small>
+                          </div>
                         </button>
 
                         <button
@@ -491,7 +595,14 @@ function App() {
                             VolumeDown(10);
                           }}
                         >
-                          Volume Down
+                          <div className="volume-button-icon">
+                            <VolumeDownIcon />
+                          </div>
+
+                          <div className="volume-button-content">
+                            <span>Volume Down</span>
+                            <small>Turn volume down</small>
+                          </div>
                         </button>
 
                         <button
@@ -502,46 +613,106 @@ function App() {
                             ToggleMute();
                           }}
                         >
-                          {isMuted ? "Unmute" : "Mute"}
+                          <div className="volume-button-icon">
+                            <VolumeMuteIcon />
+                          </div>
+
+                          <div className="volume-button-content">
+                            <span>{isMuted ? "Unmute" : "Mute"}</span>
+                            <small>Toggle system volume</small>
+                          </div>
                         </button>
                       </div>
                     </div>
                   </>
                 )}
 
-                {currentModelType == "Settings" && (
-                  <>
-                    <div className="settings-container">
-                      <div className="settings-container-item">
-                        <button
-                          className="settings-container-button"
-                          data-controller-focus
-                          data-controller-group="Settings-modal"
-                        >
-                          Check Internet
-                        </button>
+                {currentModelType === "Settings" && (
+                  <div className="settings-container">
+                    <div className="settings-header">
+                      <div className="settings-title">
+                        <div className="settings-title-icon">
+                          <SettingsIcon />
+                        </div>
 
-                        <button
-                          className="settings-container-button"
-                          data-controller-focus
-                          data-controller-group="Settings-modal"
-                          onClick={() => {
-                            CheckStatus();
-                          }}
-                        >
-                          Restart Frontend
-                        </button>
-
-                        <button
-                          className="settings-container-button"
-                          data-controller-focus
-                          data-controller-group="Settings-modal"
-                        >
-                          Restart Backend
-                        </button>
+                        <div>
+                          <h2>Settings</h2>
+                          <p>Manage your application</p>
+                        </div>
                       </div>
                     </div>
-                  </>
+
+                    <div className="settings-section">
+                      <div className="settings-section-title">System</div>
+
+                      <button
+                        className="settings-container-button"
+                        data-controller-focus
+                        data-controller-group="Settings-modal"
+                        onClick={() => setKeyboardOpen(true)}
+                      >
+                        <div className="settings-button-icon">
+                          <EthernetIcon />
+                        </div>
+
+                        <div className="settings-button-content">
+                          <span>Check Internet</span>
+                          <small>Test your current network connection</small>
+                        </div>
+                      </button>
+
+                      <button
+                        className="settings-container-button"
+                        data-controller-focus
+                        data-controller-group="Settings-modal"
+                        onClick={() => setKeyboardOpen(true)}
+                      >
+                        <div className="settings-button-icon">
+                          <ControllerIcon />
+                        </div>
+
+                        <div className="settings-button-content">
+                          <span>Check Controller</span>
+                          <small>Test your current controller connection</small>
+                        </div>
+                        <div className="settings-button-arrow">›</div>
+                      </button>
+
+                      <button
+                        className="settings-container-button"
+                        data-controller-focus
+                        data-controller-group="Settings-modal"
+                        onClick={() => CheckStatus()}
+                      >
+                        <div className="settings-button-icon">
+                          <RestartIcon />
+                        </div>
+
+                        <div className="settings-button-content">
+                          <span>Restart Frontend</span>
+                          <small>Reload the application interface</small>
+                        </div>
+                      </button>
+
+                      <button
+                        className="settings-container-button"
+                        data-controller-focus
+                        data-controller-group="Settings-modal"
+                        onClick={() => {
+                          // RestartBackend();
+                        }}
+                      >
+                        <div className="settings-button-icon">
+                          <RestartIcon />
+                        </div>
+
+                        <div className="settings-button-content">
+                          <span>Restart Backend</span>
+                          <small>Restart background services</small>
+                        </div>
+                      </button>
+                    </div>
+                  </div>
                 )}
               </div>
             </Modal>

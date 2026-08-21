@@ -1,0 +1,159 @@
+.options-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.options-game {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.options-game-cover {
+  width: 120px;
+  height: 120px;
+  flex-shrink: 0;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 2px solid var(--app-primary-hover);
+  box-shadow:
+    0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.options-game-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.options-game-label {
+  margin-bottom: 3px;
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.options-game-info h2 {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 1.15rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.options-game-process {
+  margin-top: 4px;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.75rem;
+}
+
+.options-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.options-section-title {
+  margin-bottom: 0.25rem;
+  padding-left: 0.2rem;
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.options-container-button {
+  width: 100%;
+  min-height: 68px;
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.75rem 0.9rem;
+  box-sizing: border-box;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 13px;
+  outline: none;
+  background: var(--surface);
+  color: var(--text-primary);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background 150ms ease,
+    border-color 150ms ease,
+    transform 150ms ease,
+    box-shadow 150ms ease;
+}
+
+.options-container-button:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.1);
+  transform: translateY(-1px);
+}
+
+.options-container-button:active {
+  transform: translateY(0);
+}
+
+.options-container-button[data-controller-focus]:focus {
+  border: 2px solid var(--app-primary-hover);
+  background: rgba(111, 123, 217, 0.1);
+  box-shadow:
+    0 0 0 3px rgba(111, 123, 217, 0.12),
+    0 8px 25px rgba(111, 123, 217, 0.1);
+}
+
+.options-button-icon {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 11px;
+  background: rgba(111, 123, 217, 0.12);
+  color: #8d98f0;
+  font-size: 1.15rem;
+}
+
+.options-button-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.options-button-content span {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.options-button-content small {
+  color: rgba(255, 255, 255, 0.38);
+  font-size: 0.75rem;
+}
+
+.options-button-arrow {
+  color: rgba(255, 255, 255, 0.25);
+  font-size: 1.5rem;
+  transition:
+    color 150ms ease,
+    transform 150ms ease;
+}
+
+.options-container-button:hover .options-button-arrow{
+  color: rgba(255, 255, 255, 0.65);
+  transform: translateX(3px);
+}
+
+.options-container-button:focus .options-button-arrow{
+  color: #8d98f0;
+}
