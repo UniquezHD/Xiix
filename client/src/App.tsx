@@ -16,6 +16,7 @@ import {
   FaVolumeXmark,
 } from "react-icons/fa6";
 import { BsUsbSymbol } from "react-icons/bs";
+import Keyboard from "./components/Keyboard";
 
 type Game = {
   name: string;
@@ -172,6 +173,7 @@ function App() {
 
   return (
     <>
+    <Keyboard/>
       {isFirstBoot ? (
         <>
           <div className="boot-screen">

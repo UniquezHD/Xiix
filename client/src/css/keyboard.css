@@ -1,0 +1,15 @@
+:root{
+    --keyboard-width: 80%;
+    --keyboard-height: 300px;
+}
+
+.keyboard-container{
+    height: var(--keyboard-height);
+    width: var(--keyboard-width);
+    background-color: blue;
+    z-index: 999;
+    position: fixed;
+    top: 50%;
+    left: calc(50% - var(--keyboard-width) / 2);
+
+}
