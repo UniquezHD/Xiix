@@ -39,4 +39,12 @@
 
 *{
   /* background-color: var(--app-bg); */
+  ::-webkit-scrollbar {
+  width: 0px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #000;
+  border-radius: 0px;
+}
 }
