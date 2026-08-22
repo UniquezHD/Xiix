@@ -36,3 +36,7 @@
   --text-secondary: #000;
   --text-placeholder: #191b23; */
 }
+
+*{
+  /* background-color: var(--app-bg); */
+}

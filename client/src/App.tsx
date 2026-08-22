@@ -27,6 +27,7 @@ import SteamIcon from "./assets/ui/steam.svg?react";
 import USBIcon from "./assets/ui/usb.svg?react";
 import GameIcon from "./assets/ui/game.svg?react";
 import InstallIcon from "./assets/ui/install.svg?react";
+import BrushIcon from "./assets/ui/brush.svg?react";
 // https://allsvgicons.com/
 //#endregion
 
@@ -47,6 +48,7 @@ type Game = {
   name: string;
   processName: string;
   exePath: string;
+  args: string;
   cover: string;
 };
 
@@ -161,6 +163,8 @@ function App() {
   };
 
   const CloseGame = (processName: string) => {
+    //taskkill /F /IM pcsx2-qt.exe force close emulator
+
     window.electron.send("close-game", {
       processName,
     });
@@ -174,7 +178,7 @@ function App() {
     name: string,
     processName: string,
     exePath: string,
-    args: string = "",
+    args: string,
   ) => {
     if (currentPlaying == null) {
       window.electron.send("start-game", {
@@ -229,7 +233,7 @@ function App() {
       {keyboardOpen && (
         <Keyboard
           onSubmit={(value) => {
-            setKeyboardOutput(value)
+            setKeyboardOutput(value);
 
             setKeyboardOpen(false);
           }}
@@ -247,186 +251,185 @@ function App() {
         </>
       ) : (
         <>
-          <div
-            className="top-bar"
-            style={{ height: activeMenuBar ? "200px" : "50px" }}
-          >
+          <div className={`top-bar ${activeMenuBar ? "top-bar-expanded" : ""}`}>
             <div className="top-bar-container">
-              <div className="top-bar-item">
+              <div className="top-bar-left">
                 <img
-                  src="src\assets\logo.png"
-                  height={40}
-                  style={{ marginTop: ".2rem" }}
+                  className="top-bar-logo"
+                  src="/src/assets/logo.png"
                   alt=""
                 />
-                <span style={{ marginLeft: "1rem" }}>
-                  {currentPlaying?.name}
-                </span>
-              </div>
-              <div className="middle-group">
-                <div className="top-bar-item">
-                  <button
-                    data-controller-navigation="topbar"
-                    data-controller-group="topbar"
-                    className="top-bar-item-btns"
-                    onBlur={() => setActiveMenubar(0)}
-                    onFocus={() => setActiveMenubar(1)}
-                    data-controller-focus
-                    onClick={() => {
-                      setCurrentModalType("Add Game");
-                      GetUsbDir();
-                      setModalOpened(true);
-                    }}
-                  >
-                    <FaPlus style={{ marginTop: ".5rem" }} />
-                  </button>
-                  <span
-                    style={{
-                      opacity: activeMenuBar ? "1" : "0",
-                      transition: ".5s",
-                    }}
-                  >
-                    {activeMenuBar ? <span>Add Game</span> : <></>}
+
+                <div className="top-bar-game">
+                  <span className="top-bar-game-label">
+                    {currentPlaying?.name != undefined ? "NOW PLAYING" : ""}
+                  </span>
+
+                  <span className="top-bar-game-name">
+                    {currentPlaying?.name}
                   </span>
                 </div>
-                <div className="top-bar-item">
-                  <button
-                    data-controller-navigation="topbar"
-                    data-controller-group="topbar"
-                    className="top-bar-item-btns"
-                    onBlur={() => setActiveMenubar(0)}
-                    onFocus={() => setActiveMenubar(1)}
-                    data-controller-focus
-                    onClick={() => {
-                      setCurrentModalType("Music");
-                      setModalOpened(true);
-                    }}
-                  >
-                    <FaMusic style={{ marginTop: ".5rem" }} />
-                  </button>
-                  <span
-                    style={{
-                      opacity: activeMenuBar ? "1" : "0",
-                      transition: ".5s",
-                    }}
-                  >
-                    {activeMenuBar ? <span>Music</span> : <></>}
-                  </span>
-                </div>
-                <div className="top-bar-item">
-                  <button
-                    data-controller-navigation="topbar"
-                    data-controller-group="topbar"
-                    className="top-bar-item-btns"
-                    onBlur={() => setActiveMenubar(0)}
-                    onFocus={() => setActiveMenubar(1)}
-                    data-controller-focus
-                    onClick={() => {
-                      setCurrentModalType("Volume");
-                      setModalOpened(true);
-                    }}
-                  >
-                    <FaVolumeHigh style={{ marginTop: ".5rem" }} />
-                  </button>
-                  {activeMenuBar ? <span>Volume</span> : <></>}
-                </div>
-                <div className="top-bar-item">
-                  <button
-                    data-controller-navigation="topbar"
-                    data-controller-group="topbar"
-                    onBlur={() => setActiveMenubar(0)}
-                    onFocus={() => setActiveMenubar(1)}
-                    className="top-bar-item-btns"
-                    data-controller-focus
-                    onClick={() => {
-                      console.log("yes");
-                      setCurrentModalType("Settings");
-                      setModalOpened(true);
-                    }}
-                  >
-                    <IoMdSettings style={{ marginTop: ".5rem" }} />
-                  </button>
-                  {activeMenuBar ? <span>Settings</span> : <></>}
-                </div>
               </div>
-              <div className="top-bar-item">
+
+              <div className="top-bar-navigation">
+                <button
+                  data-controller-navigation="topbar"
+                  data-controller-group="topbar"
+                  data-controller-focus
+                  className="top-bar-nav-button"
+                  onBlur={() => setActiveMenubar(0)}
+                  onFocus={() => setActiveMenubar(1)}
+                  onClick={() => {
+                    setCurrentModalType("Add Game");
+                    GetUsbDir();
+                    setModalOpened(true);
+                  }}
+                >
+                  <FaPlus />
+
+                  <span className="top-bar-nav-label">Add Game</span>
+                </button>
+
+                <button
+                  data-controller-navigation="topbar"
+                  data-controller-group="topbar"
+                  data-controller-focus
+                  className="top-bar-nav-button"
+                  onBlur={() => setActiveMenubar(0)}
+                  onFocus={() => setActiveMenubar(1)}
+                  onClick={() => {
+                    setCurrentModalType("Music");
+                    setModalOpened(true);
+                  }}
+                >
+                  <FaMusic />
+
+                  <span className="top-bar-nav-label">Music</span>
+                </button>
+
+                <button
+                  data-controller-navigation="topbar"
+                  data-controller-group="topbar"
+                  data-controller-focus
+                  className="top-bar-nav-button"
+                  onBlur={() => setActiveMenubar(0)}
+                  onFocus={() => setActiveMenubar(1)}
+                  onClick={() => {
+                    setCurrentModalType("Volume");
+                    setModalOpened(true);
+                  }}
+                >
+                  <FaVolumeHigh />
+
+                  <span className="top-bar-nav-label">Volume</span>
+                </button>
+
+                <button
+                  data-controller-navigation="topbar"
+                  data-controller-group="topbar"
+                  data-controller-focus
+                  className="top-bar-nav-button"
+                  onBlur={() => setActiveMenubar(0)}
+                  onFocus={() => setActiveMenubar(1)}
+                  onClick={() => {
+                    setCurrentModalType("Settings");
+                    setModalOpened(true);
+                  }}
+                >
+                  <IoMdSettings />
+
+                  <span className="top-bar-nav-label">Settings</span>
+                </button>
+              </div>
+
+              <div className="top-bar-right">
                 <div className="status-bar">
-                  {isController == "connected" ? (
-                    <GiConsoleController size={28} />
-                  ) : (
-                    <></>
+                  {isController === "connected" && (
+                    <div className="status-item">
+                      <GiConsoleController />
+                    </div>
                   )}
 
-                  {isUsb ? <BsUsbSymbol size={28} /> : <></>}
+                  {isUsb && (
+                    <div className="status-item">
+                      <BsUsbSymbol />
+                    </div>
+                  )}
 
-                  {isHeadphones ? <FaHeadphones size={25} /> : <></>}
+                  {isHeadphones && (
+                    <div className="status-item">
+                      <FaHeadphones />
+                    </div>
+                  )}
 
-                  <span
-                    style={{
-                      fontWeight: "600",
-                      fontSize: 24,
-                      marginTop: "-0.3rem",
-                    }}
-                  >
+                  <div className="volume-status">
                     {isMuted ? (
-                      <FaVolumeXmark size={30} style={{ marginTop: ".2rem" }} />
+                      <FaVolumeXmark />
                     ) : (
-                      <>{currentVolume}%</>
+                      <span>{currentVolume}%</span>
                     )}
-                  </span>
+                  </div>
 
-                  {isEthernet ? <FaWifi size={25} /> : <></>}
+                  {isEthernet && (
+                    <div className="status-item">
+                      <FaWifi />
+                    </div>
+                  )}
                 </div>
-                <Clock />
+
+                <div className="top-bar-clock">
+                  <Clock />
+                </div>
               </div>
             </div>
           </div>
 
-          <div /* className="games-container-wrapper" */>
+          <div>
             <Grid
-              className="games-grid"
+              className={`games-grid ${activeMenuBar ? "grid-top-bar-expanded" : ""}`}
               style={{ margin: "0 auto 0" /* background: "#000" */ }}
               rowGap="xl"
               columnGap="lg"
             >
-              {GameData.map((item: Game, _i: number) => {
-                return (
-                  <>
-                    <Grid.Col className="games-grid-col" span={1.5}>
-                      <button
-                        className="game-container"
-                        style={{ backgroundImage: `url(${item.cover})` }}
-                        data-controller-focus
-                        data-controller-group="games"
-                        onClick={() => {
-                          StartGame(item.name, item.processName, item.exePath);
-                        }}
-                        onFocus={() => setFocusedGame(item)}
-                      >
-                        {currentPlaying?.name == item.name ? (
-                          <div className="game-container-playing-icon">
-                            <div className="wave-effect"></div>
-                            <GiConsoleController size={28} />
-                          </div>
-                        ) : (
-                          ""
-                        )}
-                        <div className="game-container-titlebar">
-                          {item.name}
-                        </div>
-                      </button>
-                    </Grid.Col>
-                  </>
-                );
-              })}
+              {GameData.map((item: Game) => (
+                <Grid.Col key={item.name} className="games-grid-col" span={1.5}>
+                  <button
+                    className="game-container"
+                    style={{
+                      backgroundImage: `url(${item.cover})`,
+                    }}
+                    data-controller-focus
+                    data-controller-group="games"
+                    onClick={() => {
+                      StartGame(
+                        item.name,
+                        item.processName,
+                        item.exePath,
+                        item.args,
+                      );
+                    }}
+                    onFocus={() => setFocusedGame(item)}
+                  >
+                    {currentPlaying?.name === item.name && (
+                      <div className="game-container-playing-icon">
+                        <div className="wave-effect" />
+
+                        <GiConsoleController size={25} />
+                      </div>
+                    )}
+
+                    <div className="game-container-titlebar">{item.name}</div>
+                  </button>
+                </Grid.Col>
+              ))}
             </Grid>
 
             <Modal
               withCloseButton={false}
               opened={modalOpened}
               onClose={() => {
-                setModalOpened(false)
-                setKeyboardOutput("")
+                setModalOpened(false);
+                setKeyboardOutput("");
               }}
               centered
               title={
@@ -517,6 +520,7 @@ function App() {
                             focusedGame.name,
                             focusedGame.processName,
                             focusedGame.exePath,
+                            focusedGame.args,
                           );
 
                           setModalOpened(false);
@@ -786,6 +790,22 @@ function App() {
 
                     <div className="settings-section">
                       <div className="settings-section-title">System</div>
+
+                      <button
+                        className="settings-container-button"
+                        data-controller-focus
+                        data-controller-group="Settings-modal"
+                        onClick={() => setKeyboardOpen(true)}
+                      >
+                        <div className="settings-button-icon">
+                          <BrushIcon />
+                        </div>
+
+                        <div className="settings-button-content">
+                          <span>Theme</span>
+                          <small>Change UI theme</small>
+                        </div>
+                      </button>
 
                       <button
                         className="settings-container-button"
