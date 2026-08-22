@@ -5,6 +5,10 @@ declare global {
       set: (value: number) => Promise<void>;
     };
 
+    directory: {
+      get: () => Promise<any>;
+    };
+
      windowState: {
       set: (value: number) => Promise<void>;
     };

@@ -25,13 +25,16 @@ contextBridge.exposeInMainWorld("volumeAPI", {
   set: (value: number) => ipcRenderer.invoke("set-volume", value),
 });
 
+contextBridge.exposeInMainWorld("directory", {
+  get: () => ipcRenderer.invoke("get-usb-dir"),
+});
+
 contextBridge.exposeInMainWorld("windowState", {
   set: (value: number) => ipcRenderer.invoke("set-window-state", value),
 });
 
 contextBridge.exposeInMainWorld("electron", {
   send: (channel: string, data: object) => ipcRenderer.send(channel, data),
-
   on: (channel: string, callback: (data: unknown) => void) => ipcRenderer.on(channel, (_, data) => callback(data))
 });
 

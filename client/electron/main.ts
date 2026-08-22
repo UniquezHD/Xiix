@@ -14,6 +14,8 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const loudness = require("loudness");
 
+const fs = require("fs");
+
 process.env.APP_ROOT = path.join(__dirname, "..");
 
 export const VITE_DEV_SERVER_URL = process.env["VITE_DEV_SERVER_URL"];
@@ -62,6 +64,19 @@ function createWindow() {
   }
 }
 
+ipcMain.handle("get-usb-dir", async () => {
+  try {
+    if (process.platform === "linux") {
+      return await fs.promises.readdir("/media"); 
+    } else if (process.platform === "win32") {
+      return await fs.promises.readdir("G:\\");
+    }
+  } catch (err) {
+    console.error("usb not connected");
+    return null;
+  }
+});
+
 ipcMain.handle("get-volume", async () => {
   const vol = await loudness.getVolume();
   return vol;
@@ -85,9 +100,9 @@ io.on("connection", (socket) => {
     });
   });
 
-  ipcMain.emit("check-status",() => {
+  ipcMain.emit("check-status", () => {
     socket.emit("status", {});
-  })
+  });
 
   ipcMain.on("close-game", (_event, gameData: GameData) => {
     console.log("Received from React:", gameData);

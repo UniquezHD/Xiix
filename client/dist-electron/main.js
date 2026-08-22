@@ -14186,7 +14186,7 @@ var hasRequiredNodeGypBuild$1;
 function requireNodeGypBuild$1() {
   if (hasRequiredNodeGypBuild$1) return nodeGypBuild;
   hasRequiredNodeGypBuild$1 = 1;
-  var fs = require$$1$5;
+  var fs2 = require$$1$5;
   var path2 = require$$1;
   var os = require$$0$3;
   var runtimeRequire = typeof __webpack_require__ === "function" ? __non_webpack_require__ : commonjsRequire;
@@ -14247,7 +14247,7 @@ function requireNodeGypBuild$1() {
   };
   function readdirSync(dir) {
     try {
-      return fs.readdirSync(dir);
+      return fs2.readdirSync(dir);
     } catch (err) {
       return [];
     }
@@ -14341,7 +14341,7 @@ function requireNodeGypBuild$1() {
     return typeof window !== "undefined" && window.process && window.process.type === "renderer";
   }
   function isAlpine(platform2) {
-    return platform2 === "linux" && fs.existsSync("/etc/alpine-release");
+    return platform2 === "linux" && fs2.existsSync("/etc/alpine-release");
   }
   load.parseTags = parseTags;
   load.matchTags = matchTags;
@@ -24740,6 +24740,7 @@ const io = new Server2(3e3, {
 const require$1 = createRequire(import.meta.url);
 const __dirname$1 = path.dirname(fileURLToPath(import.meta.url));
 const loudness = require$1("loudness");
+const fs = require$1("fs");
 process.env.APP_ROOT = path.join(__dirname$1, "..");
 const VITE_DEV_SERVER_URL = process.env["VITE_DEV_SERVER_URL"];
 const MAIN_DIST = path.join(process.env.APP_ROOT, "dist-electron");
@@ -24770,6 +24771,18 @@ function createWindow() {
     win.loadFile(path.join(RENDERER_DIST, "index.html"));
   }
 }
+ipcMain.handle("get-usb-dir", async () => {
+  try {
+    if (process.platform === "linux") {
+      return await fs.promises.readdir("/media");
+    } else if (process.platform === "win32") {
+      return await fs.promises.readdir("G:\\");
+    }
+  } catch (err) {
+    console.error("usb not connected");
+    return null;
+  }
+});
 ipcMain.handle("get-volume", async () => {
   const vol = await loudness.getVolume();
   return vol;

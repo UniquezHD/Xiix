@@ -3,12 +3,14 @@ import { useControllerNavigation } from "./hooks/useControllerNavigation";
 import "./App.css";
 import "./css/settings.css";
 import "./css/addgame.css";
+import "./css/addgamesteam.css";
 import "./css/volume.css";
 import "./css/options.css";
 import { Grid, Modal } from "@mantine/core";
 import { GameData } from "./data/GameData";
 import Clock from "./components/Clock";
 
+//#region Icons
 import SettingsIcon from "./assets/ui/settings.svg?react";
 import RestartIcon from "./assets/ui/restart.svg?react";
 import EthernetIcon from "./assets/ui/ethernet.svg?react";
@@ -20,8 +22,13 @@ import CloseIcon from "./assets/ui/close.svg?react";
 import PlayIcon from "./assets/ui/play.svg?react";
 import WrenchIcon from "./assets/ui/wrench.svg?react";
 import ControllerIcon from "./assets/ui/controller.svg?react";
-
+import EditIcon from "./assets/ui/edit.svg?react";
+import SteamIcon from "./assets/ui/steam.svg?react";
+import USBIcon from "./assets/ui/usb.svg?react";
+import GameIcon from "./assets/ui/game.svg?react";
+import InstallIcon from "./assets/ui/install.svg?react";
 // https://allsvgicons.com/
+//#endregion
 
 import { IoMdSettings } from "react-icons/io";
 import { GiConsoleController } from "react-icons/gi";
@@ -61,6 +68,10 @@ function App() {
   const [isMuted, setIsMuted] = useState(false);
   const [keyboardOpen, setKeyboardOpen] = useState(false);
 
+  const [keyboardOutput, setKeyboardOutput] = useState("");
+
+  const [usbDir, setUsbDir] = useState<any>();
+
   const [currentPlaying, setCurrentPlaying] = useState<Game | null>(null);
 
   const [focusedGame, setFocusedGame] = useState<Game | null>(null);
@@ -71,10 +82,16 @@ function App() {
 
   const [modalOpened, setModalOpened] = useState(true);
 
-  type ModalTypes = "Add Game" | "Music" | "Volume" | "Settings" | "Options";
+  type ModalTypes =
+    | "Add Game"
+    | "Music"
+    | "Volume"
+    | "Settings"
+    | "Options"
+    | "Add Steam Game";
 
   const [currentModelType, setCurrentModalType] =
-    useState<ModalTypes>("Settings");
+    useState<ModalTypes>("Add Game");
 
   const activeControllerGroup = keyboardOpen
     ? "keyboard"
@@ -149,6 +166,10 @@ function App() {
     });
   };
 
+  const InstallSteamGame = (id: number) => {
+    //steam.exe -applaunch 3527290
+  };
+
   const StartGame = (
     name: string,
     processName: string,
@@ -165,6 +186,13 @@ function App() {
     } else {
       console.log("other game running");
     }
+  };
+
+  const GetUsbDir = () => {
+    window.directory.get().then((dir) => {
+      setUsbDir(dir);
+      console.log(dir);
+    });
   };
 
   useEffect(() => {
@@ -201,7 +229,7 @@ function App() {
       {keyboardOpen && (
         <Keyboard
           onSubmit={(value) => {
-            console.log("Keyboard:", value);
+            setKeyboardOutput(value)
 
             setKeyboardOpen(false);
           }}
@@ -246,6 +274,7 @@ function App() {
                     data-controller-focus
                     onClick={() => {
                       setCurrentModalType("Add Game");
+                      GetUsbDir();
                       setModalOpened(true);
                     }}
                   >
@@ -395,7 +424,10 @@ function App() {
             <Modal
               withCloseButton={false}
               opened={modalOpened}
-              onClose={() => setModalOpened(false)}
+              onClose={() => {
+                setModalOpened(false)
+                setKeyboardOutput("")
+              }}
               centered
               title={
                 currentModelType == "Options"
@@ -509,6 +541,24 @@ function App() {
                         }}
                       >
                         <div className="options-button-icon">
+                          <EditIcon />
+                        </div>
+
+                        <div className="options-button-content">
+                          <span>Edit</span>
+                          <small>Edit game data</small>
+                        </div>
+                      </button>
+
+                      <button
+                        className="options-container-button"
+                        data-controller-group="game-modal"
+                        data-controller-focus
+                        onClick={() => {
+                          console.log("Edit game");
+                        }}
+                      >
+                        <div className="options-button-icon">
                           <WrenchIcon />
                         </div>
 
@@ -524,15 +574,107 @@ function App() {
 
                 {currentModelType == "Add Game" && (
                   <>
-                    <span>Add Game</span>
+                    <div className="addgame-container">
+                      <div className="addgame-header">
+                        <div className="addgame-title">
+                          <div className="addgame-title-icon">
+                            <GameIcon />
+                          </div>
 
-                    <button
-                      data-controller-focus
-                      data-controller-group="Add Game-modal"
-                      onClick={() => setModalOpened(false)}
-                    >
-                      Close
-                    </button>
+                          <div>
+                            <h2>Add Game</h2>
+                            <p>Install games</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="addgame-section">
+                        <div className="addgame-section-title">Action</div>
+
+                        <button
+                          className="addgame-container-button"
+                          data-controller-focus
+                          data-controller-group="Add Game-modal"
+                        >
+                          <div className="addgame-button-icon">
+                            <USBIcon />
+                          </div>
+
+                          <div className="addgame-button-content">
+                            <span>USB</span>
+                            <small>Install game from USB</small>
+                          </div>
+                          <div className="addgame-button-arrow">›</div>
+                        </button>
+
+                        <button
+                          className="addgame-container-button"
+                          data-controller-focus
+                          data-controller-group="Add Game-modal"
+                          onClick={() => {
+                            setCurrentModalType("Add Steam Game");
+                          }}
+                        >
+                          <div className="addgame-button-icon">
+                            <SteamIcon />
+                          </div>
+
+                          <div className="addgame-button-content">
+                            <span>Steam</span>
+                            <small>Install game from steam</small>
+                          </div>
+                          <div className="addgame-button-arrow">›</div>
+                        </button>
+                      </div>
+                    </div>
+                  </>
+                )}
+
+                {currentModelType == "Add Steam Game" && (
+                  <>
+                    <div className="addgamesteam-container">
+                      <div className="addgamesteam-header">
+                        <div className="addgamesteam-title">
+                          <div className="addgamesteam-title-icon">
+                            <SteamIcon />
+                          </div>
+
+                          <div>
+                            <h2>Add Steam Game</h2>
+                            <p>Install games</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="addgamesteam-section">
+                        <div className="addgamesteam-section-title">Action</div>
+
+                        <input
+                          className="addgamesteam-keyboard-input"
+                          placeholder="Game ID"
+                          value={keyboardOutput}
+                          onClick={() => setKeyboardOpen(true)}
+                          data-controller-focus
+                          data-controller-group="Add Steam Game-modal"
+                        />
+                        <button
+                          className="addgamesteam-container-button"
+                          data-controller-focus
+                          data-controller-group="Add Steam Game-modal"
+                          onClick={() => {}}
+                        >
+                          <div className="addgamesteam-button-icon">
+                            <InstallIcon />
+                          </div>
+
+                          <div className="addgamesteam-button-content">
+                            <span>Install</span>
+                            <small>Install game</small>
+                          </div>
+                          <div className="addgamesteam-button-arrow">›</div>
+                        </button>
+                      </div>
+                    </div>
                   </>
                 )}
 
