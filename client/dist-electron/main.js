@@ -24776,7 +24776,7 @@ ipcMain.handle("get-usb-dir", async () => {
     if (process.platform === "linux") {
       return await fs.promises.readdir("/media");
     } else if (process.platform === "win32") {
-      return await fs.promises.readdir("G:\\");
+      return await fs.promises.readdir("C:\\USB");
     }
   } catch (err) {
     console.error("usb not connected");

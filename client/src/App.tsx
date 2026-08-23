@@ -50,6 +50,7 @@ type Game = {
   exePath: string;
   args: string;
   cover: string;
+  type: string;
 };
 
 // Todo: g'r icon st're og vis title p[ iconet n[r top baren er [bnet ]]]
@@ -90,7 +91,8 @@ function App() {
     | "Volume"
     | "Settings"
     | "Options"
-    | "Add Steam Game";
+    | "Add Steam Game"
+    | "Add USB Game";
 
   const [currentModelType, setCurrentModalType] =
     useState<ModalTypes>("Add Game");
@@ -162,11 +164,12 @@ function App() {
     setCurrentVolume(newVolume);
   };
 
-  const CloseGame = (processName: string) => {
+  const CloseGame = (processName: string, type: string) => {
     //taskkill /F /IM pcsx2-qt.exe force close emulator
 
     window.electron.send("close-game", {
       processName,
+      type,
     });
   };
 
@@ -179,6 +182,7 @@ function App() {
     processName: string,
     exePath: string,
     args: string,
+    type: string,
   ) => {
     if (currentPlaying == null) {
       window.electron.send("start-game", {
@@ -186,6 +190,7 @@ function App() {
         processName,
         exePath,
         args,
+        type,
       });
     } else {
       console.log("other game running");
@@ -194,6 +199,7 @@ function App() {
 
   const GetUsbDir = () => {
     window.directory.get().then((dir) => {
+      
       setUsbDir(dir);
       console.log(dir);
     });
@@ -406,6 +412,7 @@ function App() {
                         item.processName,
                         item.exePath,
                         item.args,
+                        item.type,
                       );
                     }}
                     onFocus={() => setFocusedGame(item)}
@@ -479,8 +486,8 @@ function App() {
 
                         <h2>{focusedGame?.name}</h2>
 
-                        <span className="options-game-process">
-                          {focusedGame?.processName}
+                        <span className="options-game-type">
+                          Game type: {focusedGame?.type}
                         </span>
                       </div>
                     </div>
@@ -495,7 +502,7 @@ function App() {
                         onClick={() => {
                           if (!focusedGame) return;
 
-                          CloseGame(focusedGame.processName);
+                          CloseGame(focusedGame.processName, focusedGame.type);
                           setModalOpened(false);
                         }}
                       >
@@ -521,6 +528,7 @@ function App() {
                             focusedGame.processName,
                             focusedGame.exePath,
                             focusedGame.args,
+                            focusedGame.type,
                           );
 
                           setModalOpened(false);
@@ -628,6 +636,48 @@ function App() {
                             <small>Install game from steam</small>
                           </div>
                           <div className="addgame-button-arrow">›</div>
+                        </button>
+                      </div>
+                    </div>
+                  </>
+                )}
+
+                {currentModelType == "Add USB Game" && (
+                  <>
+                    <div className="addgameusb-container">
+                      <div className="addgameusb-header">
+                        <div className="addgameusb-title">
+                          <div className="addgameusb-title-icon">
+                            <SteamIcon />
+                          </div>
+
+                          <div>
+                            <h2>Add USB Game</h2>
+                            <p>Install games</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="addgameusb-section">
+                        <div className="addgameusb-section-title">Action</div>
+
+                        {/* usb data */}
+
+                        <button
+                          className="addgameusb-container-button"
+                          data-controller-focus
+                          data-controller-group="Add USB Game-modal"
+                          onClick={() => {}}
+                        >
+                          <div className="addgameusb-button-icon">
+                            <InstallIcon />
+                          </div>
+
+                          <div className="addgameusb-button-content">
+                            <span>Install</span>
+                            <small>Install game</small>
+                          </div>
+                          <div className="addgameusb-button-arrow">›</div>
                         </button>
                       </div>
                     </div>
