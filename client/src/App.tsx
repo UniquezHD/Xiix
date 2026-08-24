@@ -287,7 +287,6 @@ function App() {
                   onFocus={() => setActiveMenubar(1)}
                   onClick={() => {
                     setCurrentModalType("Add Game");
-                    GetUsbDir();
                     setModalOpened(true);
                   }}
                 >
@@ -607,6 +606,10 @@ function App() {
                           className="addgame-container-button"
                           data-controller-focus
                           data-controller-group="Add Game-modal"
+                          onClick={() => {
+                            GetUsbDir();
+                            setCurrentModalType("Add USB Game");
+                          }}
                         >
                           <div className="addgame-button-icon">
                             <USBIcon />
