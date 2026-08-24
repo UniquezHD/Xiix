@@ -64,12 +64,25 @@ function createWindow() {
   }
 }
 
-ipcMain.handle("get-usb-dir", async () => {
+ipcMain.handle("get-usb-dir", () => {
   try {
     if (process.platform === "linux") {
-      return await fs.promises.readdir("/media"); 
+
+      let rawdata = fs.readFileSync("/media/");
+
+      let installInfo = JSON.parse(rawdata);
+
+      console.log(installInfo)
+
+      return installInfo;
     } else if (process.platform === "win32") {
-      return await fs.promises.readdir("G:\\");
+      let rawdata = fs.readFileSync("C:\\USB\\info.json");
+
+      let installInfo = JSON.parse(rawdata);
+
+      console.log(installInfo)
+
+      return installInfo;
     }
   } catch (err) {
     console.error("usb not connected");
