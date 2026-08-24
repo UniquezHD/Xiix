@@ -17,7 +17,12 @@ function Clock() {
     return () => clearInterval(interval);
   }, []);
 
-  return <h1 className="top-bar-item-clock">{time}</h1>;
+  return (
+    <>
+      <h1>{time}</h1>
+      <span style={{ marginTop: "-1rem"}}>{new Date().toLocaleDateString()}</span>
+    </>
+  );
 }
 
 export default Clock;

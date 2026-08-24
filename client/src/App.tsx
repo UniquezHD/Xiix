@@ -4,8 +4,10 @@ import "./App.css";
 import "./css/settings.css";
 import "./css/addgame.css";
 import "./css/addgamesteam.css";
+import "./css/addgameusb.css";
 import "./css/volume.css";
 import "./css/options.css";
+import "./css/selecttheme.css";
 import { Grid, Modal } from "@mantine/core";
 import { GameData } from "./data/GameData";
 import Clock from "./components/Clock";
@@ -28,6 +30,9 @@ import USBIcon from "./assets/ui/usb.svg?react";
 import GameIcon from "./assets/ui/game.svg?react";
 import InstallIcon from "./assets/ui/install.svg?react";
 import BrushIcon from "./assets/ui/brush.svg?react";
+import MoonIcon from "./assets/ui/moon.svg?react";
+import SunIcon from "./assets/ui/sun.svg?react";
+import SolarisIcon from "./assets/ui/solaris.svg?react";
 // https://allsvgicons.com/
 //#endregion
 
@@ -94,10 +99,11 @@ function App() {
     | "Settings"
     | "Options"
     | "Add Steam Game"
-    | "Add USB Game";
+    | "Add USB Game"
+    | "Theme";
 
   const [currentModelType, setCurrentModalType] =
-    useState<ModalTypes>("Add Game");
+    useState<ModalTypes>("Theme");
 
   const activeControllerGroup = keyboardOpen
     ? "keyboard"
@@ -152,6 +158,11 @@ function App() {
     window.electron.send("check-status", {});
   };
 
+  const VolumeSet = (amount: number) => {
+    window.volumeAPI.set(amount);
+    setCurrentVolume(amount);
+  }
+
   const VolumeUp = (amount: number) => {
     const newVolume = Math.min(currentVolume + amount, 100);
 
@@ -201,7 +212,6 @@ function App() {
 
   const GetUsbDir = () => {
     window.directory.get().then((dir) => {
-      
       setUsbDir(dir);
       console.log(dir);
     });
@@ -252,7 +262,7 @@ function App() {
           <div className="boot-screen">
             <img
               className="boot-screen-logo"
-              src="src\assets\logo.png"
+              src="src\assets\logo-white.png"
               alt=""
             />
           </div>
@@ -264,7 +274,7 @@ function App() {
               <div className="top-bar-left">
                 <img
                   className="top-bar-logo"
-                  src="/src/assets/logo.png"
+                  src="/src/assets/logo-white.png"
                   alt=""
                 />
 
@@ -652,13 +662,24 @@ function App() {
                     <div className="addgameusb-container">
                       <div className="addgameusb-header">
                         <div className="addgameusb-title">
-                          <div className="addgameusb-title-icon">
-                            <SteamIcon />
-                          </div>
 
-                          <div>
-                            <h2>Add USB Game</h2>
-                            <p>Install games</p>
+
+                          <div className="addgameusb-game">
+                            <img
+                              className="addgameusb-game-cover"
+                              src={usbDir?.cover}
+                              alt=""
+                            />
+
+                            <div className="addgameusb-game-info">
+                              <span className="addgameusb-game-label">GAME</span>
+
+                              <h2>{usbDir?.name}</h2>
+
+                              <span className="addgameusb-game-type">
+                                Game type: {usbDir?.type}
+                              </span>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -770,6 +791,51 @@ function App() {
                       <div className="volume-section">
                         <div className="volume-section-title">System</div>
 
+                        <input
+                          className="volume-keyboard-input"
+                          placeholder="Volume"
+                          value={keyboardOutput}
+                          onClick={() => setKeyboardOpen(true)}
+                          data-controller-focus
+                          data-controller-group="volume-modal"
+                        />
+
+                        <button
+                          className="volume-container-button"
+                          data-controller-focus
+                          data-controller-group="Volume-modal"
+                          onClick={() => {
+                            VolumeSet(parseInt(keyboardOutput));
+                          }}
+                        >
+                          <div className="volume-button-icon">
+                            <VolumeUpIcon />
+                          </div>
+
+                          <div className="volume-button-content">
+                            <span>Set Volume</span>
+                            <small>Sets the volume</small>
+                          </div>
+                        </button>
+
+                        <button
+                          className="volume-container-button"
+                          data-controller-focus
+                          data-controller-group="Volume-modal"
+                          onClick={() => {
+                            ToggleMute();
+                          }}
+                        >
+                          <div className="volume-button-icon">
+                            <VolumeMuteIcon />
+                          </div>
+
+                          <div className="volume-button-content">
+                            <span>{isMuted ? "Unmute" : "Mute"}</span>
+                            <small>Toggle system volume</small>
+                          </div>
+                        </button>
+
                         <button
                           className="volume-container-button"
                           data-controller-focus
@@ -804,23 +870,82 @@ function App() {
                             <span>Volume Down</span>
                             <small>Turn volume down</small>
                           </div>
+                        </button> 
+                      </div>
+                    </div>
+                  </>
+                )}
+
+                {currentModelType == "Theme" && (
+                  <>
+                    <div className="theme-container">
+                      <div className="theme-header">
+                        <div className="theme-title">
+                          <div className="theme-title-icon">
+                            <BrushIcon />
+                          </div>
+
+                          <div>
+                            <h2>Theme</h2>
+                            <p>Manage theme</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="theme-section">
+                        <div className="theme-section-title">Themes</div>
+
+                        <button
+                          className="theme-container-button"
+                          data-controller-focus
+                          data-controller-group="Theme-modal"
+                          onClick={() => {
+                            
+                          }}
+                        >
+                          <div className="theme-button-icon">
+                            <SolarisIcon />
+                          </div>
+
+                          <div className="theme-button-content">
+                            <span>Solarized</span>
+                            <small>Sets theme</small>
+                          </div>
                         </button>
 
                         <button
-                          className="volume-container-button"
+                          className="theme-container-button"
                           data-controller-focus
-                          data-controller-group="Volume-modal"
+                          data-controller-group="Theme-modal"
                           onClick={() => {
-                            ToggleMute();
+                            
                           }}
                         >
-                          <div className="volume-button-icon">
-                            <VolumeMuteIcon />
+                          <div className="theme-button-icon">
+                            <MoonIcon />
                           </div>
 
-                          <div className="volume-button-content">
-                            <span>{isMuted ? "Unmute" : "Mute"}</span>
-                            <small>Toggle system volume</small>
+                          <div className="theme-button-content">
+                            <span>Dark</span>
+                            <small>Sets theme</small>
+                          </div>
+                        </button>
+
+                        <button
+                          className="theme-container-button"
+                          data-controller-focus
+                          data-controller-group="Theme-modal"
+                          onClick={() => {
+                            
+                          }}
+                        >
+                          <div className="theme-button-icon">
+                            <SunIcon />
+                          </div>
+
+                          <div className="theme-button-content">
+                            <span>Light</span>
+                            <small>Sets theme</small>
                           </div>
                         </button>
                       </div>
@@ -844,13 +969,13 @@ function App() {
                     </div>
 
                     <div className="settings-section">
-                      <div className="settings-section-title">System</div>
+                      <div className="settings-section-title">UI</div>
 
                       <button
                         className="settings-container-button"
                         data-controller-focus
                         data-controller-group="Settings-modal"
-                        onClick={() => setKeyboardOpen(true)}
+                        onClick={() => setCurrentModalType("Theme")}
                       >
                         <div className="settings-button-icon">
                           <BrushIcon />
@@ -860,7 +985,10 @@ function App() {
                           <span>Theme</span>
                           <small>Change UI theme</small>
                         </div>
+                        <div className="settings-button-arrow">›</div>
                       </button>
+
+                      <div className="settings-section-title">Troubleshoot</div>
 
                       <button
                         className="settings-container-button"
@@ -894,6 +1022,8 @@ function App() {
                         </div>
                         <div className="settings-button-arrow">›</div>
                       </button>
+
+                      <div className="settings-section-title">System</div>
 
                       <button
                         className="settings-container-button"
