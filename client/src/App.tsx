@@ -31,6 +31,8 @@ import BrushIcon from "./assets/ui/brush.svg?react";
 // https://allsvgicons.com/
 //#endregion
 
+//https://www.koeitecmoamerica.com/manual/rtk8-remake/en/2200.html
+
 import { IoMdSettings } from "react-icons/io";
 import { GiConsoleController } from "react-icons/gi";
 import { FaPlus } from "react-icons/fa";
