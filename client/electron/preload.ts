@@ -29,6 +29,10 @@ contextBridge.exposeInMainWorld("directory", {
   get: () => ipcRenderer.invoke("get-usb-dir"),
 });
 
+contextBridge.exposeInMainWorld("versions", {
+  get: () => ipcRenderer.invoke("get-version"),
+});
+
 contextBridge.exposeInMainWorld("windowState", {
   set: (value: number) => ipcRenderer.invoke("set-window-state", value),
 });
