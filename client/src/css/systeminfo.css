@@ -55,15 +55,20 @@
   text-transform: uppercase;
 }
 
-.systeminfo-container-info{
-    width: 100%;
-    height: auto;
+.systeminfo-container-info {
+  width: 100%;
+  height: auto;
 }
 
-.systeminfo-info{
-    list-style: none;
-    text-decoration: none;
-    margin: 0;
-    padding-left: .5rem;
-    color: rgba(255, 255, 255, 0.4);
+.systeminfo-info {
+  list-style: none;
+  margin: 0;
+  padding-left: 0.5rem;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.systeminfo-info li {
+  display: flex;
+  justify-content: space-between;
+  width: 260px;
 }

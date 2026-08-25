@@ -1,6 +1,6 @@
 :root {
   --top-bar-height: 80px;
-  --top-bar-expanded-height: 110px;
+  --top-bar-expanded-height: 100px;
 }
 
 .boot-screen {
@@ -19,7 +19,7 @@
   width: 100%;
   height: var(--top-bar-height);
   position: relative;
-  z-index: 10;
+  z-index: 99;
   overflow: hidden;
   background: #0b2634;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
@@ -30,7 +30,7 @@
 }
 
 .top-bar-expanded {
-  height: 110px;
+  height: var(--top-bar-expanded-height);
   box-shadow: 0 15px 45px rgba(0, 0, 0, 0.3);
 }
 
@@ -174,6 +174,8 @@
   width: 34px;
   height: 34px;
   display: flex;
+  outline: none;
+  border: none;
   align-items: center;
   justify-content: center;
   border-radius: 9px;
@@ -182,10 +184,21 @@
   font-size: 1rem;
 }
 
+.status-item[data-controller-focus]:focus {
+  color: #8d98f0;
+  border: 2px solid var(--app-primary-hover);
+  background: rgba(111, 123, 217, 0.1);
+  box-shadow:
+    0 0 0 3px rgba(111, 123, 217, 0.12),
+    0 8px 25px rgba(111, 123, 217, 0.1);
+}
+
 .volume-status {
   height: 34px;
   min-width: 54px;
   display: flex;
+  outline: none;
+  border: none;
   align-items: center;
   justify-content: center;
   padding: 0 0.6rem;
@@ -194,6 +207,15 @@
   color: #8d98f0;
   font-size: 0.85rem;
   font-weight: 600;
+}
+
+.volume-status[data-controller-focus]:focus{
+  color: #8d98f0;
+  border: 2px solid var(--app-primary-hover);
+  background: rgba(111, 123, 217, 0.1);
+  box-shadow:
+    0 0 0 3px rgba(111, 123, 217, 0.12),
+    0 8px 25px rgba(111, 123, 217, 0.1);
 }
 
 .top-bar-clock {

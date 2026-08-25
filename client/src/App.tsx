@@ -9,7 +9,7 @@ import "./css/volume.css";
 import "./css/options.css";
 import "./css/systeminfo.css";
 import "./css/selecttheme.css";
-import { Grid, Modal } from "@mantine/core";
+import { Grid, Modal, Tooltip } from "@mantine/core";
 import { GameData } from "./data/GameData";
 import Clock from "./components/Clock";
 
@@ -17,6 +17,7 @@ import Clock from "./components/Clock";
 import SettingsIcon from "./assets/ui/settings.svg?react";
 import RestartIcon from "./assets/ui/restart.svg?react";
 import EthernetIcon from "./assets/ui/ethernet.svg?react";
+import EthernetOffIcon from "./assets/ui/ethernetoff.svg?react";
 import VolumeIcon from "./assets/ui/volume.svg?react";
 import VolumeUpIcon from "./assets/ui/volumeup.svg?react";
 import VolumeDownIcon from "./assets/ui/volumedown.svg?react";
@@ -25,9 +26,11 @@ import CloseIcon from "./assets/ui/close.svg?react";
 import PlayIcon from "./assets/ui/play.svg?react";
 import WrenchIcon from "./assets/ui/wrench.svg?react";
 import ControllerIcon from "./assets/ui/controller.svg?react";
+import ControllerErrorIcon from "./assets/ui/controllererror.svg?react";
 import EditIcon from "./assets/ui/edit.svg?react";
 import SteamIcon from "./assets/ui/steam.svg?react";
 import USBIcon from "./assets/ui/usb.svg?react";
+import USBOffIcon from "./assets/ui/usboff.svg?react";
 import GameIcon from "./assets/ui/game.svg?react";
 import InstallIcon from "./assets/ui/install.svg?react";
 import BrushIcon from "./assets/ui/brush.svg?react";
@@ -35,22 +38,16 @@ import MoonIcon from "./assets/ui/moon.svg?react";
 import SunIcon from "./assets/ui/sun.svg?react";
 import SolarisIcon from "./assets/ui/solaris.svg?react";
 import InfoIcon from "./assets/ui/info.svg?react";
+import HeadphonesIcon from "./assets/ui/headphones.svg?react";
+import HeadphonesOffIcon from "./assets/ui/headphonesoff.svg?react";
 // https://allsvgicons.com/
 //#endregion
 
 //https://www.koeitecmoamerica.com/manual/rtk8-remake/en/2200.html
 
 import { IoMdSettings } from "react-icons/io";
-import { GiConsoleController } from "react-icons/gi";
 import { FaPlus } from "react-icons/fa";
-import {
-  FaHeadphones,
-  FaVolumeHigh,
-  FaWifi,
-  FaMusic,
-  FaVolumeXmark,
-} from "react-icons/fa6";
-import { BsUsbSymbol } from "react-icons/bs";
+import { FaVolumeHigh, FaMusic, FaVolumeXmark } from "react-icons/fa6";
 import Keyboard from "./components/Keyboard";
 
 type Game = {
@@ -65,7 +62,7 @@ type Game = {
 type Version = {
   frontend: string;
   backend: string;
-}
+};
 
 // Todo: g'r icon st're og vis title p[ iconet n[r top baren er [bnet ]]]
 
@@ -78,14 +75,17 @@ type Version = {
 
 function App() {
   const [activeMenuBar, setActiveMenubar] = useState(0);
-  const [isHeadphones, setIsHeadphones] = useState(1);
-  const [isUsb, setIsUsb] = useState(1);
+
+  const [isFirstBoot, setIsFirstBoot] = useState(false);
+  const [isHeadphones, setIsHeadphones] = useState(false);
+  const [isUsb, setIsUsb] = useState(false);
   const [isEthernet, setIsEthernet] = useState(true);
   const [isController, setIsController] = useState("disconnected");
   const [isMuted, setIsMuted] = useState(false);
+
   const [keyboardOpen, setKeyboardOpen] = useState(false);
 
-  const [versions, setVersions] = useState<Version>();
+  const [version, setVersion] = useState<Version>();
 
   const [keyboardOutput, setKeyboardOutput] = useState("");
 
@@ -94,8 +94,6 @@ function App() {
   const [currentPlaying, setCurrentPlaying] = useState<Game | null>(null);
 
   const [focusedGame, setFocusedGame] = useState<Game | null>(null);
-
-  const [isFirstBoot, setIsFirstBoot] = useState(false);
 
   const [currentVolume, setCurrentVolume] = useState<number>(0);
 
@@ -146,6 +144,58 @@ function App() {
 
   const [previousVolume, setPreviousVolume] = useState(100);
 
+  useEffect(() => {
+    window.volumeAPI.get().then(setCurrentVolume);
+
+    CheckStatus();
+  }, []);
+
+  useEffect(() => {
+    window.electron.on("get-version", (data) => {
+      setVersion(data);
+      console.log("Version: ", data);
+    });
+  }, []);
+
+  useEffect(() => {
+    window.electron.on("ethernet-status", (data) => {
+      setIsEthernet(data.status);
+      console.log("Internet: ", data);
+    });
+  }, []);
+
+  useEffect(() => {
+    window.electron.on("controller-connected", (data) => {
+      setIsController(data.message);
+      console.log("Controller: ", data);
+    });
+  }, []);
+
+  useEffect(() => {
+    window.electron.on("controller-disconnected", (data) => {
+      setIsController(data.message);
+      console.log("Controller: ", data);
+    });
+  }, []);
+
+  useEffect(() => {
+    window.electron.on("game-started", (data) => {
+      setCurrentPlaying(data);
+      console.log("Game started:", data);
+    });
+  }, []);
+
+  useEffect(() => {
+    window.electron.on("game-closed", (data) => {
+      setCurrentPlaying(null);
+      console.log("game-closed:", data);
+    });
+  }, []);
+
+  const CheckStatus = () => {
+    window.electron.send("check-status", {});
+  };
+
   const ToggleMute = () => {
     setIsMuted((prev) => {
       const newMuted = !prev;
@@ -162,17 +212,6 @@ function App() {
 
       return newMuted;
     });
-  };
-
-  const GetVersions = () => {
-    window.versions.get().then((obj:Version) => {
-      setVersions(obj);
-      console.log(obj);
-    });
-  }
-
-  const CheckStatus = () => {
-    window.electron.send("check-status", {});
   };
 
   const VolumeSet = (amount: number) => {
@@ -233,35 +272,6 @@ function App() {
       console.log(dir);
     });
   };
-
-  useEffect(() => {
-    window.volumeAPI.get().then(setCurrentVolume);
-
-    window.electron.on("game-closed", (data) => {
-      setCurrentPlaying(null);
-      console.log("game-closed:", data);
-    });
-
-    window.electron.on("game-started", (data) => {
-      setCurrentPlaying(data);
-      console.log("Game started:", data);
-    });
-
-    window.electron.on("controller-disconnected", (data) => {
-      setIsController(data.message);
-      console.log("Controller: ", data);
-    });
-
-    window.electron.on("controller-connected", (data) => {
-      setIsController(data.message);
-      console.log("Controller: ", data);
-    });
-
-    window.electron.on("ethernet-status", (data) => {
-      setIsEthernet(data.status);
-      console.log("Wifi: ", data);
-    });
-  }, []);
 
   return (
     <>
@@ -378,37 +388,104 @@ function App() {
 
               <div className="top-bar-right">
                 <div className="status-bar">
-                  {isController === "connected" && (
-                    <div className="status-item">
-                      <GiConsoleController />
-                    </div>
-                  )}
+                  <Tooltip
+                    color="var(--app-bg)"
+                    label={
+                      isController === "connected"
+                        ? "Controller Connected"
+                        : "Controller Disconnected"
+                    }
+                    events={{ hover: true, focus: true, touch: false  }}
+                  >
+                    <button
+                      data-controller-navigation="topbar"
+                      data-controller-group="topbar"
+                      data-controller-focus
+                      className="status-item"
+                    >
+                      {isController === "connected" ? (
+                        <ControllerIcon />
+                      ) : (
+                        <ControllerErrorIcon />
+                      )}
+                    </button>
+                  </Tooltip>
 
-                  {isUsb && (
-                    <div className="status-item">
-                      <BsUsbSymbol />
-                    </div>
-                  )}
+                  <Tooltip
+                    color="var(--app-bg)"
+                    label={isUsb ? "USB Connected" : "USB Disconnected"}
+                    events={{ hover: true, focus: true, touch: false }}
+                  >
+                    <button
+                      data-controller-navigation="topbar"
+                      data-controller-group="topbar"
+                      data-controller-focus
+                      className="status-item"
+                    >
+                      {isUsb ? <USBIcon /> : <USBOffIcon />}
+                    </button>
+                  </Tooltip>
 
-                  {isHeadphones && (
-                    <div className="status-item">
-                      <FaHeadphones />
-                    </div>
-                  )}
+                  <Tooltip
+                    color="var(--app-bg)"
+                    label={
+                      isHeadphones
+                        ? "Headphones Connected"
+                        : "Headphones Disconnected"
+                    }
+                    events={{ hover: true, focus: true, touch: false  }}
+                  >
+                    <button
+                      data-controller-navigation="topbar"
+                      data-controller-group="topbar"
+                      data-controller-focus
+                      className="status-item"
+                    >
+                      {isHeadphones ? (
+                        <HeadphonesIcon />
+                      ) : (
+                        <HeadphonesOffIcon />
+                      )}
+                    </button>
+                  </Tooltip>
 
-                  <div className="volume-status">
-                    {isMuted ? (
-                      <FaVolumeXmark />
-                    ) : (
-                      <span>{currentVolume}%</span>
-                    )}
-                  </div>
+                  <Tooltip
+                    color="var(--app-bg)"
+                    label="System Volume"
+                    events={{ hover: true, focus: true, touch: false  }}
+                  >
+                    <button
+                      data-controller-navigation="topbar"
+                      data-controller-group="topbar"
+                      data-controller-focus
+                      className="volume-status"
+                    >
+                      {isMuted ? (
+                        <FaVolumeXmark />
+                      ) : (
+                        <span>{currentVolume}%</span>
+                      )}
+                    </button>
+                  </Tooltip>
 
-                  {isEthernet && (
-                    <div className="status-item">
-                      <FaWifi />
-                    </div>
-                  )}
+                  <Tooltip
+                    color="var(--app-bg)"
+                    label={
+                      isEthernet
+                        ? "Ethernet Connected"
+                        : "Ethernet Disconnected"
+                    }
+                    events={{ hover: true, focus: true, touch: false  }}
+                  >
+                    <button
+                      data-controller-navigation="topbar"
+                      data-controller-group="topbar"
+                      data-controller-focus
+                      className="status-item"
+                    >
+                      {isEthernet ? <EthernetIcon /> : <EthernetOffIcon />}
+                    </button>
+                  </Tooltip>
                 </div>
 
                 <div className="top-bar-clock">
@@ -985,11 +1062,36 @@ function App() {
 
                         <div className="systeminfo-container-info">
                           <ul className="systeminfo-info">
-                            <li>Installed Games: {GameData.length}</li>
-                            <li>Internet Status: {isEthernet}</li>
-                            <li>System Volume: {currentVolume}</li>
-                            <li>Frontend Version: {versions?.frontend}</li>
-                            <li>Backend Version: {versions?.backend}</li>
+                            <li>
+                              <span>Installed Games</span>{" "}
+                              <span>{GameData.length}</span>
+                            </li>
+                            <li>
+                              <span>Internet Status</span>{" "}
+                              <span>
+                                {isEthernet ? "Connected" : "Disconnected"}
+                              </span>
+                            </li>
+                            <li>
+                              <span>Controller Status</span>{" "}
+                              <span>
+                                {isController === "connected"
+                                  ? "Connected"
+                                  : "Disconnected"}
+                              </span>
+                            </li>
+                            <li>
+                              <span>System Volume</span>{" "}
+                              <span>{currentVolume}%</span>
+                            </li>
+                            <li>
+                              <span>Frontend Version</span>{" "}
+                              <span>{version?.frontend}</span>
+                            </li>
+                            <li>
+                              <span>Backend Version</span>{" "}
+                              <span>{version?.backend}</span>
+                            </li>
                           </ul>
                         </div>
                       </div>
@@ -1072,7 +1174,7 @@ function App() {
                         data-controller-focus
                         data-controller-group="Settings-modal"
                         onClick={() => {
-                          GetVersions();
+                          CheckStatus();
                           setCurrentModalType("System Information");
                         }}
                       >

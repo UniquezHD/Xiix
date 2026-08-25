@@ -24808,17 +24808,7 @@ io.on("connection", (socket2) => {
       Args: gameData.args
     });
   });
-  ipcMain.handle("get-version", () => {
-    socket2.emit("get-version", {});
-  });
-  socket2.on("get-version", (data) => {
-    let versionData = {
-      frontend: FRONTEND_VERSION,
-      backend: data
-    };
-    win == null ? void 0 : win.webContents.send("get-version", versionData);
-  });
-  ipcMain.emit("check-status", () => {
+  ipcMain.on("check-status", () => {
     socket2.emit("status", {});
   });
   ipcMain.on("close-game", (_event, gameData) => {
@@ -24846,9 +24836,16 @@ io.on("connection", (socket2) => {
       win == null ? void 0 : win.show();
     }
   });
-  socket2.emit("status", {});
   socket2.on("ethernet-status", (data) => {
     win == null ? void 0 : win.webContents.send("ethernet-status", data);
+  });
+  socket2.on("get-version", (data) => {
+    let versionData = {
+      frontend: FRONTEND_VERSION,
+      backend: data.backend
+    };
+    console.log(versionData);
+    win == null ? void 0 : win.webContents.send("get-version", versionData);
   });
   socket2.on("controller-disconnected", (data) => {
     win == null ? void 0 : win.webContents.send("controller-disconnected", data);

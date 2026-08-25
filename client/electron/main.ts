@@ -119,22 +119,7 @@ io.on("connection", (socket) => {
     });
   });
 
-  ipcMain.handle("get-version", () => {
-    
-    socket.emit("get-version", {});
-  });
-
-  socket.on("get-version", (data: string) => {
-
-    let versionData: Version = {
-      frontend: FRONTEND_VERSION,
-      backend: data,
-    };
-
-    win?.webContents.send("get-version", versionData);
-  });
-
-  ipcMain.emit("check-status", () => {
+  ipcMain.on("check-status", () => {
     socket.emit("status", {});
   });
 
@@ -169,10 +154,20 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.emit("status", {});
-
   socket.on("ethernet-status", (data) => {
     win?.webContents.send("ethernet-status", data);
+  });
+
+  socket.on("get-version", (data) => {
+    
+    let versionData: Version = {
+      frontend: FRONTEND_VERSION,
+      backend: data.backend,
+    };
+
+    console.log(versionData)
+
+    win?.webContents.send("get-version", versionData);
   });
 
   socket.on("controller-disconnected", (data) => {
