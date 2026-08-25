@@ -24741,6 +24741,7 @@ const require$1 = createRequire(import.meta.url);
 const __dirname$1 = path.dirname(fileURLToPath(import.meta.url));
 const loudness = require$1("loudness");
 const fs = require$1("fs");
+const FRONTEND_VERSION = "0.0.1";
 process.env.APP_ROOT = path.join(__dirname$1, "..");
 const VITE_DEV_SERVER_URL = process.env["VITE_DEV_SERVER_URL"];
 const MAIN_DIST = path.join(process.env.APP_ROOT, "dist-electron");
@@ -24806,6 +24807,16 @@ io.on("connection", (socket2) => {
       ExePath: gameData.exePath,
       Args: gameData.args
     });
+  });
+  ipcMain.handle("get-version", () => {
+    socket2.emit("get-version", {});
+  });
+  socket2.on("get-version", (data) => {
+    let versionData = {
+      frontend: FRONTEND_VERSION,
+      backend: data
+    };
+    win == null ? void 0 : win.webContents.send("get-version", versionData);
   });
   ipcMain.emit("check-status", () => {
     socket2.emit("status", {});

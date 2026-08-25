@@ -9,6 +9,10 @@ declare global {
       get: () => Promise<any>;
     };
 
+    versions: {
+      get: () => Promise<any>;
+    };
+
      windowState: {
       set: (value: number) => Promise<void>;
     };

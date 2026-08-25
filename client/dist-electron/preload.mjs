@@ -25,6 +25,9 @@ electron.contextBridge.exposeInMainWorld("volumeAPI", {
 electron.contextBridge.exposeInMainWorld("directory", {
   get: () => electron.ipcRenderer.invoke("get-usb-dir")
 });
+electron.contextBridge.exposeInMainWorld("versions", {
+  get: () => electron.ipcRenderer.invoke("get-version")
+});
 electron.contextBridge.exposeInMainWorld("windowState", {
   set: (value) => electron.ipcRenderer.invoke("set-window-state", value)
 });

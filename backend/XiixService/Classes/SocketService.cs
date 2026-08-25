@@ -68,6 +68,14 @@ namespace XiixService.Classes
                 }
             });
 
+            _socket.On("get-version", async ctx =>
+            {
+                await SendToElectron("get-version", new
+                {
+                    Program.VERSION
+                });
+            });
+
             _socket.On("status", async ctx =>
             {
                 bool wifiStatus = Internet.Check();

@@ -7,6 +7,7 @@ import "./css/addgamesteam.css";
 import "./css/addgameusb.css";
 import "./css/volume.css";
 import "./css/options.css";
+import "./css/systeminfo.css";
 import "./css/selecttheme.css";
 import { Grid, Modal } from "@mantine/core";
 import { GameData } from "./data/GameData";
@@ -33,6 +34,7 @@ import BrushIcon from "./assets/ui/brush.svg?react";
 import MoonIcon from "./assets/ui/moon.svg?react";
 import SunIcon from "./assets/ui/sun.svg?react";
 import SolarisIcon from "./assets/ui/solaris.svg?react";
+import InfoIcon from "./assets/ui/info.svg?react";
 // https://allsvgicons.com/
 //#endregion
 
@@ -60,6 +62,11 @@ type Game = {
   type: string;
 };
 
+type Version = {
+  frontend: string;
+  backend: string;
+}
+
 // Todo: g'r icon st're og vis title p[ iconet n[r top baren er [bnet ]]]
 
 // Todo: add music icon til topbar
@@ -77,6 +84,8 @@ function App() {
   const [isController, setIsController] = useState("disconnected");
   const [isMuted, setIsMuted] = useState(false);
   const [keyboardOpen, setKeyboardOpen] = useState(false);
+
+  const [versions, setVersions] = useState<Version>();
 
   const [keyboardOutput, setKeyboardOutput] = useState("");
 
@@ -100,10 +109,11 @@ function App() {
     | "Options"
     | "Add Steam Game"
     | "Add USB Game"
-    | "Theme";
+    | "Theme"
+    | "System Information";
 
   const [currentModelType, setCurrentModalType] =
-    useState<ModalTypes>("Theme");
+    useState<ModalTypes>("System Information");
 
   const activeControllerGroup = keyboardOpen
     ? "keyboard"
@@ -154,6 +164,13 @@ function App() {
     });
   };
 
+  const GetVersions = () => {
+    window.versions.get().then((obj:Version) => {
+      setVersions(obj);
+      console.log(obj);
+    });
+  }
+
   const CheckStatus = () => {
     window.electron.send("check-status", {});
   };
@@ -161,7 +178,7 @@ function App() {
   const VolumeSet = (amount: number) => {
     window.volumeAPI.set(amount);
     setCurrentVolume(amount);
-  }
+  };
 
   const VolumeUp = (amount: number) => {
     const newVolume = Math.min(currentVolume + amount, 100);
@@ -595,7 +612,7 @@ function App() {
                   </div>
                 )}
 
-                {currentModelType == "Add Game" && (
+                {currentModelType === "Add Game" && (
                   <>
                     <div className="addgame-container">
                       <div className="addgame-header">
@@ -657,13 +674,11 @@ function App() {
                   </>
                 )}
 
-                {currentModelType == "Add USB Game" && (
+                {currentModelType === "Add USB Game" && (
                   <>
                     <div className="addgameusb-container">
                       <div className="addgameusb-header">
                         <div className="addgameusb-title">
-
-
                           <div className="addgameusb-game">
                             <img
                               className="addgameusb-game-cover"
@@ -672,7 +687,9 @@ function App() {
                             />
 
                             <div className="addgameusb-game-info">
-                              <span className="addgameusb-game-label">GAME</span>
+                              <span className="addgameusb-game-label">
+                                GAME
+                              </span>
 
                               <h2>{usbDir?.name}</h2>
 
@@ -710,7 +727,7 @@ function App() {
                   </>
                 )}
 
-                {currentModelType == "Add Steam Game" && (
+                {currentModelType === "Add Steam Game" && (
                   <>
                     <div className="addgamesteam-container">
                       <div className="addgamesteam-header">
@@ -758,7 +775,7 @@ function App() {
                   </>
                 )}
 
-                {currentModelType == "Music" && (
+                {currentModelType === "Music" && (
                   <>
                     <span>Music</span>
 
@@ -772,7 +789,7 @@ function App() {
                   </>
                 )}
 
-                {currentModelType == "Volume" && (
+                {currentModelType === "Volume" && (
                   <>
                     <div className="volume-container">
                       <div className="volume-header">
@@ -870,13 +887,13 @@ function App() {
                             <span>Volume Down</span>
                             <small>Turn volume down</small>
                           </div>
-                        </button> 
+                        </button>
                       </div>
                     </div>
                   </>
                 )}
 
-                {currentModelType == "Theme" && (
+                {currentModelType === "Theme" && (
                   <>
                     <div className="theme-container">
                       <div className="theme-header">
@@ -899,9 +916,7 @@ function App() {
                           className="theme-container-button"
                           data-controller-focus
                           data-controller-group="Theme-modal"
-                          onClick={() => {
-                            
-                          }}
+                          onClick={() => {}}
                         >
                           <div className="theme-button-icon">
                             <SolarisIcon />
@@ -917,9 +932,7 @@ function App() {
                           className="theme-container-button"
                           data-controller-focus
                           data-controller-group="Theme-modal"
-                          onClick={() => {
-                            
-                          }}
+                          onClick={() => {}}
                         >
                           <div className="theme-button-icon">
                             <MoonIcon />
@@ -935,9 +948,7 @@ function App() {
                           className="theme-container-button"
                           data-controller-focus
                           data-controller-group="Theme-modal"
-                          onClick={() => {
-                            
-                          }}
+                          onClick={() => {}}
                         >
                           <div className="theme-button-icon">
                             <SunIcon />
@@ -948,6 +959,39 @@ function App() {
                             <small>Sets theme</small>
                           </div>
                         </button>
+                      </div>
+                    </div>
+                  </>
+                )}
+
+                {currentModelType === "System Information" && (
+                  <>
+                    <div className="systeminfo-container">
+                      <div className="systeminfo-header">
+                        <div className="systeminfo-title">
+                          <div className="systeminfo-title-icon">
+                            <InfoIcon />
+                          </div>
+
+                          <div>
+                            <h2>System Information</h2>
+                            <p>View System Information</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="systeminfo-section">
+                        <div className="systeminfo-section-title">Info</div>
+
+                        <div className="systeminfo-container-info">
+                          <ul className="systeminfo-info">
+                            <li>Installed Games: {GameData.length}</li>
+                            <li>Internet Status: {isEthernet}</li>
+                            <li>System Volume: {currentVolume}</li>
+                            <li>Frontend Version: {versions?.frontend}</li>
+                            <li>Backend Version: {versions?.backend}</li>
+                          </ul>
+                        </div>
                       </div>
                     </div>
                   </>
@@ -1023,13 +1067,33 @@ function App() {
                         <div className="settings-button-arrow">›</div>
                       </button>
 
+                      <button
+                        className="settings-container-button"
+                        data-controller-focus
+                        data-controller-group="Settings-modal"
+                        onClick={() => {
+                          GetVersions();
+                          setCurrentModalType("System Information");
+                        }}
+                      >
+                        <div className="settings-button-icon">
+                          <InfoIcon />
+                        </div>
+
+                        <div className="settings-button-content">
+                          <span>About</span>
+                          <small>Check system information</small>
+                        </div>
+                        <div className="settings-button-arrow">›</div>
+                      </button>
+
                       <div className="settings-section-title">System</div>
 
                       <button
                         className="settings-container-button"
                         data-controller-focus
                         data-controller-group="Settings-modal"
-                        onClick={() => CheckStatus()}
+                        onClick={() => {}}
                       >
                         <div className="settings-button-icon">
                           <RestartIcon />

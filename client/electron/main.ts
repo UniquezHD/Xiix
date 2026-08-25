@@ -16,6 +16,8 @@ const loudness = require("loudness");
 
 const fs = require("fs");
 
+const FRONTEND_VERSION = "0.0.1";
+
 process.env.APP_ROOT = path.join(__dirname, "..");
 
 export const VITE_DEV_SERVER_URL = process.env["VITE_DEV_SERVER_URL"];
@@ -33,6 +35,11 @@ type GameData = {
   exePath: string;
   args: string;
   processName: string;
+};
+
+type Version = {
+  frontend: string;
+  backend: string;
 };
 
 function createWindow() {
@@ -67,12 +74,11 @@ function createWindow() {
 ipcMain.handle("get-usb-dir", () => {
   try {
     if (process.platform === "linux") {
-
       let rawdata = fs.readFileSync("/media/");
 
       let installInfo = JSON.parse(rawdata);
 
-      console.log(installInfo)
+      console.log(installInfo);
 
       return installInfo;
     } else if (process.platform === "win32") {
@@ -80,7 +86,7 @@ ipcMain.handle("get-usb-dir", () => {
 
       let installInfo = JSON.parse(rawdata);
 
-      console.log(installInfo)
+      console.log(installInfo);
 
       return installInfo;
     }
@@ -111,6 +117,21 @@ io.on("connection", (socket) => {
       ExePath: gameData.exePath,
       Args: gameData.args,
     });
+  });
+
+  ipcMain.handle("get-version", () => {
+    
+    socket.emit("get-version", {});
+  });
+
+  socket.on("get-version", (data: string) => {
+
+    let versionData: Version = {
+      frontend: FRONTEND_VERSION,
+      backend: data,
+    };
+
+    win?.webContents.send("get-version", versionData);
   });
 
   ipcMain.emit("check-status", () => {
