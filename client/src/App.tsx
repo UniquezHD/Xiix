@@ -526,7 +526,7 @@ function App() {
                       <div className="game-container-playing-icon">
                         <div className="wave-effect" />
 
-                        <GiConsoleController size={25} />
+                        <ControllerIcon size={25} />
                       </div>
                     )}
 
