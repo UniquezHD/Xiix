@@ -9,9 +9,12 @@ import "./css/volume.css";
 import "./css/options.css";
 import "./css/systeminfo.css";
 import "./css/selecttheme.css";
+import "./css/restartservices.css";
 import { Grid, Modal, Tooltip } from "@mantine/core";
 import { GameData } from "./data/GameData";
 import Clock from "./components/Clock";
+
+import { notifications } from "@mantine/notifications";
 
 //#region Icons
 import SettingsIcon from "./assets/ui/settings.svg?react";
@@ -40,6 +43,7 @@ import SolarisIcon from "./assets/ui/solaris.svg?react";
 import InfoIcon from "./assets/ui/info.svg?react";
 import HeadphonesIcon from "./assets/ui/headphones.svg?react";
 import HeadphonesOffIcon from "./assets/ui/headphonesoff.svg?react";
+import ServicesIcon from "./assets/ui/services.svg?react";
 // https://allsvgicons.com/
 //#endregion
 
@@ -108,10 +112,11 @@ function App() {
     | "Add Steam Game"
     | "Add USB Game"
     | "Theme"
-    | "System Information";
+    | "System Information"
+    | "Restart Services";
 
   const [currentModelType, setCurrentModalType] =
-    useState<ModalTypes>("System Information");
+    useState<ModalTypes>("Restart Services");
 
   const activeControllerGroup = keyboardOpen
     ? "keyboard"
@@ -215,8 +220,23 @@ function App() {
   };
 
   const VolumeSet = (amount: number) => {
+    if (amount > 100) {
+      amount = 100;
+    } else if (amount < 0) {
+      amount = 0;
+    }
+
     window.volumeAPI.set(amount);
     setCurrentVolume(amount);
+
+    /* Mangler Color title */
+    notifications.show({
+      style: { backgroundColor: "var(--app-bg)" },
+      color: "var(--app-primary)",
+      title: "Success",
+      message: `Volume set to ${amount}`,
+    });
+    
   };
 
   const VolumeUp = (amount: number) => {
@@ -395,7 +415,7 @@ function App() {
                         ? "Controller Connected"
                         : "Controller Disconnected"
                     }
-                    events={{ hover: true, focus: true, touch: false  }}
+                    events={{ hover: true, focus: true, touch: false }}
                   >
                     <button
                       data-controller-navigation="topbar"
@@ -433,7 +453,7 @@ function App() {
                         ? "Headphones Connected"
                         : "Headphones Disconnected"
                     }
-                    events={{ hover: true, focus: true, touch: false  }}
+                    events={{ hover: true, focus: true, touch: false }}
                   >
                     <button
                       data-controller-navigation="topbar"
@@ -452,7 +472,7 @@ function App() {
                   <Tooltip
                     color="var(--app-bg)"
                     label="System Volume"
-                    events={{ hover: true, focus: true, touch: false  }}
+                    events={{ hover: true, focus: true, touch: false }}
                   >
                     <button
                       data-controller-navigation="topbar"
@@ -475,7 +495,7 @@ function App() {
                         ? "Ethernet Connected"
                         : "Ethernet Disconnected"
                     }
-                    events={{ hover: true, focus: true, touch: false  }}
+                    events={{ hover: true, focus: true, touch: false }}
                   >
                     <button
                       data-controller-navigation="topbar"
@@ -526,7 +546,7 @@ function App() {
                       <div className="game-container-playing-icon">
                         <div className="wave-effect" />
 
-                        <GiConsoleController size={25} />
+                        <ControllerIcon size={25} />
                       </div>
                     )}
 
@@ -891,7 +911,7 @@ function App() {
                           value={keyboardOutput}
                           onClick={() => setKeyboardOpen(true)}
                           data-controller-focus
-                          data-controller-group="volume-modal"
+                          data-controller-group="Volume-modal"
                         />
 
                         <button
@@ -1060,6 +1080,13 @@ function App() {
                       <div className="systeminfo-section">
                         <div className="systeminfo-section-title">Info</div>
 
+                        <button
+                          style={{ display: "none" }}
+                          data-controller-focus
+                          data-controller-group="System Information-modal"
+                          onClick={() => {}}
+                        ></button>
+
                         <div className="systeminfo-container-info">
                           <ul className="systeminfo-info">
                             <li>
@@ -1094,6 +1121,63 @@ function App() {
                             </li>
                           </ul>
                         </div>
+                      </div>
+                    </div>
+                  </>
+                )}
+
+                {currentModelType === "Restart Services" && (
+                  <>
+                    <div className="restartservices-container">
+                      <div className="restartservices-header">
+                        <div className="restartservices-title">
+                          <div className="restartservices-title-icon">
+                            <ServicesIcon />
+                          </div>
+
+                          <div>
+                            <h2>Restart</h2>
+                            <p>Manage Services</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="restartservices-section">
+                        <div className="restartservices-section-title">
+                          Services
+                        </div>
+
+                        <button
+                          className="restartservices-container-button"
+                          data-controller-focus
+                          data-controller-group="Restart Services-modal"
+                          onClick={() => {}}
+                        >
+                          <div className="restartservices-button-icon">
+                            <RestartIcon />
+                          </div>
+
+                          <div className="restartservices-button-content">
+                            <span>Frontend</span>
+                            <small>Restart frontend</small>
+                          </div>
+                        </button>
+
+                        <button
+                          className="restartservices-container-button"
+                          data-controller-focus
+                          data-controller-group="Restart Services-modal"
+                          onClick={() => {}}
+                        >
+                          <div className="restartservices-button-icon">
+                            <RestartIcon />
+                          </div>
+
+                          <div className="restartservices-button-content">
+                            <span>Backend</span>
+                            <small>Restart backend</small>
+                          </div>
+                        </button>
                       </div>
                     </div>
                   </>
@@ -1195,24 +1279,8 @@ function App() {
                         className="settings-container-button"
                         data-controller-focus
                         data-controller-group="Settings-modal"
-                        onClick={() => {}}
-                      >
-                        <div className="settings-button-icon">
-                          <RestartIcon />
-                        </div>
-
-                        <div className="settings-button-content">
-                          <span>Restart Frontend</span>
-                          <small>Reload the application interface</small>
-                        </div>
-                      </button>
-
-                      <button
-                        className="settings-container-button"
-                        data-controller-focus
-                        data-controller-group="Settings-modal"
                         onClick={() => {
-                          // RestartBackend();
+                          setCurrentModalType("Restart Services");
                         }}
                       >
                         <div className="settings-button-icon">
@@ -1220,9 +1288,10 @@ function App() {
                         </div>
 
                         <div className="settings-button-content">
-                          <span>Restart Backend</span>
-                          <small>Restart background services</small>
+                          <span>Restart</span>
+                          <small>Restart services</small>
                         </div>
+                        <div className="settings-button-arrow">›</div>
                       </button>
                     </div>
                   </div>
