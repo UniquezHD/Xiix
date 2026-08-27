@@ -4,18 +4,24 @@ import { useGamepad, type ControllerAction } from "./useGamepad";
 type ControllerNavigationProps = {
   onOptions?: () => void;
   onCloseModal?: () => void;
+  onCloseControllerDiagram?: () => void;
   modalOpen?: boolean;
   activeGroup?: string;
+  controllerDiagram?: boolean;
 };
 
 export function useControllerNavigation({
   onOptions,
   onCloseModal,
+  onCloseControllerDiagram,
   modalOpen = false,
   activeGroup,
+  controllerDiagram,
 }: ControllerNavigationProps = {}) {
   const elementsRef = useRef<HTMLElement[]>([]);
   const currentElementRef = useRef<HTMLElement | null>(null);
+  const circleHoldTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const circleHeldRef = useRef(false);
 
   const UpdateElements = useCallback(() => {
     const AllElements = Array.from(
@@ -181,15 +187,41 @@ export function useControllerNavigation({
           break;
 
         case "cross":
-          currentElementRef.current.click();
+          if (!controllerDiagram) {
+            currentElementRef.current.click();
+          }
           break;
 
         case "circle":
-          if (activeGroup) {
-            onCloseModal?.();
-          } else {
-            window.history.back();
+          circleHeldRef.current = false;
+
+          circleHoldTimerRef.current = setTimeout(() => {
+            circleHeldRef.current = true;
+
+            if(controllerDiagram){
+              onCloseControllerDiagram?.();
+            }
+
+            console.log("Circle held");
+          }, 1000);
+
+          break;
+
+        case "circle-release":
+          if (circleHoldTimerRef.current) {
+            clearTimeout(circleHoldTimerRef.current);
+            circleHoldTimerRef.current = null;
           }
+
+          if (!circleHeldRef.current) {
+            if (activeGroup) {
+              onCloseModal?.();
+            } else {
+              window.history.back();
+            }
+          }
+
+          circleHeldRef.current = false;
           break;
 
         case "options":

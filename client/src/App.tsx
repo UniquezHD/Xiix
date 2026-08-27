@@ -10,7 +10,6 @@ import "./css/options.css";
 import "./css/systeminfo.css";
 import "./css/selecttheme.css";
 import "./css/restartservices.css";
-import "./css/controllertest.css";
 import { Grid, Modal, Tooltip } from "@mantine/core";
 import { GameData } from "./data/GameData";
 import Clock from "./components/Clock";
@@ -54,7 +53,7 @@ import { IoMdSettings } from "react-icons/io";
 import { FaPlus } from "react-icons/fa";
 import { FaVolumeHigh, FaMusic, FaVolumeXmark } from "react-icons/fa6";
 import Keyboard from "./components/Keyboard";
-import ControllerTest from "./components/ControllerTest";
+import ControllerDiagram from "./components/ControllerDiagram";
 
 type Game = {
   name: string;
@@ -75,7 +74,7 @@ type StorageInfo = {
   freeSpace: string;
   totalFreeSpace: string;
   SpaceUsed: string;
-}
+};
 
 // Todo: add mulighed for at ;ndre lyden p[ alle processes ]
 // Todo: add game system via usb
@@ -89,7 +88,6 @@ type StorageInfo = {
 
 // Todo: Add storage amount in system information
 
-
 function App() {
   const [activeMenuBar, setActiveMenubar] = useState(0);
 
@@ -102,11 +100,11 @@ function App() {
 
   const [keyboardOpen, setKeyboardOpen] = useState(false);
 
-  const [controllerTest, setControllerTest] = useState(false);
-  
+  const [controllerDiagram, setControllerDiagram] = useState(true);
+
   const [version, setVersion] = useState<Version>();
   const [storageInfo, setStorageInfo] = useState<StorageInfo>();
-  
+
   const [keyboardOutput, setKeyboardOutput] = useState("");
 
   const [usbDir, setUsbDir] = useState<any>();
@@ -117,9 +115,8 @@ function App() {
 
   const [currentVolume, setCurrentVolume] = useState<number>(0);
 
-  
   type ModalTypes =
-  | "Add Game"
+    | "Add Game"
     | "Music"
     | "Volume"
     | "Settings"
@@ -129,7 +126,7 @@ function App() {
     | "Theme"
     | "System Information"
     | "Restart Services";
-    
+
   const [modalOpened, setModalOpened] = useState(false);
 
   const [currentModelType, setCurrentModalType] =
@@ -146,6 +143,7 @@ function App() {
   useControllerNavigation({
     modalOpen: modalOpened,
     activeGroup: activeControllerGroup,
+    controllerDiagram: controllerDiagram,
 
     onOptions: () => {
       if (!modalOpened) {
@@ -161,6 +159,10 @@ function App() {
       }
       setModalOpened(false);
       setCurrentModalType(undefined);
+    },
+
+    onCloseControllerDiagram: () => {
+      setControllerDiagram(false);
     },
   });
 
@@ -188,7 +190,7 @@ function App() {
 
   useEffect(() => {
     window.electron.on("get-storage", (data) => {
-      setStorageInfo(data)
+      setStorageInfo(data);
       console.log("Storage: ", data);
     });
   }, []);
@@ -260,7 +262,6 @@ function App() {
       title: "Success",
       message: `Volume set to ${amount}`,
     });
-    
   };
 
   const VolumeUp = (amount: number) => {
@@ -329,10 +330,7 @@ function App() {
         />
       )}
 
-      {controllerTest && (
-        <ControllerTest/>
-      )}
-
+      {controllerDiagram && <ControllerDiagram isController={isController} />}
 
       {isFirstBoot ? (
         <>
@@ -1274,7 +1272,7 @@ function App() {
                         className="settings-container-button"
                         data-controller-focus
                         data-controller-group="Settings-modal"
-                        onClick={() => setControllerTest(true)}
+                        onClick={() => setControllerDiagram(true)}
                       >
                         <div className="settings-button-icon">
                           <ControllerIcon />
@@ -1330,7 +1328,6 @@ function App() {
                     </div>
                   </div>
                 )}
-
               </div>
             </Modal>
           </div>

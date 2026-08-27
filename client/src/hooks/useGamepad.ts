@@ -17,7 +17,8 @@ export type ControllerAction =
   | "R2"
   | "R3"
   | "select"
-  | "home";
+  | "home"
+  | "circle-release";
 
 type Props = {
   onAction: (action: ControllerAction) => void;
@@ -49,6 +50,10 @@ export function useGamepad({ onAction }: Props) {
 
         if (buttons[1] && !previous[1]) {
           onAction("circle");
+        }
+
+        if (!buttons[1] && previous[1]) {
+          onAction("circle-release");
         }
 
         if (buttons[2] && !previous[2]) {

@@ -1,0 +1,178 @@
+:root {
+  --controller-width: min(900px, 90vw);
+}
+
+.controller-diagram-container {
+  position: fixed;
+  width: 80%;
+  height: 80%;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 999;
+  background-color: var(--app-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.controller-diagram {
+  width: var(--controller-width);
+  max-width: 100%;
+}
+
+.controller-image-wrapper {
+  position: relative;
+  width: 100%;
+  line-height: 0;
+}
+
+.controller-image {
+  width: 100%;
+  height: auto;
+}
+
+.controller-button {
+  position: absolute;
+  transform: translate(-50%, -50%);
+}
+
+.controller-button img {
+  width: 100%;
+  height: 100%;
+}
+
+.dpad-up {
+  height: 60px;
+  left: 21%;
+  top: 25%;
+}
+
+.dpad-down {
+  height: 60px;
+  left: 21%;
+  top: 38.4%;
+}
+
+.dpad-left {
+  height: 48px;
+  left: 16.6%;
+  top: 31.6%;
+}
+
+.dpad-right {
+  height: 48px;
+  left: 25.2%;
+  top: 31.6%;
+}
+
+.face-triangle {
+  height: 50px;
+  left: 78.5%;
+  top: 20.8%;
+}
+
+.face-circle {
+  height: 50px;
+  left: 85.3%;
+  top: 31.69%;
+}
+
+.face-cross {
+  height: 50px;
+  left: 78.5%;
+  top: 42.6%;
+}
+
+.face-square {
+  height: 50px;
+  left: 71.6%;
+  top: 31.69%;
+}
+
+.share {
+  left: 43%;
+  top: 30%;
+}
+
+.options {
+  left: 57%;
+  top: 30%;
+}
+
+.home {
+  height: 40px;
+  left: 49.6%;
+  top: 52.4%;
+}
+
+.touch-pad {
+  height: 170px;
+  left: 49.6%;
+  top: 21%;
+}
+
+.l1 {
+  left: 27%;
+  top: 17%;
+}
+
+.r1 {
+  left: 73%;
+  top: 17%;
+}
+
+.l2 {
+  left: 25%;
+  top: 8%;
+}
+
+.r2 {
+  left: 75%;
+  top: 8%;
+}
+
+.l3 {
+  height: 85px;
+  left: 35%;
+  top: 52%;
+}
+
+.r3 {
+  height: 85px;
+  left: 64.4%;
+  top: 52%;
+}
+
+.controller-button.pressed {
+  transform: translate(-50%, -50%) scale(1.05);
+  filter: drop-shadow(0 0 10px var(--app-primary));
+}
+
+.controller-disconnected {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  color: white;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.controller-diagram-help {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 3rem;
+  font-size: 18px;
+  color: var(--text-secondary);
+}
+
+.controller-diagram-help-icons {
+  width: 28px;
+  height: 28px;
+  margin-left: 1rem;
+  margin-right: .8rem;
+  object-fit: contain;
+}
+
