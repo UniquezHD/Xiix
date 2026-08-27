@@ -70,6 +70,24 @@ namespace XiixService.Classes
 
             _socket.On("status", async ctx =>
             {
+
+                DriveInfo[] drives = DriveInfo.GetDrives();
+
+                var spaceUsed = Util.ConvertBytes(drives[0].TotalSize - drives[0].TotalFreeSpace);
+
+                var storageInfo = new StorageInfo
+                {
+                    DriveName = drives[0].Name,
+                    FreeSpace = Util.ConvertBytes(drives[0].TotalSize),
+                    TotalFreeSpace = Util.ConvertBytes(drives[0].TotalFreeSpace),
+                    SpaceUsed = spaceUsed,
+                };
+
+                await SendToElectron("get-storage", new
+                {
+                    storageInfo
+                });
+
                 bool wifiStatus = Internet.Check();
 
                 await SendToElectron("ethernet-status", new

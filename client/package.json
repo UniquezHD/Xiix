@@ -10,9 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@mantine/carousel": "^9.5.1",
-    "@mantine/core": "^9.5.1",
+    "@mantine/carousel": "^9.5.2",
+    "@mantine/core": "^9.5.2",
     "@mantine/hooks": "^9.5.1",
+    "@mantine/notifications": "^9.5.2",
     "bufferutil": "^4.1.0",
     "embla-carousel": "^8.5.2",
     "embla-carousel-react": "^8.5.2",
