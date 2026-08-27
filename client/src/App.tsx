@@ -10,6 +10,7 @@ import "./css/options.css";
 import "./css/systeminfo.css";
 import "./css/selecttheme.css";
 import "./css/restartservices.css";
+import "./css/controllertest.css";
 import { Grid, Modal, Tooltip } from "@mantine/core";
 import { GameData } from "./data/GameData";
 import Clock from "./components/Clock";
@@ -53,6 +54,7 @@ import { IoMdSettings } from "react-icons/io";
 import { FaPlus } from "react-icons/fa";
 import { FaVolumeHigh, FaMusic, FaVolumeXmark } from "react-icons/fa6";
 import Keyboard from "./components/Keyboard";
+import ControllerTest from "./components/ControllerTest";
 
 type Game = {
   name: string;
@@ -68,14 +70,25 @@ type Version = {
   backend: string;
 };
 
-// Todo: g'r icon st're og vis title p[ iconet n[r top baren er [bnet ]]]
+type StorageInfo = {
+  name: string;
+  freeSpace: string;
+  totalFreeSpace: string;
+  SpaceUsed: string;
+}
 
-// Todo: add music icon til topbar
 // Todo: add mulighed for at ;ndre lyden p[ alle processes ]
 // Todo: add game system via usb
 
-// Todo: skift wifi icon og text til ethernet
-// Todo: change icons til .svg icons
+// Todo: XiiX logo som controller
+// Todo: language support
+// Todo: Select controller type
+// Todo: InstallSteamGame()
+// Todo: InstallUSBGame()
+// Todo: Notification title Mangler Color
+
+// Todo: Add storage amount in system information
+
 
 function App() {
   const [activeMenuBar, setActiveMenubar] = useState(0);
@@ -89,8 +102,11 @@ function App() {
 
   const [keyboardOpen, setKeyboardOpen] = useState(false);
 
+  const [controllerTest, setControllerTest] = useState(false);
+  
   const [version, setVersion] = useState<Version>();
-
+  const [storageInfo, setStorageInfo] = useState<StorageInfo>();
+  
   const [keyboardOutput, setKeyboardOutput] = useState("");
 
   const [usbDir, setUsbDir] = useState<any>();
@@ -101,10 +117,9 @@ function App() {
 
   const [currentVolume, setCurrentVolume] = useState<number>(0);
 
-  const [modalOpened, setModalOpened] = useState(true);
-
+  
   type ModalTypes =
-    | "Add Game"
+  | "Add Game"
     | "Music"
     | "Volume"
     | "Settings"
@@ -114,9 +129,11 @@ function App() {
     | "Theme"
     | "System Information"
     | "Restart Services";
+    
+  const [modalOpened, setModalOpened] = useState(false);
 
   const [currentModelType, setCurrentModalType] =
-    useState<ModalTypes>("Restart Services");
+    useState<ModalTypes>("Options");
 
   const activeControllerGroup = keyboardOpen
     ? "keyboard"
@@ -166,6 +183,13 @@ function App() {
     window.electron.on("ethernet-status", (data) => {
       setIsEthernet(data.status);
       console.log("Internet: ", data);
+    });
+  }, []);
+
+  useEffect(() => {
+    window.electron.on("get-storage", (data) => {
+      setStorageInfo(data)
+      console.log("Storage: ", data);
     });
   }, []);
 
@@ -304,6 +328,12 @@ function App() {
           }}
         />
       )}
+
+      {controllerTest && (
+        <ControllerTest/>
+      )}
+
+
       {isFirstBoot ? (
         <>
           <div className="boot-screen">
@@ -518,7 +548,7 @@ function App() {
           <div>
             <Grid
               className={`games-grid ${activeMenuBar ? "grid-top-bar-expanded" : ""}`}
-              style={{ margin: "0 auto 0" /* background: "#000" */ }}
+              style={{ margin: "0 auto 0" }}
               rowGap="xl"
               columnGap="lg"
             >
@@ -1094,6 +1124,10 @@ function App() {
                               <span>{GameData.length}</span>
                             </li>
                             <li>
+                              <span>System Storage</span>{" "}
+                              <span>{/* system storage */}</span>
+                            </li>
+                            <li>
                               <span>Internet Status</span>{" "}
                               <span>
                                 {isEthernet ? "Connected" : "Disconnected"}
@@ -1240,7 +1274,7 @@ function App() {
                         className="settings-container-button"
                         data-controller-focus
                         data-controller-group="Settings-modal"
-                        onClick={() => setKeyboardOpen(true)}
+                        onClick={() => setControllerTest(true)}
                       >
                         <div className="settings-button-icon">
                           <ControllerIcon />
@@ -1296,6 +1330,7 @@ function App() {
                     </div>
                   </div>
                 )}
+
               </div>
             </Modal>
           </div>

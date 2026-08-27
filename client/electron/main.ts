@@ -158,6 +158,11 @@ io.on("connection", (socket) => {
     win?.webContents.send("ethernet-status", data);
   });
 
+  socket.on("get-storage", (data) => {
+     console.log(data)
+    win?.webContents.send("get-storage", data);
+  })
+
   socket.on("get-version", (data) => {
 
     console.log(data)

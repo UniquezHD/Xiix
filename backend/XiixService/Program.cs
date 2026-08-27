@@ -15,7 +15,6 @@ class Program
 
         Controller.Listen();
 
-        Console.WriteLine("Listening for events");
         await Task.Delay(-1);
     }
 }

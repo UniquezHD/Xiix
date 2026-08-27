@@ -1,0 +1,14 @@
+:root{
+    --controller-test-width: 80%;
+    --controller-test-height: 80%;
+}
+
+.controller-test-container{
+    height: var(--controller-test-height);
+    width: var(--controller-test-width);
+    background-color: var(--app-bg);
+    z-index: 99;
+    position: absolute;
+    top: calc(50% - var(--controller-test-height) / 2);
+    right: calc(50% - var(--controller-test-width) / 2);
+}

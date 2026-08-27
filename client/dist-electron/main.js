@@ -24839,6 +24839,9 @@ io.on("connection", (socket2) => {
   socket2.on("ethernet-status", (data) => {
     win == null ? void 0 : win.webContents.send("ethernet-status", data);
   });
+  socket2.on("get-storage", (data) => {
+    win == null ? void 0 : win.webContents.send("get-storage", data);
+  });
   socket2.on("get-version", (data) => {
     console.log(data);
     let versionData = {
