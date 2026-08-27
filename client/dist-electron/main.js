@@ -24840,6 +24840,7 @@ io.on("connection", (socket2) => {
     win == null ? void 0 : win.webContents.send("ethernet-status", data);
   });
   socket2.on("get-version", (data) => {
+    console.log(data);
     let versionData = {
       frontend: FRONTEND_VERSION,
       backend: data.backend

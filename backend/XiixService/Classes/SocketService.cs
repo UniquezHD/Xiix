@@ -68,14 +68,6 @@ namespace XiixService.Classes
                 }
             });
 
-            _socket.On("get-version", async ctx =>
-            {
-                await SendToElectron("get-version", new
-                {
-                    Program.VERSION
-                });
-            });
-
             _socket.On("status", async ctx =>
             {
                 bool wifiStatus = Internet.Check();
@@ -83,6 +75,11 @@ namespace XiixService.Classes
                 await SendToElectron("ethernet-status", new
                 {
                     status = wifiStatus
+                });
+
+                await SendToElectron("get-version", new
+                {
+                    backend = Program.VERSION
                 });
 
                 if (Controller.isConnected)

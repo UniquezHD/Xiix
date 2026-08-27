@@ -159,6 +159,8 @@ io.on("connection", (socket) => {
   });
 
   socket.on("get-version", (data) => {
+
+    console.log(data)
     
     let versionData: Version = {
       frontend: FRONTEND_VERSION,
