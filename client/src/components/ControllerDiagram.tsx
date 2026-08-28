@@ -99,322 +99,326 @@ function ControllerDiagram({ isController }: ControllerDiagramProps) {
   };
 
   return (
-    <div className="controller-diagram-container">
-      <div className="controller-diagram">
-        <div className="controller-image-wrapper">
-          {controllerType === "ps4" ? (
-            <>
-              <img src={ControllerImagePs4} className="controller-image" />
+    <div className="controller-diagram-overlay">
+      <div className="controller-diagram-container">
+        <div className="controller-diagram">
+          <div className="controller-image-wrapper">
+            {controllerType === "ps4" ? (
               <>
-                <div
-                  className={`controller-button dpad-up ${
-                    isPressed(12) ? "pressed" : ""
-                  }`}
-                >
-                  <img src={ButtonPS4DpadUp} alt="" />
-                </div>
+                <img src={ControllerImagePs4} className="controller-image" />
+                <>
+                  <div
+                    className={`controller-button dpad-up ${
+                      isPressed(12) ? "pressed" : ""
+                    }`}
+                  >
+                    <img src={ButtonPS4DpadUp} alt="" />
+                  </div>
 
-                <div
-                  className={`controller-button dpad-down ${
-                    isPressed(13) ? "pressed" : ""
-                  }`}
-                >
-                  <img src={ButtonPS4DpadDown} alt="" />
-                </div>
+                  <div
+                    className={`controller-button dpad-down ${
+                      isPressed(13) ? "pressed" : ""
+                    }`}
+                  >
+                    <img src={ButtonPS4DpadDown} alt="" />
+                  </div>
 
-                <div
-                  className={`controller-button dpad-left ${
-                    isPressed(14) ? "pressed" : ""
-                  }`}
-                >
-                  <img src={ButtonPS4DpadLeft} alt="" />
-                </div>
+                  <div
+                    className={`controller-button dpad-left ${
+                      isPressed(14) ? "pressed" : ""
+                    }`}
+                  >
+                    <img src={ButtonPS4DpadLeft} alt="" />
+                  </div>
 
-                <div
-                  className={`controller-button dpad-right ${
-                    isPressed(15) ? "pressed" : ""
-                  }`}
-                >
-                  <img src={ButtonPS4DpadRight} alt="" />
-                </div>
+                  <div
+                    className={`controller-button dpad-right ${
+                      isPressed(15) ? "pressed" : ""
+                    }`}
+                  >
+                    <img src={ButtonPS4DpadRight} alt="" />
+                  </div>
 
-                <div
-                  className={`controller-button face-triangle ${
-                    isPressed(3) ? "pressed" : ""
-                  }`}
-                >
-                  <img src={ButtonPS4Triangle} alt="" />
-                </div>
+                  <div
+                    className={`controller-button face-triangle ${
+                      isPressed(3) ? "pressed" : ""
+                    }`}
+                  >
+                    <img src={ButtonPS4Triangle} alt="" />
+                  </div>
 
-                <div
-                  className={`controller-button face-circle ${
-                    isPressed(1) ? "pressed" : ""
-                  }`}
-                >
-                  <img src={ButtonPS4Circle} alt="" />
-                </div>
+                  <div
+                    className={`controller-button face-circle ${
+                      isPressed(1) ? "pressed" : ""
+                    }`}
+                  >
+                    <img src={ButtonPS4Circle} alt="" />
+                  </div>
 
-                <div
-                  className={`controller-button face-cross ${
-                    isPressed(0) ? "pressed" : ""
-                  }`}
-                >
-                  <img src={ButtonPS4X} alt="" />
-                </div>
+                  <div
+                    className={`controller-button face-cross ${
+                      isPressed(0) ? "pressed" : ""
+                    }`}
+                  >
+                    <img src={ButtonPS4X} alt="" />
+                  </div>
 
-                <div
-                  className={`controller-button face-square ${
-                    isPressed(2) ? "pressed" : ""
-                  }`}
-                >
-                  <img src={ButtonPS4Square} alt="" />
-                </div>
+                  <div
+                    className={`controller-button face-square ${
+                      isPressed(2) ? "pressed" : ""
+                    }`}
+                  >
+                    <img src={ButtonPS4Square} alt="" />
+                  </div>
 
-                <div
-                  className={`controller-button share ${
-                    isPressed(8) ? "pressed" : ""
-                  }`}
-                >
-                  <img src={ButtonPS4Share} alt="" />
-                </div>
+                  <div
+                    className={`controller-button share ${
+                      isPressed(8) ? "pressed" : ""
+                    }`}
+                  >
+                    <img src={ButtonPS4Share} alt="" />
+                  </div>
 
-                <div
-                  className={`controller-button options ${
-                    isPressed(9) ? "pressed" : ""
-                  }`}
-                >
-                  <img src={ButtonPS4Options} alt="" />
-                </div>
+                  <div
+                    className={`controller-button options ${
+                      isPressed(9) ? "pressed" : ""
+                    }`}
+                  >
+                    <img src={ButtonPS4Options} alt="" />
+                  </div>
 
-                <div
-                  className={`controller-button home ${
-                    isPressed(16) ? "pressed" : ""
-                  }`}
-                >
-                  <img src={ButtonPS4Home} alt="" />
-                </div>
+                  <div
+                    className={`controller-button home ${
+                      isPressed(16) ? "pressed" : ""
+                    }`}
+                  >
+                    <img src={ButtonPS4Home} alt="" />
+                  </div>
 
-                <div
-                  className={`controller-button l1 ${
-                    isPressed(4) ? "pressed" : ""
-                  }`}
-                >
-                  <img src={ButtonPS4L1} alt="" />
-                </div>
+                  <div
+                    className={`controller-button l1 ${
+                      isPressed(4) ? "pressed" : ""
+                    }`}
+                  >
+                    <img src={ButtonPS4L1} alt="" />
+                  </div>
 
-                <div
-                  className={`controller-button r1 ${
-                    isPressed(5) ? "pressed" : ""
-                  }`}
-                >
-                  <img src={ButtonPS4R1} alt="" />
-                </div>
+                  <div
+                    className={`controller-button r1 ${
+                      isPressed(5) ? "pressed" : ""
+                    }`}
+                  >
+                    <img src={ButtonPS4R1} alt="" />
+                  </div>
 
-                <div
-                  className={`controller-button l2 ${
-                    isPressed(6) ? "pressed" : ""
-                  }`}
-                >
-                  <img src={ButtonPS4L2} alt="" />
-                </div>
+                  <div
+                    className={`controller-button l2 ${
+                      isPressed(6) ? "pressed" : ""
+                    }`}
+                  >
+                    <img src={ButtonPS4L2} alt="" />
+                  </div>
 
-                <div
-                  className={`controller-button r2 ${
-                    isPressed(7) ? "pressed" : ""
-                  }`}
-                >
-                  <img src={ButtonPS4R2} alt="" />
-                </div>
+                  <div
+                    className={`controller-button r2 ${
+                      isPressed(7) ? "pressed" : ""
+                    }`}
+                  >
+                    <img src={ButtonPS4R2} alt="" />
+                  </div>
 
-                <div
-                  className={`controller-button l3 ${
-                    isPressed(10) ? "pressed" : ""
-                  }`}
-                >
-                  <img src={ButtonPS4L3} alt="" />
-                </div>
+                  <div
+                    className={`controller-button l3 ${
+                      isPressed(10) ? "pressed" : ""
+                    }`}
+                  >
+                    <img src={ButtonPS4L3} alt="" />
+                  </div>
 
-                <div
-                  className={`controller-button r3 ${
-                    isPressed(11) ? "pressed" : ""
-                  }`}
-                >
-                  <img src={ButtonPS4R3} alt="" />
-                </div>
+                  <div
+                    className={`controller-button r3 ${
+                      isPressed(11) ? "pressed" : ""
+                    }`}
+                  >
+                    <img src={ButtonPS4R3} alt="" />
+                  </div>
 
-                <div
-                  className={`controller-button touch-pad ${
-                    isPressed(17) ? "pressed" : ""
-                  }`}
-                >
-                  <img src={ButtonPS4TouchPad} alt="" />
-                </div>
+                  <div
+                    className={`controller-button touch-pad ${
+                      isPressed(17) ? "pressed" : ""
+                    }`}
+                  >
+                    <img src={ButtonPS4TouchPad} alt="" />
+                  </div>
+                </>
               </>
-            </>
-          ) : (
-            <>
-              <img src={ControllerImageXbox} className="controller-image" />
+            ) : (
               <>
-                <div
-                  className={`controller-button dpad-xbox-up ${
-                    isPressed(12) ? "pressed" : ""
-                  }`}
-                >
-                  <img src={ButtonXboxDpadUp} alt="" />
-                </div>
+                <img src={ControllerImageXbox} className="controller-image" />
+                <>
+                  <div
+                    className={`controller-button dpad-xbox-up ${
+                      isPressed(12) ? "pressed" : ""
+                    }`}
+                  >
+                    <img src={ButtonXboxDpadUp} alt="" />
+                  </div>
 
-                <div
-                  className={`controller-button dpad-xbox-down ${
-                    isPressed(13) ? "pressed" : ""
-                  }`}
-                >
-                  <img src={ButtonXboxDpadDown} alt="" />
-                </div>
+                  <div
+                    className={`controller-button dpad-xbox-down ${
+                      isPressed(13) ? "pressed" : ""
+                    }`}
+                  >
+                    <img src={ButtonXboxDpadDown} alt="" />
+                  </div>
 
-                <div
-                  className={`controller-button dpad-xbox-left ${
-                    isPressed(14) ? "pressed" : ""
-                  }`}
-                >
-                  <img src={ButtonXboxDpadLeft} alt="" />
-                </div>
+                  <div
+                    className={`controller-button dpad-xbox-left ${
+                      isPressed(14) ? "pressed" : ""
+                    }`}
+                  >
+                    <img src={ButtonXboxDpadLeft} alt="" />
+                  </div>
 
-                <div
-                  className={`controller-button dpad-xbox-right ${
-                    isPressed(15) ? "pressed" : ""
-                  }`}
-                >
-                  <img src={ButtonXboxDpadRight} alt="" />
-                </div>
+                  <div
+                    className={`controller-button dpad-xbox-right ${
+                      isPressed(15) ? "pressed" : ""
+                    }`}
+                  >
+                    <img src={ButtonXboxDpadRight} alt="" />
+                  </div>
 
-                <div
-                  className={`controller-button face-y ${
-                    isPressed(3) ? "pressed" : ""
-                  }`}
-                >
-                  <img src={ButtonXboxY} alt="" />
-                </div>
+                  <div
+                    className={`controller-button face-y ${
+                      isPressed(3) ? "pressed" : ""
+                    }`}
+                  >
+                    <img src={ButtonXboxY} alt="" />
+                  </div>
 
-                <div
-                  className={`controller-button face-b ${
-                    isPressed(1) ? "pressed" : ""
-                  }`}
-                >
-                  <img src={ButtonXboxB} alt="" />
-                </div>
+                  <div
+                    className={`controller-button face-b ${
+                      isPressed(1) ? "pressed" : ""
+                    }`}
+                  >
+                    <img src={ButtonXboxB} alt="" />
+                  </div>
 
-                <div
-                  className={`controller-button face-a ${
-                    isPressed(0) ? "pressed" : ""
-                  }`}
-                >
-                  <img src={ButtonXboxA} alt="" />
-                </div>
+                  <div
+                    className={`controller-button face-a ${
+                      isPressed(0) ? "pressed" : ""
+                    }`}
+                  >
+                    <img src={ButtonXboxA} alt="" />
+                  </div>
 
-                <div
-                  className={`controller-button face-x ${
-                    isPressed(2) ? "pressed" : ""
-                  }`}
-                >
-                  <img src={ButtonXboxX} alt="" />
-                </div>
+                  <div
+                    className={`controller-button face-x ${
+                      isPressed(2) ? "pressed" : ""
+                    }`}
+                  >
+                    <img src={ButtonXboxX} alt="" />
+                  </div>
 
-                <div
-                  className={`controller-button back ${
-                    isPressed(8) ? "pressed" : ""
-                  }`}
-                >
-                  {/* <img src={ButtonShare} alt="" /> */}
-                </div>
+                  <div
+                    className={`controller-button back ${
+                      isPressed(8) ? "pressed" : ""
+                    }`}
+                  >
+                    {/* <img src={ButtonShare} alt="" /> */}
+                  </div>
 
-                <div
-                  className={`controller-button start ${
-                    isPressed(9) ? "pressed" : ""
-                  }`}
-                >
-                  {/* <img src={ButtonOptions} alt="" /> */}
-                </div>
+                  <div
+                    className={`controller-button start ${
+                      isPressed(9) ? "pressed" : ""
+                    }`}
+                  >
+                    {/* <img src={ButtonOptions} alt="" /> */}
+                  </div>
 
-                <div
-                  className={`controller-button guide ${
-                    isPressed(16) ? "pressed" : ""
-                  }`}
-                >
-                  {/* <img src={ButtonHome} alt="" /> */}
-                </div>
+                  <div
+                    className={`controller-button guide ${
+                      isPressed(16) ? "pressed" : ""
+                    }`}
+                  >
+                    {/* <img src={ButtonHome} alt="" /> */}
+                  </div>
 
-                <div
-                  className={`controller-button lb ${
-                    isPressed(4) ? "pressed" : ""
-                  }`}
-                >
-                  {/* <img src={ButtonL1} alt="" /> */}
-                </div>
+                  <div
+                    className={`controller-button lb ${
+                      isPressed(4) ? "pressed" : ""
+                    }`}
+                  >
+                    {/* <img src={ButtonL1} alt="" /> */}
+                  </div>
 
-                <div
-                  className={`controller-button rb ${
-                    isPressed(5) ? "pressed" : ""
-                  }`}
-                >
-                  {/* <img src={ButtonR1} alt="" /> */}
-                </div>
+                  <div
+                    className={`controller-button rb ${
+                      isPressed(5) ? "pressed" : ""
+                    }`}
+                  >
+                    {/* <img src={ButtonR1} alt="" /> */}
+                  </div>
 
-                <div
-                  className={`controller-button lt ${
-                    isPressed(6) ? "pressed" : ""
-                  }`}
-                >
-                  {/* <img src={ButtonL2} alt="" /> */}
-                </div>
+                  <div
+                    className={`controller-button lt ${
+                      isPressed(6) ? "pressed" : ""
+                    }`}
+                  >
+                    {/* <img src={ButtonL2} alt="" /> */}
+                  </div>
 
-                <div
-                  className={`controller-button rt ${
-                    isPressed(7) ? "pressed" : ""
-                  }`}
-                >
-                 {/*  <img src={ButtonR2} alt="" /> */}
-                </div>
+                  <div
+                    className={`controller-button rt ${
+                      isPressed(7) ? "pressed" : ""
+                    }`}
+                  >
+                    {/*  <img src={ButtonR2} alt="" /> */}
+                  </div>
 
-                <div
-                  className={`controller-button l3 ${
-                    isPressed(10) ? "pressed" : ""
-                  }`}
-                >
-                  {/* <img src={ButtonL3} alt="" /> */}
-                </div>
+                  <div
+                    className={`controller-button l3 ${
+                      isPressed(10) ? "pressed" : ""
+                    }`}
+                  >
+                    {/* <img src={ButtonL3} alt="" /> */}
+                  </div>
 
-                <div
-                  className={`controller-button r3 ${
-                    isPressed(11) ? "pressed" : ""
-                  }`}
-                >
-                 {/*  <img src={ButtonR3} alt="" /> */}
-                </div>
+                  <div
+                    className={`controller-button r3 ${
+                      isPressed(11) ? "pressed" : ""
+                    }`}
+                  >
+                    {/*  <img src={ButtonR3} alt="" /> */}
+                  </div>
 
-                <div
-                  className={`controller-button touch-pad ${
-                    isPressed(17) ? "pressed" : ""
-                  }`}
-                >
-                  {/* <img src={ButtonTouchPad} alt="" /> */}
-                </div>
+                  <div
+                    className={`controller-button touch-pad ${
+                      isPressed(17) ? "pressed" : ""
+                    }`}
+                  >
+                    {/* <img src={ButtonTouchPad} alt="" /> */}
+                  </div>
+                </>
               </>
-            </>
+            )}
+          </div>
+
+          {isController === "disconnected" && (
+            <div className="controller-disconnected">
+              Controller Disconnected
+            </div>
           )}
-        </div>
 
-        {isController === "disconnected" && (
-          <div className="controller-disconnected">Controller Disconnected</div>
-        )}
-
-        <div className="controller-diagram-help">
-          <span>Hold</span>
-          <img
-            className="controller-diagram-help-icons"
-            src={controllerType === "ps4" ? ButtonPS4Circle : ButtonXboxB}
-            alt=""
-          />
-          <span>to Exit</span>
+          <div className="controller-diagram-help">
+            <span>Hold</span>
+            <img
+              className="controller-diagram-help-icons"
+              src={controllerType === "ps4" ? ButtonPS4Circle : ButtonXboxB}
+              alt=""
+            />
+            <span>to Exit</span>
+          </div>
         </div>
       </div>
     </div>

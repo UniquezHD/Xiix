@@ -1,22 +1,11 @@
 import { useState, useEffect } from "react";
 import { useControllerNavigation } from "./hooks/useControllerNavigation";
-import "./App.css";
-import "./css/settings.css";
-import "./css/addgame.css";
-import "./css/addgamesteam.css";
-import "./css/addgameusb.css";
-import "./css/volume.css";
-import "./css/options.css";
-import "./css/systeminfo.css";
-import "./css/selecttheme.css";
-import "./css/restartservices.css";
 import { Grid, Modal, Tooltip } from "@mantine/core";
-import { GameData } from "./data/GameData";
-import Clock from "./components/Clock";
-
 import { notifications } from "@mantine/notifications";
 
-import Logo from '../src/assets/logo-white.png'
+import { GameData } from "./data/GameData";
+
+import Logo from "../src/assets/logo-white.png";
 
 //#region Icons
 import SettingsIcon from "./assets/ui/settings.svg?react";
@@ -49,11 +38,11 @@ import ServicesIcon from "./assets/ui/services.svg?react";
 // https://allsvgicons.com/
 //#endregion
 
-//https://www.koeitecmoamerica.com/manual/rtk8-remake/en/2200.html
-
 import { IoMdSettings } from "react-icons/io";
 import { FaPlus } from "react-icons/fa";
 import { FaVolumeHigh, FaMusic, FaVolumeXmark } from "react-icons/fa6";
+
+import Clock from "./components/Clock";
 import Keyboard from "./components/Keyboard";
 import ControllerDiagram from "./components/ControllerDiagram";
 
@@ -86,7 +75,6 @@ type StorageInfo = {
 // Todo: Select controller type
 // Todo: InstallSteamGame()
 // Todo: InstallUSBGame()
-// Todo: Notification title Mangler Color
 
 // Todo: Add storage amount in system information
 
@@ -131,8 +119,9 @@ function App() {
 
   const [modalOpened, setModalOpened] = useState(false);
 
-  const [currentModelType, setCurrentModalType] =
-    useState<ModalTypes | null>("Options");
+  const [currentModelType, setCurrentModalType] = useState<ModalTypes | null>(
+    "Options",
+  );
 
   const activeControllerGroup = keyboardOpen
     ? "keyboard"
@@ -169,6 +158,20 @@ function App() {
   });
 
   const [previousVolume, setPreviousVolume] = useState(100);
+
+  const ShowNotification = (message: string, title: string = "Success") => {
+    notifications.show({
+      styles: {
+        title: {
+          color: "var(--app-primary)",
+        },
+      },
+      style: { backgroundColor: "var(--app-bg)" },
+      color: "var(--app-primary)",
+      title: title,
+      message: message,
+    });
+  };
 
   useEffect(() => {
     window.volumeAPI.get().then(setCurrentVolume);
@@ -222,6 +225,8 @@ function App() {
     window.electron.on("game-closed", (data) => {
       setCurrentPlaying(null);
       console.log("game-closed:", data);
+
+      ShowNotification("Game closed");
     });
   }, []);
 
@@ -238,9 +243,11 @@ function App() {
 
         window.volumeAPI.set(1);
         setCurrentVolume(1);
+        ShowNotification(`Muted`);
       } else {
         window.volumeAPI.set(previousVolume);
         setCurrentVolume(previousVolume);
+        ShowNotification(`Unmuted`);
       }
 
       return newMuted;
@@ -257,15 +264,7 @@ function App() {
     window.volumeAPI.set(amount);
     setCurrentVolume(amount);
 
-    /* Mangler Color title */
-
-    /* m_3feedf16 mantine-Notification-title */
-    notifications.show({
-      style: { backgroundColor: "var(--app-bg)" },
-      color: "var(--app-primary)",
-      title: "Success",
-      message: `Volume set to ${amount}`,
-    });
+    ShowNotification(`Volume set to ${amount}`);
   };
 
   const VolumeUp = (amount: number) => {
@@ -273,6 +272,8 @@ function App() {
 
     window.volumeAPI.set(newVolume);
     setCurrentVolume(newVolume);
+
+    ShowNotification(`Volume set to ${newVolume}`);
   };
 
   const VolumeDown = (amount: number) => {
@@ -280,6 +281,8 @@ function App() {
 
     window.volumeAPI.set(newVolume);
     setCurrentVolume(newVolume);
+
+    ShowNotification(`Volume set to ${newVolume}`);
   };
 
   const CloseGame = (processName: string, type: string) => {
@@ -291,7 +294,7 @@ function App() {
     });
   };
 
- /*  const InstallSteamGame = (id: number) => {
+  /*  const InstallSteamGame = (id: number) => {
     //steam.exe -applaunch 3527290
   }; */
 
@@ -311,7 +314,7 @@ function App() {
         type,
       });
     } else {
-      console.log("other game running");
+      ShowNotification("Other game running", "Error");
     }
   };
 
@@ -339,11 +342,7 @@ function App() {
       {isFirstBoot ? (
         <>
           <div className="boot-screen">
-            <img
-              className="boot-screen-logo"
-              src={Logo}
-              alt=""
-            />
+            <img className="boot-screen-logo" src={Logo} alt="" />
           </div>
         </>
       ) : (
@@ -351,11 +350,7 @@ function App() {
           <div className={`top-bar ${activeMenuBar ? "top-bar-expanded" : ""}`}>
             <div className="top-bar-container">
               <div className="top-bar-left">
-                <img
-                  className="top-bar-logo"
-                  src={Logo}
-                  alt=""
-                />
+                <img className="top-bar-logo" src={Logo} alt="" />
 
                 <div className="top-bar-game">
                   <span className="top-bar-game-label">

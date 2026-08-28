@@ -1,11 +1,13 @@
 {
   "$schema": "https://raw.githubusercontent.com/electron-userland/electron-builder/master/packages/app-builder-lib/scheme.json",
   "appId": "XiiX",
-  "asar": true,
   "productName": "XiiX",
+  "asar": true,
+   "npmRebuild": false,
 
   "directories": {
-    "output": "release/${version}"
+    "output": "release/${version}",
+    "buildResources": "build"
   },
 
   "files": [
@@ -13,22 +15,12 @@
     "dist-electron"
   ],
 
-"icon": "build/icon.ico",
-
-  "mac": {
-    "target": [
-      "dmg"
-    ],
-    "artifactName": "${productName}-Mac-${version}-Installer.${ext}"
-  },
-
   "win": {
+    "icon": "build/icon.ico",
     "target": [
       {
         "target": "nsis",
-        "arch": [
-          "x64"
-        ]
+        "arch": ["x64"]
       }
     ],
     "artifactName": "${productName}-Windows-${version}-Setup.${ext}"
@@ -38,13 +30,34 @@
     "oneClick": false,
     "perMachine": false,
     "allowToChangeInstallationDirectory": true,
-    "deleteAppDataOnUninstall": false
+    "deleteAppDataOnUninstall": false,
+
+    "installerIcon": "build/icon.ico",
+    "uninstallerIcon": "build/icon.ico",
+    "installerHeaderIcon": "icbuild/icon.ico",
+    "createDesktopShortcut": true,
+    "createStartMenuShortcut": true
+  },
+
+  "mac": {
+    "icon": "icon.icns",
+    "target": ["dmg"],
+    "artifactName": "${productName}-Mac-${version}-Installer.${ext}"
+  },
+
+  "dmg": {
+    "icon": "icon.icns",
+    "background": "dmg-background.png",
+    "window": {
+      "width": 540,
+      "height": 380
+    }
   },
 
   "linux": {
-    "target": [
-      "AppImage"
-    ],
+    "icon": "icons",
+    "target": ["AppImage"],
+    "category": "Utility",
     "artifactName": "${productName}-Linux-${version}.${ext}"
   }
 }
