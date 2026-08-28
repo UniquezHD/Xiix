@@ -100,7 +100,7 @@ function App() {
 
   const [keyboardOpen, setKeyboardOpen] = useState(false);
 
-  const [controllerDiagram, setControllerDiagram] = useState(true);
+  const [controllerDiagram, setControllerDiagram] = useState(false);
 
   const [version, setVersion] = useState<Version>();
   const [storageInfo, setStorageInfo] = useState<StorageInfo>();
@@ -256,6 +256,8 @@ function App() {
     setCurrentVolume(amount);
 
     /* Mangler Color title */
+
+    /* m_3feedf16 mantine-Notification-title */
     notifications.show({
       style: { backgroundColor: "var(--app-bg)" },
       color: "var(--app-primary)",
