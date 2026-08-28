@@ -3,3 +3,4 @@ backend/.vs
 backend/XiixService/.vs
 backend/XiixService/bin
 backend/XiixService/obj
+client/release

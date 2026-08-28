@@ -16,6 +16,8 @@ import Clock from "./components/Clock";
 
 import { notifications } from "@mantine/notifications";
 
+import Logo from '../src/assets/logo-white.png'
+
 //#region Icons
 import SettingsIcon from "./assets/ui/settings.svg?react";
 import RestartIcon from "./assets/ui/restart.svg?react";
@@ -91,9 +93,9 @@ type StorageInfo = {
 function App() {
   const [activeMenuBar, setActiveMenubar] = useState(0);
 
-  const [isFirstBoot, setIsFirstBoot] = useState(false);
-  const [isHeadphones, setIsHeadphones] = useState(false);
-  const [isUsb, setIsUsb] = useState(false);
+  const [isFirstBoot, _setIsFirstBoot] = useState(false);
+  const [isHeadphones, _setIsHeadphones] = useState(false);
+  const [isUsb, _setIsUsb] = useState(false);
   const [isEthernet, setIsEthernet] = useState(true);
   const [isController, setIsController] = useState("disconnected");
   const [isMuted, setIsMuted] = useState(false);
@@ -103,7 +105,7 @@ function App() {
   const [controllerDiagram, setControllerDiagram] = useState(false);
 
   const [version, setVersion] = useState<Version>();
-  const [storageInfo, setStorageInfo] = useState<StorageInfo>();
+  const [_storageInfo, _setStorageInfo] = useState<StorageInfo>();
 
   const [keyboardOutput, setKeyboardOutput] = useState("");
 
@@ -130,7 +132,7 @@ function App() {
   const [modalOpened, setModalOpened] = useState(false);
 
   const [currentModelType, setCurrentModalType] =
-    useState<ModalTypes>("Options");
+    useState<ModalTypes | null>("Options");
 
   const activeControllerGroup = keyboardOpen
     ? "keyboard"
@@ -158,7 +160,7 @@ function App() {
         return;
       }
       setModalOpened(false);
-      setCurrentModalType(undefined);
+      setCurrentModalType(null);
     },
 
     onCloseControllerDiagram: () => {
@@ -176,42 +178,42 @@ function App() {
 
   useEffect(() => {
     window.electron.on("get-version", (data) => {
-      setVersion(data);
+      setVersion(data as Version);
       console.log("Version: ", data);
     });
   }, []);
 
   useEffect(() => {
     window.electron.on("ethernet-status", (data) => {
-      setIsEthernet(data.status);
+      setIsEthernet((data as { status: boolean }).status);
       console.log("Internet: ", data);
     });
   }, []);
 
   useEffect(() => {
     window.electron.on("get-storage", (data) => {
-      setStorageInfo(data);
+      /* setStorageInfo(data); */
       console.log("Storage: ", data);
     });
   }, []);
 
   useEffect(() => {
     window.electron.on("controller-connected", (data) => {
-      setIsController(data.message);
+      setIsController((data as { message: string }).message);
       console.log("Controller: ", data);
     });
   }, []);
 
   useEffect(() => {
     window.electron.on("controller-disconnected", (data) => {
-      setIsController(data.message);
+      setIsController((data as { message: string }).message);
       console.log("Controller: ", data);
     });
   }, []);
 
   useEffect(() => {
     window.electron.on("game-started", (data) => {
-      setCurrentPlaying(data);
+      setCurrentPlaying(data as Game);
       console.log("Game started:", data);
     });
   }, []);
@@ -289,9 +291,9 @@ function App() {
     });
   };
 
-  const InstallSteamGame = (id: number) => {
+ /*  const InstallSteamGame = (id: number) => {
     //steam.exe -applaunch 3527290
-  };
+  }; */
 
   const StartGame = (
     name: string,
@@ -339,7 +341,7 @@ function App() {
           <div className="boot-screen">
             <img
               className="boot-screen-logo"
-              src="src\assets\logo-white.png"
+              src={Logo}
               alt=""
             />
           </div>
@@ -351,7 +353,7 @@ function App() {
               <div className="top-bar-left">
                 <img
                   className="top-bar-logo"
-                  src="/src/assets/logo-white.png"
+                  src={Logo}
                   alt=""
                 />
 
@@ -576,7 +578,7 @@ function App() {
                       <div className="game-container-playing-icon">
                         <div className="wave-effect" />
 
-                        <ControllerIcon size={25} />
+                        <ControllerIcon /* size={25} */ />
                       </div>
                     )}
 

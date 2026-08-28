@@ -6,7 +6,7 @@ import "../css/controllerdiagram.css";
 // https://commons.wikimedia.org/wiki/Category:Xbox_controller_buttons
 
 // skal komme fra config fil
-let controllerType = "xbox";
+let controllerType = "ps4";
 
 import ControllerImagePs4 from "../assets/buttons_ps/ps4-controller.png";
 import ControllerImageXbox from "../assets/buttons_xbox/xbox-controller.png";
