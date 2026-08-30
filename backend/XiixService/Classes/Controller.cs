@@ -14,7 +14,7 @@ namespace XiixService.Classes
             bool lastPsState = false;
             isConnected = false;
 
-            Console.WriteLine("Waiting for controller...");
+            Log.Info("Waiting for controller");
 
             while (true)
             {
@@ -31,7 +31,7 @@ namespace XiixService.Classes
                     if (devices.Count > 0)
                     {
                         var device = devices[0];
-                        Console.WriteLine("Controller connected: " + device.InstanceName);
+                        Log.Success("Controller connected: " + device.InstanceName);
                         Program.Socket.SendToElectron("controller-connected", new { message = "connected" });
 
                         joystick = new Joystick(directInput, device.InstanceGuid);
@@ -56,9 +56,9 @@ namespace XiixService.Classes
                     bool[] buttons = state.Buttons;
                     bool psPressed = (buttons.Length > 12 && buttons[12]);
 
-                    if (psPressed && !lastPsState)
+                    if (psPressed && !lastPsState && Program.CurrentlyPlaying != null)
                     {
-                        Console.WriteLine("PS Button Pressed");
+                        Log.Info("PS Button Pressed");
                         Program.Socket.SendToElectron("controller-ps-home", null);
                     }
 
@@ -66,7 +66,7 @@ namespace XiixService.Classes
                 }
                 catch
                 {
-                    Console.WriteLine("Controller disconnected.");
+                    Log.Warning("Controller disconnected.");
                     Program.Socket.SendToElectron("controller-disconnected", new { message = "disconnected" });
                     isConnected = false;
                     joystick = null;

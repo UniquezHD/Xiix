@@ -10,5 +10,6 @@ namespace XiixService.Models
         public string ProcessName { get; set; }
         public string ExePath { get; set; }
         public string Args { get; set; }
+        public string Type { get; set; }
     }
 }

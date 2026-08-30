@@ -35,6 +35,7 @@ type GameData = {
   exePath: string;
   args: string;
   processName: string;
+  type: string;
 };
 
 type Version = {
@@ -128,6 +129,7 @@ io.on("connection", (socket) => {
 
     socket.emit("close-game", {
       ProcessName: gameData.processName,
+      Type: gameData.type,
     });
   });
 

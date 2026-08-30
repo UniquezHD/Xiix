@@ -1,1 +1,31 @@
-let e=require("electron");e.contextBridge.exposeInMainWorld(`ipcRenderer`,{on(...t){let[n,r]=t;return e.ipcRenderer.on(n,(e,...t)=>r(e,...t))},off(...t){let[n,...r]=t;return e.ipcRenderer.off(n,...r)},send(...t){let[n,...r]=t;return e.ipcRenderer.send(n,...r)},invoke(...t){let[n,...r]=t;return e.ipcRenderer.invoke(n,...r)}}),e.contextBridge.exposeInMainWorld(`volumeAPI`,{get:()=>e.ipcRenderer.invoke(`get-volume`),set:t=>e.ipcRenderer.invoke(`set-volume`,t)}),e.contextBridge.exposeInMainWorld(`directory`,{get:()=>e.ipcRenderer.invoke(`get-usb-dir`)}),e.contextBridge.exposeInMainWorld(`windowState`,{set:t=>e.ipcRenderer.invoke(`set-window-state`,t)}),e.contextBridge.exposeInMainWorld(`electron`,{send:(t,n)=>e.ipcRenderer.send(t,n),on:(t,n)=>e.ipcRenderer.on(t,(e,t)=>n(t))});
+let electron = require("electron");
+//#region electron/preload.ts
+electron.contextBridge.exposeInMainWorld("ipcRenderer", {
+	on(...args) {
+		const [channel, listener] = args;
+		return electron.ipcRenderer.on(channel, (event, ...args) => listener(event, ...args));
+	},
+	off(...args) {
+		const [channel, ...omit] = args;
+		return electron.ipcRenderer.off(channel, ...omit);
+	},
+	send(...args) {
+		const [channel, ...omit] = args;
+		return electron.ipcRenderer.send(channel, ...omit);
+	},
+	invoke(...args) {
+		const [channel, ...omit] = args;
+		return electron.ipcRenderer.invoke(channel, ...omit);
+	}
+});
+electron.contextBridge.exposeInMainWorld("volumeAPI", {
+	get: () => electron.ipcRenderer.invoke("get-volume"),
+	set: (value) => electron.ipcRenderer.invoke("set-volume", value)
+});
+electron.contextBridge.exposeInMainWorld("directory", { get: () => electron.ipcRenderer.invoke("get-usb-dir") });
+electron.contextBridge.exposeInMainWorld("windowState", { set: (value) => electron.ipcRenderer.invoke("set-window-state", value) });
+electron.contextBridge.exposeInMainWorld("electron", {
+	send: (channel, data) => electron.ipcRenderer.send(channel, data),
+	on: (channel, callback) => electron.ipcRenderer.on(channel, (_, data) => callback(data))
+});
+//#endregion

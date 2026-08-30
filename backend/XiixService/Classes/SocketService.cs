@@ -23,9 +23,9 @@ namespace XiixService.Classes
             {
                 var gameData = ctx.GetValue<GameModel>(0)!;
 
-                Console.WriteLine($"StartGame received: {gameData.Name}, {gameData.ExePath}, {gameData.Args}, {gameData.ProcessName}");
+                Log.Info($"StartGame received: {gameData.Name}, {gameData.ExePath}, {gameData.Args}, {gameData.ProcessName}");
 
-                var process = Launcher.Launch(gameData.ExePath, gameData.Args);
+                var process = Launcher.Launch(gameData.ExePath, gameData.Args, gameData.Name);
                 Watcher.Watch(gameData.Name, process);
 
                 await SendToElectron("game-started", new
@@ -41,9 +41,9 @@ namespace XiixService.Classes
             {
                 var gameData = ctx.GetValue<GameModel>(0)!;
 
-                Console.WriteLine($"close-game ProcessName: {gameData.ProcessName}");
+                Log.Info($"close-game ProcessName: {gameData.ProcessName} Type: {gameData.Type}");
 
-                Killer.Kill(gameData.ProcessName);
+                Killer.Kill(gameData.ProcessName, gameData.Type);
                
                 await SendToElectron("closed-game", new
                 {
@@ -110,8 +110,6 @@ namespace XiixService.Classes
                 }
 
             });
-
-
         }
 
         public async Task SendToElectron(string eventName, object data)
@@ -119,11 +117,33 @@ namespace XiixService.Classes
             await _socket.EmitAsync(eventName, new object[] { data });
         }
 
-        public async Task StartAsync()
+        public async Task StartAsync(int retries = 3, int delay = 2000)
         {
-            await _socket.ConnectAsync();
-            // handle connection timeout
-            Console.WriteLine("Connected to server");
+            int attempt = 0;
+
+            while (attempt < retries)
+            {
+                attempt++;
+
+                try
+                {
+                    await _socket.ConnectAsync();
+                    Log.Success("Connected to server");
+                }
+                catch (Exception ex)
+                {
+                    Log.Warning($"Connection failed: {ex.Message}");
+
+                    if (attempt >= retries)
+                    {
+                        Log.Fatal("Could not connect to server");
+                        return;
+                    }
+
+                    Log.Info($"Retrying");
+                    await Task.Delay(delay);
+                }
+            }
         }
     }
 }

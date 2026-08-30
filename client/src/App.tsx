@@ -286,8 +286,6 @@ function App() {
   };
 
   const CloseGame = (processName: string, type: string) => {
-    //taskkill /F /IM pcsx2-qt.exe force close emulator
-
     window.electron.send("close-game", {
       processName,
       type,

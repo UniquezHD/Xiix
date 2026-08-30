@@ -1,1238 +1,1576 @@
-import { createRequire as e } from "node:module";
-import { BrowserWindow as t, app as n, ipcMain as r } from "electron";
-import { fileURLToPath as i } from "node:url";
-import a from "node:path";
+import { createRequire } from "node:module";
+import { BrowserWindow, app, ipcMain } from "electron";
+import { fileURLToPath } from "node:url";
+import path from "node:path";
 //#region \0rolldown/runtime.js
-var o = Object.create, s = Object.defineProperty, c = Object.getOwnPropertyDescriptor, l = Object.getOwnPropertyNames, u = Object.getPrototypeOf, d = Object.prototype.hasOwnProperty, f = (e, t, n) => () => {
-	if (n) throw n[0];
+var __create = Object.create;
+var __defProp = Object.defineProperty;
+var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getProtoOf = Object.getPrototypeOf;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __esmMin = (fn, res, err) => () => {
+	if (err) throw err[0];
 	try {
-		return e && (t = e(e = 0)), t;
+		return fn && (res = fn(fn = 0)), res;
 	} catch (e) {
-		throw n = [e], e;
+		throw err = [e], e;
 	}
-}, p = (e, t) => () => (t || (e((t = { exports: {} }).exports, t), e = null), t.exports), m = (e, t) => {
-	let n = {};
-	for (var r in e) s(n, r, {
-		get: e[r],
-		enumerable: !0
+};
+var __commonJSMin = (cb, mod) => () => (mod || (cb((mod = { exports: {} }).exports, mod), cb = null), mod.exports);
+var __exportAll = (all, no_symbols) => {
+	let target = {};
+	for (var name in all) __defProp(target, name, {
+		get: all[name],
+		enumerable: true
 	});
-	return t || s(n, Symbol.toStringTag, { value: "Module" }), n;
-}, h = (e, t, n, r) => {
-	if (t && typeof t == "object" || typeof t == "function") for (var i = l(t), a = 0, o = i.length, u; a < o; a++) u = i[a], !d.call(e, u) && u !== n && s(e, u, {
-		get: ((e) => t[e]).bind(null, u),
-		enumerable: !(r = c(t, u)) || r.enumerable
-	});
-	return e;
-}, g = (e, t, n) => (n = e == null ? {} : o(u(e)), h(t || !e || !e.__esModule || !d.call(e, "default") ? s(n, "default", {
-	value: e,
-	enumerable: !0
-}) : n, e)), _ = (e) => d.call(e, "module.exports") ? e["module.exports"] : h(s({}, "__esModule", { value: !0 }), e), v = /* @__PURE__ */ e(import.meta.url), y = /* @__PURE__ */ p(((e, t) => {
-	t.exports = s, t.exports.preferredCharsets = s;
-	var n = /^\s*([^\s;]+)\s*(?:;(.*))?$/;
-	function r(e) {
-		for (var t = e.split(","), n = 0, r = 0; n < t.length; n++) {
-			var a = i(t[n].trim(), n);
-			a && (t[r++] = a);
+	if (!no_symbols) __defProp(target, Symbol.toStringTag, { value: "Module" });
+	return target;
+};
+var __copyProps = (to, from, except, desc) => {
+	if (from && typeof from === "object" || typeof from === "function") for (var keys = __getOwnPropNames(from), i = 0, n = keys.length, key; i < n; i++) {
+		key = keys[i];
+		if (!__hasOwnProp.call(to, key) && key !== except) __defProp(to, key, {
+			get: ((k) => from[k]).bind(null, key),
+			enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable
+		});
+	}
+	return to;
+};
+var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(isNodeMode || !mod || !mod.__esModule || !__hasOwnProp.call(mod, "default") ? __defProp(target, "default", {
+	value: mod,
+	enumerable: true
+}) : target, mod));
+var __toCommonJS = (mod) => __hasOwnProp.call(mod, "module.exports") ? mod["module.exports"] : __copyProps(__defProp({}, "__esModule", { value: true }), mod);
+var __require = /* #__PURE__ */ (() => createRequire(import.meta.url))();
+//#endregion
+//#region node_modules/negotiator/lib/charset.js
+/**
+* negotiator
+* Copyright(c) 2012 Isaac Z. Schlueter
+* Copyright(c) 2014 Federico Romero
+* Copyright(c) 2014-2015 Douglas Christopher Wilson
+* MIT Licensed
+*/
+var require_charset = /* @__PURE__ */ __commonJSMin(((exports, module) => {
+	/**
+	* Module exports.
+	* @public
+	*/
+	module.exports = preferredCharsets;
+	module.exports.preferredCharsets = preferredCharsets;
+	/**
+	* Module variables.
+	* @private
+	*/
+	var simpleCharsetRegExp = /^\s*([^\s;]+)\s*(?:;(.*))?$/;
+	/**
+	* Parse the Accept-Charset header.
+	* @private
+	*/
+	function parseAcceptCharset(accept) {
+		var accepts = accept.split(",");
+		for (var i = 0, j = 0; i < accepts.length; i++) {
+			var charset = parseCharset(accepts[i].trim(), i);
+			if (charset) accepts[j++] = charset;
 		}
-		return t.length = r, t;
+		accepts.length = j;
+		return accepts;
 	}
-	function i(e, t) {
-		var r = n.exec(e);
-		if (!r) return null;
-		var i = r[1], a = 1;
-		if (r[2]) for (var o = r[2].split(";"), s = 0; s < o.length; s++) {
-			var c = o[s].trim().split("=");
-			if (c[0] === "q") {
-				a = parseFloat(c[1]);
-				break;
+	/**
+	* Parse a charset from the Accept-Charset header.
+	* @private
+	*/
+	function parseCharset(str, i) {
+		var match = simpleCharsetRegExp.exec(str);
+		if (!match) return null;
+		var charset = match[1];
+		var q = 1;
+		if (match[2]) {
+			var params = match[2].split(";");
+			for (var j = 0; j < params.length; j++) {
+				var p = params[j].trim().split("=");
+				if (p[0] === "q") {
+					q = parseFloat(p[1]);
+					break;
+				}
 			}
 		}
 		return {
-			charset: i,
-			q: a,
-			i: t
+			charset,
+			q,
+			i
 		};
 	}
-	function a(e, t, n) {
-		for (var r = {
+	/**
+	* Get the priority of a charset.
+	* @private
+	*/
+	function getCharsetPriority(charset, accepted, index) {
+		var priority = {
 			o: -1,
 			q: 0,
 			s: 0
-		}, i = 0; i < t.length; i++) {
-			var a = o(e, t[i], n);
-			a && (r.s - a.s || r.q - a.q || r.o - a.o) < 0 && (r = a);
+		};
+		for (var i = 0; i < accepted.length; i++) {
+			var spec = specify(charset, accepted[i], index);
+			if (spec && (priority.s - spec.s || priority.q - spec.q || priority.o - spec.o) < 0) priority = spec;
 		}
-		return r;
+		return priority;
 	}
-	function o(e, t, n) {
-		var r = 0;
-		if (t.charset.toLowerCase() === e.toLowerCase()) r |= 1;
-		else if (t.charset !== "*") return null;
+	/**
+	* Get the specificity of the charset.
+	* @private
+	*/
+	function specify(charset, spec, index) {
+		var s = 0;
+		if (spec.charset.toLowerCase() === charset.toLowerCase()) s |= 1;
+		else if (spec.charset !== "*") return null;
 		return {
-			i: n,
-			o: t.i,
-			q: t.q,
-			s: r
+			i: index,
+			o: spec.i,
+			q: spec.q,
+			s
 		};
 	}
-	function s(e, t) {
-		var n = r(e === void 0 ? "*" : e || "");
-		if (!t) return n.filter(u).sort(c).map(l);
-		var i = t.map(function(e, t) {
-			return a(e, n, t);
+	/**
+	* Get the preferred charsets from an Accept-Charset header.
+	* @public
+	*/
+	function preferredCharsets(accept, provided) {
+		var accepts = parseAcceptCharset(accept === void 0 ? "*" : accept || "");
+		if (!provided) return accepts.filter(isQuality).sort(compareSpecs).map(getFullCharset);
+		var priorities = provided.map(function getPriority(type, index) {
+			return getCharsetPriority(type, accepts, index);
 		});
-		return i.filter(u).sort(c).map(function(e) {
-			return t[i.indexOf(e)];
+		return priorities.filter(isQuality).sort(compareSpecs).map(function getCharset(priority) {
+			return provided[priorities.indexOf(priority)];
 		});
 	}
-	function c(e, t) {
-		return t.q - e.q || t.s - e.s || e.o - t.o || e.i - t.i || 0;
+	/**
+	* Compare two specs.
+	* @private
+	*/
+	function compareSpecs(a, b) {
+		return b.q - a.q || b.s - a.s || a.o - b.o || a.i - b.i || 0;
 	}
-	function l(e) {
-		return e.charset;
+	/**
+	* Get full charset string.
+	* @private
+	*/
+	function getFullCharset(spec) {
+		return spec.charset;
 	}
-	function u(e) {
-		return e.q > 0;
+	/**
+	* Check if a spec has any quality.
+	* @private
+	*/
+	function isQuality(spec) {
+		return spec.q > 0;
 	}
-})), b = /* @__PURE__ */ p(((e, t) => {
-	t.exports = s, t.exports.preferredEncodings = s;
-	var n = /^\s*([^\s;]+)\s*(?:;(.*))?$/;
-	function r(e) {
-		for (var t = e.split(","), n = !1, r = 1, a = 0, s = 0; a < t.length; a++) {
-			var c = i(t[a].trim(), a);
-			c && (t[s++] = c, n ||= o("identity", c), r = Math.min(r, c.q || 1));
+}));
+//#endregion
+//#region node_modules/negotiator/lib/encoding.js
+/**
+* negotiator
+* Copyright(c) 2012 Isaac Z. Schlueter
+* Copyright(c) 2014 Federico Romero
+* Copyright(c) 2014-2015 Douglas Christopher Wilson
+* MIT Licensed
+*/
+var require_encoding = /* @__PURE__ */ __commonJSMin(((exports, module) => {
+	/**
+	* Module exports.
+	* @public
+	*/
+	module.exports = preferredEncodings;
+	module.exports.preferredEncodings = preferredEncodings;
+	/**
+	* Module variables.
+	* @private
+	*/
+	var simpleEncodingRegExp = /^\s*([^\s;]+)\s*(?:;(.*))?$/;
+	/**
+	* Parse the Accept-Encoding header.
+	* @private
+	*/
+	function parseAcceptEncoding(accept) {
+		var accepts = accept.split(",");
+		var hasIdentity = false;
+		var minQuality = 1;
+		for (var i = 0, j = 0; i < accepts.length; i++) {
+			var encoding = parseEncoding(accepts[i].trim(), i);
+			if (encoding) {
+				accepts[j++] = encoding;
+				hasIdentity = hasIdentity || specify("identity", encoding);
+				minQuality = Math.min(minQuality, encoding.q || 1);
+			}
 		}
-		return n || (t[s++] = {
+		if (!hasIdentity) accepts[j++] = {
 			encoding: "identity",
-			q: r,
-			i: a
-		}), t.length = s, t;
+			q: minQuality,
+			i
+		};
+		accepts.length = j;
+		return accepts;
 	}
-	function i(e, t) {
-		var r = n.exec(e);
-		if (!r) return null;
-		var i = r[1], a = 1;
-		if (r[2]) for (var o = r[2].split(";"), s = 0; s < o.length; s++) {
-			var c = o[s].trim().split("=");
-			if (c[0] === "q") {
-				a = parseFloat(c[1]);
-				break;
+	/**
+	* Parse an encoding from the Accept-Encoding header.
+	* @private
+	*/
+	function parseEncoding(str, i) {
+		var match = simpleEncodingRegExp.exec(str);
+		if (!match) return null;
+		var encoding = match[1];
+		var q = 1;
+		if (match[2]) {
+			var params = match[2].split(";");
+			for (var j = 0; j < params.length; j++) {
+				var p = params[j].trim().split("=");
+				if (p[0] === "q") {
+					q = parseFloat(p[1]);
+					break;
+				}
 			}
 		}
 		return {
-			encoding: i,
-			q: a,
-			i: t
+			encoding,
+			q,
+			i
 		};
 	}
-	function a(e, t, n) {
-		for (var r = {
+	/**
+	* Get the priority of an encoding.
+	* @private
+	*/
+	function getEncodingPriority(encoding, accepted, index) {
+		var priority = {
 			o: -1,
 			q: 0,
 			s: 0
-		}, i = 0; i < t.length; i++) {
-			var a = o(e, t[i], n);
-			a && (r.s - a.s || r.q - a.q || r.o - a.o) < 0 && (r = a);
+		};
+		for (var i = 0; i < accepted.length; i++) {
+			var spec = specify(encoding, accepted[i], index);
+			if (spec && (priority.s - spec.s || priority.q - spec.q || priority.o - spec.o) < 0) priority = spec;
 		}
-		return r;
+		return priority;
 	}
-	function o(e, t, n) {
-		var r = 0;
-		if (t.encoding.toLowerCase() === e.toLowerCase()) r |= 1;
-		else if (t.encoding !== "*") return null;
+	/**
+	* Get the specificity of the encoding.
+	* @private
+	*/
+	function specify(encoding, spec, index) {
+		var s = 0;
+		if (spec.encoding.toLowerCase() === encoding.toLowerCase()) s |= 1;
+		else if (spec.encoding !== "*") return null;
 		return {
-			i: n,
-			o: t.i,
-			q: t.q,
-			s: r
+			i: index,
+			o: spec.i,
+			q: spec.q,
+			s
 		};
 	}
-	function s(e, t) {
-		var n = r(e || "");
-		if (!t) return n.filter(u).sort(c).map(l);
-		var i = t.map(function(e, t) {
-			return a(e, n, t);
+	/**
+	* Get the preferred encodings from an Accept-Encoding header.
+	* @public
+	*/
+	function preferredEncodings(accept, provided) {
+		var accepts = parseAcceptEncoding(accept || "");
+		if (!provided) return accepts.filter(isQuality).sort(compareSpecs).map(getFullEncoding);
+		var priorities = provided.map(function getPriority(type, index) {
+			return getEncodingPriority(type, accepts, index);
 		});
-		return i.filter(u).sort(c).map(function(e) {
-			return t[i.indexOf(e)];
-		});
-	}
-	function c(e, t) {
-		return t.q - e.q || t.s - e.s || e.o - t.o || e.i - t.i || 0;
-	}
-	function l(e) {
-		return e.encoding;
-	}
-	function u(e) {
-		return e.q > 0;
-	}
-})), x = /* @__PURE__ */ p(((e, t) => {
-	t.exports = s, t.exports.preferredLanguages = s;
-	var n = /^\s*([^\s\-;]+)(?:-([^\s;]+))?\s*(?:;(.*))?$/;
-	function r(e) {
-		for (var t = e.split(","), n = 0, r = 0; n < t.length; n++) {
-			var a = i(t[n].trim(), n);
-			a && (t[r++] = a);
-		}
-		return t.length = r, t;
-	}
-	function i(e, t) {
-		var r = n.exec(e);
-		if (!r) return null;
-		var i = r[1], a = r[2], o = i;
-		a && (o += "-" + a);
-		var s = 1;
-		if (r[3]) for (var c = r[3].split(";"), l = 0; l < c.length; l++) {
-			var u = c[l].split("=");
-			u[0] === "q" && (s = parseFloat(u[1]));
-		}
-		return {
-			prefix: i,
-			suffix: a,
-			q: s,
-			i: t,
-			full: o
-		};
-	}
-	function a(e, t, n) {
-		for (var r = {
-			o: -1,
-			q: 0,
-			s: 0
-		}, i = 0; i < t.length; i++) {
-			var a = o(e, t[i], n);
-			a && (r.s - a.s || r.q - a.q || r.o - a.o) < 0 && (r = a);
-		}
-		return r;
-	}
-	function o(e, t, n) {
-		var r = i(e);
-		if (!r) return null;
-		var a = 0;
-		if (t.full.toLowerCase() === r.full.toLowerCase()) a |= 4;
-		else if (t.prefix.toLowerCase() === r.full.toLowerCase()) a |= 2;
-		else if (t.full.toLowerCase() === r.prefix.toLowerCase()) a |= 1;
-		else if (t.full !== "*") return null;
-		return {
-			i: n,
-			o: t.i,
-			q: t.q,
-			s: a
-		};
-	}
-	function s(e, t) {
-		var n = r(e === void 0 ? "*" : e || "");
-		if (!t) return n.filter(u).sort(c).map(l);
-		var i = t.map(function(e, t) {
-			return a(e, n, t);
-		});
-		return i.filter(u).sort(c).map(function(e) {
-			return t[i.indexOf(e)];
+		return priorities.filter(isQuality).sort(compareSpecs).map(function getEncoding(priority) {
+			return provided[priorities.indexOf(priority)];
 		});
 	}
-	function c(e, t) {
-		return t.q - e.q || t.s - e.s || e.o - t.o || e.i - t.i || 0;
+	/**
+	* Compare two specs.
+	* @private
+	*/
+	function compareSpecs(a, b) {
+		return b.q - a.q || b.s - a.s || a.o - b.o || a.i - b.i || 0;
 	}
-	function l(e) {
-		return e.full;
+	/**
+	* Get full encoding string.
+	* @private
+	*/
+	function getFullEncoding(spec) {
+		return spec.encoding;
 	}
-	function u(e) {
-		return e.q > 0;
+	/**
+	* Check if a spec has any quality.
+	* @private
+	*/
+	function isQuality(spec) {
+		return spec.q > 0;
 	}
-})), S = /* @__PURE__ */ p(((e, t) => {
-	t.exports = s, t.exports.preferredMediaTypes = s;
-	var n = /^\s*([^\s\/;]+)\/([^;\s]+)\s*(?:;(.*))?$/;
-	function r(e) {
-		for (var t = p(e), n = 0, r = 0; n < t.length; n++) {
-			var a = i(t[n].trim(), n);
-			a && (t[r++] = a);
+}));
+//#endregion
+//#region node_modules/negotiator/lib/language.js
+/**
+* negotiator
+* Copyright(c) 2012 Isaac Z. Schlueter
+* Copyright(c) 2014 Federico Romero
+* Copyright(c) 2014-2015 Douglas Christopher Wilson
+* MIT Licensed
+*/
+var require_language = /* @__PURE__ */ __commonJSMin(((exports, module) => {
+	/**
+	* Module exports.
+	* @public
+	*/
+	module.exports = preferredLanguages;
+	module.exports.preferredLanguages = preferredLanguages;
+	/**
+	* Module variables.
+	* @private
+	*/
+	var simpleLanguageRegExp = /^\s*([^\s\-;]+)(?:-([^\s;]+))?\s*(?:;(.*))?$/;
+	/**
+	* Parse the Accept-Language header.
+	* @private
+	*/
+	function parseAcceptLanguage(accept) {
+		var accepts = accept.split(",");
+		for (var i = 0, j = 0; i < accepts.length; i++) {
+			var language = parseLanguage(accepts[i].trim(), i);
+			if (language) accepts[j++] = language;
 		}
-		return t.length = r, t;
+		accepts.length = j;
+		return accepts;
 	}
-	function i(e, t) {
-		var r = n.exec(e);
-		if (!r) return null;
-		var i = Object.create(null), a = 1, o = r[2], s = r[1];
-		if (r[3]) for (var c = m(r[3]).map(f), l = 0; l < c.length; l++) {
-			var u = c[l], d = u[0].toLowerCase(), p = u[1], h = p && p[0] === "\"" && p[p.length - 1] === "\"" ? p.substr(1, p.length - 2) : p;
-			if (d === "q") {
-				a = parseFloat(h);
-				break;
+	/**
+	* Parse a language from the Accept-Language header.
+	* @private
+	*/
+	function parseLanguage(str, i) {
+		var match = simpleLanguageRegExp.exec(str);
+		if (!match) return null;
+		var prefix = match[1];
+		var suffix = match[2];
+		var full = prefix;
+		if (suffix) full += "-" + suffix;
+		var q = 1;
+		if (match[3]) {
+			var params = match[3].split(";");
+			for (var j = 0; j < params.length; j++) {
+				var p = params[j].split("=");
+				if (p[0] === "q") q = parseFloat(p[1]);
 			}
-			i[d] = h;
 		}
 		return {
-			type: s,
-			subtype: o,
-			params: i,
-			q: a,
-			i: t
+			prefix,
+			suffix,
+			q,
+			i,
+			full
 		};
 	}
-	function a(e, t, n) {
-		for (var r = {
+	/**
+	* Get the priority of a language.
+	* @private
+	*/
+	function getLanguagePriority(language, accepted, index) {
+		var priority = {
 			o: -1,
 			q: 0,
 			s: 0
-		}, i = 0; i < t.length; i++) {
-			var a = o(e, t[i], n);
-			a && (r.s - a.s || r.q - a.q || r.o - a.o) < 0 && (r = a);
+		};
+		for (var i = 0; i < accepted.length; i++) {
+			var spec = specify(language, accepted[i], index);
+			if (spec && (priority.s - spec.s || priority.q - spec.q || priority.o - spec.o) < 0) priority = spec;
 		}
-		return r;
+		return priority;
 	}
-	function o(e, t, n) {
-		var r = i(e), a = 0;
-		if (!r) return null;
-		if (t.type.toLowerCase() == r.type.toLowerCase()) a |= 4;
-		else if (t.type != "*") return null;
-		if (t.subtype.toLowerCase() == r.subtype.toLowerCase()) a |= 2;
-		else if (t.subtype != "*") return null;
-		var o = Object.keys(t.params);
-		if (o.length > 0) {
-			if (o.every(function(e) {
-				return t.params[e] == "*" || (t.params[e] || "").toLowerCase() == (r.params[e] || "").toLowerCase();
-			})) a |= 1;
+	/**
+	* Get the specificity of the language.
+	* @private
+	*/
+	function specify(language, spec, index) {
+		var p = parseLanguage(language);
+		if (!p) return null;
+		var s = 0;
+		if (spec.full.toLowerCase() === p.full.toLowerCase()) s |= 4;
+		else if (spec.prefix.toLowerCase() === p.full.toLowerCase()) s |= 2;
+		else if (spec.full.toLowerCase() === p.prefix.toLowerCase()) s |= 1;
+		else if (spec.full !== "*") return null;
+		return {
+			i: index,
+			o: spec.i,
+			q: spec.q,
+			s
+		};
+	}
+	/**
+	* Get the preferred languages from an Accept-Language header.
+	* @public
+	*/
+	function preferredLanguages(accept, provided) {
+		var accepts = parseAcceptLanguage(accept === void 0 ? "*" : accept || "");
+		if (!provided) return accepts.filter(isQuality).sort(compareSpecs).map(getFullLanguage);
+		var priorities = provided.map(function getPriority(type, index) {
+			return getLanguagePriority(type, accepts, index);
+		});
+		return priorities.filter(isQuality).sort(compareSpecs).map(function getLanguage(priority) {
+			return provided[priorities.indexOf(priority)];
+		});
+	}
+	/**
+	* Compare two specs.
+	* @private
+	*/
+	function compareSpecs(a, b) {
+		return b.q - a.q || b.s - a.s || a.o - b.o || a.i - b.i || 0;
+	}
+	/**
+	* Get full language string.
+	* @private
+	*/
+	function getFullLanguage(spec) {
+		return spec.full;
+	}
+	/**
+	* Check if a spec has any quality.
+	* @private
+	*/
+	function isQuality(spec) {
+		return spec.q > 0;
+	}
+}));
+//#endregion
+//#region node_modules/negotiator/lib/mediaType.js
+/**
+* negotiator
+* Copyright(c) 2012 Isaac Z. Schlueter
+* Copyright(c) 2014 Federico Romero
+* Copyright(c) 2014-2015 Douglas Christopher Wilson
+* MIT Licensed
+*/
+var require_mediaType = /* @__PURE__ */ __commonJSMin(((exports, module) => {
+	/**
+	* Module exports.
+	* @public
+	*/
+	module.exports = preferredMediaTypes;
+	module.exports.preferredMediaTypes = preferredMediaTypes;
+	/**
+	* Module variables.
+	* @private
+	*/
+	var simpleMediaTypeRegExp = /^\s*([^\s\/;]+)\/([^;\s]+)\s*(?:;(.*))?$/;
+	/**
+	* Parse the Accept header.
+	* @private
+	*/
+	function parseAccept(accept) {
+		var accepts = splitMediaTypes(accept);
+		for (var i = 0, j = 0; i < accepts.length; i++) {
+			var mediaType = parseMediaType(accepts[i].trim(), i);
+			if (mediaType) accepts[j++] = mediaType;
+		}
+		accepts.length = j;
+		return accepts;
+	}
+	/**
+	* Parse a media type from the Accept header.
+	* @private
+	*/
+	function parseMediaType(str, i) {
+		var match = simpleMediaTypeRegExp.exec(str);
+		if (!match) return null;
+		var params = Object.create(null);
+		var q = 1;
+		var subtype = match[2];
+		var type = match[1];
+		if (match[3]) {
+			var kvps = splitParameters(match[3]).map(splitKeyValuePair);
+			for (var j = 0; j < kvps.length; j++) {
+				var pair = kvps[j];
+				var key = pair[0].toLowerCase();
+				var val = pair[1];
+				var value = val && val[0] === "\"" && val[val.length - 1] === "\"" ? val.substr(1, val.length - 2) : val;
+				if (key === "q") {
+					q = parseFloat(value);
+					break;
+				}
+				params[key] = value;
+			}
+		}
+		return {
+			type,
+			subtype,
+			params,
+			q,
+			i
+		};
+	}
+	/**
+	* Get the priority of a media type.
+	* @private
+	*/
+	function getMediaTypePriority(type, accepted, index) {
+		var priority = {
+			o: -1,
+			q: 0,
+			s: 0
+		};
+		for (var i = 0; i < accepted.length; i++) {
+			var spec = specify(type, accepted[i], index);
+			if (spec && (priority.s - spec.s || priority.q - spec.q || priority.o - spec.o) < 0) priority = spec;
+		}
+		return priority;
+	}
+	/**
+	* Get the specificity of the media type.
+	* @private
+	*/
+	function specify(type, spec, index) {
+		var p = parseMediaType(type);
+		var s = 0;
+		if (!p) return null;
+		if (spec.type.toLowerCase() == p.type.toLowerCase()) s |= 4;
+		else if (spec.type != "*") return null;
+		if (spec.subtype.toLowerCase() == p.subtype.toLowerCase()) s |= 2;
+		else if (spec.subtype != "*") return null;
+		var keys = Object.keys(spec.params);
+		if (keys.length > 0) {
+			if (keys.every(function(k) {
+				return spec.params[k] == "*" || (spec.params[k] || "").toLowerCase() == (p.params[k] || "").toLowerCase();
+			})) s |= 1;
 			else return null;
 		}
 		return {
-			i: n,
-			o: t.i,
-			q: t.q,
-			s: a
+			i: index,
+			o: spec.i,
+			q: spec.q,
+			s
 		};
 	}
-	function s(e, t) {
-		var n = r(e === void 0 ? "*/*" : e || "");
-		if (!t) return n.filter(u).sort(c).map(l);
-		var i = t.map(function(e, t) {
-			return a(e, n, t);
+	/**
+	* Get the preferred media types from an Accept header.
+	* @public
+	*/
+	function preferredMediaTypes(accept, provided) {
+		var accepts = parseAccept(accept === void 0 ? "*/*" : accept || "");
+		if (!provided) return accepts.filter(isQuality).sort(compareSpecs).map(getFullType);
+		var priorities = provided.map(function getPriority(type, index) {
+			return getMediaTypePriority(type, accepts, index);
 		});
-		return i.filter(u).sort(c).map(function(e) {
-			return t[i.indexOf(e)];
+		return priorities.filter(isQuality).sort(compareSpecs).map(function getType(priority) {
+			return provided[priorities.indexOf(priority)];
 		});
 	}
-	function c(e, t) {
-		return t.q - e.q || t.s - e.s || e.o - t.o || e.i - t.i || 0;
+	/**
+	* Compare two specs.
+	* @private
+	*/
+	function compareSpecs(a, b) {
+		return b.q - a.q || b.s - a.s || a.o - b.o || a.i - b.i || 0;
 	}
-	function l(e) {
-		return e.type + "/" + e.subtype;
+	/**
+	* Get full type string.
+	* @private
+	*/
+	function getFullType(spec) {
+		return spec.type + "/" + spec.subtype;
 	}
-	function u(e) {
-		return e.q > 0;
+	/**
+	* Check if a spec has any quality.
+	* @private
+	*/
+	function isQuality(spec) {
+		return spec.q > 0;
 	}
-	function d(e) {
-		for (var t = 0, n = 0; (n = e.indexOf("\"", n)) !== -1;) t++, n++;
-		return t;
+	/**
+	* Count the number of quotes in a string.
+	* @private
+	*/
+	function quoteCount(string) {
+		var count = 0;
+		var index = 0;
+		while ((index = string.indexOf("\"", index)) !== -1) {
+			count++;
+			index++;
+		}
+		return count;
 	}
-	function f(e) {
-		var t = e.indexOf("="), n, r;
-		return t === -1 ? n = e : (n = e.substr(0, t), r = e.substr(t + 1)), [n, r];
+	/**
+	* Split a key value pair.
+	* @private
+	*/
+	function splitKeyValuePair(str) {
+		var index = str.indexOf("=");
+		var key;
+		var val;
+		if (index === -1) key = str;
+		else {
+			key = str.substr(0, index);
+			val = str.substr(index + 1);
+		}
+		return [key, val];
 	}
-	function p(e) {
-		for (var t = e.split(","), n = 1, r = 0; n < t.length; n++) d(t[r]) % 2 == 0 ? t[++r] = t[n] : t[r] += "," + t[n];
-		return t.length = r + 1, t;
+	/**
+	* Split an Accept header into media types.
+	* @private
+	*/
+	function splitMediaTypes(accept) {
+		var accepts = accept.split(",");
+		for (var i = 1, j = 0; i < accepts.length; i++) if (quoteCount(accepts[j]) % 2 == 0) accepts[++j] = accepts[i];
+		else accepts[j] += "," + accepts[i];
+		accepts.length = j + 1;
+		return accepts;
 	}
-	function m(e) {
-		for (var t = e.split(";"), n = 1, r = 0; n < t.length; n++) d(t[r]) % 2 == 0 ? t[++r] = t[n] : t[r] += ";" + t[n];
-		t.length = r + 1;
-		for (var n = 0; n < t.length; n++) t[n] = t[n].trim();
-		return t;
+	/**
+	* Split a string of parameters.
+	* @private
+	*/
+	function splitParameters(str) {
+		var parameters = str.split(";");
+		for (var i = 1, j = 0; i < parameters.length; i++) if (quoteCount(parameters[j]) % 2 == 0) parameters[++j] = parameters[i];
+		else parameters[j] += ";" + parameters[i];
+		parameters.length = j + 1;
+		for (var i = 0; i < parameters.length; i++) parameters[i] = parameters[i].trim();
+		return parameters;
 	}
-})), C = /* @__PURE__ */ p(((e, t) => {
-	var n = y(), r = b(), i = x(), a = S();
-	t.exports = o, t.exports.Negotiator = o;
-	function o(e) {
-		if (!(this instanceof o)) return new o(e);
-		this.request = e;
+}));
+//#endregion
+//#region node_modules/negotiator/index.js
+/*!
+* negotiator
+* Copyright(c) 2012 Federico Romero
+* Copyright(c) 2012-2014 Isaac Z. Schlueter
+* Copyright(c) 2015 Douglas Christopher Wilson
+* MIT Licensed
+*/
+var require_negotiator = /* @__PURE__ */ __commonJSMin(((exports, module) => {
+	var preferredCharsets = require_charset();
+	var preferredEncodings = require_encoding();
+	var preferredLanguages = require_language();
+	var preferredMediaTypes = require_mediaType();
+	/**
+	* Module exports.
+	* @public
+	*/
+	module.exports = Negotiator;
+	module.exports.Negotiator = Negotiator;
+	/**
+	* Create a Negotiator instance from a request.
+	* @param {object} request
+	* @public
+	*/
+	function Negotiator(request) {
+		if (!(this instanceof Negotiator)) return new Negotiator(request);
+		this.request = request;
 	}
-	o.prototype.charset = function(e) {
-		var t = this.charsets(e);
-		return t && t[0];
-	}, o.prototype.charsets = function(e) {
-		return n(this.request.headers["accept-charset"], e);
-	}, o.prototype.encoding = function(e) {
-		var t = this.encodings(e);
-		return t && t[0];
-	}, o.prototype.encodings = function(e) {
-		return r(this.request.headers["accept-encoding"], e);
-	}, o.prototype.language = function(e) {
-		var t = this.languages(e);
-		return t && t[0];
-	}, o.prototype.languages = function(e) {
-		return i(this.request.headers["accept-language"], e);
-	}, o.prototype.mediaType = function(e) {
-		var t = this.mediaTypes(e);
-		return t && t[0];
-	}, o.prototype.mediaTypes = function(e) {
-		return a(this.request.headers.accept, e);
-	}, o.prototype.preferredCharset = o.prototype.charset, o.prototype.preferredCharsets = o.prototype.charsets, o.prototype.preferredEncoding = o.prototype.encoding, o.prototype.preferredEncodings = o.prototype.encodings, o.prototype.preferredLanguage = o.prototype.language, o.prototype.preferredLanguages = o.prototype.languages, o.prototype.preferredMediaType = o.prototype.mediaType, o.prototype.preferredMediaTypes = o.prototype.mediaTypes;
-})), w = /* @__PURE__ */ m({ default: () => T }), T, E = f((() => {
-	T = {
-		"application/1d-interleaved-parityfec": { source: "iana" },
+	Negotiator.prototype.charset = function charset(available) {
+		var set = this.charsets(available);
+		return set && set[0];
+	};
+	Negotiator.prototype.charsets = function charsets(available) {
+		return preferredCharsets(this.request.headers["accept-charset"], available);
+	};
+	Negotiator.prototype.encoding = function encoding(available) {
+		var set = this.encodings(available);
+		return set && set[0];
+	};
+	Negotiator.prototype.encodings = function encodings(available) {
+		return preferredEncodings(this.request.headers["accept-encoding"], available);
+	};
+	Negotiator.prototype.language = function language(available) {
+		var set = this.languages(available);
+		return set && set[0];
+	};
+	Negotiator.prototype.languages = function languages(available) {
+		return preferredLanguages(this.request.headers["accept-language"], available);
+	};
+	Negotiator.prototype.mediaType = function mediaType(available) {
+		var set = this.mediaTypes(available);
+		return set && set[0];
+	};
+	Negotiator.prototype.mediaTypes = function mediaTypes(available) {
+		return preferredMediaTypes(this.request.headers.accept, available);
+	};
+	Negotiator.prototype.preferredCharset = Negotiator.prototype.charset;
+	Negotiator.prototype.preferredCharsets = Negotiator.prototype.charsets;
+	Negotiator.prototype.preferredEncoding = Negotiator.prototype.encoding;
+	Negotiator.prototype.preferredEncodings = Negotiator.prototype.encodings;
+	Negotiator.prototype.preferredLanguage = Negotiator.prototype.language;
+	Negotiator.prototype.preferredLanguages = Negotiator.prototype.languages;
+	Negotiator.prototype.preferredMediaType = Negotiator.prototype.mediaType;
+	Negotiator.prototype.preferredMediaTypes = Negotiator.prototype.mediaTypes;
+}));
+//#endregion
+//#region node_modules/mime-db/db.json
+var db_exports = /* @__PURE__ */ __exportAll({ default: () => db_default });
+var db_default;
+var init_db = __esmMin((() => {
+	db_default = {
+		"application/1d-interleaved-parityfec": { "source": "iana" },
 		"application/3gpdash-qoe-report+xml": {
-			source: "iana",
-			charset: "UTF-8",
-			compressible: !0
+			"source": "iana",
+			"charset": "UTF-8",
+			"compressible": true
 		},
 		"application/3gpp-ims+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/3gpphal+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/3gpphalforms+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/a2l": { source: "iana" },
-		"application/ace+cbor": { source: "iana" },
-		"application/activemessage": { source: "iana" },
+		"application/a2l": { "source": "iana" },
+		"application/ace+cbor": { "source": "iana" },
+		"application/activemessage": { "source": "iana" },
 		"application/activity+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/alto-costmap+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/alto-costmapfilter+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/alto-directory+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/alto-endpointcost+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/alto-endpointcostparams+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/alto-endpointprop+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/alto-endpointpropparams+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/alto-error+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/alto-networkmap+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/alto-networkmapfilter+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/alto-updatestreamcontrol+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/alto-updatestreamparams+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/aml": { source: "iana" },
+		"application/aml": { "source": "iana" },
 		"application/andrew-inset": {
-			source: "iana",
-			extensions: ["ez"]
+			"source": "iana",
+			"extensions": ["ez"]
 		},
-		"application/applefile": { source: "iana" },
+		"application/applefile": { "source": "iana" },
 		"application/applixware": {
-			source: "apache",
-			extensions: ["aw"]
+			"source": "apache",
+			"extensions": ["aw"]
 		},
-		"application/at+jwt": { source: "iana" },
-		"application/atf": { source: "iana" },
-		"application/atfx": { source: "iana" },
+		"application/at+jwt": { "source": "iana" },
+		"application/atf": { "source": "iana" },
+		"application/atfx": { "source": "iana" },
 		"application/atom+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["atom"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["atom"]
 		},
 		"application/atomcat+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["atomcat"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["atomcat"]
 		},
 		"application/atomdeleted+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["atomdeleted"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["atomdeleted"]
 		},
-		"application/atomicmail": { source: "iana" },
+		"application/atomicmail": { "source": "iana" },
 		"application/atomsvc+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["atomsvc"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["atomsvc"]
 		},
 		"application/atsc-dwd+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["dwd"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["dwd"]
 		},
-		"application/atsc-dynamic-event-message": { source: "iana" },
+		"application/atsc-dynamic-event-message": { "source": "iana" },
 		"application/atsc-held+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["held"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["held"]
 		},
 		"application/atsc-rdt+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/atsc-rsat+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["rsat"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["rsat"]
 		},
-		"application/atxml": { source: "iana" },
+		"application/atxml": { "source": "iana" },
 		"application/auth-policy+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/bacnet-xdd+zip": {
-			source: "iana",
-			compressible: !1
+			"source": "iana",
+			"compressible": false
 		},
-		"application/batch-smtp": { source: "iana" },
+		"application/batch-smtp": { "source": "iana" },
 		"application/bdoc": {
-			compressible: !1,
-			extensions: ["bdoc"]
+			"compressible": false,
+			"extensions": ["bdoc"]
 		},
 		"application/beep+xml": {
-			source: "iana",
-			charset: "UTF-8",
-			compressible: !0
+			"source": "iana",
+			"charset": "UTF-8",
+			"compressible": true
 		},
 		"application/calendar+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/calendar+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["xcs"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["xcs"]
 		},
-		"application/call-completion": { source: "iana" },
-		"application/cals-1840": { source: "iana" },
+		"application/call-completion": { "source": "iana" },
+		"application/cals-1840": { "source": "iana" },
 		"application/captive+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/cbor": { source: "iana" },
-		"application/cbor-seq": { source: "iana" },
-		"application/cccex": { source: "iana" },
+		"application/cbor": { "source": "iana" },
+		"application/cbor-seq": { "source": "iana" },
+		"application/cccex": { "source": "iana" },
 		"application/ccmp+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/ccxml+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["ccxml"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["ccxml"]
 		},
 		"application/cdfx+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["cdfx"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["cdfx"]
 		},
 		"application/cdmi-capability": {
-			source: "iana",
-			extensions: ["cdmia"]
+			"source": "iana",
+			"extensions": ["cdmia"]
 		},
 		"application/cdmi-container": {
-			source: "iana",
-			extensions: ["cdmic"]
+			"source": "iana",
+			"extensions": ["cdmic"]
 		},
 		"application/cdmi-domain": {
-			source: "iana",
-			extensions: ["cdmid"]
+			"source": "iana",
+			"extensions": ["cdmid"]
 		},
 		"application/cdmi-object": {
-			source: "iana",
-			extensions: ["cdmio"]
+			"source": "iana",
+			"extensions": ["cdmio"]
 		},
 		"application/cdmi-queue": {
-			source: "iana",
-			extensions: ["cdmiq"]
+			"source": "iana",
+			"extensions": ["cdmiq"]
 		},
-		"application/cdni": { source: "iana" },
-		"application/cea": { source: "iana" },
+		"application/cdni": { "source": "iana" },
+		"application/cea": { "source": "iana" },
 		"application/cea-2018+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/cellml+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/cfw": { source: "iana" },
+		"application/cfw": { "source": "iana" },
 		"application/city+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/clr": { source: "iana" },
+		"application/clr": { "source": "iana" },
 		"application/clue+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/clue_info+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/cms": { source: "iana" },
+		"application/cms": { "source": "iana" },
 		"application/cnrp+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/coap-group+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/coap-payload": { source: "iana" },
-		"application/commonground": { source: "iana" },
+		"application/coap-payload": { "source": "iana" },
+		"application/commonground": { "source": "iana" },
 		"application/conference-info+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/cose": { source: "iana" },
-		"application/cose-key": { source: "iana" },
-		"application/cose-key-set": { source: "iana" },
+		"application/cose": { "source": "iana" },
+		"application/cose-key": { "source": "iana" },
+		"application/cose-key-set": { "source": "iana" },
 		"application/cpl+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["cpl"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["cpl"]
 		},
-		"application/csrattrs": { source: "iana" },
+		"application/csrattrs": { "source": "iana" },
 		"application/csta+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/cstadata+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/csvm+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/cu-seeme": {
-			source: "apache",
-			extensions: ["cu"]
+			"source": "apache",
+			"extensions": ["cu"]
 		},
-		"application/cwt": { source: "iana" },
-		"application/cybercash": { source: "iana" },
-		"application/dart": { compressible: !0 },
+		"application/cwt": { "source": "iana" },
+		"application/cybercash": { "source": "iana" },
+		"application/dart": { "compressible": true },
 		"application/dash+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["mpd"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["mpd"]
 		},
 		"application/dash-patch+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["mpp"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["mpp"]
 		},
-		"application/dashdelta": { source: "iana" },
+		"application/dashdelta": { "source": "iana" },
 		"application/davmount+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["davmount"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["davmount"]
 		},
-		"application/dca-rft": { source: "iana" },
-		"application/dcd": { source: "iana" },
-		"application/dec-dx": { source: "iana" },
+		"application/dca-rft": { "source": "iana" },
+		"application/dcd": { "source": "iana" },
+		"application/dec-dx": { "source": "iana" },
 		"application/dialog-info+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/dicom": { source: "iana" },
+		"application/dicom": { "source": "iana" },
 		"application/dicom+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/dicom+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/dii": { source: "iana" },
-		"application/dit": { source: "iana" },
-		"application/dns": { source: "iana" },
+		"application/dii": { "source": "iana" },
+		"application/dit": { "source": "iana" },
+		"application/dns": { "source": "iana" },
 		"application/dns+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/dns-message": { source: "iana" },
+		"application/dns-message": { "source": "iana" },
 		"application/docbook+xml": {
-			source: "apache",
-			compressible: !0,
-			extensions: ["dbk"]
+			"source": "apache",
+			"compressible": true,
+			"extensions": ["dbk"]
 		},
-		"application/dots+cbor": { source: "iana" },
+		"application/dots+cbor": { "source": "iana" },
 		"application/dskpp+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/dssc+der": {
-			source: "iana",
-			extensions: ["dssc"]
+			"source": "iana",
+			"extensions": ["dssc"]
 		},
 		"application/dssc+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["xdssc"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["xdssc"]
 		},
-		"application/dvcs": { source: "iana" },
+		"application/dvcs": { "source": "iana" },
 		"application/ecmascript": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["es", "ecma"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["es", "ecma"]
 		},
-		"application/edi-consent": { source: "iana" },
+		"application/edi-consent": { "source": "iana" },
 		"application/edi-x12": {
-			source: "iana",
-			compressible: !1
+			"source": "iana",
+			"compressible": false
 		},
 		"application/edifact": {
-			source: "iana",
-			compressible: !1
+			"source": "iana",
+			"compressible": false
 		},
-		"application/efi": { source: "iana" },
+		"application/efi": { "source": "iana" },
 		"application/elm+json": {
-			source: "iana",
-			charset: "UTF-8",
-			compressible: !0
+			"source": "iana",
+			"charset": "UTF-8",
+			"compressible": true
 		},
 		"application/elm+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/emergencycalldata.cap+xml": {
-			source: "iana",
-			charset: "UTF-8",
-			compressible: !0
+			"source": "iana",
+			"charset": "UTF-8",
+			"compressible": true
 		},
 		"application/emergencycalldata.comment+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/emergencycalldata.control+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/emergencycalldata.deviceinfo+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/emergencycalldata.ecall.msd": { source: "iana" },
+		"application/emergencycalldata.ecall.msd": { "source": "iana" },
 		"application/emergencycalldata.providerinfo+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/emergencycalldata.serviceinfo+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/emergencycalldata.subscriberinfo+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/emergencycalldata.veds+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/emma+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["emma"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["emma"]
 		},
 		"application/emotionml+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["emotionml"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["emotionml"]
 		},
-		"application/encaprtp": { source: "iana" },
+		"application/encaprtp": { "source": "iana" },
 		"application/epp+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/epub+zip": {
-			source: "iana",
-			compressible: !1,
-			extensions: ["epub"]
+			"source": "iana",
+			"compressible": false,
+			"extensions": ["epub"]
 		},
-		"application/eshop": { source: "iana" },
+		"application/eshop": { "source": "iana" },
 		"application/exi": {
-			source: "iana",
-			extensions: ["exi"]
+			"source": "iana",
+			"extensions": ["exi"]
 		},
 		"application/expect-ct-report+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/express": {
-			source: "iana",
-			extensions: ["exp"]
+			"source": "iana",
+			"extensions": ["exp"]
 		},
-		"application/fastinfoset": { source: "iana" },
-		"application/fastsoap": { source: "iana" },
+		"application/fastinfoset": { "source": "iana" },
+		"application/fastsoap": { "source": "iana" },
 		"application/fdt+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["fdt"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["fdt"]
 		},
 		"application/fhir+json": {
-			source: "iana",
-			charset: "UTF-8",
-			compressible: !0
+			"source": "iana",
+			"charset": "UTF-8",
+			"compressible": true
 		},
 		"application/fhir+xml": {
-			source: "iana",
-			charset: "UTF-8",
-			compressible: !0
+			"source": "iana",
+			"charset": "UTF-8",
+			"compressible": true
 		},
-		"application/fido.trusted-apps+json": { compressible: !0 },
-		"application/fits": { source: "iana" },
-		"application/flexfec": { source: "iana" },
-		"application/font-sfnt": { source: "iana" },
+		"application/fido.trusted-apps+json": { "compressible": true },
+		"application/fits": { "source": "iana" },
+		"application/flexfec": { "source": "iana" },
+		"application/font-sfnt": { "source": "iana" },
 		"application/font-tdpfr": {
-			source: "iana",
-			extensions: ["pfr"]
+			"source": "iana",
+			"extensions": ["pfr"]
 		},
 		"application/font-woff": {
-			source: "iana",
-			compressible: !1
+			"source": "iana",
+			"compressible": false
 		},
 		"application/framework-attributes+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/geo+json": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["geojson"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["geojson"]
 		},
-		"application/geo+json-seq": { source: "iana" },
-		"application/geopackage+sqlite3": { source: "iana" },
+		"application/geo+json-seq": { "source": "iana" },
+		"application/geopackage+sqlite3": { "source": "iana" },
 		"application/geoxacml+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/gltf-buffer": { source: "iana" },
+		"application/gltf-buffer": { "source": "iana" },
 		"application/gml+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["gml"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["gml"]
 		},
 		"application/gpx+xml": {
-			source: "apache",
-			compressible: !0,
-			extensions: ["gpx"]
+			"source": "apache",
+			"compressible": true,
+			"extensions": ["gpx"]
 		},
 		"application/gxf": {
-			source: "apache",
-			extensions: ["gxf"]
+			"source": "apache",
+			"extensions": ["gxf"]
 		},
 		"application/gzip": {
-			source: "iana",
-			compressible: !1,
-			extensions: ["gz"]
+			"source": "iana",
+			"compressible": false,
+			"extensions": ["gz"]
 		},
-		"application/h224": { source: "iana" },
+		"application/h224": { "source": "iana" },
 		"application/held+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/hjson": { extensions: ["hjson"] },
-		"application/http": { source: "iana" },
+		"application/hjson": { "extensions": ["hjson"] },
+		"application/http": { "source": "iana" },
 		"application/hyperstudio": {
-			source: "iana",
-			extensions: ["stk"]
+			"source": "iana",
+			"extensions": ["stk"]
 		},
 		"application/ibe-key-request+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/ibe-pkg-reply+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/ibe-pp-data": { source: "iana" },
-		"application/iges": { source: "iana" },
+		"application/ibe-pp-data": { "source": "iana" },
+		"application/iges": { "source": "iana" },
 		"application/im-iscomposing+xml": {
-			source: "iana",
-			charset: "UTF-8",
-			compressible: !0
+			"source": "iana",
+			"charset": "UTF-8",
+			"compressible": true
 		},
-		"application/index": { source: "iana" },
-		"application/index.cmd": { source: "iana" },
-		"application/index.obj": { source: "iana" },
-		"application/index.response": { source: "iana" },
-		"application/index.vnd": { source: "iana" },
+		"application/index": { "source": "iana" },
+		"application/index.cmd": { "source": "iana" },
+		"application/index.obj": { "source": "iana" },
+		"application/index.response": { "source": "iana" },
+		"application/index.vnd": { "source": "iana" },
 		"application/inkml+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["ink", "inkml"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["ink", "inkml"]
 		},
-		"application/iotp": { source: "iana" },
+		"application/iotp": { "source": "iana" },
 		"application/ipfix": {
-			source: "iana",
-			extensions: ["ipfix"]
+			"source": "iana",
+			"extensions": ["ipfix"]
 		},
-		"application/ipp": { source: "iana" },
-		"application/isup": { source: "iana" },
+		"application/ipp": { "source": "iana" },
+		"application/isup": { "source": "iana" },
 		"application/its+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["its"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["its"]
 		},
 		"application/java-archive": {
-			source: "apache",
-			compressible: !1,
-			extensions: [
+			"source": "apache",
+			"compressible": false,
+			"extensions": [
 				"jar",
 				"war",
 				"ear"
 			]
 		},
 		"application/java-serialized-object": {
-			source: "apache",
-			compressible: !1,
-			extensions: ["ser"]
+			"source": "apache",
+			"compressible": false,
+			"extensions": ["ser"]
 		},
 		"application/java-vm": {
-			source: "apache",
-			compressible: !1,
-			extensions: ["class"]
+			"source": "apache",
+			"compressible": false,
+			"extensions": ["class"]
 		},
 		"application/javascript": {
-			source: "iana",
-			charset: "UTF-8",
-			compressible: !0,
-			extensions: ["js", "mjs"]
+			"source": "iana",
+			"charset": "UTF-8",
+			"compressible": true,
+			"extensions": ["js", "mjs"]
 		},
 		"application/jf2feed+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/jose": { source: "iana" },
+		"application/jose": { "source": "iana" },
 		"application/jose+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/jrd+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/jscalendar+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/json": {
-			source: "iana",
-			charset: "UTF-8",
-			compressible: !0,
-			extensions: ["json", "map"]
+			"source": "iana",
+			"charset": "UTF-8",
+			"compressible": true,
+			"extensions": ["json", "map"]
 		},
 		"application/json-patch+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/json-seq": { source: "iana" },
-		"application/json5": { extensions: ["json5"] },
+		"application/json-seq": { "source": "iana" },
+		"application/json5": { "extensions": ["json5"] },
 		"application/jsonml+json": {
-			source: "apache",
-			compressible: !0,
-			extensions: ["jsonml"]
+			"source": "apache",
+			"compressible": true,
+			"extensions": ["jsonml"]
 		},
 		"application/jwk+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/jwk-set+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/jwt": { source: "iana" },
+		"application/jwt": { "source": "iana" },
 		"application/kpml-request+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/kpml-response+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/ld+json": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["jsonld"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["jsonld"]
 		},
 		"application/lgr+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["lgr"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["lgr"]
 		},
-		"application/link-format": { source: "iana" },
+		"application/link-format": { "source": "iana" },
 		"application/load-control+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/lost+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["lostxml"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["lostxml"]
 		},
 		"application/lostsync+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/lpf+zip": {
-			source: "iana",
-			compressible: !1
+			"source": "iana",
+			"compressible": false
 		},
-		"application/lxf": { source: "iana" },
+		"application/lxf": { "source": "iana" },
 		"application/mac-binhex40": {
-			source: "iana",
-			extensions: ["hqx"]
+			"source": "iana",
+			"extensions": ["hqx"]
 		},
 		"application/mac-compactpro": {
-			source: "apache",
-			extensions: ["cpt"]
+			"source": "apache",
+			"extensions": ["cpt"]
 		},
-		"application/macwriteii": { source: "iana" },
+		"application/macwriteii": { "source": "iana" },
 		"application/mads+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["mads"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["mads"]
 		},
 		"application/manifest+json": {
-			source: "iana",
-			charset: "UTF-8",
-			compressible: !0,
-			extensions: ["webmanifest"]
+			"source": "iana",
+			"charset": "UTF-8",
+			"compressible": true,
+			"extensions": ["webmanifest"]
 		},
 		"application/marc": {
-			source: "iana",
-			extensions: ["mrc"]
+			"source": "iana",
+			"extensions": ["mrc"]
 		},
 		"application/marcxml+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["mrcx"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["mrcx"]
 		},
 		"application/mathematica": {
-			source: "iana",
-			extensions: [
+			"source": "iana",
+			"extensions": [
 				"ma",
 				"nb",
 				"mb"
 			]
 		},
 		"application/mathml+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["mathml"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["mathml"]
 		},
 		"application/mathml-content+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/mathml-presentation+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/mbms-associated-procedure-description+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/mbms-deregister+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/mbms-envelope+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/mbms-msk+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/mbms-msk-response+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/mbms-protection-description+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/mbms-reception-report+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/mbms-register+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/mbms-register-response+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/mbms-schedule+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/mbms-user-service-description+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/mbox": {
-			source: "iana",
-			extensions: ["mbox"]
+			"source": "iana",
+			"extensions": ["mbox"]
 		},
 		"application/media-policy-dataset+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["mpf"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["mpf"]
 		},
 		"application/media_control+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/mediaservercontrol+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["mscml"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["mscml"]
 		},
 		"application/merge-patch+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/metalink+xml": {
-			source: "apache",
-			compressible: !0,
-			extensions: ["metalink"]
+			"source": "apache",
+			"compressible": true,
+			"extensions": ["metalink"]
 		},
 		"application/metalink4+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["meta4"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["meta4"]
 		},
 		"application/mets+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["mets"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["mets"]
 		},
-		"application/mf4": { source: "iana" },
-		"application/mikey": { source: "iana" },
-		"application/mipc": { source: "iana" },
-		"application/missing-blocks+cbor-seq": { source: "iana" },
+		"application/mf4": { "source": "iana" },
+		"application/mikey": { "source": "iana" },
+		"application/mipc": { "source": "iana" },
+		"application/missing-blocks+cbor-seq": { "source": "iana" },
 		"application/mmt-aei+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["maei"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["maei"]
 		},
 		"application/mmt-usd+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["musd"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["musd"]
 		},
 		"application/mods+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["mods"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["mods"]
 		},
-		"application/moss-keys": { source: "iana" },
-		"application/moss-signature": { source: "iana" },
-		"application/mosskey-data": { source: "iana" },
-		"application/mosskey-request": { source: "iana" },
+		"application/moss-keys": { "source": "iana" },
+		"application/moss-signature": { "source": "iana" },
+		"application/mosskey-data": { "source": "iana" },
+		"application/mosskey-request": { "source": "iana" },
 		"application/mp21": {
-			source: "iana",
-			extensions: ["m21", "mp21"]
+			"source": "iana",
+			"extensions": ["m21", "mp21"]
 		},
 		"application/mp4": {
-			source: "iana",
-			extensions: ["mp4s", "m4p"]
+			"source": "iana",
+			"extensions": ["mp4s", "m4p"]
 		},
-		"application/mpeg4-generic": { source: "iana" },
-		"application/mpeg4-iod": { source: "iana" },
-		"application/mpeg4-iod-xmt": { source: "iana" },
+		"application/mpeg4-generic": { "source": "iana" },
+		"application/mpeg4-iod": { "source": "iana" },
+		"application/mpeg4-iod-xmt": { "source": "iana" },
 		"application/mrb-consumer+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/mrb-publish+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/msc-ivr+xml": {
-			source: "iana",
-			charset: "UTF-8",
-			compressible: !0
+			"source": "iana",
+			"charset": "UTF-8",
+			"compressible": true
 		},
 		"application/msc-mixer+xml": {
-			source: "iana",
-			charset: "UTF-8",
-			compressible: !0
+			"source": "iana",
+			"charset": "UTF-8",
+			"compressible": true
 		},
 		"application/msword": {
-			source: "iana",
-			compressible: !1,
-			extensions: ["doc", "dot"]
+			"source": "iana",
+			"compressible": false,
+			"extensions": ["doc", "dot"]
 		},
 		"application/mud+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/multipart-core": { source: "iana" },
+		"application/multipart-core": { "source": "iana" },
 		"application/mxf": {
-			source: "iana",
-			extensions: ["mxf"]
+			"source": "iana",
+			"extensions": ["mxf"]
 		},
 		"application/n-quads": {
-			source: "iana",
-			extensions: ["nq"]
+			"source": "iana",
+			"extensions": ["nq"]
 		},
 		"application/n-triples": {
-			source: "iana",
-			extensions: ["nt"]
+			"source": "iana",
+			"extensions": ["nt"]
 		},
-		"application/nasdata": { source: "iana" },
+		"application/nasdata": { "source": "iana" },
 		"application/news-checkgroups": {
-			source: "iana",
-			charset: "US-ASCII"
+			"source": "iana",
+			"charset": "US-ASCII"
 		},
 		"application/news-groupinfo": {
-			source: "iana",
-			charset: "US-ASCII"
+			"source": "iana",
+			"charset": "US-ASCII"
 		},
-		"application/news-transmission": { source: "iana" },
+		"application/news-transmission": { "source": "iana" },
 		"application/nlsml+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/node": {
-			source: "iana",
-			extensions: ["cjs"]
+			"source": "iana",
+			"extensions": ["cjs"]
 		},
-		"application/nss": { source: "iana" },
-		"application/oauth-authz-req+jwt": { source: "iana" },
-		"application/oblivious-dns-message": { source: "iana" },
-		"application/ocsp-request": { source: "iana" },
-		"application/ocsp-response": { source: "iana" },
+		"application/nss": { "source": "iana" },
+		"application/oauth-authz-req+jwt": { "source": "iana" },
+		"application/oblivious-dns-message": { "source": "iana" },
+		"application/ocsp-request": { "source": "iana" },
+		"application/ocsp-response": { "source": "iana" },
 		"application/octet-stream": {
-			source: "iana",
-			compressible: !1,
-			extensions: [
+			"source": "iana",
+			"compressible": false,
+			"extensions": [
 				"bin",
 				"dms",
 				"lrf",
@@ -1258,32 +1596,32 @@ var o = Object.create, s = Object.defineProperty, c = Object.getOwnPropertyDescr
 			]
 		},
 		"application/oda": {
-			source: "iana",
-			extensions: ["oda"]
+			"source": "iana",
+			"extensions": ["oda"]
 		},
 		"application/odm+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/odx": { source: "iana" },
+		"application/odx": { "source": "iana" },
 		"application/oebps-package+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["opf"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["opf"]
 		},
 		"application/ogg": {
-			source: "iana",
-			compressible: !1,
-			extensions: ["ogx"]
+			"source": "iana",
+			"compressible": false,
+			"extensions": ["ogx"]
 		},
 		"application/omdoc+xml": {
-			source: "apache",
-			compressible: !0,
-			extensions: ["omdoc"]
+			"source": "apache",
+			"compressible": true,
+			"extensions": ["omdoc"]
 		},
 		"application/onenote": {
-			source: "apache",
-			extensions: [
+			"source": "apache",
+			"extensions": [
 				"onetoc",
 				"onetoc2",
 				"onetmp",
@@ -1291,984 +1629,984 @@ var o = Object.create, s = Object.defineProperty, c = Object.getOwnPropertyDescr
 			]
 		},
 		"application/opc-nodeset+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/oscore": { source: "iana" },
+		"application/oscore": { "source": "iana" },
 		"application/oxps": {
-			source: "iana",
-			extensions: ["oxps"]
+			"source": "iana",
+			"extensions": ["oxps"]
 		},
-		"application/p21": { source: "iana" },
+		"application/p21": { "source": "iana" },
 		"application/p21+zip": {
-			source: "iana",
-			compressible: !1
+			"source": "iana",
+			"compressible": false
 		},
 		"application/p2p-overlay+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["relo"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["relo"]
 		},
-		"application/parityfec": { source: "iana" },
-		"application/passport": { source: "iana" },
+		"application/parityfec": { "source": "iana" },
+		"application/passport": { "source": "iana" },
 		"application/patch-ops-error+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["xer"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["xer"]
 		},
 		"application/pdf": {
-			source: "iana",
-			compressible: !1,
-			extensions: ["pdf"]
+			"source": "iana",
+			"compressible": false,
+			"extensions": ["pdf"]
 		},
-		"application/pdx": { source: "iana" },
-		"application/pem-certificate-chain": { source: "iana" },
+		"application/pdx": { "source": "iana" },
+		"application/pem-certificate-chain": { "source": "iana" },
 		"application/pgp-encrypted": {
-			source: "iana",
-			compressible: !1,
-			extensions: ["pgp"]
+			"source": "iana",
+			"compressible": false,
+			"extensions": ["pgp"]
 		},
 		"application/pgp-keys": {
-			source: "iana",
-			extensions: ["asc"]
+			"source": "iana",
+			"extensions": ["asc"]
 		},
 		"application/pgp-signature": {
-			source: "iana",
-			extensions: ["asc", "sig"]
+			"source": "iana",
+			"extensions": ["asc", "sig"]
 		},
 		"application/pics-rules": {
-			source: "apache",
-			extensions: ["prf"]
+			"source": "apache",
+			"extensions": ["prf"]
 		},
 		"application/pidf+xml": {
-			source: "iana",
-			charset: "UTF-8",
-			compressible: !0
+			"source": "iana",
+			"charset": "UTF-8",
+			"compressible": true
 		},
 		"application/pidf-diff+xml": {
-			source: "iana",
-			charset: "UTF-8",
-			compressible: !0
+			"source": "iana",
+			"charset": "UTF-8",
+			"compressible": true
 		},
 		"application/pkcs10": {
-			source: "iana",
-			extensions: ["p10"]
+			"source": "iana",
+			"extensions": ["p10"]
 		},
-		"application/pkcs12": { source: "iana" },
+		"application/pkcs12": { "source": "iana" },
 		"application/pkcs7-mime": {
-			source: "iana",
-			extensions: ["p7m", "p7c"]
+			"source": "iana",
+			"extensions": ["p7m", "p7c"]
 		},
 		"application/pkcs7-signature": {
-			source: "iana",
-			extensions: ["p7s"]
+			"source": "iana",
+			"extensions": ["p7s"]
 		},
 		"application/pkcs8": {
-			source: "iana",
-			extensions: ["p8"]
+			"source": "iana",
+			"extensions": ["p8"]
 		},
-		"application/pkcs8-encrypted": { source: "iana" },
+		"application/pkcs8-encrypted": { "source": "iana" },
 		"application/pkix-attr-cert": {
-			source: "iana",
-			extensions: ["ac"]
+			"source": "iana",
+			"extensions": ["ac"]
 		},
 		"application/pkix-cert": {
-			source: "iana",
-			extensions: ["cer"]
+			"source": "iana",
+			"extensions": ["cer"]
 		},
 		"application/pkix-crl": {
-			source: "iana",
-			extensions: ["crl"]
+			"source": "iana",
+			"extensions": ["crl"]
 		},
 		"application/pkix-pkipath": {
-			source: "iana",
-			extensions: ["pkipath"]
+			"source": "iana",
+			"extensions": ["pkipath"]
 		},
 		"application/pkixcmp": {
-			source: "iana",
-			extensions: ["pki"]
+			"source": "iana",
+			"extensions": ["pki"]
 		},
 		"application/pls+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["pls"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["pls"]
 		},
 		"application/poc-settings+xml": {
-			source: "iana",
-			charset: "UTF-8",
-			compressible: !0
+			"source": "iana",
+			"charset": "UTF-8",
+			"compressible": true
 		},
 		"application/postscript": {
-			source: "iana",
-			compressible: !0,
-			extensions: [
+			"source": "iana",
+			"compressible": true,
+			"extensions": [
 				"ai",
 				"eps",
 				"ps"
 			]
 		},
 		"application/ppsp-tracker+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/problem+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/problem+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/provenance+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["provx"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["provx"]
 		},
-		"application/prs.alvestrand.titrax-sheet": { source: "iana" },
+		"application/prs.alvestrand.titrax-sheet": { "source": "iana" },
 		"application/prs.cww": {
-			source: "iana",
-			extensions: ["cww"]
+			"source": "iana",
+			"extensions": ["cww"]
 		},
 		"application/prs.cyn": {
-			source: "iana",
-			charset: "7-BIT"
+			"source": "iana",
+			"charset": "7-BIT"
 		},
 		"application/prs.hpub+zip": {
-			source: "iana",
-			compressible: !1
+			"source": "iana",
+			"compressible": false
 		},
-		"application/prs.nprend": { source: "iana" },
-		"application/prs.plucker": { source: "iana" },
-		"application/prs.rdf-xml-crypt": { source: "iana" },
+		"application/prs.nprend": { "source": "iana" },
+		"application/prs.plucker": { "source": "iana" },
+		"application/prs.rdf-xml-crypt": { "source": "iana" },
 		"application/prs.xsf+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/pskc+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["pskcxml"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["pskcxml"]
 		},
 		"application/pvd+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/qsig": { source: "iana" },
+		"application/qsig": { "source": "iana" },
 		"application/raml+yaml": {
-			compressible: !0,
-			extensions: ["raml"]
+			"compressible": true,
+			"extensions": ["raml"]
 		},
-		"application/raptorfec": { source: "iana" },
+		"application/raptorfec": { "source": "iana" },
 		"application/rdap+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/rdf+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["rdf", "owl"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["rdf", "owl"]
 		},
 		"application/reginfo+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["rif"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["rif"]
 		},
 		"application/relax-ng-compact-syntax": {
-			source: "iana",
-			extensions: ["rnc"]
+			"source": "iana",
+			"extensions": ["rnc"]
 		},
-		"application/remote-printing": { source: "iana" },
+		"application/remote-printing": { "source": "iana" },
 		"application/reputon+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/resource-lists+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["rl"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["rl"]
 		},
 		"application/resource-lists-diff+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["rld"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["rld"]
 		},
 		"application/rfc+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/riscos": { source: "iana" },
+		"application/riscos": { "source": "iana" },
 		"application/rlmi+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/rls-services+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["rs"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["rs"]
 		},
 		"application/route-apd+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["rapd"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["rapd"]
 		},
 		"application/route-s-tsid+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["sls"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["sls"]
 		},
 		"application/route-usd+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["rusd"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["rusd"]
 		},
 		"application/rpki-ghostbusters": {
-			source: "iana",
-			extensions: ["gbr"]
+			"source": "iana",
+			"extensions": ["gbr"]
 		},
 		"application/rpki-manifest": {
-			source: "iana",
-			extensions: ["mft"]
+			"source": "iana",
+			"extensions": ["mft"]
 		},
-		"application/rpki-publication": { source: "iana" },
+		"application/rpki-publication": { "source": "iana" },
 		"application/rpki-roa": {
-			source: "iana",
-			extensions: ["roa"]
+			"source": "iana",
+			"extensions": ["roa"]
 		},
-		"application/rpki-updown": { source: "iana" },
+		"application/rpki-updown": { "source": "iana" },
 		"application/rsd+xml": {
-			source: "apache",
-			compressible: !0,
-			extensions: ["rsd"]
+			"source": "apache",
+			"compressible": true,
+			"extensions": ["rsd"]
 		},
 		"application/rss+xml": {
-			source: "apache",
-			compressible: !0,
-			extensions: ["rss"]
+			"source": "apache",
+			"compressible": true,
+			"extensions": ["rss"]
 		},
 		"application/rtf": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["rtf"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["rtf"]
 		},
-		"application/rtploopback": { source: "iana" },
-		"application/rtx": { source: "iana" },
+		"application/rtploopback": { "source": "iana" },
+		"application/rtx": { "source": "iana" },
 		"application/samlassertion+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/samlmetadata+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/sarif+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/sarif-external-properties+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/sbe": { source: "iana" },
+		"application/sbe": { "source": "iana" },
 		"application/sbml+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["sbml"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["sbml"]
 		},
 		"application/scaip+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/scim+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/scvp-cv-request": {
-			source: "iana",
-			extensions: ["scq"]
+			"source": "iana",
+			"extensions": ["scq"]
 		},
 		"application/scvp-cv-response": {
-			source: "iana",
-			extensions: ["scs"]
+			"source": "iana",
+			"extensions": ["scs"]
 		},
 		"application/scvp-vp-request": {
-			source: "iana",
-			extensions: ["spq"]
+			"source": "iana",
+			"extensions": ["spq"]
 		},
 		"application/scvp-vp-response": {
-			source: "iana",
-			extensions: ["spp"]
+			"source": "iana",
+			"extensions": ["spp"]
 		},
 		"application/sdp": {
-			source: "iana",
-			extensions: ["sdp"]
+			"source": "iana",
+			"extensions": ["sdp"]
 		},
-		"application/secevent+jwt": { source: "iana" },
-		"application/senml+cbor": { source: "iana" },
+		"application/secevent+jwt": { "source": "iana" },
+		"application/senml+cbor": { "source": "iana" },
 		"application/senml+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/senml+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["senmlx"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["senmlx"]
 		},
-		"application/senml-etch+cbor": { source: "iana" },
+		"application/senml-etch+cbor": { "source": "iana" },
 		"application/senml-etch+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/senml-exi": { source: "iana" },
-		"application/sensml+cbor": { source: "iana" },
+		"application/senml-exi": { "source": "iana" },
+		"application/sensml+cbor": { "source": "iana" },
 		"application/sensml+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/sensml+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["sensmlx"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["sensmlx"]
 		},
-		"application/sensml-exi": { source: "iana" },
+		"application/sensml-exi": { "source": "iana" },
 		"application/sep+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/sep-exi": { source: "iana" },
-		"application/session-info": { source: "iana" },
-		"application/set-payment": { source: "iana" },
+		"application/sep-exi": { "source": "iana" },
+		"application/session-info": { "source": "iana" },
+		"application/set-payment": { "source": "iana" },
 		"application/set-payment-initiation": {
-			source: "iana",
-			extensions: ["setpay"]
+			"source": "iana",
+			"extensions": ["setpay"]
 		},
-		"application/set-registration": { source: "iana" },
+		"application/set-registration": { "source": "iana" },
 		"application/set-registration-initiation": {
-			source: "iana",
-			extensions: ["setreg"]
+			"source": "iana",
+			"extensions": ["setreg"]
 		},
-		"application/sgml": { source: "iana" },
-		"application/sgml-open-catalog": { source: "iana" },
+		"application/sgml": { "source": "iana" },
+		"application/sgml-open-catalog": { "source": "iana" },
 		"application/shf+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["shf"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["shf"]
 		},
 		"application/sieve": {
-			source: "iana",
-			extensions: ["siv", "sieve"]
+			"source": "iana",
+			"extensions": ["siv", "sieve"]
 		},
 		"application/simple-filter+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/simple-message-summary": { source: "iana" },
-		"application/simplesymbolcontainer": { source: "iana" },
-		"application/sipc": { source: "iana" },
-		"application/slate": { source: "iana" },
-		"application/smil": { source: "iana" },
+		"application/simple-message-summary": { "source": "iana" },
+		"application/simplesymbolcontainer": { "source": "iana" },
+		"application/sipc": { "source": "iana" },
+		"application/slate": { "source": "iana" },
+		"application/smil": { "source": "iana" },
 		"application/smil+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["smi", "smil"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["smi", "smil"]
 		},
-		"application/smpte336m": { source: "iana" },
-		"application/soap+fastinfoset": { source: "iana" },
+		"application/smpte336m": { "source": "iana" },
+		"application/soap+fastinfoset": { "source": "iana" },
 		"application/soap+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/sparql-query": {
-			source: "iana",
-			extensions: ["rq"]
+			"source": "iana",
+			"extensions": ["rq"]
 		},
 		"application/sparql-results+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["srx"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["srx"]
 		},
 		"application/spdx+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/spirits-event+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/sql": { source: "iana" },
+		"application/sql": { "source": "iana" },
 		"application/srgs": {
-			source: "iana",
-			extensions: ["gram"]
+			"source": "iana",
+			"extensions": ["gram"]
 		},
 		"application/srgs+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["grxml"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["grxml"]
 		},
 		"application/sru+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["sru"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["sru"]
 		},
 		"application/ssdl+xml": {
-			source: "apache",
-			compressible: !0,
-			extensions: ["ssdl"]
+			"source": "apache",
+			"compressible": true,
+			"extensions": ["ssdl"]
 		},
 		"application/ssml+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["ssml"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["ssml"]
 		},
 		"application/stix+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/swid+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["swidtag"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["swidtag"]
 		},
-		"application/tamp-apex-update": { source: "iana" },
-		"application/tamp-apex-update-confirm": { source: "iana" },
-		"application/tamp-community-update": { source: "iana" },
-		"application/tamp-community-update-confirm": { source: "iana" },
-		"application/tamp-error": { source: "iana" },
-		"application/tamp-sequence-adjust": { source: "iana" },
-		"application/tamp-sequence-adjust-confirm": { source: "iana" },
-		"application/tamp-status-query": { source: "iana" },
-		"application/tamp-status-response": { source: "iana" },
-		"application/tamp-update": { source: "iana" },
-		"application/tamp-update-confirm": { source: "iana" },
-		"application/tar": { compressible: !0 },
+		"application/tamp-apex-update": { "source": "iana" },
+		"application/tamp-apex-update-confirm": { "source": "iana" },
+		"application/tamp-community-update": { "source": "iana" },
+		"application/tamp-community-update-confirm": { "source": "iana" },
+		"application/tamp-error": { "source": "iana" },
+		"application/tamp-sequence-adjust": { "source": "iana" },
+		"application/tamp-sequence-adjust-confirm": { "source": "iana" },
+		"application/tamp-status-query": { "source": "iana" },
+		"application/tamp-status-response": { "source": "iana" },
+		"application/tamp-update": { "source": "iana" },
+		"application/tamp-update-confirm": { "source": "iana" },
+		"application/tar": { "compressible": true },
 		"application/taxii+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/td+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/tei+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["tei", "teicorpus"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["tei", "teicorpus"]
 		},
-		"application/tetra_isi": { source: "iana" },
+		"application/tetra_isi": { "source": "iana" },
 		"application/thraud+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["tfi"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["tfi"]
 		},
-		"application/timestamp-query": { source: "iana" },
-		"application/timestamp-reply": { source: "iana" },
+		"application/timestamp-query": { "source": "iana" },
+		"application/timestamp-reply": { "source": "iana" },
 		"application/timestamped-data": {
-			source: "iana",
-			extensions: ["tsd"]
+			"source": "iana",
+			"extensions": ["tsd"]
 		},
-		"application/tlsrpt+gzip": { source: "iana" },
+		"application/tlsrpt+gzip": { "source": "iana" },
 		"application/tlsrpt+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/tnauthlist": { source: "iana" },
-		"application/token-introspection+jwt": { source: "iana" },
+		"application/tnauthlist": { "source": "iana" },
+		"application/token-introspection+jwt": { "source": "iana" },
 		"application/toml": {
-			compressible: !0,
-			extensions: ["toml"]
+			"compressible": true,
+			"extensions": ["toml"]
 		},
-		"application/trickle-ice-sdpfrag": { source: "iana" },
+		"application/trickle-ice-sdpfrag": { "source": "iana" },
 		"application/trig": {
-			source: "iana",
-			extensions: ["trig"]
+			"source": "iana",
+			"extensions": ["trig"]
 		},
 		"application/ttml+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["ttml"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["ttml"]
 		},
-		"application/tve-trigger": { source: "iana" },
-		"application/tzif": { source: "iana" },
-		"application/tzif-leap": { source: "iana" },
+		"application/tve-trigger": { "source": "iana" },
+		"application/tzif": { "source": "iana" },
+		"application/tzif-leap": { "source": "iana" },
 		"application/ubjson": {
-			compressible: !1,
-			extensions: ["ubj"]
+			"compressible": false,
+			"extensions": ["ubj"]
 		},
-		"application/ulpfec": { source: "iana" },
+		"application/ulpfec": { "source": "iana" },
 		"application/urc-grpsheet+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/urc-ressheet+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["rsheet"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["rsheet"]
 		},
 		"application/urc-targetdesc+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["td"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["td"]
 		},
 		"application/urc-uisocketdesc+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vcard+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vcard+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/vemmi": { source: "iana" },
-		"application/vividence.scriptfile": { source: "apache" },
+		"application/vemmi": { "source": "iana" },
+		"application/vividence.scriptfile": { "source": "apache" },
 		"application/vnd.1000minds.decision-model+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["1km"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["1km"]
 		},
 		"application/vnd.3gpp-prose+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.3gpp-prose-pc3ch+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/vnd.3gpp-v2x-local-service-information": { source: "iana" },
-		"application/vnd.3gpp.5gnas": { source: "iana" },
+		"application/vnd.3gpp-v2x-local-service-information": { "source": "iana" },
+		"application/vnd.3gpp.5gnas": { "source": "iana" },
 		"application/vnd.3gpp.access-transfer-events+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.3gpp.bsf+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.3gpp.gmop+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/vnd.3gpp.gtpc": { source: "iana" },
-		"application/vnd.3gpp.interworking-data": { source: "iana" },
-		"application/vnd.3gpp.lpp": { source: "iana" },
-		"application/vnd.3gpp.mc-signalling-ear": { source: "iana" },
+		"application/vnd.3gpp.gtpc": { "source": "iana" },
+		"application/vnd.3gpp.interworking-data": { "source": "iana" },
+		"application/vnd.3gpp.lpp": { "source": "iana" },
+		"application/vnd.3gpp.mc-signalling-ear": { "source": "iana" },
 		"application/vnd.3gpp.mcdata-affiliation-command+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.3gpp.mcdata-info+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/vnd.3gpp.mcdata-payload": { source: "iana" },
+		"application/vnd.3gpp.mcdata-payload": { "source": "iana" },
 		"application/vnd.3gpp.mcdata-service-config+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/vnd.3gpp.mcdata-signalling": { source: "iana" },
+		"application/vnd.3gpp.mcdata-signalling": { "source": "iana" },
 		"application/vnd.3gpp.mcdata-ue-config+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.3gpp.mcdata-user-profile+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.3gpp.mcptt-affiliation-command+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.3gpp.mcptt-floor-request+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.3gpp.mcptt-info+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.3gpp.mcptt-location-info+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.3gpp.mcptt-mbms-usage-info+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.3gpp.mcptt-service-config+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.3gpp.mcptt-signed+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.3gpp.mcptt-ue-config+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.3gpp.mcptt-ue-init-config+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.3gpp.mcptt-user-profile+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.3gpp.mcvideo-affiliation-command+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.3gpp.mcvideo-affiliation-info+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.3gpp.mcvideo-info+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.3gpp.mcvideo-location-info+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.3gpp.mcvideo-mbms-usage-info+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.3gpp.mcvideo-service-config+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.3gpp.mcvideo-transmission-request+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.3gpp.mcvideo-ue-config+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.3gpp.mcvideo-user-profile+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.3gpp.mid-call+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/vnd.3gpp.ngap": { source: "iana" },
-		"application/vnd.3gpp.pfcp": { source: "iana" },
+		"application/vnd.3gpp.ngap": { "source": "iana" },
+		"application/vnd.3gpp.pfcp": { "source": "iana" },
 		"application/vnd.3gpp.pic-bw-large": {
-			source: "iana",
-			extensions: ["plb"]
+			"source": "iana",
+			"extensions": ["plb"]
 		},
 		"application/vnd.3gpp.pic-bw-small": {
-			source: "iana",
-			extensions: ["psb"]
+			"source": "iana",
+			"extensions": ["psb"]
 		},
 		"application/vnd.3gpp.pic-bw-var": {
-			source: "iana",
-			extensions: ["pvb"]
+			"source": "iana",
+			"extensions": ["pvb"]
 		},
-		"application/vnd.3gpp.s1ap": { source: "iana" },
-		"application/vnd.3gpp.sms": { source: "iana" },
+		"application/vnd.3gpp.s1ap": { "source": "iana" },
+		"application/vnd.3gpp.sms": { "source": "iana" },
 		"application/vnd.3gpp.sms+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.3gpp.srvcc-ext+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.3gpp.srvcc-info+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.3gpp.state-and-event-info+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.3gpp.ussd+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.3gpp2.bcmcsinfo+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/vnd.3gpp2.sms": { source: "iana" },
+		"application/vnd.3gpp2.sms": { "source": "iana" },
 		"application/vnd.3gpp2.tcap": {
-			source: "iana",
-			extensions: ["tcap"]
+			"source": "iana",
+			"extensions": ["tcap"]
 		},
-		"application/vnd.3lightssoftware.imagescal": { source: "iana" },
+		"application/vnd.3lightssoftware.imagescal": { "source": "iana" },
 		"application/vnd.3m.post-it-notes": {
-			source: "iana",
-			extensions: ["pwn"]
+			"source": "iana",
+			"extensions": ["pwn"]
 		},
 		"application/vnd.accpac.simply.aso": {
-			source: "iana",
-			extensions: ["aso"]
+			"source": "iana",
+			"extensions": ["aso"]
 		},
 		"application/vnd.accpac.simply.imp": {
-			source: "iana",
-			extensions: ["imp"]
+			"source": "iana",
+			"extensions": ["imp"]
 		},
 		"application/vnd.acucobol": {
-			source: "iana",
-			extensions: ["acu"]
+			"source": "iana",
+			"extensions": ["acu"]
 		},
 		"application/vnd.acucorp": {
-			source: "iana",
-			extensions: ["atc", "acutc"]
+			"source": "iana",
+			"extensions": ["atc", "acutc"]
 		},
 		"application/vnd.adobe.air-application-installer-package+zip": {
-			source: "apache",
-			compressible: !1,
-			extensions: ["air"]
+			"source": "apache",
+			"compressible": false,
+			"extensions": ["air"]
 		},
-		"application/vnd.adobe.flash.movie": { source: "iana" },
+		"application/vnd.adobe.flash.movie": { "source": "iana" },
 		"application/vnd.adobe.formscentral.fcdt": {
-			source: "iana",
-			extensions: ["fcdt"]
+			"source": "iana",
+			"extensions": ["fcdt"]
 		},
 		"application/vnd.adobe.fxp": {
-			source: "iana",
-			extensions: ["fxp", "fxpl"]
+			"source": "iana",
+			"extensions": ["fxp", "fxpl"]
 		},
-		"application/vnd.adobe.partial-upload": { source: "iana" },
+		"application/vnd.adobe.partial-upload": { "source": "iana" },
 		"application/vnd.adobe.xdp+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["xdp"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["xdp"]
 		},
 		"application/vnd.adobe.xfdf": {
-			source: "iana",
-			extensions: ["xfdf"]
+			"source": "iana",
+			"extensions": ["xfdf"]
 		},
-		"application/vnd.aether.imp": { source: "iana" },
-		"application/vnd.afpc.afplinedata": { source: "iana" },
-		"application/vnd.afpc.afplinedata-pagedef": { source: "iana" },
-		"application/vnd.afpc.cmoca-cmresource": { source: "iana" },
-		"application/vnd.afpc.foca-charset": { source: "iana" },
-		"application/vnd.afpc.foca-codedfont": { source: "iana" },
-		"application/vnd.afpc.foca-codepage": { source: "iana" },
-		"application/vnd.afpc.modca": { source: "iana" },
-		"application/vnd.afpc.modca-cmtable": { source: "iana" },
-		"application/vnd.afpc.modca-formdef": { source: "iana" },
-		"application/vnd.afpc.modca-mediummap": { source: "iana" },
-		"application/vnd.afpc.modca-objectcontainer": { source: "iana" },
-		"application/vnd.afpc.modca-overlay": { source: "iana" },
-		"application/vnd.afpc.modca-pagesegment": { source: "iana" },
+		"application/vnd.aether.imp": { "source": "iana" },
+		"application/vnd.afpc.afplinedata": { "source": "iana" },
+		"application/vnd.afpc.afplinedata-pagedef": { "source": "iana" },
+		"application/vnd.afpc.cmoca-cmresource": { "source": "iana" },
+		"application/vnd.afpc.foca-charset": { "source": "iana" },
+		"application/vnd.afpc.foca-codedfont": { "source": "iana" },
+		"application/vnd.afpc.foca-codepage": { "source": "iana" },
+		"application/vnd.afpc.modca": { "source": "iana" },
+		"application/vnd.afpc.modca-cmtable": { "source": "iana" },
+		"application/vnd.afpc.modca-formdef": { "source": "iana" },
+		"application/vnd.afpc.modca-mediummap": { "source": "iana" },
+		"application/vnd.afpc.modca-objectcontainer": { "source": "iana" },
+		"application/vnd.afpc.modca-overlay": { "source": "iana" },
+		"application/vnd.afpc.modca-pagesegment": { "source": "iana" },
 		"application/vnd.age": {
-			source: "iana",
-			extensions: ["age"]
+			"source": "iana",
+			"extensions": ["age"]
 		},
-		"application/vnd.ah-barcode": { source: "iana" },
+		"application/vnd.ah-barcode": { "source": "iana" },
 		"application/vnd.ahead.space": {
-			source: "iana",
-			extensions: ["ahead"]
+			"source": "iana",
+			"extensions": ["ahead"]
 		},
 		"application/vnd.airzip.filesecure.azf": {
-			source: "iana",
-			extensions: ["azf"]
+			"source": "iana",
+			"extensions": ["azf"]
 		},
 		"application/vnd.airzip.filesecure.azs": {
-			source: "iana",
-			extensions: ["azs"]
+			"source": "iana",
+			"extensions": ["azs"]
 		},
 		"application/vnd.amadeus+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.amazon.ebook": {
-			source: "apache",
-			extensions: ["azw"]
+			"source": "apache",
+			"extensions": ["azw"]
 		},
-		"application/vnd.amazon.mobi8-ebook": { source: "iana" },
+		"application/vnd.amazon.mobi8-ebook": { "source": "iana" },
 		"application/vnd.americandynamics.acc": {
-			source: "iana",
-			extensions: ["acc"]
+			"source": "iana",
+			"extensions": ["acc"]
 		},
 		"application/vnd.amiga.ami": {
-			source: "iana",
-			extensions: ["ami"]
+			"source": "iana",
+			"extensions": ["ami"]
 		},
 		"application/vnd.amundsen.maze+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/vnd.android.ota": { source: "iana" },
+		"application/vnd.android.ota": { "source": "iana" },
 		"application/vnd.android.package-archive": {
-			source: "apache",
-			compressible: !1,
-			extensions: ["apk"]
+			"source": "apache",
+			"compressible": false,
+			"extensions": ["apk"]
 		},
-		"application/vnd.anki": { source: "iana" },
+		"application/vnd.anki": { "source": "iana" },
 		"application/vnd.anser-web-certificate-issue-initiation": {
-			source: "iana",
-			extensions: ["cii"]
+			"source": "iana",
+			"extensions": ["cii"]
 		},
 		"application/vnd.anser-web-funds-transfer-initiation": {
-			source: "apache",
-			extensions: ["fti"]
+			"source": "apache",
+			"extensions": ["fti"]
 		},
 		"application/vnd.antix.game-component": {
-			source: "iana",
-			extensions: ["atx"]
+			"source": "iana",
+			"extensions": ["atx"]
 		},
-		"application/vnd.apache.arrow.file": { source: "iana" },
-		"application/vnd.apache.arrow.stream": { source: "iana" },
-		"application/vnd.apache.thrift.binary": { source: "iana" },
-		"application/vnd.apache.thrift.compact": { source: "iana" },
-		"application/vnd.apache.thrift.json": { source: "iana" },
+		"application/vnd.apache.arrow.file": { "source": "iana" },
+		"application/vnd.apache.arrow.stream": { "source": "iana" },
+		"application/vnd.apache.thrift.binary": { "source": "iana" },
+		"application/vnd.apache.thrift.compact": { "source": "iana" },
+		"application/vnd.apache.thrift.json": { "source": "iana" },
 		"application/vnd.api+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.aplextor.warrp+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.apothekende.reservation+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.apple.installer+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["mpkg"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["mpkg"]
 		},
 		"application/vnd.apple.keynote": {
-			source: "iana",
-			extensions: ["key"]
+			"source": "iana",
+			"extensions": ["key"]
 		},
 		"application/vnd.apple.mpegurl": {
-			source: "iana",
-			extensions: ["m3u8"]
+			"source": "iana",
+			"extensions": ["m3u8"]
 		},
 		"application/vnd.apple.numbers": {
-			source: "iana",
-			extensions: ["numbers"]
+			"source": "iana",
+			"extensions": ["numbers"]
 		},
 		"application/vnd.apple.pages": {
-			source: "iana",
-			extensions: ["pages"]
+			"source": "iana",
+			"extensions": ["pages"]
 		},
 		"application/vnd.apple.pkpass": {
-			compressible: !1,
-			extensions: ["pkpass"]
+			"compressible": false,
+			"extensions": ["pkpass"]
 		},
-		"application/vnd.arastra.swi": { source: "iana" },
+		"application/vnd.arastra.swi": { "source": "iana" },
 		"application/vnd.aristanetworks.swi": {
-			source: "iana",
-			extensions: ["swi"]
+			"source": "iana",
+			"extensions": ["swi"]
 		},
 		"application/vnd.artisan+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/vnd.artsquare": { source: "iana" },
+		"application/vnd.artsquare": { "source": "iana" },
 		"application/vnd.astraea-software.iota": {
-			source: "iana",
-			extensions: ["iota"]
+			"source": "iana",
+			"extensions": ["iota"]
 		},
 		"application/vnd.audiograph": {
-			source: "iana",
-			extensions: ["aep"]
+			"source": "iana",
+			"extensions": ["aep"]
 		},
-		"application/vnd.autopackage": { source: "iana" },
+		"application/vnd.autopackage": { "source": "iana" },
 		"application/vnd.avalon+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.avistar+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.balsamiq.bmml+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["bmml"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["bmml"]
 		},
-		"application/vnd.balsamiq.bmpr": { source: "iana" },
-		"application/vnd.banana-accounting": { source: "iana" },
-		"application/vnd.bbf.usp.error": { source: "iana" },
-		"application/vnd.bbf.usp.msg": { source: "iana" },
+		"application/vnd.balsamiq.bmpr": { "source": "iana" },
+		"application/vnd.banana-accounting": { "source": "iana" },
+		"application/vnd.bbf.usp.error": { "source": "iana" },
+		"application/vnd.bbf.usp.msg": { "source": "iana" },
 		"application/vnd.bbf.usp.msg+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.bekitzur-stech+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/vnd.bint.med-content": { source: "iana" },
+		"application/vnd.bint.med-content": { "source": "iana" },
 		"application/vnd.biopax.rdf+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/vnd.blink-idb-value-wrapper": { source: "iana" },
+		"application/vnd.blink-idb-value-wrapper": { "source": "iana" },
 		"application/vnd.blueice.multipass": {
-			source: "iana",
-			extensions: ["mpm"]
+			"source": "iana",
+			"extensions": ["mpm"]
 		},
-		"application/vnd.bluetooth.ep.oob": { source: "iana" },
-		"application/vnd.bluetooth.le.oob": { source: "iana" },
+		"application/vnd.bluetooth.ep.oob": { "source": "iana" },
+		"application/vnd.bluetooth.le.oob": { "source": "iana" },
 		"application/vnd.bmi": {
-			source: "iana",
-			extensions: ["bmi"]
+			"source": "iana",
+			"extensions": ["bmi"]
 		},
-		"application/vnd.bpf": { source: "iana" },
-		"application/vnd.bpf3": { source: "iana" },
+		"application/vnd.bpf": { "source": "iana" },
+		"application/vnd.bpf3": { "source": "iana" },
 		"application/vnd.businessobjects": {
-			source: "iana",
-			extensions: ["rep"]
+			"source": "iana",
+			"extensions": ["rep"]
 		},
 		"application/vnd.byu.uapi+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/vnd.cab-jscript": { source: "iana" },
-		"application/vnd.canon-cpdl": { source: "iana" },
-		"application/vnd.canon-lips": { source: "iana" },
+		"application/vnd.cab-jscript": { "source": "iana" },
+		"application/vnd.canon-cpdl": { "source": "iana" },
+		"application/vnd.canon-lips": { "source": "iana" },
 		"application/vnd.capasystems-pg+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/vnd.cendio.thinlinc.clientconf": { source: "iana" },
-		"application/vnd.century-systems.tcp_stream": { source: "iana" },
+		"application/vnd.cendio.thinlinc.clientconf": { "source": "iana" },
+		"application/vnd.century-systems.tcp_stream": { "source": "iana" },
 		"application/vnd.chemdraw+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["cdxml"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["cdxml"]
 		},
-		"application/vnd.chess-pgn": { source: "iana" },
+		"application/vnd.chess-pgn": { "source": "iana" },
 		"application/vnd.chipnuts.karaoke-mmd": {
-			source: "iana",
-			extensions: ["mmd"]
+			"source": "iana",
+			"extensions": ["mmd"]
 		},
-		"application/vnd.ciedi": { source: "iana" },
+		"application/vnd.ciedi": { "source": "iana" },
 		"application/vnd.cinderella": {
-			source: "iana",
-			extensions: ["cdy"]
+			"source": "iana",
+			"extensions": ["cdy"]
 		},
-		"application/vnd.cirpack.isdn-ext": { source: "iana" },
+		"application/vnd.cirpack.isdn-ext": { "source": "iana" },
 		"application/vnd.citationstyles.style+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["csl"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["csl"]
 		},
 		"application/vnd.claymore": {
-			source: "iana",
-			extensions: ["cla"]
+			"source": "iana",
+			"extensions": ["cla"]
 		},
 		"application/vnd.cloanto.rp9": {
-			source: "iana",
-			extensions: ["rp9"]
+			"source": "iana",
+			"extensions": ["rp9"]
 		},
 		"application/vnd.clonk.c4group": {
-			source: "iana",
-			extensions: [
+			"source": "iana",
+			"extensions": [
 				"c4g",
 				"c4d",
 				"c4f",
@@ -2277,155 +2615,155 @@ var o = Object.create, s = Object.defineProperty, c = Object.getOwnPropertyDescr
 			]
 		},
 		"application/vnd.cluetrust.cartomobile-config": {
-			source: "iana",
-			extensions: ["c11amc"]
+			"source": "iana",
+			"extensions": ["c11amc"]
 		},
 		"application/vnd.cluetrust.cartomobile-config-pkg": {
-			source: "iana",
-			extensions: ["c11amz"]
+			"source": "iana",
+			"extensions": ["c11amz"]
 		},
-		"application/vnd.coffeescript": { source: "iana" },
-		"application/vnd.collabio.xodocuments.document": { source: "iana" },
-		"application/vnd.collabio.xodocuments.document-template": { source: "iana" },
-		"application/vnd.collabio.xodocuments.presentation": { source: "iana" },
-		"application/vnd.collabio.xodocuments.presentation-template": { source: "iana" },
-		"application/vnd.collabio.xodocuments.spreadsheet": { source: "iana" },
-		"application/vnd.collabio.xodocuments.spreadsheet-template": { source: "iana" },
+		"application/vnd.coffeescript": { "source": "iana" },
+		"application/vnd.collabio.xodocuments.document": { "source": "iana" },
+		"application/vnd.collabio.xodocuments.document-template": { "source": "iana" },
+		"application/vnd.collabio.xodocuments.presentation": { "source": "iana" },
+		"application/vnd.collabio.xodocuments.presentation-template": { "source": "iana" },
+		"application/vnd.collabio.xodocuments.spreadsheet": { "source": "iana" },
+		"application/vnd.collabio.xodocuments.spreadsheet-template": { "source": "iana" },
 		"application/vnd.collection+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.collection.doc+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.collection.next+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.comicbook+zip": {
-			source: "iana",
-			compressible: !1
+			"source": "iana",
+			"compressible": false
 		},
-		"application/vnd.comicbook-rar": { source: "iana" },
-		"application/vnd.commerce-battelle": { source: "iana" },
+		"application/vnd.comicbook-rar": { "source": "iana" },
+		"application/vnd.commerce-battelle": { "source": "iana" },
 		"application/vnd.commonspace": {
-			source: "iana",
-			extensions: ["csp"]
+			"source": "iana",
+			"extensions": ["csp"]
 		},
 		"application/vnd.contact.cmsg": {
-			source: "iana",
-			extensions: ["cdbcmsg"]
+			"source": "iana",
+			"extensions": ["cdbcmsg"]
 		},
 		"application/vnd.coreos.ignition+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.cosmocaller": {
-			source: "iana",
-			extensions: ["cmc"]
+			"source": "iana",
+			"extensions": ["cmc"]
 		},
 		"application/vnd.crick.clicker": {
-			source: "iana",
-			extensions: ["clkx"]
+			"source": "iana",
+			"extensions": ["clkx"]
 		},
 		"application/vnd.crick.clicker.keyboard": {
-			source: "iana",
-			extensions: ["clkk"]
+			"source": "iana",
+			"extensions": ["clkk"]
 		},
 		"application/vnd.crick.clicker.palette": {
-			source: "iana",
-			extensions: ["clkp"]
+			"source": "iana",
+			"extensions": ["clkp"]
 		},
 		"application/vnd.crick.clicker.template": {
-			source: "iana",
-			extensions: ["clkt"]
+			"source": "iana",
+			"extensions": ["clkt"]
 		},
 		"application/vnd.crick.clicker.wordbank": {
-			source: "iana",
-			extensions: ["clkw"]
+			"source": "iana",
+			"extensions": ["clkw"]
 		},
 		"application/vnd.criticaltools.wbs+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["wbs"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["wbs"]
 		},
 		"application/vnd.cryptii.pipe+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/vnd.crypto-shade-file": { source: "iana" },
-		"application/vnd.cryptomator.encrypted": { source: "iana" },
-		"application/vnd.cryptomator.vault": { source: "iana" },
+		"application/vnd.crypto-shade-file": { "source": "iana" },
+		"application/vnd.cryptomator.encrypted": { "source": "iana" },
+		"application/vnd.cryptomator.vault": { "source": "iana" },
 		"application/vnd.ctc-posml": {
-			source: "iana",
-			extensions: ["pml"]
+			"source": "iana",
+			"extensions": ["pml"]
 		},
 		"application/vnd.ctct.ws+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/vnd.cups-pdf": { source: "iana" },
-		"application/vnd.cups-postscript": { source: "iana" },
+		"application/vnd.cups-pdf": { "source": "iana" },
+		"application/vnd.cups-postscript": { "source": "iana" },
 		"application/vnd.cups-ppd": {
-			source: "iana",
-			extensions: ["ppd"]
+			"source": "iana",
+			"extensions": ["ppd"]
 		},
-		"application/vnd.cups-raster": { source: "iana" },
-		"application/vnd.cups-raw": { source: "iana" },
-		"application/vnd.curl": { source: "iana" },
+		"application/vnd.cups-raster": { "source": "iana" },
+		"application/vnd.cups-raw": { "source": "iana" },
+		"application/vnd.curl": { "source": "iana" },
 		"application/vnd.curl.car": {
-			source: "apache",
-			extensions: ["car"]
+			"source": "apache",
+			"extensions": ["car"]
 		},
 		"application/vnd.curl.pcurl": {
-			source: "apache",
-			extensions: ["pcurl"]
+			"source": "apache",
+			"extensions": ["pcurl"]
 		},
 		"application/vnd.cyan.dean.root+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/vnd.cybank": { source: "iana" },
+		"application/vnd.cybank": { "source": "iana" },
 		"application/vnd.cyclonedx+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.cyclonedx+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.d2l.coursepackage1p0+zip": {
-			source: "iana",
-			compressible: !1
+			"source": "iana",
+			"compressible": false
 		},
-		"application/vnd.d3m-dataset": { source: "iana" },
-		"application/vnd.d3m-problem": { source: "iana" },
+		"application/vnd.d3m-dataset": { "source": "iana" },
+		"application/vnd.d3m-problem": { "source": "iana" },
 		"application/vnd.dart": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["dart"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["dart"]
 		},
 		"application/vnd.data-vision.rdz": {
-			source: "iana",
-			extensions: ["rdz"]
+			"source": "iana",
+			"extensions": ["rdz"]
 		},
 		"application/vnd.datapackage+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.dataresource+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.dbf": {
-			source: "iana",
-			extensions: ["dbf"]
+			"source": "iana",
+			"extensions": ["dbf"]
 		},
-		"application/vnd.debian.binary-package": { source: "iana" },
+		"application/vnd.debian.binary-package": { "source": "iana" },
 		"application/vnd.dece.data": {
-			source: "iana",
-			extensions: [
+			"source": "iana",
+			"extensions": [
 				"uvf",
 				"uvvf",
 				"uvd",
@@ -2433,317 +2771,317 @@ var o = Object.create, s = Object.defineProperty, c = Object.getOwnPropertyDescr
 			]
 		},
 		"application/vnd.dece.ttml+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["uvt", "uvvt"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["uvt", "uvvt"]
 		},
 		"application/vnd.dece.unspecified": {
-			source: "iana",
-			extensions: ["uvx", "uvvx"]
+			"source": "iana",
+			"extensions": ["uvx", "uvvx"]
 		},
 		"application/vnd.dece.zip": {
-			source: "iana",
-			extensions: ["uvz", "uvvz"]
+			"source": "iana",
+			"extensions": ["uvz", "uvvz"]
 		},
 		"application/vnd.denovo.fcselayout-link": {
-			source: "iana",
-			extensions: ["fe_launch"]
+			"source": "iana",
+			"extensions": ["fe_launch"]
 		},
-		"application/vnd.desmume.movie": { source: "iana" },
-		"application/vnd.dir-bi.plate-dl-nosuffix": { source: "iana" },
+		"application/vnd.desmume.movie": { "source": "iana" },
+		"application/vnd.dir-bi.plate-dl-nosuffix": { "source": "iana" },
 		"application/vnd.dm.delegation+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.dna": {
-			source: "iana",
-			extensions: ["dna"]
+			"source": "iana",
+			"extensions": ["dna"]
 		},
 		"application/vnd.document+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.dolby.mlp": {
-			source: "apache",
-			extensions: ["mlp"]
+			"source": "apache",
+			"extensions": ["mlp"]
 		},
-		"application/vnd.dolby.mobile.1": { source: "iana" },
-		"application/vnd.dolby.mobile.2": { source: "iana" },
-		"application/vnd.doremir.scorecloud-binary-document": { source: "iana" },
+		"application/vnd.dolby.mobile.1": { "source": "iana" },
+		"application/vnd.dolby.mobile.2": { "source": "iana" },
+		"application/vnd.doremir.scorecloud-binary-document": { "source": "iana" },
 		"application/vnd.dpgraph": {
-			source: "iana",
-			extensions: ["dpg"]
+			"source": "iana",
+			"extensions": ["dpg"]
 		},
 		"application/vnd.dreamfactory": {
-			source: "iana",
-			extensions: ["dfac"]
+			"source": "iana",
+			"extensions": ["dfac"]
 		},
 		"application/vnd.drive+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.ds-keypoint": {
-			source: "apache",
-			extensions: ["kpxx"]
+			"source": "apache",
+			"extensions": ["kpxx"]
 		},
-		"application/vnd.dtg.local": { source: "iana" },
-		"application/vnd.dtg.local.flash": { source: "iana" },
-		"application/vnd.dtg.local.html": { source: "iana" },
+		"application/vnd.dtg.local": { "source": "iana" },
+		"application/vnd.dtg.local.flash": { "source": "iana" },
+		"application/vnd.dtg.local.html": { "source": "iana" },
 		"application/vnd.dvb.ait": {
-			source: "iana",
-			extensions: ["ait"]
+			"source": "iana",
+			"extensions": ["ait"]
 		},
 		"application/vnd.dvb.dvbisl+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/vnd.dvb.dvbj": { source: "iana" },
-		"application/vnd.dvb.esgcontainer": { source: "iana" },
-		"application/vnd.dvb.ipdcdftnotifaccess": { source: "iana" },
-		"application/vnd.dvb.ipdcesgaccess": { source: "iana" },
-		"application/vnd.dvb.ipdcesgaccess2": { source: "iana" },
-		"application/vnd.dvb.ipdcesgpdd": { source: "iana" },
-		"application/vnd.dvb.ipdcroaming": { source: "iana" },
-		"application/vnd.dvb.iptv.alfec-base": { source: "iana" },
-		"application/vnd.dvb.iptv.alfec-enhancement": { source: "iana" },
+		"application/vnd.dvb.dvbj": { "source": "iana" },
+		"application/vnd.dvb.esgcontainer": { "source": "iana" },
+		"application/vnd.dvb.ipdcdftnotifaccess": { "source": "iana" },
+		"application/vnd.dvb.ipdcesgaccess": { "source": "iana" },
+		"application/vnd.dvb.ipdcesgaccess2": { "source": "iana" },
+		"application/vnd.dvb.ipdcesgpdd": { "source": "iana" },
+		"application/vnd.dvb.ipdcroaming": { "source": "iana" },
+		"application/vnd.dvb.iptv.alfec-base": { "source": "iana" },
+		"application/vnd.dvb.iptv.alfec-enhancement": { "source": "iana" },
 		"application/vnd.dvb.notif-aggregate-root+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.dvb.notif-container+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.dvb.notif-generic+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.dvb.notif-ia-msglist+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.dvb.notif-ia-registration-request+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.dvb.notif-ia-registration-response+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.dvb.notif-init+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/vnd.dvb.pfr": { source: "iana" },
+		"application/vnd.dvb.pfr": { "source": "iana" },
 		"application/vnd.dvb.service": {
-			source: "iana",
-			extensions: ["svc"]
+			"source": "iana",
+			"extensions": ["svc"]
 		},
-		"application/vnd.dxr": { source: "iana" },
+		"application/vnd.dxr": { "source": "iana" },
 		"application/vnd.dynageo": {
-			source: "iana",
-			extensions: ["geo"]
+			"source": "iana",
+			"extensions": ["geo"]
 		},
-		"application/vnd.dzr": { source: "iana" },
-		"application/vnd.easykaraoke.cdgdownload": { source: "iana" },
-		"application/vnd.ecdis-update": { source: "iana" },
-		"application/vnd.ecip.rlp": { source: "iana" },
+		"application/vnd.dzr": { "source": "iana" },
+		"application/vnd.easykaraoke.cdgdownload": { "source": "iana" },
+		"application/vnd.ecdis-update": { "source": "iana" },
+		"application/vnd.ecip.rlp": { "source": "iana" },
 		"application/vnd.eclipse.ditto+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.ecowin.chart": {
-			source: "iana",
-			extensions: ["mag"]
+			"source": "iana",
+			"extensions": ["mag"]
 		},
-		"application/vnd.ecowin.filerequest": { source: "iana" },
-		"application/vnd.ecowin.fileupdate": { source: "iana" },
-		"application/vnd.ecowin.series": { source: "iana" },
-		"application/vnd.ecowin.seriesrequest": { source: "iana" },
-		"application/vnd.ecowin.seriesupdate": { source: "iana" },
-		"application/vnd.efi.img": { source: "iana" },
-		"application/vnd.efi.iso": { source: "iana" },
+		"application/vnd.ecowin.filerequest": { "source": "iana" },
+		"application/vnd.ecowin.fileupdate": { "source": "iana" },
+		"application/vnd.ecowin.series": { "source": "iana" },
+		"application/vnd.ecowin.seriesrequest": { "source": "iana" },
+		"application/vnd.ecowin.seriesupdate": { "source": "iana" },
+		"application/vnd.efi.img": { "source": "iana" },
+		"application/vnd.efi.iso": { "source": "iana" },
 		"application/vnd.emclient.accessrequest+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.enliven": {
-			source: "iana",
-			extensions: ["nml"]
+			"source": "iana",
+			"extensions": ["nml"]
 		},
-		"application/vnd.enphase.envoy": { source: "iana" },
+		"application/vnd.enphase.envoy": { "source": "iana" },
 		"application/vnd.eprints.data+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.epson.esf": {
-			source: "iana",
-			extensions: ["esf"]
+			"source": "iana",
+			"extensions": ["esf"]
 		},
 		"application/vnd.epson.msf": {
-			source: "iana",
-			extensions: ["msf"]
+			"source": "iana",
+			"extensions": ["msf"]
 		},
 		"application/vnd.epson.quickanime": {
-			source: "iana",
-			extensions: ["qam"]
+			"source": "iana",
+			"extensions": ["qam"]
 		},
 		"application/vnd.epson.salt": {
-			source: "iana",
-			extensions: ["slt"]
+			"source": "iana",
+			"extensions": ["slt"]
 		},
 		"application/vnd.epson.ssf": {
-			source: "iana",
-			extensions: ["ssf"]
+			"source": "iana",
+			"extensions": ["ssf"]
 		},
-		"application/vnd.ericsson.quickcall": { source: "iana" },
+		"application/vnd.ericsson.quickcall": { "source": "iana" },
 		"application/vnd.espass-espass+zip": {
-			source: "iana",
-			compressible: !1
+			"source": "iana",
+			"compressible": false
 		},
 		"application/vnd.eszigno3+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["es3", "et3"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["es3", "et3"]
 		},
 		"application/vnd.etsi.aoc+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.etsi.asic-e+zip": {
-			source: "iana",
-			compressible: !1
+			"source": "iana",
+			"compressible": false
 		},
 		"application/vnd.etsi.asic-s+zip": {
-			source: "iana",
-			compressible: !1
+			"source": "iana",
+			"compressible": false
 		},
 		"application/vnd.etsi.cug+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.etsi.iptvcommand+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.etsi.iptvdiscovery+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.etsi.iptvprofile+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.etsi.iptvsad-bc+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.etsi.iptvsad-cod+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.etsi.iptvsad-npvr+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.etsi.iptvservice+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.etsi.iptvsync+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.etsi.iptvueprofile+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.etsi.mcid+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/vnd.etsi.mheg5": { source: "iana" },
+		"application/vnd.etsi.mheg5": { "source": "iana" },
 		"application/vnd.etsi.overload-control-policy-dataset+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.etsi.pstn+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.etsi.sci+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.etsi.simservs+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/vnd.etsi.timestamp-token": { source: "iana" },
+		"application/vnd.etsi.timestamp-token": { "source": "iana" },
 		"application/vnd.etsi.tsl+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/vnd.etsi.tsl.der": { source: "iana" },
+		"application/vnd.etsi.tsl.der": { "source": "iana" },
 		"application/vnd.eu.kasparian.car+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/vnd.eudora.data": { source: "iana" },
-		"application/vnd.evolv.ecig.profile": { source: "iana" },
-		"application/vnd.evolv.ecig.settings": { source: "iana" },
-		"application/vnd.evolv.ecig.theme": { source: "iana" },
+		"application/vnd.eudora.data": { "source": "iana" },
+		"application/vnd.evolv.ecig.profile": { "source": "iana" },
+		"application/vnd.evolv.ecig.settings": { "source": "iana" },
+		"application/vnd.evolv.ecig.theme": { "source": "iana" },
 		"application/vnd.exstream-empower+zip": {
-			source: "iana",
-			compressible: !1
+			"source": "iana",
+			"compressible": false
 		},
-		"application/vnd.exstream-package": { source: "iana" },
+		"application/vnd.exstream-package": { "source": "iana" },
 		"application/vnd.ezpix-album": {
-			source: "iana",
-			extensions: ["ez2"]
+			"source": "iana",
+			"extensions": ["ez2"]
 		},
 		"application/vnd.ezpix-package": {
-			source: "iana",
-			extensions: ["ez3"]
+			"source": "iana",
+			"extensions": ["ez3"]
 		},
-		"application/vnd.f-secure.mobile": { source: "iana" },
+		"application/vnd.f-secure.mobile": { "source": "iana" },
 		"application/vnd.familysearch.gedcom+zip": {
-			source: "iana",
-			compressible: !1
+			"source": "iana",
+			"compressible": false
 		},
-		"application/vnd.fastcopy-disk-image": { source: "iana" },
+		"application/vnd.fastcopy-disk-image": { "source": "iana" },
 		"application/vnd.fdf": {
-			source: "iana",
-			extensions: ["fdf"]
+			"source": "iana",
+			"extensions": ["fdf"]
 		},
 		"application/vnd.fdsn.mseed": {
-			source: "iana",
-			extensions: ["mseed"]
+			"source": "iana",
+			"extensions": ["mseed"]
 		},
 		"application/vnd.fdsn.seed": {
-			source: "iana",
-			extensions: ["seed", "dataless"]
+			"source": "iana",
+			"extensions": ["seed", "dataless"]
 		},
-		"application/vnd.ffsns": { source: "iana" },
+		"application/vnd.ffsns": { "source": "iana" },
 		"application/vnd.ficlab.flb+zip": {
-			source: "iana",
-			compressible: !1
+			"source": "iana",
+			"compressible": false
 		},
-		"application/vnd.filmit.zfc": { source: "iana" },
-		"application/vnd.fints": { source: "iana" },
-		"application/vnd.firemonkeys.cloudcell": { source: "iana" },
+		"application/vnd.filmit.zfc": { "source": "iana" },
+		"application/vnd.fints": { "source": "iana" },
+		"application/vnd.firemonkeys.cloudcell": { "source": "iana" },
 		"application/vnd.flographit": {
-			source: "iana",
-			extensions: ["gph"]
+			"source": "iana",
+			"extensions": ["gph"]
 		},
 		"application/vnd.fluxtime.clip": {
-			source: "iana",
-			extensions: ["ftc"]
+			"source": "iana",
+			"extensions": ["ftc"]
 		},
-		"application/vnd.font-fontforge-sfd": { source: "iana" },
+		"application/vnd.font-fontforge-sfd": { "source": "iana" },
 		"application/vnd.framemaker": {
-			source: "iana",
-			extensions: [
+			"source": "iana",
+			"extensions": [
 				"fm",
 				"frame",
 				"maker",
@@ -2751,501 +3089,501 @@ var o = Object.create, s = Object.defineProperty, c = Object.getOwnPropertyDescr
 			]
 		},
 		"application/vnd.frogans.fnc": {
-			source: "iana",
-			extensions: ["fnc"]
+			"source": "iana",
+			"extensions": ["fnc"]
 		},
 		"application/vnd.frogans.ltf": {
-			source: "iana",
-			extensions: ["ltf"]
+			"source": "iana",
+			"extensions": ["ltf"]
 		},
 		"application/vnd.fsc.weblaunch": {
-			source: "iana",
-			extensions: ["fsc"]
+			"source": "iana",
+			"extensions": ["fsc"]
 		},
-		"application/vnd.fujifilm.fb.docuworks": { source: "iana" },
-		"application/vnd.fujifilm.fb.docuworks.binder": { source: "iana" },
-		"application/vnd.fujifilm.fb.docuworks.container": { source: "iana" },
+		"application/vnd.fujifilm.fb.docuworks": { "source": "iana" },
+		"application/vnd.fujifilm.fb.docuworks.binder": { "source": "iana" },
+		"application/vnd.fujifilm.fb.docuworks.container": { "source": "iana" },
 		"application/vnd.fujifilm.fb.jfi+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.fujitsu.oasys": {
-			source: "iana",
-			extensions: ["oas"]
+			"source": "iana",
+			"extensions": ["oas"]
 		},
 		"application/vnd.fujitsu.oasys2": {
-			source: "iana",
-			extensions: ["oa2"]
+			"source": "iana",
+			"extensions": ["oa2"]
 		},
 		"application/vnd.fujitsu.oasys3": {
-			source: "iana",
-			extensions: ["oa3"]
+			"source": "iana",
+			"extensions": ["oa3"]
 		},
 		"application/vnd.fujitsu.oasysgp": {
-			source: "iana",
-			extensions: ["fg5"]
+			"source": "iana",
+			"extensions": ["fg5"]
 		},
 		"application/vnd.fujitsu.oasysprs": {
-			source: "iana",
-			extensions: ["bh2"]
+			"source": "iana",
+			"extensions": ["bh2"]
 		},
-		"application/vnd.fujixerox.art-ex": { source: "iana" },
-		"application/vnd.fujixerox.art4": { source: "iana" },
+		"application/vnd.fujixerox.art-ex": { "source": "iana" },
+		"application/vnd.fujixerox.art4": { "source": "iana" },
 		"application/vnd.fujixerox.ddd": {
-			source: "iana",
-			extensions: ["ddd"]
+			"source": "iana",
+			"extensions": ["ddd"]
 		},
 		"application/vnd.fujixerox.docuworks": {
-			source: "iana",
-			extensions: ["xdw"]
+			"source": "iana",
+			"extensions": ["xdw"]
 		},
 		"application/vnd.fujixerox.docuworks.binder": {
-			source: "iana",
-			extensions: ["xbd"]
+			"source": "iana",
+			"extensions": ["xbd"]
 		},
-		"application/vnd.fujixerox.docuworks.container": { source: "iana" },
-		"application/vnd.fujixerox.hbpl": { source: "iana" },
-		"application/vnd.fut-misnet": { source: "iana" },
-		"application/vnd.futoin+cbor": { source: "iana" },
+		"application/vnd.fujixerox.docuworks.container": { "source": "iana" },
+		"application/vnd.fujixerox.hbpl": { "source": "iana" },
+		"application/vnd.fut-misnet": { "source": "iana" },
+		"application/vnd.futoin+cbor": { "source": "iana" },
 		"application/vnd.futoin+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.fuzzysheet": {
-			source: "iana",
-			extensions: ["fzs"]
+			"source": "iana",
+			"extensions": ["fzs"]
 		},
 		"application/vnd.genomatix.tuxedo": {
-			source: "iana",
-			extensions: ["txd"]
+			"source": "iana",
+			"extensions": ["txd"]
 		},
 		"application/vnd.gentics.grd+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.geo+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.geocube+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.geogebra.file": {
-			source: "iana",
-			extensions: ["ggb"]
+			"source": "iana",
+			"extensions": ["ggb"]
 		},
-		"application/vnd.geogebra.slides": { source: "iana" },
+		"application/vnd.geogebra.slides": { "source": "iana" },
 		"application/vnd.geogebra.tool": {
-			source: "iana",
-			extensions: ["ggt"]
+			"source": "iana",
+			"extensions": ["ggt"]
 		},
 		"application/vnd.geometry-explorer": {
-			source: "iana",
-			extensions: ["gex", "gre"]
+			"source": "iana",
+			"extensions": ["gex", "gre"]
 		},
 		"application/vnd.geonext": {
-			source: "iana",
-			extensions: ["gxt"]
+			"source": "iana",
+			"extensions": ["gxt"]
 		},
 		"application/vnd.geoplan": {
-			source: "iana",
-			extensions: ["g2w"]
+			"source": "iana",
+			"extensions": ["g2w"]
 		},
 		"application/vnd.geospace": {
-			source: "iana",
-			extensions: ["g3w"]
+			"source": "iana",
+			"extensions": ["g3w"]
 		},
-		"application/vnd.gerber": { source: "iana" },
-		"application/vnd.globalplatform.card-content-mgt": { source: "iana" },
-		"application/vnd.globalplatform.card-content-mgt-response": { source: "iana" },
+		"application/vnd.gerber": { "source": "iana" },
+		"application/vnd.globalplatform.card-content-mgt": { "source": "iana" },
+		"application/vnd.globalplatform.card-content-mgt-response": { "source": "iana" },
 		"application/vnd.gmx": {
-			source: "iana",
-			extensions: ["gmx"]
+			"source": "iana",
+			"extensions": ["gmx"]
 		},
 		"application/vnd.google-apps.document": {
-			compressible: !1,
-			extensions: ["gdoc"]
+			"compressible": false,
+			"extensions": ["gdoc"]
 		},
 		"application/vnd.google-apps.presentation": {
-			compressible: !1,
-			extensions: ["gslides"]
+			"compressible": false,
+			"extensions": ["gslides"]
 		},
 		"application/vnd.google-apps.spreadsheet": {
-			compressible: !1,
-			extensions: ["gsheet"]
+			"compressible": false,
+			"extensions": ["gsheet"]
 		},
 		"application/vnd.google-earth.kml+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["kml"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["kml"]
 		},
 		"application/vnd.google-earth.kmz": {
-			source: "iana",
-			compressible: !1,
-			extensions: ["kmz"]
+			"source": "iana",
+			"compressible": false,
+			"extensions": ["kmz"]
 		},
 		"application/vnd.gov.sk.e-form+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.gov.sk.e-form+zip": {
-			source: "iana",
-			compressible: !1
+			"source": "iana",
+			"compressible": false
 		},
 		"application/vnd.gov.sk.xmldatacontainer+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.grafeq": {
-			source: "iana",
-			extensions: ["gqf", "gqs"]
+			"source": "iana",
+			"extensions": ["gqf", "gqs"]
 		},
-		"application/vnd.gridmp": { source: "iana" },
+		"application/vnd.gridmp": { "source": "iana" },
 		"application/vnd.groove-account": {
-			source: "iana",
-			extensions: ["gac"]
+			"source": "iana",
+			"extensions": ["gac"]
 		},
 		"application/vnd.groove-help": {
-			source: "iana",
-			extensions: ["ghf"]
+			"source": "iana",
+			"extensions": ["ghf"]
 		},
 		"application/vnd.groove-identity-message": {
-			source: "iana",
-			extensions: ["gim"]
+			"source": "iana",
+			"extensions": ["gim"]
 		},
 		"application/vnd.groove-injector": {
-			source: "iana",
-			extensions: ["grv"]
+			"source": "iana",
+			"extensions": ["grv"]
 		},
 		"application/vnd.groove-tool-message": {
-			source: "iana",
-			extensions: ["gtm"]
+			"source": "iana",
+			"extensions": ["gtm"]
 		},
 		"application/vnd.groove-tool-template": {
-			source: "iana",
-			extensions: ["tpl"]
+			"source": "iana",
+			"extensions": ["tpl"]
 		},
 		"application/vnd.groove-vcard": {
-			source: "iana",
-			extensions: ["vcg"]
+			"source": "iana",
+			"extensions": ["vcg"]
 		},
 		"application/vnd.hal+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.hal+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["hal"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["hal"]
 		},
 		"application/vnd.handheld-entertainment+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["zmm"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["zmm"]
 		},
 		"application/vnd.hbci": {
-			source: "iana",
-			extensions: ["hbci"]
+			"source": "iana",
+			"extensions": ["hbci"]
 		},
 		"application/vnd.hc+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/vnd.hcl-bireports": { source: "iana" },
-		"application/vnd.hdt": { source: "iana" },
+		"application/vnd.hcl-bireports": { "source": "iana" },
+		"application/vnd.hdt": { "source": "iana" },
 		"application/vnd.heroku+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.hhe.lesson-player": {
-			source: "iana",
-			extensions: ["les"]
+			"source": "iana",
+			"extensions": ["les"]
 		},
 		"application/vnd.hl7cda+xml": {
-			source: "iana",
-			charset: "UTF-8",
-			compressible: !0
+			"source": "iana",
+			"charset": "UTF-8",
+			"compressible": true
 		},
 		"application/vnd.hl7v2+xml": {
-			source: "iana",
-			charset: "UTF-8",
-			compressible: !0
+			"source": "iana",
+			"charset": "UTF-8",
+			"compressible": true
 		},
 		"application/vnd.hp-hpgl": {
-			source: "iana",
-			extensions: ["hpgl"]
+			"source": "iana",
+			"extensions": ["hpgl"]
 		},
 		"application/vnd.hp-hpid": {
-			source: "iana",
-			extensions: ["hpid"]
+			"source": "iana",
+			"extensions": ["hpid"]
 		},
 		"application/vnd.hp-hps": {
-			source: "iana",
-			extensions: ["hps"]
+			"source": "iana",
+			"extensions": ["hps"]
 		},
 		"application/vnd.hp-jlyt": {
-			source: "iana",
-			extensions: ["jlt"]
+			"source": "iana",
+			"extensions": ["jlt"]
 		},
 		"application/vnd.hp-pcl": {
-			source: "iana",
-			extensions: ["pcl"]
+			"source": "iana",
+			"extensions": ["pcl"]
 		},
 		"application/vnd.hp-pclxl": {
-			source: "iana",
-			extensions: ["pclxl"]
+			"source": "iana",
+			"extensions": ["pclxl"]
 		},
-		"application/vnd.httphone": { source: "iana" },
+		"application/vnd.httphone": { "source": "iana" },
 		"application/vnd.hydrostatix.sof-data": {
-			source: "iana",
-			extensions: ["sfd-hdstx"]
+			"source": "iana",
+			"extensions": ["sfd-hdstx"]
 		},
 		"application/vnd.hyper+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.hyper-item+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.hyperdrive+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/vnd.hzn-3d-crossword": { source: "iana" },
-		"application/vnd.ibm.afplinedata": { source: "iana" },
-		"application/vnd.ibm.electronic-media": { source: "iana" },
+		"application/vnd.hzn-3d-crossword": { "source": "iana" },
+		"application/vnd.ibm.afplinedata": { "source": "iana" },
+		"application/vnd.ibm.electronic-media": { "source": "iana" },
 		"application/vnd.ibm.minipay": {
-			source: "iana",
-			extensions: ["mpy"]
+			"source": "iana",
+			"extensions": ["mpy"]
 		},
 		"application/vnd.ibm.modcap": {
-			source: "iana",
-			extensions: [
+			"source": "iana",
+			"extensions": [
 				"afp",
 				"listafp",
 				"list3820"
 			]
 		},
 		"application/vnd.ibm.rights-management": {
-			source: "iana",
-			extensions: ["irm"]
+			"source": "iana",
+			"extensions": ["irm"]
 		},
 		"application/vnd.ibm.secure-container": {
-			source: "iana",
-			extensions: ["sc"]
+			"source": "iana",
+			"extensions": ["sc"]
 		},
 		"application/vnd.iccprofile": {
-			source: "iana",
-			extensions: ["icc", "icm"]
+			"source": "iana",
+			"extensions": ["icc", "icm"]
 		},
-		"application/vnd.ieee.1905": { source: "iana" },
+		"application/vnd.ieee.1905": { "source": "iana" },
 		"application/vnd.igloader": {
-			source: "iana",
-			extensions: ["igl"]
+			"source": "iana",
+			"extensions": ["igl"]
 		},
 		"application/vnd.imagemeter.folder+zip": {
-			source: "iana",
-			compressible: !1
+			"source": "iana",
+			"compressible": false
 		},
 		"application/vnd.imagemeter.image+zip": {
-			source: "iana",
-			compressible: !1
+			"source": "iana",
+			"compressible": false
 		},
 		"application/vnd.immervision-ivp": {
-			source: "iana",
-			extensions: ["ivp"]
+			"source": "iana",
+			"extensions": ["ivp"]
 		},
 		"application/vnd.immervision-ivu": {
-			source: "iana",
-			extensions: ["ivu"]
+			"source": "iana",
+			"extensions": ["ivu"]
 		},
-		"application/vnd.ims.imsccv1p1": { source: "iana" },
-		"application/vnd.ims.imsccv1p2": { source: "iana" },
-		"application/vnd.ims.imsccv1p3": { source: "iana" },
+		"application/vnd.ims.imsccv1p1": { "source": "iana" },
+		"application/vnd.ims.imsccv1p2": { "source": "iana" },
+		"application/vnd.ims.imsccv1p3": { "source": "iana" },
 		"application/vnd.ims.lis.v2.result+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.ims.lti.v2.toolconsumerprofile+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.ims.lti.v2.toolproxy+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.ims.lti.v2.toolproxy.id+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.ims.lti.v2.toolsettings+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.ims.lti.v2.toolsettings.simple+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.informedcontrol.rms+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/vnd.informix-visionary": { source: "iana" },
-		"application/vnd.infotech.project": { source: "iana" },
+		"application/vnd.informix-visionary": { "source": "iana" },
+		"application/vnd.infotech.project": { "source": "iana" },
 		"application/vnd.infotech.project+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/vnd.innopath.wamp.notification": { source: "iana" },
+		"application/vnd.innopath.wamp.notification": { "source": "iana" },
 		"application/vnd.insors.igm": {
-			source: "iana",
-			extensions: ["igm"]
+			"source": "iana",
+			"extensions": ["igm"]
 		},
 		"application/vnd.intercon.formnet": {
-			source: "iana",
-			extensions: ["xpw", "xpx"]
+			"source": "iana",
+			"extensions": ["xpw", "xpx"]
 		},
 		"application/vnd.intergeo": {
-			source: "iana",
-			extensions: ["i2g"]
+			"source": "iana",
+			"extensions": ["i2g"]
 		},
-		"application/vnd.intertrust.digibox": { source: "iana" },
-		"application/vnd.intertrust.nncp": { source: "iana" },
+		"application/vnd.intertrust.digibox": { "source": "iana" },
+		"application/vnd.intertrust.nncp": { "source": "iana" },
 		"application/vnd.intu.qbo": {
-			source: "iana",
-			extensions: ["qbo"]
+			"source": "iana",
+			"extensions": ["qbo"]
 		},
 		"application/vnd.intu.qfx": {
-			source: "iana",
-			extensions: ["qfx"]
+			"source": "iana",
+			"extensions": ["qfx"]
 		},
 		"application/vnd.iptc.g2.catalogitem+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.iptc.g2.conceptitem+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.iptc.g2.knowledgeitem+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.iptc.g2.newsitem+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.iptc.g2.newsmessage+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.iptc.g2.packageitem+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.iptc.g2.planningitem+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.ipunplugged.rcprofile": {
-			source: "iana",
-			extensions: ["rcprofile"]
+			"source": "iana",
+			"extensions": ["rcprofile"]
 		},
 		"application/vnd.irepository.package+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["irp"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["irp"]
 		},
 		"application/vnd.is-xpr": {
-			source: "iana",
-			extensions: ["xpr"]
+			"source": "iana",
+			"extensions": ["xpr"]
 		},
 		"application/vnd.isac.fcs": {
-			source: "iana",
-			extensions: ["fcs"]
+			"source": "iana",
+			"extensions": ["fcs"]
 		},
 		"application/vnd.iso11783-10+zip": {
-			source: "iana",
-			compressible: !1
+			"source": "iana",
+			"compressible": false
 		},
 		"application/vnd.jam": {
-			source: "iana",
-			extensions: ["jam"]
+			"source": "iana",
+			"extensions": ["jam"]
 		},
-		"application/vnd.japannet-directory-service": { source: "iana" },
-		"application/vnd.japannet-jpnstore-wakeup": { source: "iana" },
-		"application/vnd.japannet-payment-wakeup": { source: "iana" },
-		"application/vnd.japannet-registration": { source: "iana" },
-		"application/vnd.japannet-registration-wakeup": { source: "iana" },
-		"application/vnd.japannet-setstore-wakeup": { source: "iana" },
-		"application/vnd.japannet-verification": { source: "iana" },
-		"application/vnd.japannet-verification-wakeup": { source: "iana" },
+		"application/vnd.japannet-directory-service": { "source": "iana" },
+		"application/vnd.japannet-jpnstore-wakeup": { "source": "iana" },
+		"application/vnd.japannet-payment-wakeup": { "source": "iana" },
+		"application/vnd.japannet-registration": { "source": "iana" },
+		"application/vnd.japannet-registration-wakeup": { "source": "iana" },
+		"application/vnd.japannet-setstore-wakeup": { "source": "iana" },
+		"application/vnd.japannet-verification": { "source": "iana" },
+		"application/vnd.japannet-verification-wakeup": { "source": "iana" },
 		"application/vnd.jcp.javame.midlet-rms": {
-			source: "iana",
-			extensions: ["rms"]
+			"source": "iana",
+			"extensions": ["rms"]
 		},
 		"application/vnd.jisp": {
-			source: "iana",
-			extensions: ["jisp"]
+			"source": "iana",
+			"extensions": ["jisp"]
 		},
 		"application/vnd.joost.joda-archive": {
-			source: "iana",
-			extensions: ["joda"]
+			"source": "iana",
+			"extensions": ["joda"]
 		},
-		"application/vnd.jsk.isdn-ngn": { source: "iana" },
+		"application/vnd.jsk.isdn-ngn": { "source": "iana" },
 		"application/vnd.kahootz": {
-			source: "iana",
-			extensions: ["ktz", "ktr"]
+			"source": "iana",
+			"extensions": ["ktz", "ktr"]
 		},
 		"application/vnd.kde.karbon": {
-			source: "iana",
-			extensions: ["karbon"]
+			"source": "iana",
+			"extensions": ["karbon"]
 		},
 		"application/vnd.kde.kchart": {
-			source: "iana",
-			extensions: ["chrt"]
+			"source": "iana",
+			"extensions": ["chrt"]
 		},
 		"application/vnd.kde.kformula": {
-			source: "iana",
-			extensions: ["kfo"]
+			"source": "iana",
+			"extensions": ["kfo"]
 		},
 		"application/vnd.kde.kivio": {
-			source: "iana",
-			extensions: ["flw"]
+			"source": "iana",
+			"extensions": ["flw"]
 		},
 		"application/vnd.kde.kontour": {
-			source: "iana",
-			extensions: ["kon"]
+			"source": "iana",
+			"extensions": ["kon"]
 		},
 		"application/vnd.kde.kpresenter": {
-			source: "iana",
-			extensions: ["kpr", "kpt"]
+			"source": "iana",
+			"extensions": ["kpr", "kpt"]
 		},
 		"application/vnd.kde.kspread": {
-			source: "iana",
-			extensions: ["ksp"]
+			"source": "iana",
+			"extensions": ["ksp"]
 		},
 		"application/vnd.kde.kword": {
-			source: "iana",
-			extensions: ["kwd", "kwt"]
+			"source": "iana",
+			"extensions": ["kwd", "kwt"]
 		},
 		"application/vnd.kenameaapp": {
-			source: "iana",
-			extensions: ["htke"]
+			"source": "iana",
+			"extensions": ["htke"]
 		},
 		"application/vnd.kidspiration": {
-			source: "iana",
-			extensions: ["kia"]
+			"source": "iana",
+			"extensions": ["kia"]
 		},
 		"application/vnd.kinar": {
-			source: "iana",
-			extensions: ["kne", "knp"]
+			"source": "iana",
+			"extensions": ["kne", "knp"]
 		},
 		"application/vnd.koan": {
-			source: "iana",
-			extensions: [
+			"source": "iana",
+			"extensions": [
 				"skp",
 				"skd",
 				"skt",
@@ -3253,209 +3591,209 @@ var o = Object.create, s = Object.defineProperty, c = Object.getOwnPropertyDescr
 			]
 		},
 		"application/vnd.kodak-descriptor": {
-			source: "iana",
-			extensions: ["sse"]
+			"source": "iana",
+			"extensions": ["sse"]
 		},
-		"application/vnd.las": { source: "iana" },
+		"application/vnd.las": { "source": "iana" },
 		"application/vnd.las.las+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.las.las+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["lasxml"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["lasxml"]
 		},
-		"application/vnd.laszip": { source: "iana" },
+		"application/vnd.laszip": { "source": "iana" },
 		"application/vnd.leap+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.liberty-request+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.llamagraphics.life-balance.desktop": {
-			source: "iana",
-			extensions: ["lbd"]
+			"source": "iana",
+			"extensions": ["lbd"]
 		},
 		"application/vnd.llamagraphics.life-balance.exchange+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["lbe"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["lbe"]
 		},
 		"application/vnd.logipipe.circuit+zip": {
-			source: "iana",
-			compressible: !1
+			"source": "iana",
+			"compressible": false
 		},
-		"application/vnd.loom": { source: "iana" },
+		"application/vnd.loom": { "source": "iana" },
 		"application/vnd.lotus-1-2-3": {
-			source: "iana",
-			extensions: ["123"]
+			"source": "iana",
+			"extensions": ["123"]
 		},
 		"application/vnd.lotus-approach": {
-			source: "iana",
-			extensions: ["apr"]
+			"source": "iana",
+			"extensions": ["apr"]
 		},
 		"application/vnd.lotus-freelance": {
-			source: "iana",
-			extensions: ["pre"]
+			"source": "iana",
+			"extensions": ["pre"]
 		},
 		"application/vnd.lotus-notes": {
-			source: "iana",
-			extensions: ["nsf"]
+			"source": "iana",
+			"extensions": ["nsf"]
 		},
 		"application/vnd.lotus-organizer": {
-			source: "iana",
-			extensions: ["org"]
+			"source": "iana",
+			"extensions": ["org"]
 		},
 		"application/vnd.lotus-screencam": {
-			source: "iana",
-			extensions: ["scm"]
+			"source": "iana",
+			"extensions": ["scm"]
 		},
 		"application/vnd.lotus-wordpro": {
-			source: "iana",
-			extensions: ["lwp"]
+			"source": "iana",
+			"extensions": ["lwp"]
 		},
 		"application/vnd.macports.portpkg": {
-			source: "iana",
-			extensions: ["portpkg"]
+			"source": "iana",
+			"extensions": ["portpkg"]
 		},
 		"application/vnd.mapbox-vector-tile": {
-			source: "iana",
-			extensions: ["mvt"]
+			"source": "iana",
+			"extensions": ["mvt"]
 		},
 		"application/vnd.marlin.drm.actiontoken+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.marlin.drm.conftoken+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.marlin.drm.license+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/vnd.marlin.drm.mdcf": { source: "iana" },
+		"application/vnd.marlin.drm.mdcf": { "source": "iana" },
 		"application/vnd.mason+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.maxar.archive.3tz+zip": {
-			source: "iana",
-			compressible: !1
+			"source": "iana",
+			"compressible": false
 		},
-		"application/vnd.maxmind.maxmind-db": { source: "iana" },
+		"application/vnd.maxmind.maxmind-db": { "source": "iana" },
 		"application/vnd.mcd": {
-			source: "iana",
-			extensions: ["mcd"]
+			"source": "iana",
+			"extensions": ["mcd"]
 		},
 		"application/vnd.medcalcdata": {
-			source: "iana",
-			extensions: ["mc1"]
+			"source": "iana",
+			"extensions": ["mc1"]
 		},
 		"application/vnd.mediastation.cdkey": {
-			source: "iana",
-			extensions: ["cdkey"]
+			"source": "iana",
+			"extensions": ["cdkey"]
 		},
-		"application/vnd.meridian-slingshot": { source: "iana" },
+		"application/vnd.meridian-slingshot": { "source": "iana" },
 		"application/vnd.mfer": {
-			source: "iana",
-			extensions: ["mwf"]
+			"source": "iana",
+			"extensions": ["mwf"]
 		},
 		"application/vnd.mfmp": {
-			source: "iana",
-			extensions: ["mfm"]
+			"source": "iana",
+			"extensions": ["mfm"]
 		},
 		"application/vnd.micro+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.micrografx.flo": {
-			source: "iana",
-			extensions: ["flo"]
+			"source": "iana",
+			"extensions": ["flo"]
 		},
 		"application/vnd.micrografx.igx": {
-			source: "iana",
-			extensions: ["igx"]
+			"source": "iana",
+			"extensions": ["igx"]
 		},
-		"application/vnd.microsoft.portable-executable": { source: "iana" },
-		"application/vnd.microsoft.windows.thumbnail-cache": { source: "iana" },
+		"application/vnd.microsoft.portable-executable": { "source": "iana" },
+		"application/vnd.microsoft.windows.thumbnail-cache": { "source": "iana" },
 		"application/vnd.miele+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.mif": {
-			source: "iana",
-			extensions: ["mif"]
+			"source": "iana",
+			"extensions": ["mif"]
 		},
-		"application/vnd.minisoft-hp3000-save": { source: "iana" },
-		"application/vnd.mitsubishi.misty-guard.trustweb": { source: "iana" },
+		"application/vnd.minisoft-hp3000-save": { "source": "iana" },
+		"application/vnd.mitsubishi.misty-guard.trustweb": { "source": "iana" },
 		"application/vnd.mobius.daf": {
-			source: "iana",
-			extensions: ["daf"]
+			"source": "iana",
+			"extensions": ["daf"]
 		},
 		"application/vnd.mobius.dis": {
-			source: "iana",
-			extensions: ["dis"]
+			"source": "iana",
+			"extensions": ["dis"]
 		},
 		"application/vnd.mobius.mbk": {
-			source: "iana",
-			extensions: ["mbk"]
+			"source": "iana",
+			"extensions": ["mbk"]
 		},
 		"application/vnd.mobius.mqy": {
-			source: "iana",
-			extensions: ["mqy"]
+			"source": "iana",
+			"extensions": ["mqy"]
 		},
 		"application/vnd.mobius.msl": {
-			source: "iana",
-			extensions: ["msl"]
+			"source": "iana",
+			"extensions": ["msl"]
 		},
 		"application/vnd.mobius.plc": {
-			source: "iana",
-			extensions: ["plc"]
+			"source": "iana",
+			"extensions": ["plc"]
 		},
 		"application/vnd.mobius.txf": {
-			source: "iana",
-			extensions: ["txf"]
+			"source": "iana",
+			"extensions": ["txf"]
 		},
 		"application/vnd.mophun.application": {
-			source: "iana",
-			extensions: ["mpn"]
+			"source": "iana",
+			"extensions": ["mpn"]
 		},
 		"application/vnd.mophun.certificate": {
-			source: "iana",
-			extensions: ["mpc"]
+			"source": "iana",
+			"extensions": ["mpc"]
 		},
-		"application/vnd.motorola.flexsuite": { source: "iana" },
-		"application/vnd.motorola.flexsuite.adsi": { source: "iana" },
-		"application/vnd.motorola.flexsuite.fis": { source: "iana" },
-		"application/vnd.motorola.flexsuite.gotap": { source: "iana" },
-		"application/vnd.motorola.flexsuite.kmr": { source: "iana" },
-		"application/vnd.motorola.flexsuite.ttc": { source: "iana" },
-		"application/vnd.motorola.flexsuite.wem": { source: "iana" },
-		"application/vnd.motorola.iprm": { source: "iana" },
+		"application/vnd.motorola.flexsuite": { "source": "iana" },
+		"application/vnd.motorola.flexsuite.adsi": { "source": "iana" },
+		"application/vnd.motorola.flexsuite.fis": { "source": "iana" },
+		"application/vnd.motorola.flexsuite.gotap": { "source": "iana" },
+		"application/vnd.motorola.flexsuite.kmr": { "source": "iana" },
+		"application/vnd.motorola.flexsuite.ttc": { "source": "iana" },
+		"application/vnd.motorola.flexsuite.wem": { "source": "iana" },
+		"application/vnd.motorola.iprm": { "source": "iana" },
 		"application/vnd.mozilla.xul+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["xul"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["xul"]
 		},
-		"application/vnd.ms-3mfdocument": { source: "iana" },
+		"application/vnd.ms-3mfdocument": { "source": "iana" },
 		"application/vnd.ms-artgalry": {
-			source: "iana",
-			extensions: ["cil"]
+			"source": "iana",
+			"extensions": ["cil"]
 		},
-		"application/vnd.ms-asf": { source: "iana" },
+		"application/vnd.ms-asf": { "source": "iana" },
 		"application/vnd.ms-cab-compressed": {
-			source: "iana",
-			extensions: ["cab"]
+			"source": "iana",
+			"extensions": ["cab"]
 		},
-		"application/vnd.ms-color.iccprofile": { source: "apache" },
+		"application/vnd.ms-color.iccprofile": { "source": "apache" },
 		"application/vnd.ms-excel": {
-			source: "iana",
-			compressible: !1,
-			extensions: [
+			"source": "iana",
+			"compressible": false,
+			"extensions": [
 				"xls",
 				"xlm",
 				"xla",
@@ -3465,132 +3803,132 @@ var o = Object.create, s = Object.defineProperty, c = Object.getOwnPropertyDescr
 			]
 		},
 		"application/vnd.ms-excel.addin.macroenabled.12": {
-			source: "iana",
-			extensions: ["xlam"]
+			"source": "iana",
+			"extensions": ["xlam"]
 		},
 		"application/vnd.ms-excel.sheet.binary.macroenabled.12": {
-			source: "iana",
-			extensions: ["xlsb"]
+			"source": "iana",
+			"extensions": ["xlsb"]
 		},
 		"application/vnd.ms-excel.sheet.macroenabled.12": {
-			source: "iana",
-			extensions: ["xlsm"]
+			"source": "iana",
+			"extensions": ["xlsm"]
 		},
 		"application/vnd.ms-excel.template.macroenabled.12": {
-			source: "iana",
-			extensions: ["xltm"]
+			"source": "iana",
+			"extensions": ["xltm"]
 		},
 		"application/vnd.ms-fontobject": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["eot"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["eot"]
 		},
 		"application/vnd.ms-htmlhelp": {
-			source: "iana",
-			extensions: ["chm"]
+			"source": "iana",
+			"extensions": ["chm"]
 		},
 		"application/vnd.ms-ims": {
-			source: "iana",
-			extensions: ["ims"]
+			"source": "iana",
+			"extensions": ["ims"]
 		},
 		"application/vnd.ms-lrm": {
-			source: "iana",
-			extensions: ["lrm"]
+			"source": "iana",
+			"extensions": ["lrm"]
 		},
 		"application/vnd.ms-office.activex+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.ms-officetheme": {
-			source: "iana",
-			extensions: ["thmx"]
+			"source": "iana",
+			"extensions": ["thmx"]
 		},
 		"application/vnd.ms-opentype": {
-			source: "apache",
-			compressible: !0
+			"source": "apache",
+			"compressible": true
 		},
 		"application/vnd.ms-outlook": {
-			compressible: !1,
-			extensions: ["msg"]
+			"compressible": false,
+			"extensions": ["msg"]
 		},
-		"application/vnd.ms-package.obfuscated-opentype": { source: "apache" },
+		"application/vnd.ms-package.obfuscated-opentype": { "source": "apache" },
 		"application/vnd.ms-pki.seccat": {
-			source: "apache",
-			extensions: ["cat"]
+			"source": "apache",
+			"extensions": ["cat"]
 		},
 		"application/vnd.ms-pki.stl": {
-			source: "apache",
-			extensions: ["stl"]
+			"source": "apache",
+			"extensions": ["stl"]
 		},
 		"application/vnd.ms-playready.initiator+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.ms-powerpoint": {
-			source: "iana",
-			compressible: !1,
-			extensions: [
+			"source": "iana",
+			"compressible": false,
+			"extensions": [
 				"ppt",
 				"pps",
 				"pot"
 			]
 		},
 		"application/vnd.ms-powerpoint.addin.macroenabled.12": {
-			source: "iana",
-			extensions: ["ppam"]
+			"source": "iana",
+			"extensions": ["ppam"]
 		},
 		"application/vnd.ms-powerpoint.presentation.macroenabled.12": {
-			source: "iana",
-			extensions: ["pptm"]
+			"source": "iana",
+			"extensions": ["pptm"]
 		},
 		"application/vnd.ms-powerpoint.slide.macroenabled.12": {
-			source: "iana",
-			extensions: ["sldm"]
+			"source": "iana",
+			"extensions": ["sldm"]
 		},
 		"application/vnd.ms-powerpoint.slideshow.macroenabled.12": {
-			source: "iana",
-			extensions: ["ppsm"]
+			"source": "iana",
+			"extensions": ["ppsm"]
 		},
 		"application/vnd.ms-powerpoint.template.macroenabled.12": {
-			source: "iana",
-			extensions: ["potm"]
+			"source": "iana",
+			"extensions": ["potm"]
 		},
 		"application/vnd.ms-printdevicecapabilities+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.ms-printing.printticket+xml": {
-			source: "apache",
-			compressible: !0
+			"source": "apache",
+			"compressible": true
 		},
 		"application/vnd.ms-printschematicket+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.ms-project": {
-			source: "iana",
-			extensions: ["mpp", "mpt"]
+			"source": "iana",
+			"extensions": ["mpp", "mpt"]
 		},
-		"application/vnd.ms-tnef": { source: "iana" },
-		"application/vnd.ms-windows.devicepairing": { source: "iana" },
-		"application/vnd.ms-windows.nwprinting.oob": { source: "iana" },
-		"application/vnd.ms-windows.printerpairing": { source: "iana" },
-		"application/vnd.ms-windows.wsd.oob": { source: "iana" },
-		"application/vnd.ms-wmdrm.lic-chlg-req": { source: "iana" },
-		"application/vnd.ms-wmdrm.lic-resp": { source: "iana" },
-		"application/vnd.ms-wmdrm.meter-chlg-req": { source: "iana" },
-		"application/vnd.ms-wmdrm.meter-resp": { source: "iana" },
+		"application/vnd.ms-tnef": { "source": "iana" },
+		"application/vnd.ms-windows.devicepairing": { "source": "iana" },
+		"application/vnd.ms-windows.nwprinting.oob": { "source": "iana" },
+		"application/vnd.ms-windows.printerpairing": { "source": "iana" },
+		"application/vnd.ms-windows.wsd.oob": { "source": "iana" },
+		"application/vnd.ms-wmdrm.lic-chlg-req": { "source": "iana" },
+		"application/vnd.ms-wmdrm.lic-resp": { "source": "iana" },
+		"application/vnd.ms-wmdrm.meter-chlg-req": { "source": "iana" },
+		"application/vnd.ms-wmdrm.meter-resp": { "source": "iana" },
 		"application/vnd.ms-word.document.macroenabled.12": {
-			source: "iana",
-			extensions: ["docm"]
+			"source": "iana",
+			"extensions": ["docm"]
 		},
 		"application/vnd.ms-word.template.macroenabled.12": {
-			source: "iana",
-			extensions: ["dotm"]
+			"source": "iana",
+			"extensions": ["dotm"]
 		},
 		"application/vnd.ms-works": {
-			source: "iana",
-			extensions: [
+			"source": "iana",
+			"extensions": [
 				"wps",
 				"wks",
 				"wcm",
@@ -3598,812 +3936,812 @@ var o = Object.create, s = Object.defineProperty, c = Object.getOwnPropertyDescr
 			]
 		},
 		"application/vnd.ms-wpl": {
-			source: "iana",
-			extensions: ["wpl"]
+			"source": "iana",
+			"extensions": ["wpl"]
 		},
 		"application/vnd.ms-xpsdocument": {
-			source: "iana",
-			compressible: !1,
-			extensions: ["xps"]
+			"source": "iana",
+			"compressible": false,
+			"extensions": ["xps"]
 		},
-		"application/vnd.msa-disk-image": { source: "iana" },
+		"application/vnd.msa-disk-image": { "source": "iana" },
 		"application/vnd.mseq": {
-			source: "iana",
-			extensions: ["mseq"]
+			"source": "iana",
+			"extensions": ["mseq"]
 		},
-		"application/vnd.msign": { source: "iana" },
-		"application/vnd.multiad.creator": { source: "iana" },
-		"application/vnd.multiad.creator.cif": { source: "iana" },
-		"application/vnd.music-niff": { source: "iana" },
+		"application/vnd.msign": { "source": "iana" },
+		"application/vnd.multiad.creator": { "source": "iana" },
+		"application/vnd.multiad.creator.cif": { "source": "iana" },
+		"application/vnd.music-niff": { "source": "iana" },
 		"application/vnd.musician": {
-			source: "iana",
-			extensions: ["mus"]
+			"source": "iana",
+			"extensions": ["mus"]
 		},
 		"application/vnd.muvee.style": {
-			source: "iana",
-			extensions: ["msty"]
+			"source": "iana",
+			"extensions": ["msty"]
 		},
 		"application/vnd.mynfc": {
-			source: "iana",
-			extensions: ["taglet"]
+			"source": "iana",
+			"extensions": ["taglet"]
 		},
 		"application/vnd.nacamar.ybrid+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/vnd.ncd.control": { source: "iana" },
-		"application/vnd.ncd.reference": { source: "iana" },
+		"application/vnd.ncd.control": { "source": "iana" },
+		"application/vnd.ncd.reference": { "source": "iana" },
 		"application/vnd.nearst.inv+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/vnd.nebumind.line": { source: "iana" },
-		"application/vnd.nervana": { source: "iana" },
-		"application/vnd.netfpx": { source: "iana" },
+		"application/vnd.nebumind.line": { "source": "iana" },
+		"application/vnd.nervana": { "source": "iana" },
+		"application/vnd.netfpx": { "source": "iana" },
 		"application/vnd.neurolanguage.nlu": {
-			source: "iana",
-			extensions: ["nlu"]
+			"source": "iana",
+			"extensions": ["nlu"]
 		},
-		"application/vnd.nimn": { source: "iana" },
-		"application/vnd.nintendo.nitro.rom": { source: "iana" },
-		"application/vnd.nintendo.snes.rom": { source: "iana" },
+		"application/vnd.nimn": { "source": "iana" },
+		"application/vnd.nintendo.nitro.rom": { "source": "iana" },
+		"application/vnd.nintendo.snes.rom": { "source": "iana" },
 		"application/vnd.nitf": {
-			source: "iana",
-			extensions: ["ntf", "nitf"]
+			"source": "iana",
+			"extensions": ["ntf", "nitf"]
 		},
 		"application/vnd.noblenet-directory": {
-			source: "iana",
-			extensions: ["nnd"]
+			"source": "iana",
+			"extensions": ["nnd"]
 		},
 		"application/vnd.noblenet-sealer": {
-			source: "iana",
-			extensions: ["nns"]
+			"source": "iana",
+			"extensions": ["nns"]
 		},
 		"application/vnd.noblenet-web": {
-			source: "iana",
-			extensions: ["nnw"]
+			"source": "iana",
+			"extensions": ["nnw"]
 		},
-		"application/vnd.nokia.catalogs": { source: "iana" },
-		"application/vnd.nokia.conml+wbxml": { source: "iana" },
+		"application/vnd.nokia.catalogs": { "source": "iana" },
+		"application/vnd.nokia.conml+wbxml": { "source": "iana" },
 		"application/vnd.nokia.conml+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.nokia.iptv.config+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/vnd.nokia.isds-radio-presets": { source: "iana" },
-		"application/vnd.nokia.landmark+wbxml": { source: "iana" },
+		"application/vnd.nokia.isds-radio-presets": { "source": "iana" },
+		"application/vnd.nokia.landmark+wbxml": { "source": "iana" },
 		"application/vnd.nokia.landmark+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.nokia.landmarkcollection+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.nokia.n-gage.ac+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["ac"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["ac"]
 		},
 		"application/vnd.nokia.n-gage.data": {
-			source: "iana",
-			extensions: ["ngdat"]
+			"source": "iana",
+			"extensions": ["ngdat"]
 		},
 		"application/vnd.nokia.n-gage.symbian.install": {
-			source: "iana",
-			extensions: ["n-gage"]
+			"source": "iana",
+			"extensions": ["n-gage"]
 		},
-		"application/vnd.nokia.ncd": { source: "iana" },
-		"application/vnd.nokia.pcd+wbxml": { source: "iana" },
+		"application/vnd.nokia.ncd": { "source": "iana" },
+		"application/vnd.nokia.pcd+wbxml": { "source": "iana" },
 		"application/vnd.nokia.pcd+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.nokia.radio-preset": {
-			source: "iana",
-			extensions: ["rpst"]
+			"source": "iana",
+			"extensions": ["rpst"]
 		},
 		"application/vnd.nokia.radio-presets": {
-			source: "iana",
-			extensions: ["rpss"]
+			"source": "iana",
+			"extensions": ["rpss"]
 		},
 		"application/vnd.novadigm.edm": {
-			source: "iana",
-			extensions: ["edm"]
+			"source": "iana",
+			"extensions": ["edm"]
 		},
 		"application/vnd.novadigm.edx": {
-			source: "iana",
-			extensions: ["edx"]
+			"source": "iana",
+			"extensions": ["edx"]
 		},
 		"application/vnd.novadigm.ext": {
-			source: "iana",
-			extensions: ["ext"]
+			"source": "iana",
+			"extensions": ["ext"]
 		},
-		"application/vnd.ntt-local.content-share": { source: "iana" },
-		"application/vnd.ntt-local.file-transfer": { source: "iana" },
-		"application/vnd.ntt-local.ogw_remote-access": { source: "iana" },
-		"application/vnd.ntt-local.sip-ta_remote": { source: "iana" },
-		"application/vnd.ntt-local.sip-ta_tcp_stream": { source: "iana" },
+		"application/vnd.ntt-local.content-share": { "source": "iana" },
+		"application/vnd.ntt-local.file-transfer": { "source": "iana" },
+		"application/vnd.ntt-local.ogw_remote-access": { "source": "iana" },
+		"application/vnd.ntt-local.sip-ta_remote": { "source": "iana" },
+		"application/vnd.ntt-local.sip-ta_tcp_stream": { "source": "iana" },
 		"application/vnd.oasis.opendocument.chart": {
-			source: "iana",
-			extensions: ["odc"]
+			"source": "iana",
+			"extensions": ["odc"]
 		},
 		"application/vnd.oasis.opendocument.chart-template": {
-			source: "iana",
-			extensions: ["otc"]
+			"source": "iana",
+			"extensions": ["otc"]
 		},
 		"application/vnd.oasis.opendocument.database": {
-			source: "iana",
-			extensions: ["odb"]
+			"source": "iana",
+			"extensions": ["odb"]
 		},
 		"application/vnd.oasis.opendocument.formula": {
-			source: "iana",
-			extensions: ["odf"]
+			"source": "iana",
+			"extensions": ["odf"]
 		},
 		"application/vnd.oasis.opendocument.formula-template": {
-			source: "iana",
-			extensions: ["odft"]
+			"source": "iana",
+			"extensions": ["odft"]
 		},
 		"application/vnd.oasis.opendocument.graphics": {
-			source: "iana",
-			compressible: !1,
-			extensions: ["odg"]
+			"source": "iana",
+			"compressible": false,
+			"extensions": ["odg"]
 		},
 		"application/vnd.oasis.opendocument.graphics-template": {
-			source: "iana",
-			extensions: ["otg"]
+			"source": "iana",
+			"extensions": ["otg"]
 		},
 		"application/vnd.oasis.opendocument.image": {
-			source: "iana",
-			extensions: ["odi"]
+			"source": "iana",
+			"extensions": ["odi"]
 		},
 		"application/vnd.oasis.opendocument.image-template": {
-			source: "iana",
-			extensions: ["oti"]
+			"source": "iana",
+			"extensions": ["oti"]
 		},
 		"application/vnd.oasis.opendocument.presentation": {
-			source: "iana",
-			compressible: !1,
-			extensions: ["odp"]
+			"source": "iana",
+			"compressible": false,
+			"extensions": ["odp"]
 		},
 		"application/vnd.oasis.opendocument.presentation-template": {
-			source: "iana",
-			extensions: ["otp"]
+			"source": "iana",
+			"extensions": ["otp"]
 		},
 		"application/vnd.oasis.opendocument.spreadsheet": {
-			source: "iana",
-			compressible: !1,
-			extensions: ["ods"]
+			"source": "iana",
+			"compressible": false,
+			"extensions": ["ods"]
 		},
 		"application/vnd.oasis.opendocument.spreadsheet-template": {
-			source: "iana",
-			extensions: ["ots"]
+			"source": "iana",
+			"extensions": ["ots"]
 		},
 		"application/vnd.oasis.opendocument.text": {
-			source: "iana",
-			compressible: !1,
-			extensions: ["odt"]
+			"source": "iana",
+			"compressible": false,
+			"extensions": ["odt"]
 		},
 		"application/vnd.oasis.opendocument.text-master": {
-			source: "iana",
-			extensions: ["odm"]
+			"source": "iana",
+			"extensions": ["odm"]
 		},
 		"application/vnd.oasis.opendocument.text-template": {
-			source: "iana",
-			extensions: ["ott"]
+			"source": "iana",
+			"extensions": ["ott"]
 		},
 		"application/vnd.oasis.opendocument.text-web": {
-			source: "iana",
-			extensions: ["oth"]
+			"source": "iana",
+			"extensions": ["oth"]
 		},
-		"application/vnd.obn": { source: "iana" },
-		"application/vnd.ocf+cbor": { source: "iana" },
+		"application/vnd.obn": { "source": "iana" },
+		"application/vnd.ocf+cbor": { "source": "iana" },
 		"application/vnd.oci.image.manifest.v1+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.oftn.l10n+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.oipf.contentaccessdownload+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.oipf.contentaccessstreaming+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/vnd.oipf.cspg-hexbinary": { source: "iana" },
+		"application/vnd.oipf.cspg-hexbinary": { "source": "iana" },
 		"application/vnd.oipf.dae.svg+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.oipf.dae.xhtml+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.oipf.mippvcontrolmessage+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/vnd.oipf.pae.gem": { source: "iana" },
+		"application/vnd.oipf.pae.gem": { "source": "iana" },
 		"application/vnd.oipf.spdiscovery+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.oipf.spdlist+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.oipf.ueprofile+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.oipf.userprofile+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.olpc-sugar": {
-			source: "iana",
-			extensions: ["xo"]
+			"source": "iana",
+			"extensions": ["xo"]
 		},
-		"application/vnd.oma-scws-config": { source: "iana" },
-		"application/vnd.oma-scws-http-request": { source: "iana" },
-		"application/vnd.oma-scws-http-response": { source: "iana" },
+		"application/vnd.oma-scws-config": { "source": "iana" },
+		"application/vnd.oma-scws-http-request": { "source": "iana" },
+		"application/vnd.oma-scws-http-response": { "source": "iana" },
 		"application/vnd.oma.bcast.associated-procedure-parameter+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.oma.bcast.drm-trigger+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.oma.bcast.imd+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/vnd.oma.bcast.ltkm": { source: "iana" },
+		"application/vnd.oma.bcast.ltkm": { "source": "iana" },
 		"application/vnd.oma.bcast.notification+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/vnd.oma.bcast.provisioningtrigger": { source: "iana" },
-		"application/vnd.oma.bcast.sgboot": { source: "iana" },
+		"application/vnd.oma.bcast.provisioningtrigger": { "source": "iana" },
+		"application/vnd.oma.bcast.sgboot": { "source": "iana" },
 		"application/vnd.oma.bcast.sgdd+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/vnd.oma.bcast.sgdu": { source: "iana" },
-		"application/vnd.oma.bcast.simple-symbol-container": { source: "iana" },
+		"application/vnd.oma.bcast.sgdu": { "source": "iana" },
+		"application/vnd.oma.bcast.simple-symbol-container": { "source": "iana" },
 		"application/vnd.oma.bcast.smartcard-trigger+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.oma.bcast.sprov+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/vnd.oma.bcast.stkm": { source: "iana" },
+		"application/vnd.oma.bcast.stkm": { "source": "iana" },
 		"application/vnd.oma.cab-address-book+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.oma.cab-feature-handler+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.oma.cab-pcc+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.oma.cab-subs-invite+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.oma.cab-user-prefs+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/vnd.oma.dcd": { source: "iana" },
-		"application/vnd.oma.dcdc": { source: "iana" },
+		"application/vnd.oma.dcd": { "source": "iana" },
+		"application/vnd.oma.dcdc": { "source": "iana" },
 		"application/vnd.oma.dd2+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["dd2"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["dd2"]
 		},
 		"application/vnd.oma.drm.risd+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.oma.group-usage-list+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/vnd.oma.lwm2m+cbor": { source: "iana" },
+		"application/vnd.oma.lwm2m+cbor": { "source": "iana" },
 		"application/vnd.oma.lwm2m+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/vnd.oma.lwm2m+tlv": { source: "iana" },
+		"application/vnd.oma.lwm2m+tlv": { "source": "iana" },
 		"application/vnd.oma.pal+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.oma.poc.detailed-progress-report+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.oma.poc.final-report+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.oma.poc.groups+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.oma.poc.invocation-descriptor+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.oma.poc.optimized-progress-report+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/vnd.oma.push": { source: "iana" },
+		"application/vnd.oma.push": { "source": "iana" },
 		"application/vnd.oma.scidm.messages+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.oma.xcap-directory+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.omads-email+xml": {
-			source: "iana",
-			charset: "UTF-8",
-			compressible: !0
+			"source": "iana",
+			"charset": "UTF-8",
+			"compressible": true
 		},
 		"application/vnd.omads-file+xml": {
-			source: "iana",
-			charset: "UTF-8",
-			compressible: !0
+			"source": "iana",
+			"charset": "UTF-8",
+			"compressible": true
 		},
 		"application/vnd.omads-folder+xml": {
-			source: "iana",
-			charset: "UTF-8",
-			compressible: !0
+			"source": "iana",
+			"charset": "UTF-8",
+			"compressible": true
 		},
-		"application/vnd.omaloc-supl-init": { source: "iana" },
-		"application/vnd.onepager": { source: "iana" },
-		"application/vnd.onepagertamp": { source: "iana" },
-		"application/vnd.onepagertamx": { source: "iana" },
-		"application/vnd.onepagertat": { source: "iana" },
-		"application/vnd.onepagertatp": { source: "iana" },
-		"application/vnd.onepagertatx": { source: "iana" },
+		"application/vnd.omaloc-supl-init": { "source": "iana" },
+		"application/vnd.onepager": { "source": "iana" },
+		"application/vnd.onepagertamp": { "source": "iana" },
+		"application/vnd.onepagertamx": { "source": "iana" },
+		"application/vnd.onepagertat": { "source": "iana" },
+		"application/vnd.onepagertatp": { "source": "iana" },
+		"application/vnd.onepagertatx": { "source": "iana" },
 		"application/vnd.openblox.game+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["obgx"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["obgx"]
 		},
-		"application/vnd.openblox.game-binary": { source: "iana" },
-		"application/vnd.openeye.oeb": { source: "iana" },
+		"application/vnd.openblox.game-binary": { "source": "iana" },
+		"application/vnd.openeye.oeb": { "source": "iana" },
 		"application/vnd.openofficeorg.extension": {
-			source: "apache",
-			extensions: ["oxt"]
+			"source": "apache",
+			"extensions": ["oxt"]
 		},
 		"application/vnd.openstreetmap.data+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["osm"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["osm"]
 		},
-		"application/vnd.opentimestamps.ots": { source: "iana" },
+		"application/vnd.opentimestamps.ots": { "source": "iana" },
 		"application/vnd.openxmlformats-officedocument.custom-properties+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.openxmlformats-officedocument.customxmlproperties+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.openxmlformats-officedocument.drawing+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.openxmlformats-officedocument.drawingml.chart+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.openxmlformats-officedocument.drawingml.chartshapes+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.openxmlformats-officedocument.drawingml.diagramcolors+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.openxmlformats-officedocument.drawingml.diagramdata+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.openxmlformats-officedocument.drawingml.diagramlayout+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.openxmlformats-officedocument.drawingml.diagramstyle+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.openxmlformats-officedocument.extended-properties+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.openxmlformats-officedocument.presentationml.commentauthors+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.openxmlformats-officedocument.presentationml.comments+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.openxmlformats-officedocument.presentationml.handoutmaster+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.openxmlformats-officedocument.presentationml.notesmaster+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.openxmlformats-officedocument.presentationml.notesslide+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.openxmlformats-officedocument.presentationml.presentation": {
-			source: "iana",
-			compressible: !1,
-			extensions: ["pptx"]
+			"source": "iana",
+			"compressible": false,
+			"extensions": ["pptx"]
 		},
 		"application/vnd.openxmlformats-officedocument.presentationml.presentation.main+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.openxmlformats-officedocument.presentationml.presprops+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.openxmlformats-officedocument.presentationml.slide": {
-			source: "iana",
-			extensions: ["sldx"]
+			"source": "iana",
+			"extensions": ["sldx"]
 		},
 		"application/vnd.openxmlformats-officedocument.presentationml.slide+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.openxmlformats-officedocument.presentationml.slidelayout+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.openxmlformats-officedocument.presentationml.slidemaster+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.openxmlformats-officedocument.presentationml.slideshow": {
-			source: "iana",
-			extensions: ["ppsx"]
+			"source": "iana",
+			"extensions": ["ppsx"]
 		},
 		"application/vnd.openxmlformats-officedocument.presentationml.slideshow.main+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.openxmlformats-officedocument.presentationml.slideupdateinfo+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.openxmlformats-officedocument.presentationml.tablestyles+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.openxmlformats-officedocument.presentationml.tags+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.openxmlformats-officedocument.presentationml.template": {
-			source: "iana",
-			extensions: ["potx"]
+			"source": "iana",
+			"extensions": ["potx"]
 		},
 		"application/vnd.openxmlformats-officedocument.presentationml.template.main+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.openxmlformats-officedocument.presentationml.viewprops+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.openxmlformats-officedocument.spreadsheetml.calcchain+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.openxmlformats-officedocument.spreadsheetml.chartsheet+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.openxmlformats-officedocument.spreadsheetml.comments+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.openxmlformats-officedocument.spreadsheetml.connections+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.openxmlformats-officedocument.spreadsheetml.dialogsheet+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.openxmlformats-officedocument.spreadsheetml.externallink+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.openxmlformats-officedocument.spreadsheetml.pivotcachedefinition+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.openxmlformats-officedocument.spreadsheetml.pivotcacherecords+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.openxmlformats-officedocument.spreadsheetml.pivottable+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.openxmlformats-officedocument.spreadsheetml.querytable+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.openxmlformats-officedocument.spreadsheetml.revisionheaders+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.openxmlformats-officedocument.spreadsheetml.revisionlog+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.openxmlformats-officedocument.spreadsheetml.sharedstrings+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": {
-			source: "iana",
-			compressible: !1,
-			extensions: ["xlsx"]
+			"source": "iana",
+			"compressible": false,
+			"extensions": ["xlsx"]
 		},
 		"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.openxmlformats-officedocument.spreadsheetml.sheetmetadata+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.openxmlformats-officedocument.spreadsheetml.table+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.openxmlformats-officedocument.spreadsheetml.tablesinglecells+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.openxmlformats-officedocument.spreadsheetml.template": {
-			source: "iana",
-			extensions: ["xltx"]
+			"source": "iana",
+			"extensions": ["xltx"]
 		},
 		"application/vnd.openxmlformats-officedocument.spreadsheetml.template.main+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.openxmlformats-officedocument.spreadsheetml.usernames+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.openxmlformats-officedocument.spreadsheetml.volatiledependencies+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.openxmlformats-officedocument.theme+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.openxmlformats-officedocument.themeoverride+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/vnd.openxmlformats-officedocument.vmldrawing": { source: "iana" },
+		"application/vnd.openxmlformats-officedocument.vmldrawing": { "source": "iana" },
 		"application/vnd.openxmlformats-officedocument.wordprocessingml.comments+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.openxmlformats-officedocument.wordprocessingml.document": {
-			source: "iana",
-			compressible: !1,
-			extensions: ["docx"]
+			"source": "iana",
+			"compressible": false,
+			"extensions": ["docx"]
 		},
 		"application/vnd.openxmlformats-officedocument.wordprocessingml.document.glossary+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.openxmlformats-officedocument.wordprocessingml.endnotes+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.openxmlformats-officedocument.wordprocessingml.fonttable+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.openxmlformats-officedocument.wordprocessingml.footer+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.openxmlformats-officedocument.wordprocessingml.footnotes+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.openxmlformats-officedocument.wordprocessingml.numbering+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.openxmlformats-officedocument.wordprocessingml.template": {
-			source: "iana",
-			extensions: ["dotx"]
+			"source": "iana",
+			"extensions": ["dotx"]
 		},
 		"application/vnd.openxmlformats-officedocument.wordprocessingml.template.main+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.openxmlformats-officedocument.wordprocessingml.websettings+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.openxmlformats-package.core-properties+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.openxmlformats-package.digital-signature-xmlsignature+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.openxmlformats-package.relationships+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.oracle.resource+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/vnd.orange.indata": { source: "iana" },
-		"application/vnd.osa.netdeploy": { source: "iana" },
+		"application/vnd.orange.indata": { "source": "iana" },
+		"application/vnd.osa.netdeploy": { "source": "iana" },
 		"application/vnd.osgeo.mapguide.package": {
-			source: "iana",
-			extensions: ["mgp"]
+			"source": "iana",
+			"extensions": ["mgp"]
 		},
-		"application/vnd.osgi.bundle": { source: "iana" },
+		"application/vnd.osgi.bundle": { "source": "iana" },
 		"application/vnd.osgi.dp": {
-			source: "iana",
-			extensions: ["dp"]
+			"source": "iana",
+			"extensions": ["dp"]
 		},
 		"application/vnd.osgi.subsystem": {
-			source: "iana",
-			extensions: ["esa"]
+			"source": "iana",
+			"extensions": ["esa"]
 		},
 		"application/vnd.otps.ct-kip+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/vnd.oxli.countgraph": { source: "iana" },
+		"application/vnd.oxli.countgraph": { "source": "iana" },
 		"application/vnd.pagerduty+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.palm": {
-			source: "iana",
-			extensions: [
+			"source": "iana",
+			"extensions": [
 				"pdb",
 				"pqa",
 				"oprc"
 			]
 		},
-		"application/vnd.panoply": { source: "iana" },
-		"application/vnd.paos.xml": { source: "iana" },
-		"application/vnd.patentdive": { source: "iana" },
-		"application/vnd.patientecommsdoc": { source: "iana" },
+		"application/vnd.panoply": { "source": "iana" },
+		"application/vnd.paos.xml": { "source": "iana" },
+		"application/vnd.patentdive": { "source": "iana" },
+		"application/vnd.patientecommsdoc": { "source": "iana" },
 		"application/vnd.pawaafile": {
-			source: "iana",
-			extensions: ["paw"]
+			"source": "iana",
+			"extensions": ["paw"]
 		},
-		"application/vnd.pcos": { source: "iana" },
+		"application/vnd.pcos": { "source": "iana" },
 		"application/vnd.pg.format": {
-			source: "iana",
-			extensions: ["str"]
+			"source": "iana",
+			"extensions": ["str"]
 		},
 		"application/vnd.pg.osasli": {
-			source: "iana",
-			extensions: ["ei6"]
+			"source": "iana",
+			"extensions": ["ei6"]
 		},
-		"application/vnd.piaccess.application-licence": { source: "iana" },
+		"application/vnd.piaccess.application-licence": { "source": "iana" },
 		"application/vnd.picsel": {
-			source: "iana",
-			extensions: ["efif"]
+			"source": "iana",
+			"extensions": ["efif"]
 		},
 		"application/vnd.pmi.widget": {
-			source: "iana",
-			extensions: ["wg"]
+			"source": "iana",
+			"extensions": ["wg"]
 		},
 		"application/vnd.poc.group-advertisement+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.pocketlearn": {
-			source: "iana",
-			extensions: ["plf"]
+			"source": "iana",
+			"extensions": ["plf"]
 		},
 		"application/vnd.powerbuilder6": {
-			source: "iana",
-			extensions: ["pbd"]
+			"source": "iana",
+			"extensions": ["pbd"]
 		},
-		"application/vnd.powerbuilder6-s": { source: "iana" },
-		"application/vnd.powerbuilder7": { source: "iana" },
-		"application/vnd.powerbuilder7-s": { source: "iana" },
-		"application/vnd.powerbuilder75": { source: "iana" },
-		"application/vnd.powerbuilder75-s": { source: "iana" },
-		"application/vnd.preminet": { source: "iana" },
+		"application/vnd.powerbuilder6-s": { "source": "iana" },
+		"application/vnd.powerbuilder7": { "source": "iana" },
+		"application/vnd.powerbuilder7-s": { "source": "iana" },
+		"application/vnd.powerbuilder75": { "source": "iana" },
+		"application/vnd.powerbuilder75-s": { "source": "iana" },
+		"application/vnd.preminet": { "source": "iana" },
 		"application/vnd.previewsystems.box": {
-			source: "iana",
-			extensions: ["box"]
+			"source": "iana",
+			"extensions": ["box"]
 		},
 		"application/vnd.proteus.magazine": {
-			source: "iana",
-			extensions: ["mgz"]
+			"source": "iana",
+			"extensions": ["mgz"]
 		},
-		"application/vnd.psfs": { source: "iana" },
+		"application/vnd.psfs": { "source": "iana" },
 		"application/vnd.publishare-delta-tree": {
-			source: "iana",
-			extensions: ["qps"]
+			"source": "iana",
+			"extensions": ["qps"]
 		},
 		"application/vnd.pvi.ptid1": {
-			source: "iana",
-			extensions: ["ptid"]
+			"source": "iana",
+			"extensions": ["ptid"]
 		},
-		"application/vnd.pwg-multiplexed": { source: "iana" },
+		"application/vnd.pwg-multiplexed": { "source": "iana" },
 		"application/vnd.pwg-xhtml-print+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/vnd.qualcomm.brew-app-res": { source: "iana" },
-		"application/vnd.quarantainenet": { source: "iana" },
+		"application/vnd.qualcomm.brew-app-res": { "source": "iana" },
+		"application/vnd.quarantainenet": { "source": "iana" },
 		"application/vnd.quark.quarkxpress": {
-			source: "iana",
-			extensions: [
+			"source": "iana",
+			"extensions": [
 				"qxd",
 				"qxt",
 				"qwd",
@@ -4412,456 +4750,456 @@ var o = Object.create, s = Object.defineProperty, c = Object.getOwnPropertyDescr
 				"qxb"
 			]
 		},
-		"application/vnd.quobject-quoxdocument": { source: "iana" },
+		"application/vnd.quobject-quoxdocument": { "source": "iana" },
 		"application/vnd.radisys.moml+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.radisys.msml+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.radisys.msml-audit+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.radisys.msml-audit-conf+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.radisys.msml-audit-conn+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.radisys.msml-audit-dialog+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.radisys.msml-audit-stream+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.radisys.msml-conf+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.radisys.msml-dialog+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.radisys.msml-dialog-base+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.radisys.msml-dialog-fax-detect+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.radisys.msml-dialog-fax-sendrecv+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.radisys.msml-dialog-group+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.radisys.msml-dialog-speech+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.radisys.msml-dialog-transform+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/vnd.rainstor.data": { source: "iana" },
-		"application/vnd.rapid": { source: "iana" },
+		"application/vnd.rainstor.data": { "source": "iana" },
+		"application/vnd.rapid": { "source": "iana" },
 		"application/vnd.rar": {
-			source: "iana",
-			extensions: ["rar"]
+			"source": "iana",
+			"extensions": ["rar"]
 		},
 		"application/vnd.realvnc.bed": {
-			source: "iana",
-			extensions: ["bed"]
+			"source": "iana",
+			"extensions": ["bed"]
 		},
 		"application/vnd.recordare.musicxml": {
-			source: "iana",
-			extensions: ["mxl"]
+			"source": "iana",
+			"extensions": ["mxl"]
 		},
 		"application/vnd.recordare.musicxml+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["musicxml"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["musicxml"]
 		},
-		"application/vnd.renlearn.rlprint": { source: "iana" },
-		"application/vnd.resilient.logic": { source: "iana" },
+		"application/vnd.renlearn.rlprint": { "source": "iana" },
+		"application/vnd.resilient.logic": { "source": "iana" },
 		"application/vnd.restful+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.rig.cryptonote": {
-			source: "iana",
-			extensions: ["cryptonote"]
+			"source": "iana",
+			"extensions": ["cryptonote"]
 		},
 		"application/vnd.rim.cod": {
-			source: "apache",
-			extensions: ["cod"]
+			"source": "apache",
+			"extensions": ["cod"]
 		},
 		"application/vnd.rn-realmedia": {
-			source: "apache",
-			extensions: ["rm"]
+			"source": "apache",
+			"extensions": ["rm"]
 		},
 		"application/vnd.rn-realmedia-vbr": {
-			source: "apache",
-			extensions: ["rmvb"]
+			"source": "apache",
+			"extensions": ["rmvb"]
 		},
 		"application/vnd.route66.link66+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["link66"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["link66"]
 		},
-		"application/vnd.rs-274x": { source: "iana" },
-		"application/vnd.ruckus.download": { source: "iana" },
-		"application/vnd.s3sms": { source: "iana" },
+		"application/vnd.rs-274x": { "source": "iana" },
+		"application/vnd.ruckus.download": { "source": "iana" },
+		"application/vnd.s3sms": { "source": "iana" },
 		"application/vnd.sailingtracker.track": {
-			source: "iana",
-			extensions: ["st"]
+			"source": "iana",
+			"extensions": ["st"]
 		},
-		"application/vnd.sar": { source: "iana" },
-		"application/vnd.sbm.cid": { source: "iana" },
-		"application/vnd.sbm.mid2": { source: "iana" },
-		"application/vnd.scribus": { source: "iana" },
-		"application/vnd.sealed.3df": { source: "iana" },
-		"application/vnd.sealed.csf": { source: "iana" },
-		"application/vnd.sealed.doc": { source: "iana" },
-		"application/vnd.sealed.eml": { source: "iana" },
-		"application/vnd.sealed.mht": { source: "iana" },
-		"application/vnd.sealed.net": { source: "iana" },
-		"application/vnd.sealed.ppt": { source: "iana" },
-		"application/vnd.sealed.tiff": { source: "iana" },
-		"application/vnd.sealed.xls": { source: "iana" },
-		"application/vnd.sealedmedia.softseal.html": { source: "iana" },
-		"application/vnd.sealedmedia.softseal.pdf": { source: "iana" },
+		"application/vnd.sar": { "source": "iana" },
+		"application/vnd.sbm.cid": { "source": "iana" },
+		"application/vnd.sbm.mid2": { "source": "iana" },
+		"application/vnd.scribus": { "source": "iana" },
+		"application/vnd.sealed.3df": { "source": "iana" },
+		"application/vnd.sealed.csf": { "source": "iana" },
+		"application/vnd.sealed.doc": { "source": "iana" },
+		"application/vnd.sealed.eml": { "source": "iana" },
+		"application/vnd.sealed.mht": { "source": "iana" },
+		"application/vnd.sealed.net": { "source": "iana" },
+		"application/vnd.sealed.ppt": { "source": "iana" },
+		"application/vnd.sealed.tiff": { "source": "iana" },
+		"application/vnd.sealed.xls": { "source": "iana" },
+		"application/vnd.sealedmedia.softseal.html": { "source": "iana" },
+		"application/vnd.sealedmedia.softseal.pdf": { "source": "iana" },
 		"application/vnd.seemail": {
-			source: "iana",
-			extensions: ["see"]
+			"source": "iana",
+			"extensions": ["see"]
 		},
 		"application/vnd.seis+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.sema": {
-			source: "iana",
-			extensions: ["sema"]
+			"source": "iana",
+			"extensions": ["sema"]
 		},
 		"application/vnd.semd": {
-			source: "iana",
-			extensions: ["semd"]
+			"source": "iana",
+			"extensions": ["semd"]
 		},
 		"application/vnd.semf": {
-			source: "iana",
-			extensions: ["semf"]
+			"source": "iana",
+			"extensions": ["semf"]
 		},
-		"application/vnd.shade-save-file": { source: "iana" },
+		"application/vnd.shade-save-file": { "source": "iana" },
 		"application/vnd.shana.informed.formdata": {
-			source: "iana",
-			extensions: ["ifm"]
+			"source": "iana",
+			"extensions": ["ifm"]
 		},
 		"application/vnd.shana.informed.formtemplate": {
-			source: "iana",
-			extensions: ["itp"]
+			"source": "iana",
+			"extensions": ["itp"]
 		},
 		"application/vnd.shana.informed.interchange": {
-			source: "iana",
-			extensions: ["iif"]
+			"source": "iana",
+			"extensions": ["iif"]
 		},
 		"application/vnd.shana.informed.package": {
-			source: "iana",
-			extensions: ["ipk"]
+			"source": "iana",
+			"extensions": ["ipk"]
 		},
 		"application/vnd.shootproof+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.shopkick+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/vnd.shp": { source: "iana" },
-		"application/vnd.shx": { source: "iana" },
-		"application/vnd.sigrok.session": { source: "iana" },
+		"application/vnd.shp": { "source": "iana" },
+		"application/vnd.shx": { "source": "iana" },
+		"application/vnd.sigrok.session": { "source": "iana" },
 		"application/vnd.simtech-mindmapper": {
-			source: "iana",
-			extensions: ["twd", "twds"]
+			"source": "iana",
+			"extensions": ["twd", "twds"]
 		},
 		"application/vnd.siren+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.smaf": {
-			source: "iana",
-			extensions: ["mmf"]
+			"source": "iana",
+			"extensions": ["mmf"]
 		},
-		"application/vnd.smart.notebook": { source: "iana" },
+		"application/vnd.smart.notebook": { "source": "iana" },
 		"application/vnd.smart.teacher": {
-			source: "iana",
-			extensions: ["teacher"]
+			"source": "iana",
+			"extensions": ["teacher"]
 		},
-		"application/vnd.snesdev-page-table": { source: "iana" },
+		"application/vnd.snesdev-page-table": { "source": "iana" },
 		"application/vnd.software602.filler.form+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["fo"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["fo"]
 		},
-		"application/vnd.software602.filler.form-xml-zip": { source: "iana" },
+		"application/vnd.software602.filler.form-xml-zip": { "source": "iana" },
 		"application/vnd.solent.sdkm+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["sdkm", "sdkd"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["sdkm", "sdkd"]
 		},
 		"application/vnd.spotfire.dxp": {
-			source: "iana",
-			extensions: ["dxp"]
+			"source": "iana",
+			"extensions": ["dxp"]
 		},
 		"application/vnd.spotfire.sfs": {
-			source: "iana",
-			extensions: ["sfs"]
+			"source": "iana",
+			"extensions": ["sfs"]
 		},
-		"application/vnd.sqlite3": { source: "iana" },
-		"application/vnd.sss-cod": { source: "iana" },
-		"application/vnd.sss-dtf": { source: "iana" },
-		"application/vnd.sss-ntf": { source: "iana" },
+		"application/vnd.sqlite3": { "source": "iana" },
+		"application/vnd.sss-cod": { "source": "iana" },
+		"application/vnd.sss-dtf": { "source": "iana" },
+		"application/vnd.sss-ntf": { "source": "iana" },
 		"application/vnd.stardivision.calc": {
-			source: "apache",
-			extensions: ["sdc"]
+			"source": "apache",
+			"extensions": ["sdc"]
 		},
 		"application/vnd.stardivision.draw": {
-			source: "apache",
-			extensions: ["sda"]
+			"source": "apache",
+			"extensions": ["sda"]
 		},
 		"application/vnd.stardivision.impress": {
-			source: "apache",
-			extensions: ["sdd"]
+			"source": "apache",
+			"extensions": ["sdd"]
 		},
 		"application/vnd.stardivision.math": {
-			source: "apache",
-			extensions: ["smf"]
+			"source": "apache",
+			"extensions": ["smf"]
 		},
 		"application/vnd.stardivision.writer": {
-			source: "apache",
-			extensions: ["sdw", "vor"]
+			"source": "apache",
+			"extensions": ["sdw", "vor"]
 		},
 		"application/vnd.stardivision.writer-global": {
-			source: "apache",
-			extensions: ["sgl"]
+			"source": "apache",
+			"extensions": ["sgl"]
 		},
 		"application/vnd.stepmania.package": {
-			source: "iana",
-			extensions: ["smzip"]
+			"source": "iana",
+			"extensions": ["smzip"]
 		},
 		"application/vnd.stepmania.stepchart": {
-			source: "iana",
-			extensions: ["sm"]
+			"source": "iana",
+			"extensions": ["sm"]
 		},
-		"application/vnd.street-stream": { source: "iana" },
+		"application/vnd.street-stream": { "source": "iana" },
 		"application/vnd.sun.wadl+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["wadl"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["wadl"]
 		},
 		"application/vnd.sun.xml.calc": {
-			source: "apache",
-			extensions: ["sxc"]
+			"source": "apache",
+			"extensions": ["sxc"]
 		},
 		"application/vnd.sun.xml.calc.template": {
-			source: "apache",
-			extensions: ["stc"]
+			"source": "apache",
+			"extensions": ["stc"]
 		},
 		"application/vnd.sun.xml.draw": {
-			source: "apache",
-			extensions: ["sxd"]
+			"source": "apache",
+			"extensions": ["sxd"]
 		},
 		"application/vnd.sun.xml.draw.template": {
-			source: "apache",
-			extensions: ["std"]
+			"source": "apache",
+			"extensions": ["std"]
 		},
 		"application/vnd.sun.xml.impress": {
-			source: "apache",
-			extensions: ["sxi"]
+			"source": "apache",
+			"extensions": ["sxi"]
 		},
 		"application/vnd.sun.xml.impress.template": {
-			source: "apache",
-			extensions: ["sti"]
+			"source": "apache",
+			"extensions": ["sti"]
 		},
 		"application/vnd.sun.xml.math": {
-			source: "apache",
-			extensions: ["sxm"]
+			"source": "apache",
+			"extensions": ["sxm"]
 		},
 		"application/vnd.sun.xml.writer": {
-			source: "apache",
-			extensions: ["sxw"]
+			"source": "apache",
+			"extensions": ["sxw"]
 		},
 		"application/vnd.sun.xml.writer.global": {
-			source: "apache",
-			extensions: ["sxg"]
+			"source": "apache",
+			"extensions": ["sxg"]
 		},
 		"application/vnd.sun.xml.writer.template": {
-			source: "apache",
-			extensions: ["stw"]
+			"source": "apache",
+			"extensions": ["stw"]
 		},
 		"application/vnd.sus-calendar": {
-			source: "iana",
-			extensions: ["sus", "susp"]
+			"source": "iana",
+			"extensions": ["sus", "susp"]
 		},
 		"application/vnd.svd": {
-			source: "iana",
-			extensions: ["svd"]
+			"source": "iana",
+			"extensions": ["svd"]
 		},
-		"application/vnd.swiftview-ics": { source: "iana" },
+		"application/vnd.swiftview-ics": { "source": "iana" },
 		"application/vnd.sycle+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.syft+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.symbian.install": {
-			source: "apache",
-			extensions: ["sis", "sisx"]
+			"source": "apache",
+			"extensions": ["sis", "sisx"]
 		},
 		"application/vnd.syncml+xml": {
-			source: "iana",
-			charset: "UTF-8",
-			compressible: !0,
-			extensions: ["xsm"]
+			"source": "iana",
+			"charset": "UTF-8",
+			"compressible": true,
+			"extensions": ["xsm"]
 		},
 		"application/vnd.syncml.dm+wbxml": {
-			source: "iana",
-			charset: "UTF-8",
-			extensions: ["bdm"]
+			"source": "iana",
+			"charset": "UTF-8",
+			"extensions": ["bdm"]
 		},
 		"application/vnd.syncml.dm+xml": {
-			source: "iana",
-			charset: "UTF-8",
-			compressible: !0,
-			extensions: ["xdm"]
+			"source": "iana",
+			"charset": "UTF-8",
+			"compressible": true,
+			"extensions": ["xdm"]
 		},
-		"application/vnd.syncml.dm.notification": { source: "iana" },
-		"application/vnd.syncml.dmddf+wbxml": { source: "iana" },
+		"application/vnd.syncml.dm.notification": { "source": "iana" },
+		"application/vnd.syncml.dmddf+wbxml": { "source": "iana" },
 		"application/vnd.syncml.dmddf+xml": {
-			source: "iana",
-			charset: "UTF-8",
-			compressible: !0,
-			extensions: ["ddf"]
+			"source": "iana",
+			"charset": "UTF-8",
+			"compressible": true,
+			"extensions": ["ddf"]
 		},
-		"application/vnd.syncml.dmtnds+wbxml": { source: "iana" },
+		"application/vnd.syncml.dmtnds+wbxml": { "source": "iana" },
 		"application/vnd.syncml.dmtnds+xml": {
-			source: "iana",
-			charset: "UTF-8",
-			compressible: !0
+			"source": "iana",
+			"charset": "UTF-8",
+			"compressible": true
 		},
-		"application/vnd.syncml.ds.notification": { source: "iana" },
+		"application/vnd.syncml.ds.notification": { "source": "iana" },
 		"application/vnd.tableschema+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.tao.intent-module-archive": {
-			source: "iana",
-			extensions: ["tao"]
+			"source": "iana",
+			"extensions": ["tao"]
 		},
 		"application/vnd.tcpdump.pcap": {
-			source: "iana",
-			extensions: [
+			"source": "iana",
+			"extensions": [
 				"pcap",
 				"cap",
 				"dmp"
 			]
 		},
 		"application/vnd.think-cell.ppttc+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.tmd.mediaflex.api+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/vnd.tml": { source: "iana" },
+		"application/vnd.tml": { "source": "iana" },
 		"application/vnd.tmobile-livetv": {
-			source: "iana",
-			extensions: ["tmo"]
+			"source": "iana",
+			"extensions": ["tmo"]
 		},
-		"application/vnd.tri.onesource": { source: "iana" },
+		"application/vnd.tri.onesource": { "source": "iana" },
 		"application/vnd.trid.tpt": {
-			source: "iana",
-			extensions: ["tpt"]
+			"source": "iana",
+			"extensions": ["tpt"]
 		},
 		"application/vnd.triscape.mxs": {
-			source: "iana",
-			extensions: ["mxs"]
+			"source": "iana",
+			"extensions": ["mxs"]
 		},
 		"application/vnd.trueapp": {
-			source: "iana",
-			extensions: ["tra"]
+			"source": "iana",
+			"extensions": ["tra"]
 		},
-		"application/vnd.truedoc": { source: "iana" },
-		"application/vnd.ubisoft.webplayer": { source: "iana" },
+		"application/vnd.truedoc": { "source": "iana" },
+		"application/vnd.ubisoft.webplayer": { "source": "iana" },
 		"application/vnd.ufdl": {
-			source: "iana",
-			extensions: ["ufd", "ufdl"]
+			"source": "iana",
+			"extensions": ["ufd", "ufdl"]
 		},
 		"application/vnd.uiq.theme": {
-			source: "iana",
-			extensions: ["utz"]
+			"source": "iana",
+			"extensions": ["utz"]
 		},
 		"application/vnd.umajin": {
-			source: "iana",
-			extensions: ["umj"]
+			"source": "iana",
+			"extensions": ["umj"]
 		},
 		"application/vnd.unity": {
-			source: "iana",
-			extensions: ["unityweb"]
+			"source": "iana",
+			"extensions": ["unityweb"]
 		},
 		"application/vnd.uoml+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["uoml"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["uoml"]
 		},
-		"application/vnd.uplanet.alert": { source: "iana" },
-		"application/vnd.uplanet.alert-wbxml": { source: "iana" },
-		"application/vnd.uplanet.bearer-choice": { source: "iana" },
-		"application/vnd.uplanet.bearer-choice-wbxml": { source: "iana" },
-		"application/vnd.uplanet.cacheop": { source: "iana" },
-		"application/vnd.uplanet.cacheop-wbxml": { source: "iana" },
-		"application/vnd.uplanet.channel": { source: "iana" },
-		"application/vnd.uplanet.channel-wbxml": { source: "iana" },
-		"application/vnd.uplanet.list": { source: "iana" },
-		"application/vnd.uplanet.list-wbxml": { source: "iana" },
-		"application/vnd.uplanet.listcmd": { source: "iana" },
-		"application/vnd.uplanet.listcmd-wbxml": { source: "iana" },
-		"application/vnd.uplanet.signal": { source: "iana" },
-		"application/vnd.uri-map": { source: "iana" },
-		"application/vnd.valve.source.material": { source: "iana" },
+		"application/vnd.uplanet.alert": { "source": "iana" },
+		"application/vnd.uplanet.alert-wbxml": { "source": "iana" },
+		"application/vnd.uplanet.bearer-choice": { "source": "iana" },
+		"application/vnd.uplanet.bearer-choice-wbxml": { "source": "iana" },
+		"application/vnd.uplanet.cacheop": { "source": "iana" },
+		"application/vnd.uplanet.cacheop-wbxml": { "source": "iana" },
+		"application/vnd.uplanet.channel": { "source": "iana" },
+		"application/vnd.uplanet.channel-wbxml": { "source": "iana" },
+		"application/vnd.uplanet.list": { "source": "iana" },
+		"application/vnd.uplanet.list-wbxml": { "source": "iana" },
+		"application/vnd.uplanet.listcmd": { "source": "iana" },
+		"application/vnd.uplanet.listcmd-wbxml": { "source": "iana" },
+		"application/vnd.uplanet.signal": { "source": "iana" },
+		"application/vnd.uri-map": { "source": "iana" },
+		"application/vnd.valve.source.material": { "source": "iana" },
 		"application/vnd.vcx": {
-			source: "iana",
-			extensions: ["vcx"]
+			"source": "iana",
+			"extensions": ["vcx"]
 		},
-		"application/vnd.vd-study": { source: "iana" },
-		"application/vnd.vectorworks": { source: "iana" },
+		"application/vnd.vd-study": { "source": "iana" },
+		"application/vnd.vectorworks": { "source": "iana" },
 		"application/vnd.vel+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/vnd.verimatrix.vcas": { source: "iana" },
+		"application/vnd.verimatrix.vcas": { "source": "iana" },
 		"application/vnd.veritone.aion+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/vnd.veryant.thin": { source: "iana" },
-		"application/vnd.ves.encrypted": { source: "iana" },
-		"application/vnd.vidsoft.vidconference": { source: "iana" },
+		"application/vnd.veryant.thin": { "source": "iana" },
+		"application/vnd.ves.encrypted": { "source": "iana" },
+		"application/vnd.vidsoft.vidconference": { "source": "iana" },
 		"application/vnd.visio": {
-			source: "iana",
-			extensions: [
+			"source": "iana",
+			"extensions": [
 				"vsd",
 				"vst",
 				"vss",
@@ -4869,207 +5207,207 @@ var o = Object.create, s = Object.defineProperty, c = Object.getOwnPropertyDescr
 			]
 		},
 		"application/vnd.visionary": {
-			source: "iana",
-			extensions: ["vis"]
+			"source": "iana",
+			"extensions": ["vis"]
 		},
-		"application/vnd.vividence.scriptfile": { source: "iana" },
+		"application/vnd.vividence.scriptfile": { "source": "iana" },
 		"application/vnd.vsf": {
-			source: "iana",
-			extensions: ["vsf"]
+			"source": "iana",
+			"extensions": ["vsf"]
 		},
-		"application/vnd.wap.sic": { source: "iana" },
-		"application/vnd.wap.slc": { source: "iana" },
+		"application/vnd.wap.sic": { "source": "iana" },
+		"application/vnd.wap.slc": { "source": "iana" },
 		"application/vnd.wap.wbxml": {
-			source: "iana",
-			charset: "UTF-8",
-			extensions: ["wbxml"]
+			"source": "iana",
+			"charset": "UTF-8",
+			"extensions": ["wbxml"]
 		},
 		"application/vnd.wap.wmlc": {
-			source: "iana",
-			extensions: ["wmlc"]
+			"source": "iana",
+			"extensions": ["wmlc"]
 		},
 		"application/vnd.wap.wmlscriptc": {
-			source: "iana",
-			extensions: ["wmlsc"]
+			"source": "iana",
+			"extensions": ["wmlsc"]
 		},
 		"application/vnd.webturbo": {
-			source: "iana",
-			extensions: ["wtb"]
+			"source": "iana",
+			"extensions": ["wtb"]
 		},
-		"application/vnd.wfa.dpp": { source: "iana" },
-		"application/vnd.wfa.p2p": { source: "iana" },
-		"application/vnd.wfa.wsc": { source: "iana" },
-		"application/vnd.windows.devicepairing": { source: "iana" },
-		"application/vnd.wmc": { source: "iana" },
-		"application/vnd.wmf.bootstrap": { source: "iana" },
-		"application/vnd.wolfram.mathematica": { source: "iana" },
-		"application/vnd.wolfram.mathematica.package": { source: "iana" },
+		"application/vnd.wfa.dpp": { "source": "iana" },
+		"application/vnd.wfa.p2p": { "source": "iana" },
+		"application/vnd.wfa.wsc": { "source": "iana" },
+		"application/vnd.windows.devicepairing": { "source": "iana" },
+		"application/vnd.wmc": { "source": "iana" },
+		"application/vnd.wmf.bootstrap": { "source": "iana" },
+		"application/vnd.wolfram.mathematica": { "source": "iana" },
+		"application/vnd.wolfram.mathematica.package": { "source": "iana" },
 		"application/vnd.wolfram.player": {
-			source: "iana",
-			extensions: ["nbp"]
+			"source": "iana",
+			"extensions": ["nbp"]
 		},
 		"application/vnd.wordperfect": {
-			source: "iana",
-			extensions: ["wpd"]
+			"source": "iana",
+			"extensions": ["wpd"]
 		},
 		"application/vnd.wqd": {
-			source: "iana",
-			extensions: ["wqd"]
+			"source": "iana",
+			"extensions": ["wqd"]
 		},
-		"application/vnd.wrq-hp3000-labelled": { source: "iana" },
+		"application/vnd.wrq-hp3000-labelled": { "source": "iana" },
 		"application/vnd.wt.stf": {
-			source: "iana",
-			extensions: ["stf"]
+			"source": "iana",
+			"extensions": ["stf"]
 		},
-		"application/vnd.wv.csp+wbxml": { source: "iana" },
+		"application/vnd.wv.csp+wbxml": { "source": "iana" },
 		"application/vnd.wv.csp+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.wv.ssp+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.xacml+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/vnd.xara": {
-			source: "iana",
-			extensions: ["xar"]
+			"source": "iana",
+			"extensions": ["xar"]
 		},
 		"application/vnd.xfdl": {
-			source: "iana",
-			extensions: ["xfdl"]
+			"source": "iana",
+			"extensions": ["xfdl"]
 		},
-		"application/vnd.xfdl.webform": { source: "iana" },
+		"application/vnd.xfdl.webform": { "source": "iana" },
 		"application/vnd.xmi+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/vnd.xmpie.cpkg": { source: "iana" },
-		"application/vnd.xmpie.dpkg": { source: "iana" },
-		"application/vnd.xmpie.plan": { source: "iana" },
-		"application/vnd.xmpie.ppkg": { source: "iana" },
-		"application/vnd.xmpie.xlim": { source: "iana" },
+		"application/vnd.xmpie.cpkg": { "source": "iana" },
+		"application/vnd.xmpie.dpkg": { "source": "iana" },
+		"application/vnd.xmpie.plan": { "source": "iana" },
+		"application/vnd.xmpie.ppkg": { "source": "iana" },
+		"application/vnd.xmpie.xlim": { "source": "iana" },
 		"application/vnd.yamaha.hv-dic": {
-			source: "iana",
-			extensions: ["hvd"]
+			"source": "iana",
+			"extensions": ["hvd"]
 		},
 		"application/vnd.yamaha.hv-script": {
-			source: "iana",
-			extensions: ["hvs"]
+			"source": "iana",
+			"extensions": ["hvs"]
 		},
 		"application/vnd.yamaha.hv-voice": {
-			source: "iana",
-			extensions: ["hvp"]
+			"source": "iana",
+			"extensions": ["hvp"]
 		},
 		"application/vnd.yamaha.openscoreformat": {
-			source: "iana",
-			extensions: ["osf"]
+			"source": "iana",
+			"extensions": ["osf"]
 		},
 		"application/vnd.yamaha.openscoreformat.osfpvg+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["osfpvg"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["osfpvg"]
 		},
-		"application/vnd.yamaha.remote-setup": { source: "iana" },
+		"application/vnd.yamaha.remote-setup": { "source": "iana" },
 		"application/vnd.yamaha.smaf-audio": {
-			source: "iana",
-			extensions: ["saf"]
+			"source": "iana",
+			"extensions": ["saf"]
 		},
 		"application/vnd.yamaha.smaf-phrase": {
-			source: "iana",
-			extensions: ["spf"]
+			"source": "iana",
+			"extensions": ["spf"]
 		},
-		"application/vnd.yamaha.through-ngn": { source: "iana" },
-		"application/vnd.yamaha.tunnel-udpencap": { source: "iana" },
-		"application/vnd.yaoweme": { source: "iana" },
+		"application/vnd.yamaha.through-ngn": { "source": "iana" },
+		"application/vnd.yamaha.tunnel-udpencap": { "source": "iana" },
+		"application/vnd.yaoweme": { "source": "iana" },
 		"application/vnd.yellowriver-custom-menu": {
-			source: "iana",
-			extensions: ["cmp"]
+			"source": "iana",
+			"extensions": ["cmp"]
 		},
-		"application/vnd.youtube.yt": { source: "iana" },
+		"application/vnd.youtube.yt": { "source": "iana" },
 		"application/vnd.zul": {
-			source: "iana",
-			extensions: ["zir", "zirz"]
+			"source": "iana",
+			"extensions": ["zir", "zirz"]
 		},
 		"application/vnd.zzazz.deck+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["zaz"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["zaz"]
 		},
 		"application/voicexml+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["vxml"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["vxml"]
 		},
 		"application/voucher-cms+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/vq-rtcpxr": { source: "iana" },
+		"application/vq-rtcpxr": { "source": "iana" },
 		"application/wasm": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["wasm"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["wasm"]
 		},
 		"application/watcherinfo+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["wif"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["wif"]
 		},
 		"application/webpush-options+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"application/whoispp-query": { source: "iana" },
-		"application/whoispp-response": { source: "iana" },
+		"application/whoispp-query": { "source": "iana" },
+		"application/whoispp-response": { "source": "iana" },
 		"application/widget": {
-			source: "iana",
-			extensions: ["wgt"]
+			"source": "iana",
+			"extensions": ["wgt"]
 		},
 		"application/winhlp": {
-			source: "apache",
-			extensions: ["hlp"]
+			"source": "apache",
+			"extensions": ["hlp"]
 		},
-		"application/wita": { source: "iana" },
-		"application/wordperfect5.1": { source: "iana" },
+		"application/wita": { "source": "iana" },
+		"application/wordperfect5.1": { "source": "iana" },
 		"application/wsdl+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["wsdl"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["wsdl"]
 		},
 		"application/wspolicy+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["wspolicy"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["wspolicy"]
 		},
 		"application/x-7z-compressed": {
-			source: "apache",
-			compressible: !1,
-			extensions: ["7z"]
+			"source": "apache",
+			"compressible": false,
+			"extensions": ["7z"]
 		},
 		"application/x-abiword": {
-			source: "apache",
-			extensions: ["abw"]
+			"source": "apache",
+			"extensions": ["abw"]
 		},
 		"application/x-ace-compressed": {
-			source: "apache",
-			extensions: ["ace"]
+			"source": "apache",
+			"extensions": ["ace"]
 		},
-		"application/x-amf": { source: "apache" },
+		"application/x-amf": { "source": "apache" },
 		"application/x-apple-diskimage": {
-			source: "apache",
-			extensions: ["dmg"]
+			"source": "apache",
+			"extensions": ["dmg"]
 		},
 		"application/x-arj": {
-			compressible: !1,
-			extensions: ["arj"]
+			"compressible": false,
+			"extensions": ["arj"]
 		},
 		"application/x-authorware-bin": {
-			source: "apache",
-			extensions: [
+			"source": "apache",
+			"extensions": [
 				"aab",
 				"x32",
 				"u32",
@@ -5077,42 +5415,42 @@ var o = Object.create, s = Object.defineProperty, c = Object.getOwnPropertyDescr
 			]
 		},
 		"application/x-authorware-map": {
-			source: "apache",
-			extensions: ["aam"]
+			"source": "apache",
+			"extensions": ["aam"]
 		},
 		"application/x-authorware-seg": {
-			source: "apache",
-			extensions: ["aas"]
+			"source": "apache",
+			"extensions": ["aas"]
 		},
 		"application/x-bcpio": {
-			source: "apache",
-			extensions: ["bcpio"]
+			"source": "apache",
+			"extensions": ["bcpio"]
 		},
 		"application/x-bdoc": {
-			compressible: !1,
-			extensions: ["bdoc"]
+			"compressible": false,
+			"extensions": ["bdoc"]
 		},
 		"application/x-bittorrent": {
-			source: "apache",
-			extensions: ["torrent"]
+			"source": "apache",
+			"extensions": ["torrent"]
 		},
 		"application/x-blorb": {
-			source: "apache",
-			extensions: ["blb", "blorb"]
+			"source": "apache",
+			"extensions": ["blb", "blorb"]
 		},
 		"application/x-bzip": {
-			source: "apache",
-			compressible: !1,
-			extensions: ["bz"]
+			"source": "apache",
+			"compressible": false,
+			"extensions": ["bz"]
 		},
 		"application/x-bzip2": {
-			source: "apache",
-			compressible: !1,
-			extensions: ["bz2", "boz"]
+			"source": "apache",
+			"compressible": false,
+			"extensions": ["bz2", "boz"]
 		},
 		"application/x-cbr": {
-			source: "apache",
-			extensions: [
+			"source": "apache",
+			"extensions": [
 				"cbr",
 				"cba",
 				"cbt",
@@ -5121,51 +5459,51 @@ var o = Object.create, s = Object.defineProperty, c = Object.getOwnPropertyDescr
 			]
 		},
 		"application/x-cdlink": {
-			source: "apache",
-			extensions: ["vcd"]
+			"source": "apache",
+			"extensions": ["vcd"]
 		},
 		"application/x-cfs-compressed": {
-			source: "apache",
-			extensions: ["cfs"]
+			"source": "apache",
+			"extensions": ["cfs"]
 		},
 		"application/x-chat": {
-			source: "apache",
-			extensions: ["chat"]
+			"source": "apache",
+			"extensions": ["chat"]
 		},
 		"application/x-chess-pgn": {
-			source: "apache",
-			extensions: ["pgn"]
+			"source": "apache",
+			"extensions": ["pgn"]
 		},
-		"application/x-chrome-extension": { extensions: ["crx"] },
+		"application/x-chrome-extension": { "extensions": ["crx"] },
 		"application/x-cocoa": {
-			source: "nginx",
-			extensions: ["cco"]
+			"source": "nginx",
+			"extensions": ["cco"]
 		},
-		"application/x-compress": { source: "apache" },
+		"application/x-compress": { "source": "apache" },
 		"application/x-conference": {
-			source: "apache",
-			extensions: ["nsc"]
+			"source": "apache",
+			"extensions": ["nsc"]
 		},
 		"application/x-cpio": {
-			source: "apache",
-			extensions: ["cpio"]
+			"source": "apache",
+			"extensions": ["cpio"]
 		},
 		"application/x-csh": {
-			source: "apache",
-			extensions: ["csh"]
+			"source": "apache",
+			"extensions": ["csh"]
 		},
-		"application/x-deb": { compressible: !1 },
+		"application/x-deb": { "compressible": false },
 		"application/x-debian-package": {
-			source: "apache",
-			extensions: ["deb", "udeb"]
+			"source": "apache",
+			"extensions": ["deb", "udeb"]
 		},
 		"application/x-dgc-compressed": {
-			source: "apache",
-			extensions: ["dgc"]
+			"source": "apache",
+			"extensions": ["dgc"]
 		},
 		"application/x-director": {
-			source: "apache",
-			extensions: [
+			"source": "apache",
+			"extensions": [
 				"dir",
 				"dcr",
 				"dxr",
@@ -5178,194 +5516,194 @@ var o = Object.create, s = Object.defineProperty, c = Object.getOwnPropertyDescr
 			]
 		},
 		"application/x-doom": {
-			source: "apache",
-			extensions: ["wad"]
+			"source": "apache",
+			"extensions": ["wad"]
 		},
 		"application/x-dtbncx+xml": {
-			source: "apache",
-			compressible: !0,
-			extensions: ["ncx"]
+			"source": "apache",
+			"compressible": true,
+			"extensions": ["ncx"]
 		},
 		"application/x-dtbook+xml": {
-			source: "apache",
-			compressible: !0,
-			extensions: ["dtb"]
+			"source": "apache",
+			"compressible": true,
+			"extensions": ["dtb"]
 		},
 		"application/x-dtbresource+xml": {
-			source: "apache",
-			compressible: !0,
-			extensions: ["res"]
+			"source": "apache",
+			"compressible": true,
+			"extensions": ["res"]
 		},
 		"application/x-dvi": {
-			source: "apache",
-			compressible: !1,
-			extensions: ["dvi"]
+			"source": "apache",
+			"compressible": false,
+			"extensions": ["dvi"]
 		},
 		"application/x-envoy": {
-			source: "apache",
-			extensions: ["evy"]
+			"source": "apache",
+			"extensions": ["evy"]
 		},
 		"application/x-eva": {
-			source: "apache",
-			extensions: ["eva"]
+			"source": "apache",
+			"extensions": ["eva"]
 		},
 		"application/x-font-bdf": {
-			source: "apache",
-			extensions: ["bdf"]
+			"source": "apache",
+			"extensions": ["bdf"]
 		},
-		"application/x-font-dos": { source: "apache" },
-		"application/x-font-framemaker": { source: "apache" },
+		"application/x-font-dos": { "source": "apache" },
+		"application/x-font-framemaker": { "source": "apache" },
 		"application/x-font-ghostscript": {
-			source: "apache",
-			extensions: ["gsf"]
+			"source": "apache",
+			"extensions": ["gsf"]
 		},
-		"application/x-font-libgrx": { source: "apache" },
+		"application/x-font-libgrx": { "source": "apache" },
 		"application/x-font-linux-psf": {
-			source: "apache",
-			extensions: ["psf"]
+			"source": "apache",
+			"extensions": ["psf"]
 		},
 		"application/x-font-pcf": {
-			source: "apache",
-			extensions: ["pcf"]
+			"source": "apache",
+			"extensions": ["pcf"]
 		},
 		"application/x-font-snf": {
-			source: "apache",
-			extensions: ["snf"]
+			"source": "apache",
+			"extensions": ["snf"]
 		},
-		"application/x-font-speedo": { source: "apache" },
-		"application/x-font-sunos-news": { source: "apache" },
+		"application/x-font-speedo": { "source": "apache" },
+		"application/x-font-sunos-news": { "source": "apache" },
 		"application/x-font-type1": {
-			source: "apache",
-			extensions: [
+			"source": "apache",
+			"extensions": [
 				"pfa",
 				"pfb",
 				"pfm",
 				"afm"
 			]
 		},
-		"application/x-font-vfont": { source: "apache" },
+		"application/x-font-vfont": { "source": "apache" },
 		"application/x-freearc": {
-			source: "apache",
-			extensions: ["arc"]
+			"source": "apache",
+			"extensions": ["arc"]
 		},
 		"application/x-futuresplash": {
-			source: "apache",
-			extensions: ["spl"]
+			"source": "apache",
+			"extensions": ["spl"]
 		},
 		"application/x-gca-compressed": {
-			source: "apache",
-			extensions: ["gca"]
+			"source": "apache",
+			"extensions": ["gca"]
 		},
 		"application/x-glulx": {
-			source: "apache",
-			extensions: ["ulx"]
+			"source": "apache",
+			"extensions": ["ulx"]
 		},
 		"application/x-gnumeric": {
-			source: "apache",
-			extensions: ["gnumeric"]
+			"source": "apache",
+			"extensions": ["gnumeric"]
 		},
 		"application/x-gramps-xml": {
-			source: "apache",
-			extensions: ["gramps"]
+			"source": "apache",
+			"extensions": ["gramps"]
 		},
 		"application/x-gtar": {
-			source: "apache",
-			extensions: ["gtar"]
+			"source": "apache",
+			"extensions": ["gtar"]
 		},
-		"application/x-gzip": { source: "apache" },
+		"application/x-gzip": { "source": "apache" },
 		"application/x-hdf": {
-			source: "apache",
-			extensions: ["hdf"]
+			"source": "apache",
+			"extensions": ["hdf"]
 		},
 		"application/x-httpd-php": {
-			compressible: !0,
-			extensions: ["php"]
+			"compressible": true,
+			"extensions": ["php"]
 		},
 		"application/x-install-instructions": {
-			source: "apache",
-			extensions: ["install"]
+			"source": "apache",
+			"extensions": ["install"]
 		},
 		"application/x-iso9660-image": {
-			source: "apache",
-			extensions: ["iso"]
+			"source": "apache",
+			"extensions": ["iso"]
 		},
-		"application/x-iwork-keynote-sffkey": { extensions: ["key"] },
-		"application/x-iwork-numbers-sffnumbers": { extensions: ["numbers"] },
-		"application/x-iwork-pages-sffpages": { extensions: ["pages"] },
+		"application/x-iwork-keynote-sffkey": { "extensions": ["key"] },
+		"application/x-iwork-numbers-sffnumbers": { "extensions": ["numbers"] },
+		"application/x-iwork-pages-sffpages": { "extensions": ["pages"] },
 		"application/x-java-archive-diff": {
-			source: "nginx",
-			extensions: ["jardiff"]
+			"source": "nginx",
+			"extensions": ["jardiff"]
 		},
 		"application/x-java-jnlp-file": {
-			source: "apache",
-			compressible: !1,
-			extensions: ["jnlp"]
+			"source": "apache",
+			"compressible": false,
+			"extensions": ["jnlp"]
 		},
-		"application/x-javascript": { compressible: !0 },
-		"application/x-keepass2": { extensions: ["kdbx"] },
+		"application/x-javascript": { "compressible": true },
+		"application/x-keepass2": { "extensions": ["kdbx"] },
 		"application/x-latex": {
-			source: "apache",
-			compressible: !1,
-			extensions: ["latex"]
+			"source": "apache",
+			"compressible": false,
+			"extensions": ["latex"]
 		},
-		"application/x-lua-bytecode": { extensions: ["luac"] },
+		"application/x-lua-bytecode": { "extensions": ["luac"] },
 		"application/x-lzh-compressed": {
-			source: "apache",
-			extensions: ["lzh", "lha"]
+			"source": "apache",
+			"extensions": ["lzh", "lha"]
 		},
 		"application/x-makeself": {
-			source: "nginx",
-			extensions: ["run"]
+			"source": "nginx",
+			"extensions": ["run"]
 		},
 		"application/x-mie": {
-			source: "apache",
-			extensions: ["mie"]
+			"source": "apache",
+			"extensions": ["mie"]
 		},
 		"application/x-mobipocket-ebook": {
-			source: "apache",
-			extensions: ["prc", "mobi"]
+			"source": "apache",
+			"extensions": ["prc", "mobi"]
 		},
-		"application/x-mpegurl": { compressible: !1 },
+		"application/x-mpegurl": { "compressible": false },
 		"application/x-ms-application": {
-			source: "apache",
-			extensions: ["application"]
+			"source": "apache",
+			"extensions": ["application"]
 		},
 		"application/x-ms-shortcut": {
-			source: "apache",
-			extensions: ["lnk"]
+			"source": "apache",
+			"extensions": ["lnk"]
 		},
 		"application/x-ms-wmd": {
-			source: "apache",
-			extensions: ["wmd"]
+			"source": "apache",
+			"extensions": ["wmd"]
 		},
 		"application/x-ms-wmz": {
-			source: "apache",
-			extensions: ["wmz"]
+			"source": "apache",
+			"extensions": ["wmz"]
 		},
 		"application/x-ms-xbap": {
-			source: "apache",
-			extensions: ["xbap"]
+			"source": "apache",
+			"extensions": ["xbap"]
 		},
 		"application/x-msaccess": {
-			source: "apache",
-			extensions: ["mdb"]
+			"source": "apache",
+			"extensions": ["mdb"]
 		},
 		"application/x-msbinder": {
-			source: "apache",
-			extensions: ["obd"]
+			"source": "apache",
+			"extensions": ["obd"]
 		},
 		"application/x-mscardfile": {
-			source: "apache",
-			extensions: ["crd"]
+			"source": "apache",
+			"extensions": ["crd"]
 		},
 		"application/x-msclip": {
-			source: "apache",
-			extensions: ["clp"]
+			"source": "apache",
+			"extensions": ["clp"]
 		},
-		"application/x-msdos-program": { extensions: ["exe"] },
+		"application/x-msdos-program": { "extensions": ["exe"] },
 		"application/x-msdownload": {
-			source: "apache",
-			extensions: [
+			"source": "apache",
+			"extensions": [
 				"exe",
 				"dll",
 				"com",
@@ -5374,16 +5712,16 @@ var o = Object.create, s = Object.defineProperty, c = Object.getOwnPropertyDescr
 			]
 		},
 		"application/x-msmediaview": {
-			source: "apache",
-			extensions: [
+			"source": "apache",
+			"extensions": [
 				"mvb",
 				"m13",
 				"m14"
 			]
 		},
 		"application/x-msmetafile": {
-			source: "apache",
-			extensions: [
+			"source": "apache",
+			"extensions": [
 				"wmf",
 				"wmz",
 				"emf",
@@ -5391,231 +5729,231 @@ var o = Object.create, s = Object.defineProperty, c = Object.getOwnPropertyDescr
 			]
 		},
 		"application/x-msmoney": {
-			source: "apache",
-			extensions: ["mny"]
+			"source": "apache",
+			"extensions": ["mny"]
 		},
 		"application/x-mspublisher": {
-			source: "apache",
-			extensions: ["pub"]
+			"source": "apache",
+			"extensions": ["pub"]
 		},
 		"application/x-msschedule": {
-			source: "apache",
-			extensions: ["scd"]
+			"source": "apache",
+			"extensions": ["scd"]
 		},
 		"application/x-msterminal": {
-			source: "apache",
-			extensions: ["trm"]
+			"source": "apache",
+			"extensions": ["trm"]
 		},
 		"application/x-mswrite": {
-			source: "apache",
-			extensions: ["wri"]
+			"source": "apache",
+			"extensions": ["wri"]
 		},
 		"application/x-netcdf": {
-			source: "apache",
-			extensions: ["nc", "cdf"]
+			"source": "apache",
+			"extensions": ["nc", "cdf"]
 		},
 		"application/x-ns-proxy-autoconfig": {
-			compressible: !0,
-			extensions: ["pac"]
+			"compressible": true,
+			"extensions": ["pac"]
 		},
 		"application/x-nzb": {
-			source: "apache",
-			extensions: ["nzb"]
+			"source": "apache",
+			"extensions": ["nzb"]
 		},
 		"application/x-perl": {
-			source: "nginx",
-			extensions: ["pl", "pm"]
+			"source": "nginx",
+			"extensions": ["pl", "pm"]
 		},
 		"application/x-pilot": {
-			source: "nginx",
-			extensions: ["prc", "pdb"]
+			"source": "nginx",
+			"extensions": ["prc", "pdb"]
 		},
 		"application/x-pkcs12": {
-			source: "apache",
-			compressible: !1,
-			extensions: ["p12", "pfx"]
+			"source": "apache",
+			"compressible": false,
+			"extensions": ["p12", "pfx"]
 		},
 		"application/x-pkcs7-certificates": {
-			source: "apache",
-			extensions: ["p7b", "spc"]
+			"source": "apache",
+			"extensions": ["p7b", "spc"]
 		},
 		"application/x-pkcs7-certreqresp": {
-			source: "apache",
-			extensions: ["p7r"]
+			"source": "apache",
+			"extensions": ["p7r"]
 		},
-		"application/x-pki-message": { source: "iana" },
+		"application/x-pki-message": { "source": "iana" },
 		"application/x-rar-compressed": {
-			source: "apache",
-			compressible: !1,
-			extensions: ["rar"]
+			"source": "apache",
+			"compressible": false,
+			"extensions": ["rar"]
 		},
 		"application/x-redhat-package-manager": {
-			source: "nginx",
-			extensions: ["rpm"]
+			"source": "nginx",
+			"extensions": ["rpm"]
 		},
 		"application/x-research-info-systems": {
-			source: "apache",
-			extensions: ["ris"]
+			"source": "apache",
+			"extensions": ["ris"]
 		},
 		"application/x-sea": {
-			source: "nginx",
-			extensions: ["sea"]
+			"source": "nginx",
+			"extensions": ["sea"]
 		},
 		"application/x-sh": {
-			source: "apache",
-			compressible: !0,
-			extensions: ["sh"]
+			"source": "apache",
+			"compressible": true,
+			"extensions": ["sh"]
 		},
 		"application/x-shar": {
-			source: "apache",
-			extensions: ["shar"]
+			"source": "apache",
+			"extensions": ["shar"]
 		},
 		"application/x-shockwave-flash": {
-			source: "apache",
-			compressible: !1,
-			extensions: ["swf"]
+			"source": "apache",
+			"compressible": false,
+			"extensions": ["swf"]
 		},
 		"application/x-silverlight-app": {
-			source: "apache",
-			extensions: ["xap"]
+			"source": "apache",
+			"extensions": ["xap"]
 		},
 		"application/x-sql": {
-			source: "apache",
-			extensions: ["sql"]
+			"source": "apache",
+			"extensions": ["sql"]
 		},
 		"application/x-stuffit": {
-			source: "apache",
-			compressible: !1,
-			extensions: ["sit"]
+			"source": "apache",
+			"compressible": false,
+			"extensions": ["sit"]
 		},
 		"application/x-stuffitx": {
-			source: "apache",
-			extensions: ["sitx"]
+			"source": "apache",
+			"extensions": ["sitx"]
 		},
 		"application/x-subrip": {
-			source: "apache",
-			extensions: ["srt"]
+			"source": "apache",
+			"extensions": ["srt"]
 		},
 		"application/x-sv4cpio": {
-			source: "apache",
-			extensions: ["sv4cpio"]
+			"source": "apache",
+			"extensions": ["sv4cpio"]
 		},
 		"application/x-sv4crc": {
-			source: "apache",
-			extensions: ["sv4crc"]
+			"source": "apache",
+			"extensions": ["sv4crc"]
 		},
 		"application/x-t3vm-image": {
-			source: "apache",
-			extensions: ["t3"]
+			"source": "apache",
+			"extensions": ["t3"]
 		},
 		"application/x-tads": {
-			source: "apache",
-			extensions: ["gam"]
+			"source": "apache",
+			"extensions": ["gam"]
 		},
 		"application/x-tar": {
-			source: "apache",
-			compressible: !0,
-			extensions: ["tar"]
+			"source": "apache",
+			"compressible": true,
+			"extensions": ["tar"]
 		},
 		"application/x-tcl": {
-			source: "apache",
-			extensions: ["tcl", "tk"]
+			"source": "apache",
+			"extensions": ["tcl", "tk"]
 		},
 		"application/x-tex": {
-			source: "apache",
-			extensions: ["tex"]
+			"source": "apache",
+			"extensions": ["tex"]
 		},
 		"application/x-tex-tfm": {
-			source: "apache",
-			extensions: ["tfm"]
+			"source": "apache",
+			"extensions": ["tfm"]
 		},
 		"application/x-texinfo": {
-			source: "apache",
-			extensions: ["texinfo", "texi"]
+			"source": "apache",
+			"extensions": ["texinfo", "texi"]
 		},
 		"application/x-tgif": {
-			source: "apache",
-			extensions: ["obj"]
+			"source": "apache",
+			"extensions": ["obj"]
 		},
 		"application/x-ustar": {
-			source: "apache",
-			extensions: ["ustar"]
+			"source": "apache",
+			"extensions": ["ustar"]
 		},
 		"application/x-virtualbox-hdd": {
-			compressible: !0,
-			extensions: ["hdd"]
+			"compressible": true,
+			"extensions": ["hdd"]
 		},
 		"application/x-virtualbox-ova": {
-			compressible: !0,
-			extensions: ["ova"]
+			"compressible": true,
+			"extensions": ["ova"]
 		},
 		"application/x-virtualbox-ovf": {
-			compressible: !0,
-			extensions: ["ovf"]
+			"compressible": true,
+			"extensions": ["ovf"]
 		},
 		"application/x-virtualbox-vbox": {
-			compressible: !0,
-			extensions: ["vbox"]
+			"compressible": true,
+			"extensions": ["vbox"]
 		},
 		"application/x-virtualbox-vbox-extpack": {
-			compressible: !1,
-			extensions: ["vbox-extpack"]
+			"compressible": false,
+			"extensions": ["vbox-extpack"]
 		},
 		"application/x-virtualbox-vdi": {
-			compressible: !0,
-			extensions: ["vdi"]
+			"compressible": true,
+			"extensions": ["vdi"]
 		},
 		"application/x-virtualbox-vhd": {
-			compressible: !0,
-			extensions: ["vhd"]
+			"compressible": true,
+			"extensions": ["vhd"]
 		},
 		"application/x-virtualbox-vmdk": {
-			compressible: !0,
-			extensions: ["vmdk"]
+			"compressible": true,
+			"extensions": ["vmdk"]
 		},
 		"application/x-wais-source": {
-			source: "apache",
-			extensions: ["src"]
+			"source": "apache",
+			"extensions": ["src"]
 		},
 		"application/x-web-app-manifest+json": {
-			compressible: !0,
-			extensions: ["webapp"]
+			"compressible": true,
+			"extensions": ["webapp"]
 		},
 		"application/x-www-form-urlencoded": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/x-x509-ca-cert": {
-			source: "iana",
-			extensions: [
+			"source": "iana",
+			"extensions": [
 				"der",
 				"crt",
 				"pem"
 			]
 		},
-		"application/x-x509-ca-ra-cert": { source: "iana" },
-		"application/x-x509-next-ca-cert": { source: "iana" },
+		"application/x-x509-ca-ra-cert": { "source": "iana" },
+		"application/x-x509-next-ca-cert": { "source": "iana" },
 		"application/x-xfig": {
-			source: "apache",
-			extensions: ["fig"]
+			"source": "apache",
+			"extensions": ["fig"]
 		},
 		"application/x-xliff+xml": {
-			source: "apache",
-			compressible: !0,
-			extensions: ["xlf"]
+			"source": "apache",
+			"compressible": true,
+			"extensions": ["xlf"]
 		},
 		"application/x-xpinstall": {
-			source: "apache",
-			compressible: !1,
-			extensions: ["xpi"]
+			"source": "apache",
+			"compressible": false,
+			"extensions": ["xpi"]
 		},
 		"application/x-xz": {
-			source: "apache",
-			extensions: ["xz"]
+			"source": "apache",
+			"extensions": ["xz"]
 		},
 		"application/x-zmachine": {
-			source: "apache",
-			extensions: [
+			"source": "apache",
+			"extensions": [
 				"z1",
 				"z2",
 				"z3",
@@ -5626,76 +5964,76 @@ var o = Object.create, s = Object.defineProperty, c = Object.getOwnPropertyDescr
 				"z8"
 			]
 		},
-		"application/x400-bp": { source: "iana" },
+		"application/x400-bp": { "source": "iana" },
 		"application/xacml+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/xaml+xml": {
-			source: "apache",
-			compressible: !0,
-			extensions: ["xaml"]
+			"source": "apache",
+			"compressible": true,
+			"extensions": ["xaml"]
 		},
 		"application/xcap-att+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["xav"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["xav"]
 		},
 		"application/xcap-caps+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["xca"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["xca"]
 		},
 		"application/xcap-diff+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["xdf"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["xdf"]
 		},
 		"application/xcap-el+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["xel"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["xel"]
 		},
 		"application/xcap-error+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/xcap-ns+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["xns"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["xns"]
 		},
 		"application/xcon-conference-info+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/xcon-conference-info-diff+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/xenc+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["xenc"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["xenc"]
 		},
 		"application/xhtml+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["xhtml", "xht"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["xhtml", "xht"]
 		},
 		"application/xhtml-voice+xml": {
-			source: "apache",
-			compressible: !0
+			"source": "apache",
+			"compressible": true
 		},
 		"application/xliff+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["xlf"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["xlf"]
 		},
 		"application/xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: [
+			"source": "iana",
+			"compressible": true,
+			"extensions": [
 				"xml",
 				"xsl",
 				"xsd",
@@ -5703,43 +6041,43 @@ var o = Object.create, s = Object.defineProperty, c = Object.getOwnPropertyDescr
 			]
 		},
 		"application/xml-dtd": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["dtd"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["dtd"]
 		},
-		"application/xml-external-parsed-entity": { source: "iana" },
+		"application/xml-external-parsed-entity": { "source": "iana" },
 		"application/xml-patch+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/xmpp+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/xop+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["xop"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["xop"]
 		},
 		"application/xproc+xml": {
-			source: "apache",
-			compressible: !0,
-			extensions: ["xpl"]
+			"source": "apache",
+			"compressible": true,
+			"extensions": ["xpl"]
 		},
 		"application/xslt+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["xsl", "xslt"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["xsl", "xslt"]
 		},
 		"application/xspf+xml": {
-			source: "apache",
-			compressible: !0,
-			extensions: ["xspf"]
+			"source": "apache",
+			"compressible": true,
+			"extensions": ["xspf"]
 		},
 		"application/xv+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: [
+			"source": "iana",
+			"compressible": true,
+			"extensions": [
 				"mxml",
 				"xhvml",
 				"xvml",
@@ -5747,133 +6085,133 @@ var o = Object.create, s = Object.defineProperty, c = Object.getOwnPropertyDescr
 			]
 		},
 		"application/yang": {
-			source: "iana",
-			extensions: ["yang"]
+			"source": "iana",
+			"extensions": ["yang"]
 		},
 		"application/yang-data+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/yang-data+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/yang-patch+json": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/yang-patch+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"application/yin+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["yin"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["yin"]
 		},
 		"application/zip": {
-			source: "iana",
-			compressible: !1,
-			extensions: ["zip"]
+			"source": "iana",
+			"compressible": false,
+			"extensions": ["zip"]
 		},
-		"application/zlib": { source: "iana" },
-		"application/zstd": { source: "iana" },
-		"audio/1d-interleaved-parityfec": { source: "iana" },
-		"audio/32kadpcm": { source: "iana" },
+		"application/zlib": { "source": "iana" },
+		"application/zstd": { "source": "iana" },
+		"audio/1d-interleaved-parityfec": { "source": "iana" },
+		"audio/32kadpcm": { "source": "iana" },
 		"audio/3gpp": {
-			source: "iana",
-			compressible: !1,
-			extensions: ["3gpp"]
+			"source": "iana",
+			"compressible": false,
+			"extensions": ["3gpp"]
 		},
-		"audio/3gpp2": { source: "iana" },
-		"audio/aac": { source: "iana" },
-		"audio/ac3": { source: "iana" },
+		"audio/3gpp2": { "source": "iana" },
+		"audio/aac": { "source": "iana" },
+		"audio/ac3": { "source": "iana" },
 		"audio/adpcm": {
-			source: "apache",
-			extensions: ["adp"]
+			"source": "apache",
+			"extensions": ["adp"]
 		},
 		"audio/amr": {
-			source: "iana",
-			extensions: ["amr"]
+			"source": "iana",
+			"extensions": ["amr"]
 		},
-		"audio/amr-wb": { source: "iana" },
-		"audio/amr-wb+": { source: "iana" },
-		"audio/aptx": { source: "iana" },
-		"audio/asc": { source: "iana" },
-		"audio/atrac-advanced-lossless": { source: "iana" },
-		"audio/atrac-x": { source: "iana" },
-		"audio/atrac3": { source: "iana" },
+		"audio/amr-wb": { "source": "iana" },
+		"audio/amr-wb+": { "source": "iana" },
+		"audio/aptx": { "source": "iana" },
+		"audio/asc": { "source": "iana" },
+		"audio/atrac-advanced-lossless": { "source": "iana" },
+		"audio/atrac-x": { "source": "iana" },
+		"audio/atrac3": { "source": "iana" },
 		"audio/basic": {
-			source: "iana",
-			compressible: !1,
-			extensions: ["au", "snd"]
+			"source": "iana",
+			"compressible": false,
+			"extensions": ["au", "snd"]
 		},
-		"audio/bv16": { source: "iana" },
-		"audio/bv32": { source: "iana" },
-		"audio/clearmode": { source: "iana" },
-		"audio/cn": { source: "iana" },
-		"audio/dat12": { source: "iana" },
-		"audio/dls": { source: "iana" },
-		"audio/dsr-es201108": { source: "iana" },
-		"audio/dsr-es202050": { source: "iana" },
-		"audio/dsr-es202211": { source: "iana" },
-		"audio/dsr-es202212": { source: "iana" },
-		"audio/dv": { source: "iana" },
-		"audio/dvi4": { source: "iana" },
-		"audio/eac3": { source: "iana" },
-		"audio/encaprtp": { source: "iana" },
-		"audio/evrc": { source: "iana" },
-		"audio/evrc-qcp": { source: "iana" },
-		"audio/evrc0": { source: "iana" },
-		"audio/evrc1": { source: "iana" },
-		"audio/evrcb": { source: "iana" },
-		"audio/evrcb0": { source: "iana" },
-		"audio/evrcb1": { source: "iana" },
-		"audio/evrcnw": { source: "iana" },
-		"audio/evrcnw0": { source: "iana" },
-		"audio/evrcnw1": { source: "iana" },
-		"audio/evrcwb": { source: "iana" },
-		"audio/evrcwb0": { source: "iana" },
-		"audio/evrcwb1": { source: "iana" },
-		"audio/evs": { source: "iana" },
-		"audio/flexfec": { source: "iana" },
-		"audio/fwdred": { source: "iana" },
-		"audio/g711-0": { source: "iana" },
-		"audio/g719": { source: "iana" },
-		"audio/g722": { source: "iana" },
-		"audio/g7221": { source: "iana" },
-		"audio/g723": { source: "iana" },
-		"audio/g726-16": { source: "iana" },
-		"audio/g726-24": { source: "iana" },
-		"audio/g726-32": { source: "iana" },
-		"audio/g726-40": { source: "iana" },
-		"audio/g728": { source: "iana" },
-		"audio/g729": { source: "iana" },
-		"audio/g7291": { source: "iana" },
-		"audio/g729d": { source: "iana" },
-		"audio/g729e": { source: "iana" },
-		"audio/gsm": { source: "iana" },
-		"audio/gsm-efr": { source: "iana" },
-		"audio/gsm-hr-08": { source: "iana" },
-		"audio/ilbc": { source: "iana" },
-		"audio/ip-mr_v2.5": { source: "iana" },
-		"audio/isac": { source: "apache" },
-		"audio/l16": { source: "iana" },
-		"audio/l20": { source: "iana" },
+		"audio/bv16": { "source": "iana" },
+		"audio/bv32": { "source": "iana" },
+		"audio/clearmode": { "source": "iana" },
+		"audio/cn": { "source": "iana" },
+		"audio/dat12": { "source": "iana" },
+		"audio/dls": { "source": "iana" },
+		"audio/dsr-es201108": { "source": "iana" },
+		"audio/dsr-es202050": { "source": "iana" },
+		"audio/dsr-es202211": { "source": "iana" },
+		"audio/dsr-es202212": { "source": "iana" },
+		"audio/dv": { "source": "iana" },
+		"audio/dvi4": { "source": "iana" },
+		"audio/eac3": { "source": "iana" },
+		"audio/encaprtp": { "source": "iana" },
+		"audio/evrc": { "source": "iana" },
+		"audio/evrc-qcp": { "source": "iana" },
+		"audio/evrc0": { "source": "iana" },
+		"audio/evrc1": { "source": "iana" },
+		"audio/evrcb": { "source": "iana" },
+		"audio/evrcb0": { "source": "iana" },
+		"audio/evrcb1": { "source": "iana" },
+		"audio/evrcnw": { "source": "iana" },
+		"audio/evrcnw0": { "source": "iana" },
+		"audio/evrcnw1": { "source": "iana" },
+		"audio/evrcwb": { "source": "iana" },
+		"audio/evrcwb0": { "source": "iana" },
+		"audio/evrcwb1": { "source": "iana" },
+		"audio/evs": { "source": "iana" },
+		"audio/flexfec": { "source": "iana" },
+		"audio/fwdred": { "source": "iana" },
+		"audio/g711-0": { "source": "iana" },
+		"audio/g719": { "source": "iana" },
+		"audio/g722": { "source": "iana" },
+		"audio/g7221": { "source": "iana" },
+		"audio/g723": { "source": "iana" },
+		"audio/g726-16": { "source": "iana" },
+		"audio/g726-24": { "source": "iana" },
+		"audio/g726-32": { "source": "iana" },
+		"audio/g726-40": { "source": "iana" },
+		"audio/g728": { "source": "iana" },
+		"audio/g729": { "source": "iana" },
+		"audio/g7291": { "source": "iana" },
+		"audio/g729d": { "source": "iana" },
+		"audio/g729e": { "source": "iana" },
+		"audio/gsm": { "source": "iana" },
+		"audio/gsm-efr": { "source": "iana" },
+		"audio/gsm-hr-08": { "source": "iana" },
+		"audio/ilbc": { "source": "iana" },
+		"audio/ip-mr_v2.5": { "source": "iana" },
+		"audio/isac": { "source": "apache" },
+		"audio/l16": { "source": "iana" },
+		"audio/l20": { "source": "iana" },
 		"audio/l24": {
-			source: "iana",
-			compressible: !1
+			"source": "iana",
+			"compressible": false
 		},
-		"audio/l8": { source: "iana" },
-		"audio/lpc": { source: "iana" },
-		"audio/melp": { source: "iana" },
-		"audio/melp1200": { source: "iana" },
-		"audio/melp2400": { source: "iana" },
-		"audio/melp600": { source: "iana" },
-		"audio/mhas": { source: "iana" },
+		"audio/l8": { "source": "iana" },
+		"audio/lpc": { "source": "iana" },
+		"audio/melp": { "source": "iana" },
+		"audio/melp1200": { "source": "iana" },
+		"audio/melp2400": { "source": "iana" },
+		"audio/melp600": { "source": "iana" },
+		"audio/mhas": { "source": "iana" },
 		"audio/midi": {
-			source: "apache",
-			extensions: [
+			"source": "apache",
+			"extensions": [
 				"mid",
 				"midi",
 				"kar",
@@ -5881,25 +6219,25 @@ var o = Object.create, s = Object.defineProperty, c = Object.getOwnPropertyDescr
 			]
 		},
 		"audio/mobile-xmf": {
-			source: "iana",
-			extensions: ["mxmf"]
+			"source": "iana",
+			"extensions": ["mxmf"]
 		},
 		"audio/mp3": {
-			compressible: !1,
-			extensions: ["mp3"]
+			"compressible": false,
+			"extensions": ["mp3"]
 		},
 		"audio/mp4": {
-			source: "iana",
-			compressible: !1,
-			extensions: ["m4a", "mp4a"]
+			"source": "iana",
+			"compressible": false,
+			"extensions": ["m4a", "mp4a"]
 		},
-		"audio/mp4a-latm": { source: "iana" },
-		"audio/mpa": { source: "iana" },
-		"audio/mpa-robust": { source: "iana" },
+		"audio/mp4a-latm": { "source": "iana" },
+		"audio/mpa": { "source": "iana" },
+		"audio/mpa-robust": { "source": "iana" },
 		"audio/mpeg": {
-			source: "iana",
-			compressible: !1,
-			extensions: [
+			"source": "iana",
+			"compressible": false,
+			"extensions": [
 				"mpga",
 				"mp2",
 				"mp2a",
@@ -5908,465 +6246,465 @@ var o = Object.create, s = Object.defineProperty, c = Object.getOwnPropertyDescr
 				"m3a"
 			]
 		},
-		"audio/mpeg4-generic": { source: "iana" },
-		"audio/musepack": { source: "apache" },
+		"audio/mpeg4-generic": { "source": "iana" },
+		"audio/musepack": { "source": "apache" },
 		"audio/ogg": {
-			source: "iana",
-			compressible: !1,
-			extensions: [
+			"source": "iana",
+			"compressible": false,
+			"extensions": [
 				"oga",
 				"ogg",
 				"spx",
 				"opus"
 			]
 		},
-		"audio/opus": { source: "iana" },
-		"audio/parityfec": { source: "iana" },
-		"audio/pcma": { source: "iana" },
-		"audio/pcma-wb": { source: "iana" },
-		"audio/pcmu": { source: "iana" },
-		"audio/pcmu-wb": { source: "iana" },
-		"audio/prs.sid": { source: "iana" },
-		"audio/qcelp": { source: "iana" },
-		"audio/raptorfec": { source: "iana" },
-		"audio/red": { source: "iana" },
-		"audio/rtp-enc-aescm128": { source: "iana" },
-		"audio/rtp-midi": { source: "iana" },
-		"audio/rtploopback": { source: "iana" },
-		"audio/rtx": { source: "iana" },
+		"audio/opus": { "source": "iana" },
+		"audio/parityfec": { "source": "iana" },
+		"audio/pcma": { "source": "iana" },
+		"audio/pcma-wb": { "source": "iana" },
+		"audio/pcmu": { "source": "iana" },
+		"audio/pcmu-wb": { "source": "iana" },
+		"audio/prs.sid": { "source": "iana" },
+		"audio/qcelp": { "source": "iana" },
+		"audio/raptorfec": { "source": "iana" },
+		"audio/red": { "source": "iana" },
+		"audio/rtp-enc-aescm128": { "source": "iana" },
+		"audio/rtp-midi": { "source": "iana" },
+		"audio/rtploopback": { "source": "iana" },
+		"audio/rtx": { "source": "iana" },
 		"audio/s3m": {
-			source: "apache",
-			extensions: ["s3m"]
+			"source": "apache",
+			"extensions": ["s3m"]
 		},
-		"audio/scip": { source: "iana" },
+		"audio/scip": { "source": "iana" },
 		"audio/silk": {
-			source: "apache",
-			extensions: ["sil"]
+			"source": "apache",
+			"extensions": ["sil"]
 		},
-		"audio/smv": { source: "iana" },
-		"audio/smv-qcp": { source: "iana" },
-		"audio/smv0": { source: "iana" },
-		"audio/sofa": { source: "iana" },
-		"audio/sp-midi": { source: "iana" },
-		"audio/speex": { source: "iana" },
-		"audio/t140c": { source: "iana" },
-		"audio/t38": { source: "iana" },
-		"audio/telephone-event": { source: "iana" },
-		"audio/tetra_acelp": { source: "iana" },
-		"audio/tetra_acelp_bb": { source: "iana" },
-		"audio/tone": { source: "iana" },
-		"audio/tsvcis": { source: "iana" },
-		"audio/uemclip": { source: "iana" },
-		"audio/ulpfec": { source: "iana" },
-		"audio/usac": { source: "iana" },
-		"audio/vdvi": { source: "iana" },
-		"audio/vmr-wb": { source: "iana" },
-		"audio/vnd.3gpp.iufp": { source: "iana" },
-		"audio/vnd.4sb": { source: "iana" },
-		"audio/vnd.audiokoz": { source: "iana" },
-		"audio/vnd.celp": { source: "iana" },
-		"audio/vnd.cisco.nse": { source: "iana" },
-		"audio/vnd.cmles.radio-events": { source: "iana" },
-		"audio/vnd.cns.anp1": { source: "iana" },
-		"audio/vnd.cns.inf1": { source: "iana" },
+		"audio/smv": { "source": "iana" },
+		"audio/smv-qcp": { "source": "iana" },
+		"audio/smv0": { "source": "iana" },
+		"audio/sofa": { "source": "iana" },
+		"audio/sp-midi": { "source": "iana" },
+		"audio/speex": { "source": "iana" },
+		"audio/t140c": { "source": "iana" },
+		"audio/t38": { "source": "iana" },
+		"audio/telephone-event": { "source": "iana" },
+		"audio/tetra_acelp": { "source": "iana" },
+		"audio/tetra_acelp_bb": { "source": "iana" },
+		"audio/tone": { "source": "iana" },
+		"audio/tsvcis": { "source": "iana" },
+		"audio/uemclip": { "source": "iana" },
+		"audio/ulpfec": { "source": "iana" },
+		"audio/usac": { "source": "iana" },
+		"audio/vdvi": { "source": "iana" },
+		"audio/vmr-wb": { "source": "iana" },
+		"audio/vnd.3gpp.iufp": { "source": "iana" },
+		"audio/vnd.4sb": { "source": "iana" },
+		"audio/vnd.audiokoz": { "source": "iana" },
+		"audio/vnd.celp": { "source": "iana" },
+		"audio/vnd.cisco.nse": { "source": "iana" },
+		"audio/vnd.cmles.radio-events": { "source": "iana" },
+		"audio/vnd.cns.anp1": { "source": "iana" },
+		"audio/vnd.cns.inf1": { "source": "iana" },
 		"audio/vnd.dece.audio": {
-			source: "iana",
-			extensions: ["uva", "uvva"]
+			"source": "iana",
+			"extensions": ["uva", "uvva"]
 		},
 		"audio/vnd.digital-winds": {
-			source: "iana",
-			extensions: ["eol"]
+			"source": "iana",
+			"extensions": ["eol"]
 		},
-		"audio/vnd.dlna.adts": { source: "iana" },
-		"audio/vnd.dolby.heaac.1": { source: "iana" },
-		"audio/vnd.dolby.heaac.2": { source: "iana" },
-		"audio/vnd.dolby.mlp": { source: "iana" },
-		"audio/vnd.dolby.mps": { source: "iana" },
-		"audio/vnd.dolby.pl2": { source: "iana" },
-		"audio/vnd.dolby.pl2x": { source: "iana" },
-		"audio/vnd.dolby.pl2z": { source: "iana" },
-		"audio/vnd.dolby.pulse.1": { source: "iana" },
+		"audio/vnd.dlna.adts": { "source": "iana" },
+		"audio/vnd.dolby.heaac.1": { "source": "iana" },
+		"audio/vnd.dolby.heaac.2": { "source": "iana" },
+		"audio/vnd.dolby.mlp": { "source": "iana" },
+		"audio/vnd.dolby.mps": { "source": "iana" },
+		"audio/vnd.dolby.pl2": { "source": "iana" },
+		"audio/vnd.dolby.pl2x": { "source": "iana" },
+		"audio/vnd.dolby.pl2z": { "source": "iana" },
+		"audio/vnd.dolby.pulse.1": { "source": "iana" },
 		"audio/vnd.dra": {
-			source: "iana",
-			extensions: ["dra"]
+			"source": "iana",
+			"extensions": ["dra"]
 		},
 		"audio/vnd.dts": {
-			source: "iana",
-			extensions: ["dts"]
+			"source": "iana",
+			"extensions": ["dts"]
 		},
 		"audio/vnd.dts.hd": {
-			source: "iana",
-			extensions: ["dtshd"]
+			"source": "iana",
+			"extensions": ["dtshd"]
 		},
-		"audio/vnd.dts.uhd": { source: "iana" },
-		"audio/vnd.dvb.file": { source: "iana" },
-		"audio/vnd.everad.plj": { source: "iana" },
-		"audio/vnd.hns.audio": { source: "iana" },
+		"audio/vnd.dts.uhd": { "source": "iana" },
+		"audio/vnd.dvb.file": { "source": "iana" },
+		"audio/vnd.everad.plj": { "source": "iana" },
+		"audio/vnd.hns.audio": { "source": "iana" },
 		"audio/vnd.lucent.voice": {
-			source: "iana",
-			extensions: ["lvp"]
+			"source": "iana",
+			"extensions": ["lvp"]
 		},
 		"audio/vnd.ms-playready.media.pya": {
-			source: "iana",
-			extensions: ["pya"]
+			"source": "iana",
+			"extensions": ["pya"]
 		},
-		"audio/vnd.nokia.mobile-xmf": { source: "iana" },
-		"audio/vnd.nortel.vbk": { source: "iana" },
+		"audio/vnd.nokia.mobile-xmf": { "source": "iana" },
+		"audio/vnd.nortel.vbk": { "source": "iana" },
 		"audio/vnd.nuera.ecelp4800": {
-			source: "iana",
-			extensions: ["ecelp4800"]
+			"source": "iana",
+			"extensions": ["ecelp4800"]
 		},
 		"audio/vnd.nuera.ecelp7470": {
-			source: "iana",
-			extensions: ["ecelp7470"]
+			"source": "iana",
+			"extensions": ["ecelp7470"]
 		},
 		"audio/vnd.nuera.ecelp9600": {
-			source: "iana",
-			extensions: ["ecelp9600"]
+			"source": "iana",
+			"extensions": ["ecelp9600"]
 		},
-		"audio/vnd.octel.sbc": { source: "iana" },
-		"audio/vnd.presonus.multitrack": { source: "iana" },
-		"audio/vnd.qcelp": { source: "iana" },
-		"audio/vnd.rhetorex.32kadpcm": { source: "iana" },
+		"audio/vnd.octel.sbc": { "source": "iana" },
+		"audio/vnd.presonus.multitrack": { "source": "iana" },
+		"audio/vnd.qcelp": { "source": "iana" },
+		"audio/vnd.rhetorex.32kadpcm": { "source": "iana" },
 		"audio/vnd.rip": {
-			source: "iana",
-			extensions: ["rip"]
+			"source": "iana",
+			"extensions": ["rip"]
 		},
-		"audio/vnd.rn-realaudio": { compressible: !1 },
-		"audio/vnd.sealedmedia.softseal.mpeg": { source: "iana" },
-		"audio/vnd.vmx.cvsd": { source: "iana" },
-		"audio/vnd.wave": { compressible: !1 },
+		"audio/vnd.rn-realaudio": { "compressible": false },
+		"audio/vnd.sealedmedia.softseal.mpeg": { "source": "iana" },
+		"audio/vnd.vmx.cvsd": { "source": "iana" },
+		"audio/vnd.wave": { "compressible": false },
 		"audio/vorbis": {
-			source: "iana",
-			compressible: !1
+			"source": "iana",
+			"compressible": false
 		},
-		"audio/vorbis-config": { source: "iana" },
+		"audio/vorbis-config": { "source": "iana" },
 		"audio/wav": {
-			compressible: !1,
-			extensions: ["wav"]
+			"compressible": false,
+			"extensions": ["wav"]
 		},
 		"audio/wave": {
-			compressible: !1,
-			extensions: ["wav"]
+			"compressible": false,
+			"extensions": ["wav"]
 		},
 		"audio/webm": {
-			source: "apache",
-			compressible: !1,
-			extensions: ["weba"]
+			"source": "apache",
+			"compressible": false,
+			"extensions": ["weba"]
 		},
 		"audio/x-aac": {
-			source: "apache",
-			compressible: !1,
-			extensions: ["aac"]
+			"source": "apache",
+			"compressible": false,
+			"extensions": ["aac"]
 		},
 		"audio/x-aiff": {
-			source: "apache",
-			extensions: [
+			"source": "apache",
+			"extensions": [
 				"aif",
 				"aiff",
 				"aifc"
 			]
 		},
 		"audio/x-caf": {
-			source: "apache",
-			compressible: !1,
-			extensions: ["caf"]
+			"source": "apache",
+			"compressible": false,
+			"extensions": ["caf"]
 		},
 		"audio/x-flac": {
-			source: "apache",
-			extensions: ["flac"]
+			"source": "apache",
+			"extensions": ["flac"]
 		},
 		"audio/x-m4a": {
-			source: "nginx",
-			extensions: ["m4a"]
+			"source": "nginx",
+			"extensions": ["m4a"]
 		},
 		"audio/x-matroska": {
-			source: "apache",
-			extensions: ["mka"]
+			"source": "apache",
+			"extensions": ["mka"]
 		},
 		"audio/x-mpegurl": {
-			source: "apache",
-			extensions: ["m3u"]
+			"source": "apache",
+			"extensions": ["m3u"]
 		},
 		"audio/x-ms-wax": {
-			source: "apache",
-			extensions: ["wax"]
+			"source": "apache",
+			"extensions": ["wax"]
 		},
 		"audio/x-ms-wma": {
-			source: "apache",
-			extensions: ["wma"]
+			"source": "apache",
+			"extensions": ["wma"]
 		},
 		"audio/x-pn-realaudio": {
-			source: "apache",
-			extensions: ["ram", "ra"]
+			"source": "apache",
+			"extensions": ["ram", "ra"]
 		},
 		"audio/x-pn-realaudio-plugin": {
-			source: "apache",
-			extensions: ["rmp"]
+			"source": "apache",
+			"extensions": ["rmp"]
 		},
 		"audio/x-realaudio": {
-			source: "nginx",
-			extensions: ["ra"]
+			"source": "nginx",
+			"extensions": ["ra"]
 		},
-		"audio/x-tta": { source: "apache" },
+		"audio/x-tta": { "source": "apache" },
 		"audio/x-wav": {
-			source: "apache",
-			extensions: ["wav"]
+			"source": "apache",
+			"extensions": ["wav"]
 		},
 		"audio/xm": {
-			source: "apache",
-			extensions: ["xm"]
+			"source": "apache",
+			"extensions": ["xm"]
 		},
 		"chemical/x-cdx": {
-			source: "apache",
-			extensions: ["cdx"]
+			"source": "apache",
+			"extensions": ["cdx"]
 		},
 		"chemical/x-cif": {
-			source: "apache",
-			extensions: ["cif"]
+			"source": "apache",
+			"extensions": ["cif"]
 		},
 		"chemical/x-cmdf": {
-			source: "apache",
-			extensions: ["cmdf"]
+			"source": "apache",
+			"extensions": ["cmdf"]
 		},
 		"chemical/x-cml": {
-			source: "apache",
-			extensions: ["cml"]
+			"source": "apache",
+			"extensions": ["cml"]
 		},
 		"chemical/x-csml": {
-			source: "apache",
-			extensions: ["csml"]
+			"source": "apache",
+			"extensions": ["csml"]
 		},
-		"chemical/x-pdb": { source: "apache" },
+		"chemical/x-pdb": { "source": "apache" },
 		"chemical/x-xyz": {
-			source: "apache",
-			extensions: ["xyz"]
+			"source": "apache",
+			"extensions": ["xyz"]
 		},
 		"font/collection": {
-			source: "iana",
-			extensions: ["ttc"]
+			"source": "iana",
+			"extensions": ["ttc"]
 		},
 		"font/otf": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["otf"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["otf"]
 		},
-		"font/sfnt": { source: "iana" },
+		"font/sfnt": { "source": "iana" },
 		"font/ttf": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["ttf"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["ttf"]
 		},
 		"font/woff": {
-			source: "iana",
-			extensions: ["woff"]
+			"source": "iana",
+			"extensions": ["woff"]
 		},
 		"font/woff2": {
-			source: "iana",
-			extensions: ["woff2"]
+			"source": "iana",
+			"extensions": ["woff2"]
 		},
 		"image/aces": {
-			source: "iana",
-			extensions: ["exr"]
+			"source": "iana",
+			"extensions": ["exr"]
 		},
 		"image/apng": {
-			compressible: !1,
-			extensions: ["apng"]
+			"compressible": false,
+			"extensions": ["apng"]
 		},
 		"image/avci": {
-			source: "iana",
-			extensions: ["avci"]
+			"source": "iana",
+			"extensions": ["avci"]
 		},
 		"image/avcs": {
-			source: "iana",
-			extensions: ["avcs"]
+			"source": "iana",
+			"extensions": ["avcs"]
 		},
 		"image/avif": {
-			source: "iana",
-			compressible: !1,
-			extensions: ["avif"]
+			"source": "iana",
+			"compressible": false,
+			"extensions": ["avif"]
 		},
 		"image/bmp": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["bmp"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["bmp"]
 		},
 		"image/cgm": {
-			source: "iana",
-			extensions: ["cgm"]
+			"source": "iana",
+			"extensions": ["cgm"]
 		},
 		"image/dicom-rle": {
-			source: "iana",
-			extensions: ["drle"]
+			"source": "iana",
+			"extensions": ["drle"]
 		},
 		"image/emf": {
-			source: "iana",
-			extensions: ["emf"]
+			"source": "iana",
+			"extensions": ["emf"]
 		},
 		"image/fits": {
-			source: "iana",
-			extensions: ["fits"]
+			"source": "iana",
+			"extensions": ["fits"]
 		},
 		"image/g3fax": {
-			source: "iana",
-			extensions: ["g3"]
+			"source": "iana",
+			"extensions": ["g3"]
 		},
 		"image/gif": {
-			source: "iana",
-			compressible: !1,
-			extensions: ["gif"]
+			"source": "iana",
+			"compressible": false,
+			"extensions": ["gif"]
 		},
 		"image/heic": {
-			source: "iana",
-			extensions: ["heic"]
+			"source": "iana",
+			"extensions": ["heic"]
 		},
 		"image/heic-sequence": {
-			source: "iana",
-			extensions: ["heics"]
+			"source": "iana",
+			"extensions": ["heics"]
 		},
 		"image/heif": {
-			source: "iana",
-			extensions: ["heif"]
+			"source": "iana",
+			"extensions": ["heif"]
 		},
 		"image/heif-sequence": {
-			source: "iana",
-			extensions: ["heifs"]
+			"source": "iana",
+			"extensions": ["heifs"]
 		},
 		"image/hej2k": {
-			source: "iana",
-			extensions: ["hej2"]
+			"source": "iana",
+			"extensions": ["hej2"]
 		},
 		"image/hsj2": {
-			source: "iana",
-			extensions: ["hsj2"]
+			"source": "iana",
+			"extensions": ["hsj2"]
 		},
 		"image/ief": {
-			source: "iana",
-			extensions: ["ief"]
+			"source": "iana",
+			"extensions": ["ief"]
 		},
 		"image/jls": {
-			source: "iana",
-			extensions: ["jls"]
+			"source": "iana",
+			"extensions": ["jls"]
 		},
 		"image/jp2": {
-			source: "iana",
-			compressible: !1,
-			extensions: ["jp2", "jpg2"]
+			"source": "iana",
+			"compressible": false,
+			"extensions": ["jp2", "jpg2"]
 		},
 		"image/jpeg": {
-			source: "iana",
-			compressible: !1,
-			extensions: [
+			"source": "iana",
+			"compressible": false,
+			"extensions": [
 				"jpeg",
 				"jpg",
 				"jpe"
 			]
 		},
 		"image/jph": {
-			source: "iana",
-			extensions: ["jph"]
+			"source": "iana",
+			"extensions": ["jph"]
 		},
 		"image/jphc": {
-			source: "iana",
-			extensions: ["jhc"]
+			"source": "iana",
+			"extensions": ["jhc"]
 		},
 		"image/jpm": {
-			source: "iana",
-			compressible: !1,
-			extensions: ["jpm"]
+			"source": "iana",
+			"compressible": false,
+			"extensions": ["jpm"]
 		},
 		"image/jpx": {
-			source: "iana",
-			compressible: !1,
-			extensions: ["jpx", "jpf"]
+			"source": "iana",
+			"compressible": false,
+			"extensions": ["jpx", "jpf"]
 		},
 		"image/jxr": {
-			source: "iana",
-			extensions: ["jxr"]
+			"source": "iana",
+			"extensions": ["jxr"]
 		},
 		"image/jxra": {
-			source: "iana",
-			extensions: ["jxra"]
+			"source": "iana",
+			"extensions": ["jxra"]
 		},
 		"image/jxrs": {
-			source: "iana",
-			extensions: ["jxrs"]
+			"source": "iana",
+			"extensions": ["jxrs"]
 		},
 		"image/jxs": {
-			source: "iana",
-			extensions: ["jxs"]
+			"source": "iana",
+			"extensions": ["jxs"]
 		},
 		"image/jxsc": {
-			source: "iana",
-			extensions: ["jxsc"]
+			"source": "iana",
+			"extensions": ["jxsc"]
 		},
 		"image/jxsi": {
-			source: "iana",
-			extensions: ["jxsi"]
+			"source": "iana",
+			"extensions": ["jxsi"]
 		},
 		"image/jxss": {
-			source: "iana",
-			extensions: ["jxss"]
+			"source": "iana",
+			"extensions": ["jxss"]
 		},
 		"image/ktx": {
-			source: "iana",
-			extensions: ["ktx"]
+			"source": "iana",
+			"extensions": ["ktx"]
 		},
 		"image/ktx2": {
-			source: "iana",
-			extensions: ["ktx2"]
+			"source": "iana",
+			"extensions": ["ktx2"]
 		},
-		"image/naplps": { source: "iana" },
-		"image/pjpeg": { compressible: !1 },
+		"image/naplps": { "source": "iana" },
+		"image/pjpeg": { "compressible": false },
 		"image/png": {
-			source: "iana",
-			compressible: !1,
-			extensions: ["png"]
+			"source": "iana",
+			"compressible": false,
+			"extensions": ["png"]
 		},
 		"image/prs.btif": {
-			source: "iana",
-			extensions: ["btif"]
+			"source": "iana",
+			"extensions": ["btif"]
 		},
 		"image/prs.pti": {
-			source: "iana",
-			extensions: ["pti"]
+			"source": "iana",
+			"extensions": ["pti"]
 		},
-		"image/pwg-raster": { source: "iana" },
+		"image/pwg-raster": { "source": "iana" },
 		"image/sgi": {
-			source: "apache",
-			extensions: ["sgi"]
+			"source": "apache",
+			"extensions": ["sgi"]
 		},
 		"image/svg+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["svg", "svgz"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["svg", "svgz"]
 		},
 		"image/t38": {
-			source: "iana",
-			extensions: ["t38"]
+			"source": "iana",
+			"extensions": ["t38"]
 		},
 		"image/tiff": {
-			source: "iana",
-			compressible: !1,
-			extensions: ["tif", "tiff"]
+			"source": "iana",
+			"compressible": false,
+			"extensions": ["tif", "tiff"]
 		},
 		"image/tiff-fx": {
-			source: "iana",
-			extensions: ["tfx"]
+			"source": "iana",
+			"extensions": ["tfx"]
 		},
 		"image/vnd.adobe.photoshop": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["psd"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["psd"]
 		},
 		"image/vnd.airzip.accelerator.azv": {
-			source: "iana",
-			extensions: ["azv"]
+			"source": "iana",
+			"extensions": ["azv"]
 		},
-		"image/vnd.cns.inf2": { source: "iana" },
+		"image/vnd.cns.inf2": { "source": "iana" },
 		"image/vnd.dece.graphic": {
-			source: "iana",
-			extensions: [
+			"source": "iana",
+			"extensions": [
 				"uvi",
 				"uvvi",
 				"uvg",
@@ -6374,117 +6712,117 @@ var o = Object.create, s = Object.defineProperty, c = Object.getOwnPropertyDescr
 			]
 		},
 		"image/vnd.djvu": {
-			source: "iana",
-			extensions: ["djvu", "djv"]
+			"source": "iana",
+			"extensions": ["djvu", "djv"]
 		},
 		"image/vnd.dvb.subtitle": {
-			source: "iana",
-			extensions: ["sub"]
+			"source": "iana",
+			"extensions": ["sub"]
 		},
 		"image/vnd.dwg": {
-			source: "iana",
-			extensions: ["dwg"]
+			"source": "iana",
+			"extensions": ["dwg"]
 		},
 		"image/vnd.dxf": {
-			source: "iana",
-			extensions: ["dxf"]
+			"source": "iana",
+			"extensions": ["dxf"]
 		},
 		"image/vnd.fastbidsheet": {
-			source: "iana",
-			extensions: ["fbs"]
+			"source": "iana",
+			"extensions": ["fbs"]
 		},
 		"image/vnd.fpx": {
-			source: "iana",
-			extensions: ["fpx"]
+			"source": "iana",
+			"extensions": ["fpx"]
 		},
 		"image/vnd.fst": {
-			source: "iana",
-			extensions: ["fst"]
+			"source": "iana",
+			"extensions": ["fst"]
 		},
 		"image/vnd.fujixerox.edmics-mmr": {
-			source: "iana",
-			extensions: ["mmr"]
+			"source": "iana",
+			"extensions": ["mmr"]
 		},
 		"image/vnd.fujixerox.edmics-rlc": {
-			source: "iana",
-			extensions: ["rlc"]
+			"source": "iana",
+			"extensions": ["rlc"]
 		},
-		"image/vnd.globalgraphics.pgb": { source: "iana" },
+		"image/vnd.globalgraphics.pgb": { "source": "iana" },
 		"image/vnd.microsoft.icon": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["ico"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["ico"]
 		},
-		"image/vnd.mix": { source: "iana" },
-		"image/vnd.mozilla.apng": { source: "iana" },
+		"image/vnd.mix": { "source": "iana" },
+		"image/vnd.mozilla.apng": { "source": "iana" },
 		"image/vnd.ms-dds": {
-			compressible: !0,
-			extensions: ["dds"]
+			"compressible": true,
+			"extensions": ["dds"]
 		},
 		"image/vnd.ms-modi": {
-			source: "iana",
-			extensions: ["mdi"]
+			"source": "iana",
+			"extensions": ["mdi"]
 		},
 		"image/vnd.ms-photo": {
-			source: "apache",
-			extensions: ["wdp"]
+			"source": "apache",
+			"extensions": ["wdp"]
 		},
 		"image/vnd.net-fpx": {
-			source: "iana",
-			extensions: ["npx"]
+			"source": "iana",
+			"extensions": ["npx"]
 		},
 		"image/vnd.pco.b16": {
-			source: "iana",
-			extensions: ["b16"]
+			"source": "iana",
+			"extensions": ["b16"]
 		},
-		"image/vnd.radiance": { source: "iana" },
-		"image/vnd.sealed.png": { source: "iana" },
-		"image/vnd.sealedmedia.softseal.gif": { source: "iana" },
-		"image/vnd.sealedmedia.softseal.jpg": { source: "iana" },
-		"image/vnd.svf": { source: "iana" },
+		"image/vnd.radiance": { "source": "iana" },
+		"image/vnd.sealed.png": { "source": "iana" },
+		"image/vnd.sealedmedia.softseal.gif": { "source": "iana" },
+		"image/vnd.sealedmedia.softseal.jpg": { "source": "iana" },
+		"image/vnd.svf": { "source": "iana" },
 		"image/vnd.tencent.tap": {
-			source: "iana",
-			extensions: ["tap"]
+			"source": "iana",
+			"extensions": ["tap"]
 		},
 		"image/vnd.valve.source.texture": {
-			source: "iana",
-			extensions: ["vtf"]
+			"source": "iana",
+			"extensions": ["vtf"]
 		},
 		"image/vnd.wap.wbmp": {
-			source: "iana",
-			extensions: ["wbmp"]
+			"source": "iana",
+			"extensions": ["wbmp"]
 		},
 		"image/vnd.xiff": {
-			source: "iana",
-			extensions: ["xif"]
+			"source": "iana",
+			"extensions": ["xif"]
 		},
 		"image/vnd.zbrush.pcx": {
-			source: "iana",
-			extensions: ["pcx"]
+			"source": "iana",
+			"extensions": ["pcx"]
 		},
 		"image/webp": {
-			source: "apache",
-			extensions: ["webp"]
+			"source": "apache",
+			"extensions": ["webp"]
 		},
 		"image/wmf": {
-			source: "iana",
-			extensions: ["wmf"]
+			"source": "iana",
+			"extensions": ["wmf"]
 		},
 		"image/x-3ds": {
-			source: "apache",
-			extensions: ["3ds"]
+			"source": "apache",
+			"extensions": ["3ds"]
 		},
 		"image/x-cmu-raster": {
-			source: "apache",
-			extensions: ["ras"]
+			"source": "apache",
+			"extensions": ["ras"]
 		},
 		"image/x-cmx": {
-			source: "apache",
-			extensions: ["cmx"]
+			"source": "apache",
+			"extensions": ["cmx"]
 		},
 		"image/x-freehand": {
-			source: "apache",
-			extensions: [
+			"source": "apache",
+			"extensions": [
 				"fh",
 				"fhc",
 				"fh4",
@@ -6493,384 +6831,384 @@ var o = Object.create, s = Object.defineProperty, c = Object.getOwnPropertyDescr
 			]
 		},
 		"image/x-icon": {
-			source: "apache",
-			compressible: !0,
-			extensions: ["ico"]
+			"source": "apache",
+			"compressible": true,
+			"extensions": ["ico"]
 		},
 		"image/x-jng": {
-			source: "nginx",
-			extensions: ["jng"]
+			"source": "nginx",
+			"extensions": ["jng"]
 		},
 		"image/x-mrsid-image": {
-			source: "apache",
-			extensions: ["sid"]
+			"source": "apache",
+			"extensions": ["sid"]
 		},
 		"image/x-ms-bmp": {
-			source: "nginx",
-			compressible: !0,
-			extensions: ["bmp"]
+			"source": "nginx",
+			"compressible": true,
+			"extensions": ["bmp"]
 		},
 		"image/x-pcx": {
-			source: "apache",
-			extensions: ["pcx"]
+			"source": "apache",
+			"extensions": ["pcx"]
 		},
 		"image/x-pict": {
-			source: "apache",
-			extensions: ["pic", "pct"]
+			"source": "apache",
+			"extensions": ["pic", "pct"]
 		},
 		"image/x-portable-anymap": {
-			source: "apache",
-			extensions: ["pnm"]
+			"source": "apache",
+			"extensions": ["pnm"]
 		},
 		"image/x-portable-bitmap": {
-			source: "apache",
-			extensions: ["pbm"]
+			"source": "apache",
+			"extensions": ["pbm"]
 		},
 		"image/x-portable-graymap": {
-			source: "apache",
-			extensions: ["pgm"]
+			"source": "apache",
+			"extensions": ["pgm"]
 		},
 		"image/x-portable-pixmap": {
-			source: "apache",
-			extensions: ["ppm"]
+			"source": "apache",
+			"extensions": ["ppm"]
 		},
 		"image/x-rgb": {
-			source: "apache",
-			extensions: ["rgb"]
+			"source": "apache",
+			"extensions": ["rgb"]
 		},
 		"image/x-tga": {
-			source: "apache",
-			extensions: ["tga"]
+			"source": "apache",
+			"extensions": ["tga"]
 		},
 		"image/x-xbitmap": {
-			source: "apache",
-			extensions: ["xbm"]
+			"source": "apache",
+			"extensions": ["xbm"]
 		},
-		"image/x-xcf": { compressible: !1 },
+		"image/x-xcf": { "compressible": false },
 		"image/x-xpixmap": {
-			source: "apache",
-			extensions: ["xpm"]
+			"source": "apache",
+			"extensions": ["xpm"]
 		},
 		"image/x-xwindowdump": {
-			source: "apache",
-			extensions: ["xwd"]
+			"source": "apache",
+			"extensions": ["xwd"]
 		},
-		"message/cpim": { source: "iana" },
-		"message/delivery-status": { source: "iana" },
+		"message/cpim": { "source": "iana" },
+		"message/delivery-status": { "source": "iana" },
 		"message/disposition-notification": {
-			source: "iana",
-			extensions: ["disposition-notification"]
+			"source": "iana",
+			"extensions": ["disposition-notification"]
 		},
-		"message/external-body": { source: "iana" },
-		"message/feedback-report": { source: "iana" },
+		"message/external-body": { "source": "iana" },
+		"message/feedback-report": { "source": "iana" },
 		"message/global": {
-			source: "iana",
-			extensions: ["u8msg"]
+			"source": "iana",
+			"extensions": ["u8msg"]
 		},
 		"message/global-delivery-status": {
-			source: "iana",
-			extensions: ["u8dsn"]
+			"source": "iana",
+			"extensions": ["u8dsn"]
 		},
 		"message/global-disposition-notification": {
-			source: "iana",
-			extensions: ["u8mdn"]
+			"source": "iana",
+			"extensions": ["u8mdn"]
 		},
 		"message/global-headers": {
-			source: "iana",
-			extensions: ["u8hdr"]
+			"source": "iana",
+			"extensions": ["u8hdr"]
 		},
 		"message/http": {
-			source: "iana",
-			compressible: !1
+			"source": "iana",
+			"compressible": false
 		},
 		"message/imdn+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"message/news": { source: "iana" },
+		"message/news": { "source": "iana" },
 		"message/partial": {
-			source: "iana",
-			compressible: !1
+			"source": "iana",
+			"compressible": false
 		},
 		"message/rfc822": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["eml", "mime"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["eml", "mime"]
 		},
-		"message/s-http": { source: "iana" },
-		"message/sip": { source: "iana" },
-		"message/sipfrag": { source: "iana" },
-		"message/tracking-status": { source: "iana" },
-		"message/vnd.si.simp": { source: "iana" },
+		"message/s-http": { "source": "iana" },
+		"message/sip": { "source": "iana" },
+		"message/sipfrag": { "source": "iana" },
+		"message/tracking-status": { "source": "iana" },
+		"message/vnd.si.simp": { "source": "iana" },
 		"message/vnd.wfa.wsc": {
-			source: "iana",
-			extensions: ["wsc"]
+			"source": "iana",
+			"extensions": ["wsc"]
 		},
 		"model/3mf": {
-			source: "iana",
-			extensions: ["3mf"]
+			"source": "iana",
+			"extensions": ["3mf"]
 		},
-		"model/e57": { source: "iana" },
+		"model/e57": { "source": "iana" },
 		"model/gltf+json": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["gltf"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["gltf"]
 		},
 		"model/gltf-binary": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["glb"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["glb"]
 		},
 		"model/iges": {
-			source: "iana",
-			compressible: !1,
-			extensions: ["igs", "iges"]
+			"source": "iana",
+			"compressible": false,
+			"extensions": ["igs", "iges"]
 		},
 		"model/mesh": {
-			source: "iana",
-			compressible: !1,
-			extensions: [
+			"source": "iana",
+			"compressible": false,
+			"extensions": [
 				"msh",
 				"mesh",
 				"silo"
 			]
 		},
 		"model/mtl": {
-			source: "iana",
-			extensions: ["mtl"]
+			"source": "iana",
+			"extensions": ["mtl"]
 		},
 		"model/obj": {
-			source: "iana",
-			extensions: ["obj"]
+			"source": "iana",
+			"extensions": ["obj"]
 		},
-		"model/step": { source: "iana" },
+		"model/step": { "source": "iana" },
 		"model/step+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["stpx"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["stpx"]
 		},
 		"model/step+zip": {
-			source: "iana",
-			compressible: !1,
-			extensions: ["stpz"]
+			"source": "iana",
+			"compressible": false,
+			"extensions": ["stpz"]
 		},
 		"model/step-xml+zip": {
-			source: "iana",
-			compressible: !1,
-			extensions: ["stpxz"]
+			"source": "iana",
+			"compressible": false,
+			"extensions": ["stpxz"]
 		},
 		"model/stl": {
-			source: "iana",
-			extensions: ["stl"]
+			"source": "iana",
+			"extensions": ["stl"]
 		},
 		"model/vnd.collada+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["dae"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["dae"]
 		},
 		"model/vnd.dwf": {
-			source: "iana",
-			extensions: ["dwf"]
+			"source": "iana",
+			"extensions": ["dwf"]
 		},
-		"model/vnd.flatland.3dml": { source: "iana" },
+		"model/vnd.flatland.3dml": { "source": "iana" },
 		"model/vnd.gdl": {
-			source: "iana",
-			extensions: ["gdl"]
+			"source": "iana",
+			"extensions": ["gdl"]
 		},
-		"model/vnd.gs-gdl": { source: "apache" },
-		"model/vnd.gs.gdl": { source: "iana" },
+		"model/vnd.gs-gdl": { "source": "apache" },
+		"model/vnd.gs.gdl": { "source": "iana" },
 		"model/vnd.gtw": {
-			source: "iana",
-			extensions: ["gtw"]
+			"source": "iana",
+			"extensions": ["gtw"]
 		},
 		"model/vnd.moml+xml": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
 		"model/vnd.mts": {
-			source: "iana",
-			extensions: ["mts"]
+			"source": "iana",
+			"extensions": ["mts"]
 		},
 		"model/vnd.opengex": {
-			source: "iana",
-			extensions: ["ogex"]
+			"source": "iana",
+			"extensions": ["ogex"]
 		},
 		"model/vnd.parasolid.transmit.binary": {
-			source: "iana",
-			extensions: ["x_b"]
+			"source": "iana",
+			"extensions": ["x_b"]
 		},
 		"model/vnd.parasolid.transmit.text": {
-			source: "iana",
-			extensions: ["x_t"]
+			"source": "iana",
+			"extensions": ["x_t"]
 		},
-		"model/vnd.pytha.pyox": { source: "iana" },
-		"model/vnd.rosette.annotated-data-model": { source: "iana" },
+		"model/vnd.pytha.pyox": { "source": "iana" },
+		"model/vnd.rosette.annotated-data-model": { "source": "iana" },
 		"model/vnd.sap.vds": {
-			source: "iana",
-			extensions: ["vds"]
+			"source": "iana",
+			"extensions": ["vds"]
 		},
 		"model/vnd.usdz+zip": {
-			source: "iana",
-			compressible: !1,
-			extensions: ["usdz"]
+			"source": "iana",
+			"compressible": false,
+			"extensions": ["usdz"]
 		},
 		"model/vnd.valve.source.compiled-map": {
-			source: "iana",
-			extensions: ["bsp"]
+			"source": "iana",
+			"extensions": ["bsp"]
 		},
 		"model/vnd.vtu": {
-			source: "iana",
-			extensions: ["vtu"]
+			"source": "iana",
+			"extensions": ["vtu"]
 		},
 		"model/vrml": {
-			source: "iana",
-			compressible: !1,
-			extensions: ["wrl", "vrml"]
+			"source": "iana",
+			"compressible": false,
+			"extensions": ["wrl", "vrml"]
 		},
 		"model/x3d+binary": {
-			source: "apache",
-			compressible: !1,
-			extensions: ["x3db", "x3dbz"]
+			"source": "apache",
+			"compressible": false,
+			"extensions": ["x3db", "x3dbz"]
 		},
 		"model/x3d+fastinfoset": {
-			source: "iana",
-			extensions: ["x3db"]
+			"source": "iana",
+			"extensions": ["x3db"]
 		},
 		"model/x3d+vrml": {
-			source: "apache",
-			compressible: !1,
-			extensions: ["x3dv", "x3dvz"]
+			"source": "apache",
+			"compressible": false,
+			"extensions": ["x3dv", "x3dvz"]
 		},
 		"model/x3d+xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["x3d", "x3dz"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["x3d", "x3dz"]
 		},
 		"model/x3d-vrml": {
-			source: "iana",
-			extensions: ["x3dv"]
+			"source": "iana",
+			"extensions": ["x3dv"]
 		},
 		"multipart/alternative": {
-			source: "iana",
-			compressible: !1
+			"source": "iana",
+			"compressible": false
 		},
-		"multipart/appledouble": { source: "iana" },
-		"multipart/byteranges": { source: "iana" },
-		"multipart/digest": { source: "iana" },
+		"multipart/appledouble": { "source": "iana" },
+		"multipart/byteranges": { "source": "iana" },
+		"multipart/digest": { "source": "iana" },
 		"multipart/encrypted": {
-			source: "iana",
-			compressible: !1
+			"source": "iana",
+			"compressible": false
 		},
 		"multipart/form-data": {
-			source: "iana",
-			compressible: !1
+			"source": "iana",
+			"compressible": false
 		},
-		"multipart/header-set": { source: "iana" },
-		"multipart/mixed": { source: "iana" },
-		"multipart/multilingual": { source: "iana" },
-		"multipart/parallel": { source: "iana" },
+		"multipart/header-set": { "source": "iana" },
+		"multipart/mixed": { "source": "iana" },
+		"multipart/multilingual": { "source": "iana" },
+		"multipart/parallel": { "source": "iana" },
 		"multipart/related": {
-			source: "iana",
-			compressible: !1
+			"source": "iana",
+			"compressible": false
 		},
-		"multipart/report": { source: "iana" },
+		"multipart/report": { "source": "iana" },
 		"multipart/signed": {
-			source: "iana",
-			compressible: !1
+			"source": "iana",
+			"compressible": false
 		},
-		"multipart/vnd.bint.med-plus": { source: "iana" },
-		"multipart/voice-message": { source: "iana" },
-		"multipart/x-mixed-replace": { source: "iana" },
-		"text/1d-interleaved-parityfec": { source: "iana" },
+		"multipart/vnd.bint.med-plus": { "source": "iana" },
+		"multipart/voice-message": { "source": "iana" },
+		"multipart/x-mixed-replace": { "source": "iana" },
+		"text/1d-interleaved-parityfec": { "source": "iana" },
 		"text/cache-manifest": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["appcache", "manifest"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["appcache", "manifest"]
 		},
 		"text/calendar": {
-			source: "iana",
-			extensions: ["ics", "ifb"]
+			"source": "iana",
+			"extensions": ["ics", "ifb"]
 		},
-		"text/calender": { compressible: !0 },
-		"text/cmd": { compressible: !0 },
-		"text/coffeescript": { extensions: ["coffee", "litcoffee"] },
-		"text/cql": { source: "iana" },
-		"text/cql-expression": { source: "iana" },
-		"text/cql-identifier": { source: "iana" },
+		"text/calender": { "compressible": true },
+		"text/cmd": { "compressible": true },
+		"text/coffeescript": { "extensions": ["coffee", "litcoffee"] },
+		"text/cql": { "source": "iana" },
+		"text/cql-expression": { "source": "iana" },
+		"text/cql-identifier": { "source": "iana" },
 		"text/css": {
-			source: "iana",
-			charset: "UTF-8",
-			compressible: !0,
-			extensions: ["css"]
+			"source": "iana",
+			"charset": "UTF-8",
+			"compressible": true,
+			"extensions": ["css"]
 		},
 		"text/csv": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["csv"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["csv"]
 		},
-		"text/csv-schema": { source: "iana" },
-		"text/directory": { source: "iana" },
-		"text/dns": { source: "iana" },
-		"text/ecmascript": { source: "iana" },
-		"text/encaprtp": { source: "iana" },
-		"text/enriched": { source: "iana" },
-		"text/fhirpath": { source: "iana" },
-		"text/flexfec": { source: "iana" },
-		"text/fwdred": { source: "iana" },
-		"text/gff3": { source: "iana" },
-		"text/grammar-ref-list": { source: "iana" },
+		"text/csv-schema": { "source": "iana" },
+		"text/directory": { "source": "iana" },
+		"text/dns": { "source": "iana" },
+		"text/ecmascript": { "source": "iana" },
+		"text/encaprtp": { "source": "iana" },
+		"text/enriched": { "source": "iana" },
+		"text/fhirpath": { "source": "iana" },
+		"text/flexfec": { "source": "iana" },
+		"text/fwdred": { "source": "iana" },
+		"text/gff3": { "source": "iana" },
+		"text/grammar-ref-list": { "source": "iana" },
 		"text/html": {
-			source: "iana",
-			compressible: !0,
-			extensions: [
+			"source": "iana",
+			"compressible": true,
+			"extensions": [
 				"html",
 				"htm",
 				"shtml"
 			]
 		},
-		"text/jade": { extensions: ["jade"] },
+		"text/jade": { "extensions": ["jade"] },
 		"text/javascript": {
-			source: "iana",
-			compressible: !0
+			"source": "iana",
+			"compressible": true
 		},
-		"text/jcr-cnd": { source: "iana" },
+		"text/jcr-cnd": { "source": "iana" },
 		"text/jsx": {
-			compressible: !0,
-			extensions: ["jsx"]
+			"compressible": true,
+			"extensions": ["jsx"]
 		},
 		"text/less": {
-			compressible: !0,
-			extensions: ["less"]
+			"compressible": true,
+			"extensions": ["less"]
 		},
 		"text/markdown": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["markdown", "md"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["markdown", "md"]
 		},
 		"text/mathml": {
-			source: "nginx",
-			extensions: ["mml"]
+			"source": "nginx",
+			"extensions": ["mml"]
 		},
 		"text/mdx": {
-			compressible: !0,
-			extensions: ["mdx"]
+			"compressible": true,
+			"extensions": ["mdx"]
 		},
-		"text/mizar": { source: "iana" },
+		"text/mizar": { "source": "iana" },
 		"text/n3": {
-			source: "iana",
-			charset: "UTF-8",
-			compressible: !0,
-			extensions: ["n3"]
+			"source": "iana",
+			"charset": "UTF-8",
+			"compressible": true,
+			"extensions": ["n3"]
 		},
 		"text/parameters": {
-			source: "iana",
-			charset: "UTF-8"
+			"source": "iana",
+			"charset": "UTF-8"
 		},
-		"text/parityfec": { source: "iana" },
+		"text/parityfec": { "source": "iana" },
 		"text/plain": {
-			source: "iana",
-			compressible: !0,
-			extensions: [
+			"source": "iana",
+			"compressible": true,
+			"extensions": [
 				"txt",
 				"text",
 				"conf",
@@ -6882,56 +7220,56 @@ var o = Object.create, s = Object.defineProperty, c = Object.getOwnPropertyDescr
 			]
 		},
 		"text/provenance-notation": {
-			source: "iana",
-			charset: "UTF-8"
+			"source": "iana",
+			"charset": "UTF-8"
 		},
-		"text/prs.fallenstein.rst": { source: "iana" },
+		"text/prs.fallenstein.rst": { "source": "iana" },
 		"text/prs.lines.tag": {
-			source: "iana",
-			extensions: ["dsc"]
+			"source": "iana",
+			"extensions": ["dsc"]
 		},
-		"text/prs.prop.logic": { source: "iana" },
-		"text/raptorfec": { source: "iana" },
-		"text/red": { source: "iana" },
-		"text/rfc822-headers": { source: "iana" },
+		"text/prs.prop.logic": { "source": "iana" },
+		"text/raptorfec": { "source": "iana" },
+		"text/red": { "source": "iana" },
+		"text/rfc822-headers": { "source": "iana" },
 		"text/richtext": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["rtx"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["rtx"]
 		},
 		"text/rtf": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["rtf"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["rtf"]
 		},
-		"text/rtp-enc-aescm128": { source: "iana" },
-		"text/rtploopback": { source: "iana" },
-		"text/rtx": { source: "iana" },
+		"text/rtp-enc-aescm128": { "source": "iana" },
+		"text/rtploopback": { "source": "iana" },
+		"text/rtx": { "source": "iana" },
 		"text/sgml": {
-			source: "iana",
-			extensions: ["sgml", "sgm"]
+			"source": "iana",
+			"extensions": ["sgml", "sgm"]
 		},
-		"text/shaclc": { source: "iana" },
+		"text/shaclc": { "source": "iana" },
 		"text/shex": {
-			source: "iana",
-			extensions: ["shex"]
+			"source": "iana",
+			"extensions": ["shex"]
 		},
-		"text/slim": { extensions: ["slim", "slm"] },
+		"text/slim": { "extensions": ["slim", "slm"] },
 		"text/spdx": {
-			source: "iana",
-			extensions: ["spdx"]
+			"source": "iana",
+			"extensions": ["spdx"]
 		},
-		"text/strings": { source: "iana" },
-		"text/stylus": { extensions: ["stylus", "styl"] },
-		"text/t140": { source: "iana" },
+		"text/strings": { "source": "iana" },
+		"text/stylus": { "extensions": ["stylus", "styl"] },
+		"text/t140": { "source": "iana" },
 		"text/tab-separated-values": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["tsv"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["tsv"]
 		},
 		"text/troff": {
-			source: "iana",
-			extensions: [
+			"source": "iana",
+			"extensions": [
 				"t",
 				"tr",
 				"roff",
@@ -6941,127 +7279,127 @@ var o = Object.create, s = Object.defineProperty, c = Object.getOwnPropertyDescr
 			]
 		},
 		"text/turtle": {
-			source: "iana",
-			charset: "UTF-8",
-			extensions: ["ttl"]
+			"source": "iana",
+			"charset": "UTF-8",
+			"extensions": ["ttl"]
 		},
-		"text/ulpfec": { source: "iana" },
+		"text/ulpfec": { "source": "iana" },
 		"text/uri-list": {
-			source: "iana",
-			compressible: !0,
-			extensions: [
+			"source": "iana",
+			"compressible": true,
+			"extensions": [
 				"uri",
 				"uris",
 				"urls"
 			]
 		},
 		"text/vcard": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["vcard"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["vcard"]
 		},
-		"text/vnd.a": { source: "iana" },
-		"text/vnd.abc": { source: "iana" },
-		"text/vnd.ascii-art": { source: "iana" },
+		"text/vnd.a": { "source": "iana" },
+		"text/vnd.abc": { "source": "iana" },
+		"text/vnd.ascii-art": { "source": "iana" },
 		"text/vnd.curl": {
-			source: "iana",
-			extensions: ["curl"]
+			"source": "iana",
+			"extensions": ["curl"]
 		},
 		"text/vnd.curl.dcurl": {
-			source: "apache",
-			extensions: ["dcurl"]
+			"source": "apache",
+			"extensions": ["dcurl"]
 		},
 		"text/vnd.curl.mcurl": {
-			source: "apache",
-			extensions: ["mcurl"]
+			"source": "apache",
+			"extensions": ["mcurl"]
 		},
 		"text/vnd.curl.scurl": {
-			source: "apache",
-			extensions: ["scurl"]
+			"source": "apache",
+			"extensions": ["scurl"]
 		},
 		"text/vnd.debian.copyright": {
-			source: "iana",
-			charset: "UTF-8"
+			"source": "iana",
+			"charset": "UTF-8"
 		},
-		"text/vnd.dmclientscript": { source: "iana" },
+		"text/vnd.dmclientscript": { "source": "iana" },
 		"text/vnd.dvb.subtitle": {
-			source: "iana",
-			extensions: ["sub"]
+			"source": "iana",
+			"extensions": ["sub"]
 		},
 		"text/vnd.esmertec.theme-descriptor": {
-			source: "iana",
-			charset: "UTF-8"
+			"source": "iana",
+			"charset": "UTF-8"
 		},
 		"text/vnd.familysearch.gedcom": {
-			source: "iana",
-			extensions: ["ged"]
+			"source": "iana",
+			"extensions": ["ged"]
 		},
-		"text/vnd.ficlab.flt": { source: "iana" },
+		"text/vnd.ficlab.flt": { "source": "iana" },
 		"text/vnd.fly": {
-			source: "iana",
-			extensions: ["fly"]
+			"source": "iana",
+			"extensions": ["fly"]
 		},
 		"text/vnd.fmi.flexstor": {
-			source: "iana",
-			extensions: ["flx"]
+			"source": "iana",
+			"extensions": ["flx"]
 		},
-		"text/vnd.gml": { source: "iana" },
+		"text/vnd.gml": { "source": "iana" },
 		"text/vnd.graphviz": {
-			source: "iana",
-			extensions: ["gv"]
+			"source": "iana",
+			"extensions": ["gv"]
 		},
-		"text/vnd.hans": { source: "iana" },
-		"text/vnd.hgl": { source: "iana" },
+		"text/vnd.hans": { "source": "iana" },
+		"text/vnd.hgl": { "source": "iana" },
 		"text/vnd.in3d.3dml": {
-			source: "iana",
-			extensions: ["3dml"]
+			"source": "iana",
+			"extensions": ["3dml"]
 		},
 		"text/vnd.in3d.spot": {
-			source: "iana",
-			extensions: ["spot"]
+			"source": "iana",
+			"extensions": ["spot"]
 		},
-		"text/vnd.iptc.newsml": { source: "iana" },
-		"text/vnd.iptc.nitf": { source: "iana" },
-		"text/vnd.latex-z": { source: "iana" },
-		"text/vnd.motorola.reflex": { source: "iana" },
-		"text/vnd.ms-mediapackage": { source: "iana" },
-		"text/vnd.net2phone.commcenter.command": { source: "iana" },
-		"text/vnd.radisys.msml-basic-layout": { source: "iana" },
-		"text/vnd.senx.warpscript": { source: "iana" },
-		"text/vnd.si.uricatalogue": { source: "iana" },
-		"text/vnd.sosi": { source: "iana" },
+		"text/vnd.iptc.newsml": { "source": "iana" },
+		"text/vnd.iptc.nitf": { "source": "iana" },
+		"text/vnd.latex-z": { "source": "iana" },
+		"text/vnd.motorola.reflex": { "source": "iana" },
+		"text/vnd.ms-mediapackage": { "source": "iana" },
+		"text/vnd.net2phone.commcenter.command": { "source": "iana" },
+		"text/vnd.radisys.msml-basic-layout": { "source": "iana" },
+		"text/vnd.senx.warpscript": { "source": "iana" },
+		"text/vnd.si.uricatalogue": { "source": "iana" },
+		"text/vnd.sosi": { "source": "iana" },
 		"text/vnd.sun.j2me.app-descriptor": {
-			source: "iana",
-			charset: "UTF-8",
-			extensions: ["jad"]
+			"source": "iana",
+			"charset": "UTF-8",
+			"extensions": ["jad"]
 		},
 		"text/vnd.trolltech.linguist": {
-			source: "iana",
-			charset: "UTF-8"
+			"source": "iana",
+			"charset": "UTF-8"
 		},
-		"text/vnd.wap.si": { source: "iana" },
-		"text/vnd.wap.sl": { source: "iana" },
+		"text/vnd.wap.si": { "source": "iana" },
+		"text/vnd.wap.sl": { "source": "iana" },
 		"text/vnd.wap.wml": {
-			source: "iana",
-			extensions: ["wml"]
+			"source": "iana",
+			"extensions": ["wml"]
 		},
 		"text/vnd.wap.wmlscript": {
-			source: "iana",
-			extensions: ["wmls"]
+			"source": "iana",
+			"extensions": ["wmls"]
 		},
 		"text/vtt": {
-			source: "iana",
-			charset: "UTF-8",
-			compressible: !0,
-			extensions: ["vtt"]
+			"source": "iana",
+			"charset": "UTF-8",
+			"compressible": true,
+			"extensions": ["vtt"]
 		},
 		"text/x-asm": {
-			source: "apache",
-			extensions: ["s", "asm"]
+			"source": "apache",
+			"extensions": ["s", "asm"]
 		},
 		"text/x-c": {
-			source: "apache",
-			extensions: [
+			"source": "apache",
+			"extensions": [
 				"c",
 				"cc",
 				"cxx",
@@ -7072,159 +7410,159 @@ var o = Object.create, s = Object.defineProperty, c = Object.getOwnPropertyDescr
 			]
 		},
 		"text/x-component": {
-			source: "nginx",
-			extensions: ["htc"]
+			"source": "nginx",
+			"extensions": ["htc"]
 		},
 		"text/x-fortran": {
-			source: "apache",
-			extensions: [
+			"source": "apache",
+			"extensions": [
 				"f",
 				"for",
 				"f77",
 				"f90"
 			]
 		},
-		"text/x-gwt-rpc": { compressible: !0 },
-		"text/x-handlebars-template": { extensions: ["hbs"] },
+		"text/x-gwt-rpc": { "compressible": true },
+		"text/x-handlebars-template": { "extensions": ["hbs"] },
 		"text/x-java-source": {
-			source: "apache",
-			extensions: ["java"]
+			"source": "apache",
+			"extensions": ["java"]
 		},
-		"text/x-jquery-tmpl": { compressible: !0 },
-		"text/x-lua": { extensions: ["lua"] },
+		"text/x-jquery-tmpl": { "compressible": true },
+		"text/x-lua": { "extensions": ["lua"] },
 		"text/x-markdown": {
-			compressible: !0,
-			extensions: ["mkd"]
+			"compressible": true,
+			"extensions": ["mkd"]
 		},
 		"text/x-nfo": {
-			source: "apache",
-			extensions: ["nfo"]
+			"source": "apache",
+			"extensions": ["nfo"]
 		},
 		"text/x-opml": {
-			source: "apache",
-			extensions: ["opml"]
+			"source": "apache",
+			"extensions": ["opml"]
 		},
 		"text/x-org": {
-			compressible: !0,
-			extensions: ["org"]
+			"compressible": true,
+			"extensions": ["org"]
 		},
 		"text/x-pascal": {
-			source: "apache",
-			extensions: ["p", "pas"]
+			"source": "apache",
+			"extensions": ["p", "pas"]
 		},
 		"text/x-processing": {
-			compressible: !0,
-			extensions: ["pde"]
+			"compressible": true,
+			"extensions": ["pde"]
 		},
-		"text/x-sass": { extensions: ["sass"] },
-		"text/x-scss": { extensions: ["scss"] },
+		"text/x-sass": { "extensions": ["sass"] },
+		"text/x-scss": { "extensions": ["scss"] },
 		"text/x-setext": {
-			source: "apache",
-			extensions: ["etx"]
+			"source": "apache",
+			"extensions": ["etx"]
 		},
 		"text/x-sfv": {
-			source: "apache",
-			extensions: ["sfv"]
+			"source": "apache",
+			"extensions": ["sfv"]
 		},
 		"text/x-suse-ymp": {
-			compressible: !0,
-			extensions: ["ymp"]
+			"compressible": true,
+			"extensions": ["ymp"]
 		},
 		"text/x-uuencode": {
-			source: "apache",
-			extensions: ["uu"]
+			"source": "apache",
+			"extensions": ["uu"]
 		},
 		"text/x-vcalendar": {
-			source: "apache",
-			extensions: ["vcs"]
+			"source": "apache",
+			"extensions": ["vcs"]
 		},
 		"text/x-vcard": {
-			source: "apache",
-			extensions: ["vcf"]
+			"source": "apache",
+			"extensions": ["vcf"]
 		},
 		"text/xml": {
-			source: "iana",
-			compressible: !0,
-			extensions: ["xml"]
+			"source": "iana",
+			"compressible": true,
+			"extensions": ["xml"]
 		},
-		"text/xml-external-parsed-entity": { source: "iana" },
+		"text/xml-external-parsed-entity": { "source": "iana" },
 		"text/yaml": {
-			compressible: !0,
-			extensions: ["yaml", "yml"]
+			"compressible": true,
+			"extensions": ["yaml", "yml"]
 		},
-		"video/1d-interleaved-parityfec": { source: "iana" },
+		"video/1d-interleaved-parityfec": { "source": "iana" },
 		"video/3gpp": {
-			source: "iana",
-			extensions: ["3gp", "3gpp"]
+			"source": "iana",
+			"extensions": ["3gp", "3gpp"]
 		},
-		"video/3gpp-tt": { source: "iana" },
+		"video/3gpp-tt": { "source": "iana" },
 		"video/3gpp2": {
-			source: "iana",
-			extensions: ["3g2"]
+			"source": "iana",
+			"extensions": ["3g2"]
 		},
-		"video/av1": { source: "iana" },
-		"video/bmpeg": { source: "iana" },
-		"video/bt656": { source: "iana" },
-		"video/celb": { source: "iana" },
-		"video/dv": { source: "iana" },
-		"video/encaprtp": { source: "iana" },
-		"video/ffv1": { source: "iana" },
-		"video/flexfec": { source: "iana" },
+		"video/av1": { "source": "iana" },
+		"video/bmpeg": { "source": "iana" },
+		"video/bt656": { "source": "iana" },
+		"video/celb": { "source": "iana" },
+		"video/dv": { "source": "iana" },
+		"video/encaprtp": { "source": "iana" },
+		"video/ffv1": { "source": "iana" },
+		"video/flexfec": { "source": "iana" },
 		"video/h261": {
-			source: "iana",
-			extensions: ["h261"]
+			"source": "iana",
+			"extensions": ["h261"]
 		},
 		"video/h263": {
-			source: "iana",
-			extensions: ["h263"]
+			"source": "iana",
+			"extensions": ["h263"]
 		},
-		"video/h263-1998": { source: "iana" },
-		"video/h263-2000": { source: "iana" },
+		"video/h263-1998": { "source": "iana" },
+		"video/h263-2000": { "source": "iana" },
 		"video/h264": {
-			source: "iana",
-			extensions: ["h264"]
+			"source": "iana",
+			"extensions": ["h264"]
 		},
-		"video/h264-rcdo": { source: "iana" },
-		"video/h264-svc": { source: "iana" },
-		"video/h265": { source: "iana" },
+		"video/h264-rcdo": { "source": "iana" },
+		"video/h264-svc": { "source": "iana" },
+		"video/h265": { "source": "iana" },
 		"video/iso.segment": {
-			source: "iana",
-			extensions: ["m4s"]
+			"source": "iana",
+			"extensions": ["m4s"]
 		},
 		"video/jpeg": {
-			source: "iana",
-			extensions: ["jpgv"]
+			"source": "iana",
+			"extensions": ["jpgv"]
 		},
-		"video/jpeg2000": { source: "iana" },
+		"video/jpeg2000": { "source": "iana" },
 		"video/jpm": {
-			source: "apache",
-			extensions: ["jpm", "jpgm"]
+			"source": "apache",
+			"extensions": ["jpm", "jpgm"]
 		},
-		"video/jxsv": { source: "iana" },
+		"video/jxsv": { "source": "iana" },
 		"video/mj2": {
-			source: "iana",
-			extensions: ["mj2", "mjp2"]
+			"source": "iana",
+			"extensions": ["mj2", "mjp2"]
 		},
-		"video/mp1s": { source: "iana" },
-		"video/mp2p": { source: "iana" },
+		"video/mp1s": { "source": "iana" },
+		"video/mp2p": { "source": "iana" },
 		"video/mp2t": {
-			source: "iana",
-			extensions: ["ts"]
+			"source": "iana",
+			"extensions": ["ts"]
 		},
 		"video/mp4": {
-			source: "iana",
-			compressible: !1,
-			extensions: [
+			"source": "iana",
+			"compressible": false,
+			"extensions": [
 				"mp4",
 				"mp4v",
 				"mpg4"
 			]
 		},
-		"video/mp4v-es": { source: "iana" },
+		"video/mp4v-es": { "source": "iana" },
 		"video/mpeg": {
-			source: "iana",
-			compressible: !1,
-			extensions: [
+			"source": "iana",
+			"compressible": false,
+			"extensions": [
 				"mpeg",
 				"mpg",
 				"mpe",
@@ -7232,513 +7570,941 @@ var o = Object.create, s = Object.defineProperty, c = Object.getOwnPropertyDescr
 				"m2v"
 			]
 		},
-		"video/mpeg4-generic": { source: "iana" },
-		"video/mpv": { source: "iana" },
-		"video/nv": { source: "iana" },
+		"video/mpeg4-generic": { "source": "iana" },
+		"video/mpv": { "source": "iana" },
+		"video/nv": { "source": "iana" },
 		"video/ogg": {
-			source: "iana",
-			compressible: !1,
-			extensions: ["ogv"]
+			"source": "iana",
+			"compressible": false,
+			"extensions": ["ogv"]
 		},
-		"video/parityfec": { source: "iana" },
-		"video/pointer": { source: "iana" },
+		"video/parityfec": { "source": "iana" },
+		"video/pointer": { "source": "iana" },
 		"video/quicktime": {
-			source: "iana",
-			compressible: !1,
-			extensions: ["qt", "mov"]
+			"source": "iana",
+			"compressible": false,
+			"extensions": ["qt", "mov"]
 		},
-		"video/raptorfec": { source: "iana" },
-		"video/raw": { source: "iana" },
-		"video/rtp-enc-aescm128": { source: "iana" },
-		"video/rtploopback": { source: "iana" },
-		"video/rtx": { source: "iana" },
-		"video/scip": { source: "iana" },
-		"video/smpte291": { source: "iana" },
-		"video/smpte292m": { source: "iana" },
-		"video/ulpfec": { source: "iana" },
-		"video/vc1": { source: "iana" },
-		"video/vc2": { source: "iana" },
-		"video/vnd.cctv": { source: "iana" },
+		"video/raptorfec": { "source": "iana" },
+		"video/raw": { "source": "iana" },
+		"video/rtp-enc-aescm128": { "source": "iana" },
+		"video/rtploopback": { "source": "iana" },
+		"video/rtx": { "source": "iana" },
+		"video/scip": { "source": "iana" },
+		"video/smpte291": { "source": "iana" },
+		"video/smpte292m": { "source": "iana" },
+		"video/ulpfec": { "source": "iana" },
+		"video/vc1": { "source": "iana" },
+		"video/vc2": { "source": "iana" },
+		"video/vnd.cctv": { "source": "iana" },
 		"video/vnd.dece.hd": {
-			source: "iana",
-			extensions: ["uvh", "uvvh"]
+			"source": "iana",
+			"extensions": ["uvh", "uvvh"]
 		},
 		"video/vnd.dece.mobile": {
-			source: "iana",
-			extensions: ["uvm", "uvvm"]
+			"source": "iana",
+			"extensions": ["uvm", "uvvm"]
 		},
-		"video/vnd.dece.mp4": { source: "iana" },
+		"video/vnd.dece.mp4": { "source": "iana" },
 		"video/vnd.dece.pd": {
-			source: "iana",
-			extensions: ["uvp", "uvvp"]
+			"source": "iana",
+			"extensions": ["uvp", "uvvp"]
 		},
 		"video/vnd.dece.sd": {
-			source: "iana",
-			extensions: ["uvs", "uvvs"]
+			"source": "iana",
+			"extensions": ["uvs", "uvvs"]
 		},
 		"video/vnd.dece.video": {
-			source: "iana",
-			extensions: ["uvv", "uvvv"]
+			"source": "iana",
+			"extensions": ["uvv", "uvvv"]
 		},
-		"video/vnd.directv.mpeg": { source: "iana" },
-		"video/vnd.directv.mpeg-tts": { source: "iana" },
-		"video/vnd.dlna.mpeg-tts": { source: "iana" },
+		"video/vnd.directv.mpeg": { "source": "iana" },
+		"video/vnd.directv.mpeg-tts": { "source": "iana" },
+		"video/vnd.dlna.mpeg-tts": { "source": "iana" },
 		"video/vnd.dvb.file": {
-			source: "iana",
-			extensions: ["dvb"]
+			"source": "iana",
+			"extensions": ["dvb"]
 		},
 		"video/vnd.fvt": {
-			source: "iana",
-			extensions: ["fvt"]
+			"source": "iana",
+			"extensions": ["fvt"]
 		},
-		"video/vnd.hns.video": { source: "iana" },
-		"video/vnd.iptvforum.1dparityfec-1010": { source: "iana" },
-		"video/vnd.iptvforum.1dparityfec-2005": { source: "iana" },
-		"video/vnd.iptvforum.2dparityfec-1010": { source: "iana" },
-		"video/vnd.iptvforum.2dparityfec-2005": { source: "iana" },
-		"video/vnd.iptvforum.ttsavc": { source: "iana" },
-		"video/vnd.iptvforum.ttsmpeg2": { source: "iana" },
-		"video/vnd.motorola.video": { source: "iana" },
-		"video/vnd.motorola.videop": { source: "iana" },
+		"video/vnd.hns.video": { "source": "iana" },
+		"video/vnd.iptvforum.1dparityfec-1010": { "source": "iana" },
+		"video/vnd.iptvforum.1dparityfec-2005": { "source": "iana" },
+		"video/vnd.iptvforum.2dparityfec-1010": { "source": "iana" },
+		"video/vnd.iptvforum.2dparityfec-2005": { "source": "iana" },
+		"video/vnd.iptvforum.ttsavc": { "source": "iana" },
+		"video/vnd.iptvforum.ttsmpeg2": { "source": "iana" },
+		"video/vnd.motorola.video": { "source": "iana" },
+		"video/vnd.motorola.videop": { "source": "iana" },
 		"video/vnd.mpegurl": {
-			source: "iana",
-			extensions: ["mxu", "m4u"]
+			"source": "iana",
+			"extensions": ["mxu", "m4u"]
 		},
 		"video/vnd.ms-playready.media.pyv": {
-			source: "iana",
-			extensions: ["pyv"]
+			"source": "iana",
+			"extensions": ["pyv"]
 		},
-		"video/vnd.nokia.interleaved-multimedia": { source: "iana" },
-		"video/vnd.nokia.mp4vr": { source: "iana" },
-		"video/vnd.nokia.videovoip": { source: "iana" },
-		"video/vnd.objectvideo": { source: "iana" },
-		"video/vnd.radgamettools.bink": { source: "iana" },
-		"video/vnd.radgamettools.smacker": { source: "iana" },
-		"video/vnd.sealed.mpeg1": { source: "iana" },
-		"video/vnd.sealed.mpeg4": { source: "iana" },
-		"video/vnd.sealed.swf": { source: "iana" },
-		"video/vnd.sealedmedia.softseal.mov": { source: "iana" },
+		"video/vnd.nokia.interleaved-multimedia": { "source": "iana" },
+		"video/vnd.nokia.mp4vr": { "source": "iana" },
+		"video/vnd.nokia.videovoip": { "source": "iana" },
+		"video/vnd.objectvideo": { "source": "iana" },
+		"video/vnd.radgamettools.bink": { "source": "iana" },
+		"video/vnd.radgamettools.smacker": { "source": "iana" },
+		"video/vnd.sealed.mpeg1": { "source": "iana" },
+		"video/vnd.sealed.mpeg4": { "source": "iana" },
+		"video/vnd.sealed.swf": { "source": "iana" },
+		"video/vnd.sealedmedia.softseal.mov": { "source": "iana" },
 		"video/vnd.uvvu.mp4": {
-			source: "iana",
-			extensions: ["uvu", "uvvu"]
+			"source": "iana",
+			"extensions": ["uvu", "uvvu"]
 		},
 		"video/vnd.vivo": {
-			source: "iana",
-			extensions: ["viv"]
+			"source": "iana",
+			"extensions": ["viv"]
 		},
-		"video/vnd.youtube.yt": { source: "iana" },
-		"video/vp8": { source: "iana" },
-		"video/vp9": { source: "iana" },
+		"video/vnd.youtube.yt": { "source": "iana" },
+		"video/vp8": { "source": "iana" },
+		"video/vp9": { "source": "iana" },
 		"video/webm": {
-			source: "apache",
-			compressible: !1,
-			extensions: ["webm"]
+			"source": "apache",
+			"compressible": false,
+			"extensions": ["webm"]
 		},
 		"video/x-f4v": {
-			source: "apache",
-			extensions: ["f4v"]
+			"source": "apache",
+			"extensions": ["f4v"]
 		},
 		"video/x-fli": {
-			source: "apache",
-			extensions: ["fli"]
+			"source": "apache",
+			"extensions": ["fli"]
 		},
 		"video/x-flv": {
-			source: "apache",
-			compressible: !1,
-			extensions: ["flv"]
+			"source": "apache",
+			"compressible": false,
+			"extensions": ["flv"]
 		},
 		"video/x-m4v": {
-			source: "apache",
-			extensions: ["m4v"]
+			"source": "apache",
+			"extensions": ["m4v"]
 		},
 		"video/x-matroska": {
-			source: "apache",
-			compressible: !1,
-			extensions: [
+			"source": "apache",
+			"compressible": false,
+			"extensions": [
 				"mkv",
 				"mk3d",
 				"mks"
 			]
 		},
 		"video/x-mng": {
-			source: "apache",
-			extensions: ["mng"]
+			"source": "apache",
+			"extensions": ["mng"]
 		},
 		"video/x-ms-asf": {
-			source: "apache",
-			extensions: ["asf", "asx"]
+			"source": "apache",
+			"extensions": ["asf", "asx"]
 		},
 		"video/x-ms-vob": {
-			source: "apache",
-			extensions: ["vob"]
+			"source": "apache",
+			"extensions": ["vob"]
 		},
 		"video/x-ms-wm": {
-			source: "apache",
-			extensions: ["wm"]
+			"source": "apache",
+			"extensions": ["wm"]
 		},
 		"video/x-ms-wmv": {
-			source: "apache",
-			compressible: !1,
-			extensions: ["wmv"]
+			"source": "apache",
+			"compressible": false,
+			"extensions": ["wmv"]
 		},
 		"video/x-ms-wmx": {
-			source: "apache",
-			extensions: ["wmx"]
+			"source": "apache",
+			"extensions": ["wmx"]
 		},
 		"video/x-ms-wvx": {
-			source: "apache",
-			extensions: ["wvx"]
+			"source": "apache",
+			"extensions": ["wvx"]
 		},
 		"video/x-msvideo": {
-			source: "apache",
-			extensions: ["avi"]
+			"source": "apache",
+			"extensions": ["avi"]
 		},
 		"video/x-sgi-movie": {
-			source: "apache",
-			extensions: ["movie"]
+			"source": "apache",
+			"extensions": ["movie"]
 		},
 		"video/x-smv": {
-			source: "apache",
-			extensions: ["smv"]
+			"source": "apache",
+			"extensions": ["smv"]
 		},
 		"x-conference/x-cooltalk": {
-			source: "apache",
-			extensions: ["ice"]
+			"source": "apache",
+			"extensions": ["ice"]
 		},
-		"x-shader/x-fragment": { compressible: !0 },
-		"x-shader/x-vertex": { compressible: !0 }
+		"x-shader/x-fragment": { "compressible": true },
+		"x-shader/x-vertex": { "compressible": true }
 	};
-})), D = /* @__PURE__ */ p(((e, t) => {
-	t.exports = (E(), _(w).default);
-})), O = /* @__PURE__ */ p(((e) => {
-	var t = D(), n = v("path").extname, r = /^\s*([^;\s]*)(?:;|\s|$)/, i = /^text\//i;
-	e.charset = a, e.charsets = { lookup: a }, e.contentType = o, e.extension = s, e.extensions = Object.create(null), e.lookup = c, e.types = Object.create(null), l(e.extensions, e.types);
-	function a(e) {
-		if (!e || typeof e != "string") return !1;
-		var n = r.exec(e), a = n && t[n[1].toLowerCase()];
-		return a && a.charset ? a.charset : n && i.test(n[1]) ? "UTF-8" : !1;
+}));
+//#endregion
+//#region node_modules/mime-db/index.js
+var require_mime_db = /* @__PURE__ */ __commonJSMin(((exports, module) => {
+	/*!
+	* mime-db
+	* Copyright(c) 2014 Jonathan Ong
+	* Copyright(c) 2015-2022 Douglas Christopher Wilson
+	* MIT Licensed
+	*/
+	/**
+	* Module exports.
+	*/
+	module.exports = (init_db(), __toCommonJS(db_exports).default);
+}));
+//#endregion
+//#region node_modules/mime-types/index.js
+/*!
+* mime-types
+* Copyright(c) 2014 Jonathan Ong
+* Copyright(c) 2015 Douglas Christopher Wilson
+* MIT Licensed
+*/
+var require_mime_types = /* @__PURE__ */ __commonJSMin(((exports) => {
+	/**
+	* Module dependencies.
+	* @private
+	*/
+	var db = require_mime_db();
+	var extname = __require("path").extname;
+	/**
+	* Module variables.
+	* @private
+	*/
+	var EXTRACT_TYPE_REGEXP = /^\s*([^;\s]*)(?:;|\s|$)/;
+	var TEXT_TYPE_REGEXP = /^text\//i;
+	/**
+	* Module exports.
+	* @public
+	*/
+	exports.charset = charset;
+	exports.charsets = { lookup: charset };
+	exports.contentType = contentType;
+	exports.extension = extension;
+	exports.extensions = Object.create(null);
+	exports.lookup = lookup;
+	exports.types = Object.create(null);
+	populateMaps(exports.extensions, exports.types);
+	/**
+	* Get the default charset for a MIME type.
+	*
+	* @param {string} type
+	* @return {boolean|string}
+	*/
+	function charset(type) {
+		if (!type || typeof type !== "string") return false;
+		var match = EXTRACT_TYPE_REGEXP.exec(type);
+		var mime = match && db[match[1].toLowerCase()];
+		if (mime && mime.charset) return mime.charset;
+		if (match && TEXT_TYPE_REGEXP.test(match[1])) return "UTF-8";
+		return false;
 	}
-	function o(t) {
-		if (!t || typeof t != "string") return !1;
-		var n = t.indexOf("/") === -1 ? e.lookup(t) : t;
-		if (!n) return !1;
-		if (n.indexOf("charset") === -1) {
-			var r = e.charset(n);
-			r && (n += "; charset=" + r.toLowerCase());
+	/**
+	* Create a full Content-Type header given a MIME type or extension.
+	*
+	* @param {string} str
+	* @return {boolean|string}
+	*/
+	function contentType(str) {
+		if (!str || typeof str !== "string") return false;
+		var mime = str.indexOf("/") === -1 ? exports.lookup(str) : str;
+		if (!mime) return false;
+		if (mime.indexOf("charset") === -1) {
+			var charset = exports.charset(mime);
+			if (charset) mime += "; charset=" + charset.toLowerCase();
 		}
-		return n;
+		return mime;
 	}
-	function s(t) {
-		if (!t || typeof t != "string") return !1;
-		var n = r.exec(t), i = n && e.extensions[n[1].toLowerCase()];
-		return !i || !i.length ? !1 : i[0];
+	/**
+	* Get the default extension for a MIME type.
+	*
+	* @param {string} type
+	* @return {boolean|string}
+	*/
+	function extension(type) {
+		if (!type || typeof type !== "string") return false;
+		var match = EXTRACT_TYPE_REGEXP.exec(type);
+		var exts = match && exports.extensions[match[1].toLowerCase()];
+		if (!exts || !exts.length) return false;
+		return exts[0];
 	}
-	function c(t) {
-		if (!t || typeof t != "string") return !1;
-		var r = n("x." + t).toLowerCase().substr(1);
-		return r && e.types[r] || !1;
+	/**
+	* Lookup the MIME type for a file path/extension.
+	*
+	* @param {string} path
+	* @return {boolean|string}
+	*/
+	function lookup(path) {
+		if (!path || typeof path !== "string") return false;
+		var extension = extname("x." + path).toLowerCase().substr(1);
+		if (!extension) return false;
+		return exports.types[extension] || false;
 	}
-	function l(e, n) {
-		var r = [
+	/**
+	* Populate the extensions and types maps.
+	* @private
+	*/
+	function populateMaps(extensions, types) {
+		var preference = [
 			"nginx",
 			"apache",
 			void 0,
 			"iana"
 		];
-		Object.keys(t).forEach(function(i) {
-			var a = t[i], o = a.extensions;
-			if (!(!o || !o.length)) {
-				e[i] = o;
-				for (var s = 0; s < o.length; s++) {
-					var c = o[s];
-					if (n[c]) {
-						var l = r.indexOf(t[n[c]].source), u = r.indexOf(a.source);
-						if (n[c] !== "application/octet-stream" && (l > u || l === u && n[c].substr(0, 12) === "application/")) continue;
-					}
-					n[c] = i;
+		Object.keys(db).forEach(function forEachMimeType(type) {
+			var mime = db[type];
+			var exts = mime.extensions;
+			if (!exts || !exts.length) return;
+			extensions[type] = exts;
+			for (var i = 0; i < exts.length; i++) {
+				var extension = exts[i];
+				if (types[extension]) {
+					var from = preference.indexOf(db[types[extension]].source);
+					var to = preference.indexOf(mime.source);
+					if (types[extension] !== "application/octet-stream" && (from > to || from === to && types[extension].substr(0, 12) === "application/")) continue;
 				}
+				types[extension] = type;
 			}
 		});
 	}
-})), k = /* @__PURE__ */ p(((e, t) => {
-	var n = C(), r = O();
-	t.exports = i;
-	function i(e) {
-		if (!(this instanceof i)) return new i(e);
-		this.headers = e.headers, this.negotiator = new n(e);
+}));
+//#endregion
+//#region node_modules/accepts/index.js
+/*!
+* accepts
+* Copyright(c) 2014 Jonathan Ong
+* Copyright(c) 2015 Douglas Christopher Wilson
+* MIT Licensed
+*/
+var require_accepts = /* @__PURE__ */ __commonJSMin(((exports, module) => {
+	/**
+	* Module dependencies.
+	* @private
+	*/
+	var Negotiator = require_negotiator();
+	var mime = require_mime_types();
+	/**
+	* Module exports.
+	* @public
+	*/
+	module.exports = Accepts;
+	/**
+	* Create a new Accepts object for the given req.
+	*
+	* @param {object} req
+	* @public
+	*/
+	function Accepts(req) {
+		if (!(this instanceof Accepts)) return new Accepts(req);
+		this.headers = req.headers;
+		this.negotiator = new Negotiator(req);
 	}
-	i.prototype.type = i.prototype.types = function(e) {
-		var t = e;
-		if (t && !Array.isArray(t)) {
-			t = Array(arguments.length);
-			for (var n = 0; n < t.length; n++) t[n] = arguments[n];
+	/**
+	* Check if the given `type(s)` is acceptable, returning
+	* the best match when true, otherwise `undefined`, in which
+	* case you should respond with 406 "Not Acceptable".
+	*
+	* The `type` value may be a single mime type string
+	* such as "application/json", the extension name
+	* such as "json" or an array `["json", "html", "text/plain"]`. When a list
+	* or array is given the _best_ match, if any is returned.
+	*
+	* Examples:
+	*
+	*     // Accept: text/html
+	*     this.types('html');
+	*     // => "html"
+	*
+	*     // Accept: text/*, application/json
+	*     this.types('html');
+	*     // => "html"
+	*     this.types('text/html');
+	*     // => "text/html"
+	*     this.types('json', 'text');
+	*     // => "json"
+	*     this.types('application/json');
+	*     // => "application/json"
+	*
+	*     // Accept: text/*, application/json
+	*     this.types('image/png');
+	*     this.types('png');
+	*     // => undefined
+	*
+	*     // Accept: text/*;q=.5, application/json
+	*     this.types(['html', 'json']);
+	*     this.types('html', 'json');
+	*     // => "json"
+	*
+	* @param {String|Array} types...
+	* @return {String|Array|Boolean}
+	* @public
+	*/
+	Accepts.prototype.type = Accepts.prototype.types = function(types_) {
+		var types = types_;
+		if (types && !Array.isArray(types)) {
+			types = new Array(arguments.length);
+			for (var i = 0; i < types.length; i++) types[i] = arguments[i];
 		}
-		if (!t || t.length === 0) return this.negotiator.mediaTypes();
-		if (!this.headers.accept) return t[0];
-		var r = t.map(a), i = this.negotiator.mediaTypes(r.filter(o))[0];
-		return i ? t[r.indexOf(i)] : !1;
-	}, i.prototype.encoding = i.prototype.encodings = function(e) {
-		var t = e;
-		if (t && !Array.isArray(t)) {
-			t = Array(arguments.length);
-			for (var n = 0; n < t.length; n++) t[n] = arguments[n];
-		}
-		return !t || t.length === 0 ? this.negotiator.encodings() : this.negotiator.encodings(t)[0] || !1;
-	}, i.prototype.charset = i.prototype.charsets = function(e) {
-		var t = e;
-		if (t && !Array.isArray(t)) {
-			t = Array(arguments.length);
-			for (var n = 0; n < t.length; n++) t[n] = arguments[n];
-		}
-		return !t || t.length === 0 ? this.negotiator.charsets() : this.negotiator.charsets(t)[0] || !1;
-	}, i.prototype.lang = i.prototype.langs = i.prototype.language = i.prototype.languages = function(e) {
-		var t = e;
-		if (t && !Array.isArray(t)) {
-			t = Array(arguments.length);
-			for (var n = 0; n < t.length; n++) t[n] = arguments[n];
-		}
-		return !t || t.length === 0 ? this.negotiator.languages() : this.negotiator.languages(t)[0] || !1;
+		if (!types || types.length === 0) return this.negotiator.mediaTypes();
+		if (!this.headers.accept) return types[0];
+		var mimes = types.map(extToMime);
+		var first = this.negotiator.mediaTypes(mimes.filter(validMime))[0];
+		return first ? types[mimes.indexOf(first)] : false;
 	};
-	function a(e) {
-		return e.indexOf("/") === -1 ? r.lookup(e) : e;
+	/**
+	* Return accepted encodings or best fit based on `encodings`.
+	*
+	* Given `Accept-Encoding: gzip, deflate`
+	* an array sorted by quality is returned:
+	*
+	*     ['gzip', 'deflate']
+	*
+	* @param {String|Array} encodings...
+	* @return {String|Array}
+	* @public
+	*/
+	Accepts.prototype.encoding = Accepts.prototype.encodings = function(encodings_) {
+		var encodings = encodings_;
+		if (encodings && !Array.isArray(encodings)) {
+			encodings = new Array(arguments.length);
+			for (var i = 0; i < encodings.length; i++) encodings[i] = arguments[i];
+		}
+		if (!encodings || encodings.length === 0) return this.negotiator.encodings();
+		return this.negotiator.encodings(encodings)[0] || false;
+	};
+	/**
+	* Return accepted charsets or best fit based on `charsets`.
+	*
+	* Given `Accept-Charset: utf-8, iso-8859-1;q=0.2, utf-7;q=0.5`
+	* an array sorted by quality is returned:
+	*
+	*     ['utf-8', 'utf-7', 'iso-8859-1']
+	*
+	* @param {String|Array} charsets...
+	* @return {String|Array}
+	* @public
+	*/
+	Accepts.prototype.charset = Accepts.prototype.charsets = function(charsets_) {
+		var charsets = charsets_;
+		if (charsets && !Array.isArray(charsets)) {
+			charsets = new Array(arguments.length);
+			for (var i = 0; i < charsets.length; i++) charsets[i] = arguments[i];
+		}
+		if (!charsets || charsets.length === 0) return this.negotiator.charsets();
+		return this.negotiator.charsets(charsets)[0] || false;
+	};
+	/**
+	* Return accepted languages or best fit based on `langs`.
+	*
+	* Given `Accept-Language: en;q=0.8, es, pt`
+	* an array sorted by quality is returned:
+	*
+	*     ['es', 'pt', 'en']
+	*
+	* @param {String|Array} langs...
+	* @return {Array|String}
+	* @public
+	*/
+	Accepts.prototype.lang = Accepts.prototype.langs = Accepts.prototype.language = Accepts.prototype.languages = function(languages_) {
+		var languages = languages_;
+		if (languages && !Array.isArray(languages)) {
+			languages = new Array(arguments.length);
+			for (var i = 0; i < languages.length; i++) languages[i] = arguments[i];
+		}
+		if (!languages || languages.length === 0) return this.negotiator.languages();
+		return this.negotiator.languages(languages)[0] || false;
+	};
+	/**
+	* Convert extnames to mime.
+	*
+	* @param {String} type
+	* @return {String}
+	* @private
+	*/
+	function extToMime(type) {
+		return type.indexOf("/") === -1 ? mime.lookup(type) : type;
 	}
-	function o(e) {
-		return typeof e == "string";
+	/**
+	* Check if mime is valid.
+	*
+	* @param {String} type
+	* @return {String}
+	* @private
+	*/
+	function validMime(type) {
+		return typeof type === "string";
 	}
-})), A = /* @__PURE__ */ p(((e, t) => {
-	var n = v("crypto"), r = function() {};
-	r.prototype.getRandomBytes = function(e) {
-		var t = 4096, r = this;
-		if (e ||= 12, e > t) return n.randomBytes(e);
-		var i = parseInt(t / e), a = parseInt(i * .85);
-		if (!a || (this.bytesBufferIndex ??= -1, this.bytesBufferIndex == i && (this.bytesBuffer = null, this.bytesBufferIndex = -1), (this.bytesBufferIndex == -1 || this.bytesBufferIndex > a) && (this.isGeneratingBytes || (this.isGeneratingBytes = !0, n.randomBytes(t, function(e, t) {
-			r.bytesBuffer = t, r.bytesBufferIndex = 0, r.isGeneratingBytes = !1;
-		})), this.bytesBufferIndex == -1))) return n.randomBytes(e);
-		var o = this.bytesBuffer.slice(e * this.bytesBufferIndex, e * (this.bytesBufferIndex + 1));
-		return this.bytesBufferIndex++, o;
-	}, r.prototype.generateId = function() {
-		var e = Buffer.alloc(15);
-		return e.writeInt32BE ? (this.sequenceNumber = this.sequenceNumber + 1 | 0, e.writeInt32BE(this.sequenceNumber, 11), n.randomBytes ? this.getRandomBytes(12).copy(e) : [
+}));
+//#endregion
+//#region node_modules/base64id/lib/base64id.js
+var require_base64id = /* @__PURE__ */ __commonJSMin(((exports, module) => {
+	/*!
+	* base64id v0.1.0
+	*/
+	/**
+	* Module dependencies
+	*/
+	var crypto = __require("crypto");
+	/**
+	* Constructor
+	*/
+	var Base64Id = function() {};
+	/**
+	* Get random bytes
+	*
+	* Uses a buffer if available, falls back to crypto.randomBytes
+	*/
+	Base64Id.prototype.getRandomBytes = function(bytes) {
+		var BUFFER_SIZE = 4096;
+		var self = this;
+		bytes = bytes || 12;
+		if (bytes > BUFFER_SIZE) return crypto.randomBytes(bytes);
+		var bytesInBuffer = parseInt(BUFFER_SIZE / bytes);
+		var threshold = parseInt(bytesInBuffer * .85);
+		if (!threshold) return crypto.randomBytes(bytes);
+		if (this.bytesBufferIndex == null) this.bytesBufferIndex = -1;
+		if (this.bytesBufferIndex == bytesInBuffer) {
+			this.bytesBuffer = null;
+			this.bytesBufferIndex = -1;
+		}
+		if (this.bytesBufferIndex == -1 || this.bytesBufferIndex > threshold) {
+			if (!this.isGeneratingBytes) {
+				this.isGeneratingBytes = true;
+				crypto.randomBytes(BUFFER_SIZE, function(err, bytes) {
+					self.bytesBuffer = bytes;
+					self.bytesBufferIndex = 0;
+					self.isGeneratingBytes = false;
+				});
+			}
+			if (this.bytesBufferIndex == -1) return crypto.randomBytes(bytes);
+		}
+		var result = this.bytesBuffer.slice(bytes * this.bytesBufferIndex, bytes * (this.bytesBufferIndex + 1));
+		this.bytesBufferIndex++;
+		return result;
+	};
+	/**
+	* Generates a base64 id
+	*
+	* (Original version from socket.io <http://socket.io>)
+	*/
+	Base64Id.prototype.generateId = function() {
+		var rand = Buffer.alloc(15);
+		if (!rand.writeInt32BE) return Math.abs(Math.random() * Math.random() * Date.now() | 0).toString() + Math.abs(Math.random() * Math.random() * Date.now() | 0).toString();
+		this.sequenceNumber = this.sequenceNumber + 1 | 0;
+		rand.writeInt32BE(this.sequenceNumber, 11);
+		if (crypto.randomBytes) this.getRandomBytes(12).copy(rand);
+		else [
 			0,
 			4,
 			8
-		].forEach(function(t) {
-			e.writeInt32BE(Math.random() * 2 ** 32 | 0, t);
-		}), e.toString("base64").replace(/\//g, "_").replace(/\+/g, "-")) : Math.abs(Math.random() * Math.random() * Date.now() | 0).toString() + Math.abs(Math.random() * Math.random() * Date.now() | 0).toString();
-	}, e = t.exports = new r();
-})), j = /* @__PURE__ */ p(((e) => {
-	Object.defineProperty(e, "__esModule", { value: !0 }), e.ERROR_PACKET = e.PACKET_TYPES_REVERSE = e.PACKET_TYPES = void 0;
-	var t = Object.create(null);
-	e.PACKET_TYPES = t, t.open = "0", t.close = "1", t.ping = "2", t.pong = "3", t.message = "4", t.upgrade = "5", t.noop = "6";
-	var n = Object.create(null);
-	e.PACKET_TYPES_REVERSE = n, Object.keys(t).forEach((e) => {
-		n[t[e]] = e;
-	}), e.ERROR_PACKET = {
+		].forEach(function(i) {
+			rand.writeInt32BE(Math.random() * Math.pow(2, 32) | 0, i);
+		});
+		return rand.toString("base64").replace(/\//g, "_").replace(/\+/g, "-");
+	};
+	/**
+	* Export
+	*/
+	exports = module.exports = new Base64Id();
+}));
+//#endregion
+//#region node_modules/engine.io-parser/build/cjs/commons.js
+var require_commons = /* @__PURE__ */ __commonJSMin(((exports) => {
+	Object.defineProperty(exports, "__esModule", { value: true });
+	exports.ERROR_PACKET = exports.PACKET_TYPES_REVERSE = exports.PACKET_TYPES = void 0;
+	var PACKET_TYPES = Object.create(null);
+	exports.PACKET_TYPES = PACKET_TYPES;
+	PACKET_TYPES["open"] = "0";
+	PACKET_TYPES["close"] = "1";
+	PACKET_TYPES["ping"] = "2";
+	PACKET_TYPES["pong"] = "3";
+	PACKET_TYPES["message"] = "4";
+	PACKET_TYPES["upgrade"] = "5";
+	PACKET_TYPES["noop"] = "6";
+	var PACKET_TYPES_REVERSE = Object.create(null);
+	exports.PACKET_TYPES_REVERSE = PACKET_TYPES_REVERSE;
+	Object.keys(PACKET_TYPES).forEach((key) => {
+		PACKET_TYPES_REVERSE[PACKET_TYPES[key]] = key;
+	});
+	exports.ERROR_PACKET = {
 		type: "error",
 		data: "parser error"
 	};
-})), M = /* @__PURE__ */ p(((e) => {
-	Object.defineProperty(e, "__esModule", { value: !0 }), e.encodePacket = void 0, e.encodePacketToBinary = i;
-	var t = j();
-	e.encodePacket = ({ type: e, data: r }, i, a) => r instanceof ArrayBuffer || ArrayBuffer.isView(r) ? a(i ? r : "b" + n(r, !0).toString("base64")) : a(t.PACKET_TYPES[e] + (r || ""));
-	var n = (e, t) => Buffer.isBuffer(e) || e instanceof Uint8Array && !t ? e : e instanceof ArrayBuffer ? Buffer.from(e) : Buffer.from(e.buffer, e.byteOffset, e.byteLength), r;
-	function i(t, i) {
-		if (t.data instanceof ArrayBuffer || ArrayBuffer.isView(t.data)) return i(n(t.data, !1));
-		(0, e.encodePacket)(t, !0, (e) => {
-			r ||= new TextEncoder(), i(r.encode(e));
+}));
+//#endregion
+//#region node_modules/engine.io-parser/build/cjs/encodePacket.js
+var require_encodePacket = /* @__PURE__ */ __commonJSMin(((exports) => {
+	Object.defineProperty(exports, "__esModule", { value: true });
+	exports.encodePacket = void 0;
+	exports.encodePacketToBinary = encodePacketToBinary;
+	var commons_js_1 = require_commons();
+	var encodePacket = ({ type, data }, supportsBinary, callback) => {
+		if (data instanceof ArrayBuffer || ArrayBuffer.isView(data)) return callback(supportsBinary ? data : "b" + toBuffer(data, true).toString("base64"));
+		return callback(commons_js_1.PACKET_TYPES[type] + (data || ""));
+	};
+	exports.encodePacket = encodePacket;
+	var toBuffer = (data, forceBufferConversion) => {
+		if (Buffer.isBuffer(data) || data instanceof Uint8Array && !forceBufferConversion) return data;
+		else if (data instanceof ArrayBuffer) return Buffer.from(data);
+		else return Buffer.from(data.buffer, data.byteOffset, data.byteLength);
+	};
+	var TEXT_ENCODER;
+	function encodePacketToBinary(packet, callback) {
+		if (packet.data instanceof ArrayBuffer || ArrayBuffer.isView(packet.data)) return callback(toBuffer(packet.data, false));
+		(0, exports.encodePacket)(packet, true, (encoded) => {
+			if (!TEXT_ENCODER) TEXT_ENCODER = new TextEncoder();
+			callback(TEXT_ENCODER.encode(encoded));
 		});
 	}
-})), N = /* @__PURE__ */ p(((e) => {
-	Object.defineProperty(e, "__esModule", { value: !0 }), e.decodePacket = void 0;
-	var t = j();
-	e.decodePacket = (e, r) => {
-		if (typeof e != "string") return {
+}));
+//#endregion
+//#region node_modules/engine.io-parser/build/cjs/decodePacket.js
+var require_decodePacket = /* @__PURE__ */ __commonJSMin(((exports) => {
+	Object.defineProperty(exports, "__esModule", { value: true });
+	exports.decodePacket = void 0;
+	var commons_js_1 = require_commons();
+	var decodePacket = (encodedPacket, binaryType) => {
+		if (typeof encodedPacket !== "string") return {
 			type: "message",
-			data: n(e, r)
+			data: mapBinary(encodedPacket, binaryType)
 		};
-		let i = e.charAt(0);
-		return i === "b" ? {
+		const type = encodedPacket.charAt(0);
+		if (type === "b") return {
 			type: "message",
-			data: n(Buffer.from(e.substring(1), "base64"), r)
-		} : t.PACKET_TYPES_REVERSE[i] ? e.length > 1 ? {
-			type: t.PACKET_TYPES_REVERSE[i],
-			data: e.substring(1)
-		} : { type: t.PACKET_TYPES_REVERSE[i] } : t.ERROR_PACKET;
+			data: mapBinary(Buffer.from(encodedPacket.substring(1), "base64"), binaryType)
+		};
+		if (!commons_js_1.PACKET_TYPES_REVERSE[type]) return commons_js_1.ERROR_PACKET;
+		return encodedPacket.length > 1 ? {
+			type: commons_js_1.PACKET_TYPES_REVERSE[type],
+			data: encodedPacket.substring(1)
+		} : { type: commons_js_1.PACKET_TYPES_REVERSE[type] };
 	};
-	var n = (e, t) => {
-		switch (t) {
-			case "arraybuffer": return e instanceof ArrayBuffer ? e : Buffer.isBuffer(e) ? e.buffer.slice(e.byteOffset, e.byteOffset + e.byteLength) : e.buffer;
-			default: return Buffer.isBuffer(e) ? e : Buffer.from(e);
+	exports.decodePacket = decodePacket;
+	var mapBinary = (data, binaryType) => {
+		switch (binaryType) {
+			case "arraybuffer": if (data instanceof ArrayBuffer) return data;
+			else if (Buffer.isBuffer(data)) return data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength);
+			else return data.buffer;
+			default: if (Buffer.isBuffer(data)) return data;
+			else return Buffer.from(data);
 		}
 	};
-})), P = /* @__PURE__ */ p(((e) => {
-	Object.defineProperty(e, "__esModule", { value: !0 }), e.decodePayload = e.decodePacket = e.encodePayload = e.encodePacket = e.protocol = void 0, e.createPacketEncoderStream = a, e.createPacketDecoderStream = l;
-	var t = M();
-	Object.defineProperty(e, "encodePacket", {
-		enumerable: !0,
+}));
+//#endregion
+//#region node_modules/engine.io-parser/build/cjs/index.js
+var require_cjs$1 = /* @__PURE__ */ __commonJSMin(((exports) => {
+	Object.defineProperty(exports, "__esModule", { value: true });
+	exports.decodePayload = exports.decodePacket = exports.encodePayload = exports.encodePacket = exports.protocol = void 0;
+	exports.createPacketEncoderStream = createPacketEncoderStream;
+	exports.createPacketDecoderStream = createPacketDecoderStream;
+	var encodePacket_js_1 = require_encodePacket();
+	Object.defineProperty(exports, "encodePacket", {
+		enumerable: true,
 		get: function() {
-			return t.encodePacket;
+			return encodePacket_js_1.encodePacket;
 		}
 	});
-	var n = N();
-	Object.defineProperty(e, "decodePacket", {
-		enumerable: !0,
+	var decodePacket_js_1 = require_decodePacket();
+	Object.defineProperty(exports, "decodePacket", {
+		enumerable: true,
 		get: function() {
-			return n.decodePacket;
+			return decodePacket_js_1.decodePacket;
 		}
 	});
-	var r = j(), i = "";
-	e.encodePayload = (e, n) => {
-		let r = e.length, a = Array(r), o = 0;
-		e.forEach((e, s) => {
-			(0, t.encodePacket)(e, !1, (e) => {
-				a[s] = e, ++o === r && n(a.join(i));
+	var commons_js_1 = require_commons();
+	var SEPARATOR = String.fromCharCode(30);
+	var encodePayload = (packets, callback) => {
+		const length = packets.length;
+		const encodedPackets = new Array(length);
+		let count = 0;
+		packets.forEach((packet, i) => {
+			(0, encodePacket_js_1.encodePacket)(packet, false, (encodedPacket) => {
+				encodedPackets[i] = encodedPacket;
+				if (++count === length) callback(encodedPackets.join(SEPARATOR));
 			});
 		});
-	}, e.decodePayload = (e, t) => {
-		let r = e.split(i), a = [];
-		for (let e = 0; e < r.length; e++) {
-			let i = (0, n.decodePacket)(r[e], t);
-			if (a.push(i), i.type === "error") break;
-		}
-		return a;
 	};
-	function a() {
-		return new TransformStream({ transform(e, n) {
-			(0, t.encodePacketToBinary)(e, (t) => {
-				let r = t.length, i;
-				if (r < 126) i = /* @__PURE__ */ new Uint8Array(1), new DataView(i.buffer).setUint8(0, r);
-				else if (r < 65536) {
-					i = /* @__PURE__ */ new Uint8Array(3);
-					let e = new DataView(i.buffer);
-					e.setUint8(0, 126), e.setUint16(1, r);
+	exports.encodePayload = encodePayload;
+	var decodePayload = (encodedPayload, binaryType) => {
+		const encodedPackets = encodedPayload.split(SEPARATOR);
+		const packets = [];
+		for (let i = 0; i < encodedPackets.length; i++) {
+			const decodedPacket = (0, decodePacket_js_1.decodePacket)(encodedPackets[i], binaryType);
+			packets.push(decodedPacket);
+			if (decodedPacket.type === "error") break;
+		}
+		return packets;
+	};
+	exports.decodePayload = decodePayload;
+	function createPacketEncoderStream() {
+		return new TransformStream({ transform(packet, controller) {
+			(0, encodePacket_js_1.encodePacketToBinary)(packet, (encodedPacket) => {
+				const payloadLength = encodedPacket.length;
+				let header;
+				if (payloadLength < 126) {
+					header = /* @__PURE__ */ new Uint8Array(1);
+					new DataView(header.buffer).setUint8(0, payloadLength);
+				} else if (payloadLength < 65536) {
+					header = /* @__PURE__ */ new Uint8Array(3);
+					const view = new DataView(header.buffer);
+					view.setUint8(0, 126);
+					view.setUint16(1, payloadLength);
 				} else {
-					i = /* @__PURE__ */ new Uint8Array(9);
-					let e = new DataView(i.buffer);
-					e.setUint8(0, 127), e.setBigUint64(1, BigInt(r));
+					header = /* @__PURE__ */ new Uint8Array(9);
+					const view = new DataView(header.buffer);
+					view.setUint8(0, 127);
+					view.setBigUint64(1, BigInt(payloadLength));
 				}
-				e.data && typeof e.data != "string" && (i[0] |= 128), n.enqueue(i), n.enqueue(t);
+				if (packet.data && typeof packet.data !== "string") header[0] |= 128;
+				controller.enqueue(header);
+				controller.enqueue(encodedPacket);
 			});
 		} });
 	}
-	var o;
-	function s(e) {
-		return e.reduce((e, t) => e + t.length, 0);
+	var TEXT_DECODER;
+	function totalLength(chunks) {
+		return chunks.reduce((acc, chunk) => acc + chunk.length, 0);
 	}
-	function c(e, t) {
-		if (e[0].length === t) return e.shift();
-		let n = new Uint8Array(t), r = 0;
-		for (let i = 0; i < t; i++) n[i] = e[0][r++], r === e[0].length && (e.shift(), r = 0);
-		return e.length && r < e[0].length && (e[0] = e[0].slice(r)), n;
+	function concatChunks(chunks, size) {
+		if (chunks[0].length === size) return chunks.shift();
+		const buffer = new Uint8Array(size);
+		let j = 0;
+		for (let i = 0; i < size; i++) {
+			buffer[i] = chunks[0][j++];
+			if (j === chunks[0].length) {
+				chunks.shift();
+				j = 0;
+			}
+		}
+		if (chunks.length && j < chunks[0].length) chunks[0] = chunks[0].slice(j);
+		return buffer;
 	}
-	function l(e, t) {
-		o ||= new TextDecoder();
-		let i = [], a = 0, l = -1, u = !1;
-		return new TransformStream({ transform(d, f) {
-			for (i.push(d);;) {
-				if (a === 0) {
-					if (s(i) < 1) break;
-					let e = c(i, 1);
-					u = (e[0] & 128) == 128, l = e[0] & 127, a = l < 126 ? 3 : l === 126 ? 1 : 2;
-				} else if (a === 1) {
-					if (s(i) < 2) break;
-					let e = c(i, 2);
-					l = new DataView(e.buffer, e.byteOffset, e.length).getUint16(0), a = 3;
-				} else if (a === 2) {
-					if (s(i) < 8) break;
-					let e = c(i, 8), t = new DataView(e.buffer, e.byteOffset, e.length), n = t.getUint32(0);
-					if (n > 2 ** 21 - 1) {
-						f.enqueue(r.ERROR_PACKET);
+	function createPacketDecoderStream(maxPayload, binaryType) {
+		if (!TEXT_DECODER) TEXT_DECODER = new TextDecoder();
+		const chunks = [];
+		let state = 0;
+		let expectedLength = -1;
+		let isBinary = false;
+		return new TransformStream({ transform(chunk, controller) {
+			chunks.push(chunk);
+			while (true) {
+				if (state === 0) {
+					if (totalLength(chunks) < 1) break;
+					const header = concatChunks(chunks, 1);
+					isBinary = (header[0] & 128) === 128;
+					expectedLength = header[0] & 127;
+					if (expectedLength < 126) state = 3;
+					else if (expectedLength === 126) state = 1;
+					else state = 2;
+				} else if (state === 1) {
+					if (totalLength(chunks) < 2) break;
+					const headerArray = concatChunks(chunks, 2);
+					expectedLength = new DataView(headerArray.buffer, headerArray.byteOffset, headerArray.length).getUint16(0);
+					state = 3;
+				} else if (state === 2) {
+					if (totalLength(chunks) < 8) break;
+					const headerArray = concatChunks(chunks, 8);
+					const view = new DataView(headerArray.buffer, headerArray.byteOffset, headerArray.length);
+					const n = view.getUint32(0);
+					if (n > Math.pow(2, 21) - 1) {
+						controller.enqueue(commons_js_1.ERROR_PACKET);
 						break;
 					}
-					l = n * 2 ** 32 + t.getUint32(4), a = 3;
+					expectedLength = n * Math.pow(2, 32) + view.getUint32(4);
+					state = 3;
 				} else {
-					if (s(i) < l) break;
-					let e = c(i, l);
-					f.enqueue((0, n.decodePacket)(u ? e : o.decode(e), t)), a = 0;
+					if (totalLength(chunks) < expectedLength) break;
+					const data = concatChunks(chunks, expectedLength);
+					controller.enqueue((0, decodePacket_js_1.decodePacket)(isBinary ? data : TEXT_DECODER.decode(data), binaryType));
+					state = 0;
 				}
-				if (l === 0 || l > e) {
-					f.enqueue(r.ERROR_PACKET);
+				if (expectedLength === 0 || expectedLength > maxPayload) {
+					controller.enqueue(commons_js_1.ERROR_PACKET);
 					break;
 				}
 			}
 		} });
 	}
-	e.protocol = 4;
-})), F = /* @__PURE__ */ p(((e, t) => {
-	var n = String.fromCharCode;
-	function r(e) {
-		for (var t = [], n = 0, r = e.length, i, a; n < r;) i = e.charCodeAt(n++), i >= 55296 && i <= 56319 && n < r ? (a = e.charCodeAt(n++), (a & 64512) == 56320 ? t.push(((i & 1023) << 10) + (a & 1023) + 65536) : (t.push(i), n--)) : t.push(i);
-		return t;
-	}
-	function i(e) {
-		for (var t = e.length, r = -1, i, a = ""; ++r < t;) i = e[r], i > 65535 && (i -= 65536, a += n(i >>> 10 & 1023 | 55296), i = 56320 | i & 1023), a += n(i);
-		return a;
-	}
-	function a(e, t) {
-		if (e >= 55296 && e <= 57343) {
-			if (t) throw Error("Lone surrogate U+" + e.toString(16).toUpperCase() + " is not a scalar value");
-			return !1;
+	exports.protocol = 4;
+}));
+//#endregion
+//#region node_modules/engine.io/build/parser-v3/utf8.js
+var require_utf8 = /* @__PURE__ */ __commonJSMin(((exports, module) => {
+	/*! https://mths.be/utf8js v2.1.2 by @mathias */
+	var stringFromCharCode = String.fromCharCode;
+	function ucs2decode(string) {
+		var output = [];
+		var counter = 0;
+		var length = string.length;
+		var value;
+		var extra;
+		while (counter < length) {
+			value = string.charCodeAt(counter++);
+			if (value >= 55296 && value <= 56319 && counter < length) {
+				extra = string.charCodeAt(counter++);
+				if ((extra & 64512) == 56320) output.push(((value & 1023) << 10) + (extra & 1023) + 65536);
+				else {
+					output.push(value);
+					counter--;
+				}
+			} else output.push(value);
 		}
-		return !0;
+		return output;
 	}
-	function o(e, t) {
-		return n(e >> t & 63 | 128);
+	function ucs2encode(array) {
+		var length = array.length;
+		var index = -1;
+		var value;
+		var output = "";
+		while (++index < length) {
+			value = array[index];
+			if (value > 65535) {
+				value -= 65536;
+				output += stringFromCharCode(value >>> 10 & 1023 | 55296);
+				value = 56320 | value & 1023;
+			}
+			output += stringFromCharCode(value);
+		}
+		return output;
 	}
-	function s(e, t) {
-		if (!(e & 4294967168)) return n(e);
-		var r = "";
-		return e & 4294965248 ? e & 4294901760 ? e & 4292870144 || (r = n(e >> 18 & 7 | 240), r += o(e, 12), r += o(e, 6)) : (a(e, t) || (e = 65533), r = n(e >> 12 & 15 | 224), r += o(e, 6)) : r = n(e >> 6 & 31 | 192), r += n(e & 63 | 128), r;
+	function checkScalarValue(codePoint, strict) {
+		if (codePoint >= 55296 && codePoint <= 57343) {
+			if (strict) throw Error("Lone surrogate U+" + codePoint.toString(16).toUpperCase() + " is not a scalar value");
+			return false;
+		}
+		return true;
 	}
-	function c(e, t) {
-		t ||= {};
-		for (var n = !1 !== t.strict, i = r(e), a = i.length, o = -1, c, l = ""; ++o < a;) c = i[o], l += s(c, n);
-		return l;
+	function createByte(codePoint, shift) {
+		return stringFromCharCode(codePoint >> shift & 63 | 128);
 	}
-	function l() {
-		if (p >= f) throw Error("Invalid byte index");
-		var e = d[p] & 255;
-		if (p++, (e & 192) == 128) return e & 63;
+	function encodeCodePoint(codePoint, strict) {
+		if ((codePoint & 4294967168) == 0) return stringFromCharCode(codePoint);
+		var symbol = "";
+		if ((codePoint & 4294965248) == 0) symbol = stringFromCharCode(codePoint >> 6 & 31 | 192);
+		else if ((codePoint & 4294901760) == 0) {
+			if (!checkScalarValue(codePoint, strict)) codePoint = 65533;
+			symbol = stringFromCharCode(codePoint >> 12 & 15 | 224);
+			symbol += createByte(codePoint, 6);
+		} else if ((codePoint & 4292870144) == 0) {
+			symbol = stringFromCharCode(codePoint >> 18 & 7 | 240);
+			symbol += createByte(codePoint, 12);
+			symbol += createByte(codePoint, 6);
+		}
+		symbol += stringFromCharCode(codePoint & 63 | 128);
+		return symbol;
+	}
+	function utf8encode(string, opts) {
+		opts = opts || {};
+		var strict = false !== opts.strict;
+		var codePoints = ucs2decode(string);
+		var length = codePoints.length;
+		var index = -1;
+		var codePoint;
+		var byteString = "";
+		while (++index < length) {
+			codePoint = codePoints[index];
+			byteString += encodeCodePoint(codePoint, strict);
+		}
+		return byteString;
+	}
+	function readContinuationByte() {
+		if (byteIndex >= byteCount) throw Error("Invalid byte index");
+		var continuationByte = byteArray[byteIndex] & 255;
+		byteIndex++;
+		if ((continuationByte & 192) == 128) return continuationByte & 63;
 		throw Error("Invalid continuation byte");
 	}
-	function u(e) {
-		var t, n, r, i, o;
-		if (p > f) throw Error("Invalid byte index");
-		if (p == f) return !1;
-		if (t = d[p] & 255, p++, !(t & 128)) return t;
-		if ((t & 224) == 192) {
-			if (n = l(), o = (t & 31) << 6 | n, o >= 128) return o;
-			throw Error("Invalid continuation byte");
+	function decodeSymbol(strict) {
+		var byte1;
+		var byte2;
+		var byte3;
+		var byte4;
+		var codePoint;
+		if (byteIndex > byteCount) throw Error("Invalid byte index");
+		if (byteIndex == byteCount) return false;
+		byte1 = byteArray[byteIndex] & 255;
+		byteIndex++;
+		if ((byte1 & 128) == 0) return byte1;
+		if ((byte1 & 224) == 192) {
+			byte2 = readContinuationByte();
+			codePoint = (byte1 & 31) << 6 | byte2;
+			if (codePoint >= 128) return codePoint;
+			else throw Error("Invalid continuation byte");
 		}
-		if ((t & 240) == 224) {
-			if (n = l(), r = l(), o = (t & 15) << 12 | n << 6 | r, o >= 2048) return a(o, e) ? o : 65533;
-			throw Error("Invalid continuation byte");
+		if ((byte1 & 240) == 224) {
+			byte2 = readContinuationByte();
+			byte3 = readContinuationByte();
+			codePoint = (byte1 & 15) << 12 | byte2 << 6 | byte3;
+			if (codePoint >= 2048) return checkScalarValue(codePoint, strict) ? codePoint : 65533;
+			else throw Error("Invalid continuation byte");
 		}
-		if ((t & 248) == 240 && (n = l(), r = l(), i = l(), o = (t & 7) << 18 | n << 12 | r << 6 | i, o >= 65536 && o <= 1114111)) return o;
+		if ((byte1 & 248) == 240) {
+			byte2 = readContinuationByte();
+			byte3 = readContinuationByte();
+			byte4 = readContinuationByte();
+			codePoint = (byte1 & 7) << 18 | byte2 << 12 | byte3 << 6 | byte4;
+			if (codePoint >= 65536 && codePoint <= 1114111) return codePoint;
+		}
 		throw Error("Invalid UTF-8 detected");
 	}
-	var d, f, p;
-	function m(e, t) {
-		t ||= {};
-		var n = !1 !== t.strict;
-		d = r(e), f = d.length, p = 0;
-		for (var a = [], o; (o = u(n)) !== !1;) a.push(o);
-		return i(a);
+	var byteArray;
+	var byteCount;
+	var byteIndex;
+	function utf8decode(byteString, opts) {
+		opts = opts || {};
+		var strict = false !== opts.strict;
+		byteArray = ucs2decode(byteString);
+		byteCount = byteArray.length;
+		byteIndex = 0;
+		var codePoints = [];
+		var tmp;
+		while ((tmp = decodeSymbol(strict)) !== false) codePoints.push(tmp);
+		return ucs2encode(codePoints);
 	}
-	t.exports = {
+	module.exports = {
 		version: "2.1.2",
-		encode: c,
-		decode: m
+		encode: utf8encode,
+		decode: utf8decode
 	};
-})), ee = /* @__PURE__ */ p(((e) => {
-	Object.defineProperty(e, "__esModule", { value: !0 }), e.packets = e.protocol = void 0, e.encodePacket = o, e.encodeBase64Packet = c, e.decodePacket = l, e.decodeBase64Packet = d, e.encodePayload = f, e.decodePayload = h, e.encodePayloadAsBinary = y, e.decodePayloadAsBinary = x;
-	var t = F();
-	e.protocol = 3;
-	var n = (e) => {
-		for (let t of e) if (t.data instanceof ArrayBuffer || ArrayBuffer.isView(t.data)) return !0;
-		return !1;
+}));
+//#endregion
+//#region node_modules/engine.io/build/parser-v3/index.js
+var require_parser_v3 = /* @__PURE__ */ __commonJSMin(((exports) => {
+	Object.defineProperty(exports, "__esModule", { value: true });
+	exports.packets = exports.protocol = void 0;
+	exports.encodePacket = encodePacket;
+	exports.encodeBase64Packet = encodeBase64Packet;
+	exports.decodePacket = decodePacket;
+	exports.decodeBase64Packet = decodeBase64Packet;
+	exports.encodePayload = encodePayload;
+	exports.decodePayload = decodePayload;
+	exports.encodePayloadAsBinary = encodePayloadAsBinary;
+	exports.decodePayloadAsBinary = decodePayloadAsBinary;
+	/**
+	* Module dependencies.
+	*/
+	var utf8 = require_utf8();
+	/**
+	* Current protocol version.
+	*/
+	exports.protocol = 3;
+	var hasBinary = (packets) => {
+		for (const packet of packets) if (packet.data instanceof ArrayBuffer || ArrayBuffer.isView(packet.data)) return true;
+		return false;
 	};
-	e.packets = {
+	/**
+	* Packet types.
+	*/
+	exports.packets = {
 		open: 0,
 		close: 1,
 		ping: 2,
@@ -7747,397 +8513,927 @@ var o = Object.create, s = Object.defineProperty, c = Object.getOwnPropertyDescr
 		upgrade: 5,
 		noop: 6
 	};
-	var r = Object.keys(e.packets), i = {
+	var packetslist = Object.keys(exports.packets);
+	/**
+	* Premade error packet.
+	*/
+	var err = {
 		type: "error",
 		data: "parser error"
-	}, a = Buffer.concat([]);
-	function o(n, r, i, a) {
-		if (typeof r == "function" && (a = r, r = null), typeof i == "function" && (a = i, i = null), Buffer.isBuffer(n.data)) return s(n, r, a);
-		if (n.data && (n.data.buffer || n.data) instanceof ArrayBuffer) return s({
-			type: n.type,
-			data: v(n.data)
-		}, r, a);
-		var o = e.packets[n.type];
-		return n.data !== void 0 && (o += i ? t.encode(String(n.data), { strict: !1 }) : String(n.data)), a("" + o);
+	};
+	var EMPTY_BUFFER = Buffer.concat([]);
+	/**
+	* Encodes a packet.
+	*
+	*     <packet type id> [ <data> ]
+	*
+	* Example:
+	*
+	*     5hello world
+	*     3
+	*     4
+	*
+	* Binary is encoded in an identical principle
+	*
+	* @api private
+	*/
+	function encodePacket(packet, supportsBinary, utf8encode, callback) {
+		if (typeof supportsBinary === "function") {
+			callback = supportsBinary;
+			supportsBinary = null;
+		}
+		if (typeof utf8encode === "function") {
+			callback = utf8encode;
+			utf8encode = null;
+		}
+		if (Buffer.isBuffer(packet.data)) return encodeBuffer(packet, supportsBinary, callback);
+		else if (packet.data && (packet.data.buffer || packet.data) instanceof ArrayBuffer) return encodeBuffer({
+			type: packet.type,
+			data: arrayBufferToBuffer(packet.data)
+		}, supportsBinary, callback);
+		var encoded = exports.packets[packet.type];
+		if (void 0 !== packet.data) encoded += utf8encode ? utf8.encode(String(packet.data), { strict: false }) : String(packet.data);
+		return callback("" + encoded);
 	}
-	function s(t, n, r) {
-		if (!n) return c(t, r);
-		var i = t.data, a = Buffer.allocUnsafe(1);
-		return a[0] = e.packets[t.type], r(Buffer.concat([a, i]));
+	/**
+	* Encode Buffer data
+	*/
+	function encodeBuffer(packet, supportsBinary, callback) {
+		if (!supportsBinary) return encodeBase64Packet(packet, callback);
+		var data = packet.data;
+		var typeBuffer = Buffer.allocUnsafe(1);
+		typeBuffer[0] = exports.packets[packet.type];
+		return callback(Buffer.concat([typeBuffer, data]));
 	}
-	function c(t, n) {
-		var r = Buffer.isBuffer(t.data) ? t.data : v(t.data), i = "b" + e.packets[t.type];
-		return i += r.toString("base64"), n(i);
+	/**
+	* Encodes a packet with binary data in a base64 string
+	*
+	* @param {Object} packet, has `type` and `data`
+	* @return {String} base64 encoded message
+	*/
+	function encodeBase64Packet(packet, callback) {
+		var data = Buffer.isBuffer(packet.data) ? packet.data : arrayBufferToBuffer(packet.data);
+		var message = "b" + exports.packets[packet.type];
+		message += data.toString("base64");
+		return callback(message);
 	}
-	function l(e, t, n) {
-		if (e === void 0) return i;
-		let a;
-		if (typeof e == "string") return a = e.charAt(0), a === "b" ? d(e.slice(1), t) : n && (e = u(e), e === !1) || Number(a) != a || !r[a] ? i : e.length > 1 ? {
-			type: r[a],
-			data: e.slice(1)
-		} : { type: r[a] };
-		if (t === "arraybuffer") {
-			var o = new Uint8Array(e);
-			return a = o[0], {
-				type: r[a],
-				data: o.buffer.slice(1)
+	/**
+	* Decodes a packet. Data also available as an ArrayBuffer if requested.
+	*
+	* @return {import('engine.io-parser').Packet} with `type` and `data` (if any)
+	* @api private
+	*/
+	function decodePacket(data, binaryType, utf8decode) {
+		if (data === void 0) return err;
+		let type;
+		if (typeof data === "string") {
+			type = data.charAt(0);
+			if (type === "b") return decodeBase64Packet(data.slice(1), binaryType);
+			if (utf8decode) {
+				data = tryDecode(data);
+				if (data === false) return err;
+			}
+			if (Number(type) != type || !packetslist[type]) return err;
+			if (data.length > 1) return {
+				type: packetslist[type],
+				data: data.slice(1)
+			};
+			else return { type: packetslist[type] };
+		}
+		if (binaryType === "arraybuffer") {
+			var intArray = new Uint8Array(data);
+			type = intArray[0];
+			return {
+				type: packetslist[type],
+				data: intArray.buffer.slice(1)
 			};
 		}
-		return e instanceof ArrayBuffer && (e = v(e)), a = e[0], {
-			type: r[a],
-			data: e.slice(1)
+		if (data instanceof ArrayBuffer) data = arrayBufferToBuffer(data);
+		type = data[0];
+		return {
+			type: packetslist[type],
+			data: data.slice(1)
 		};
 	}
-	function u(e) {
+	function tryDecode(data) {
 		try {
-			e = t.decode(e, { strict: !1 });
-		} catch {
-			return !1;
+			data = utf8.decode(data, { strict: false });
+		} catch (e) {
+			return false;
 		}
-		return e;
+		return data;
 	}
-	function d(e, t) {
-		var n = r[e.charAt(0)], i = Buffer.from(e.slice(1), "base64");
-		if (t === "arraybuffer") {
-			for (var a = new Uint8Array(i.length), o = 0; o < a.length; o++) a[o] = i[o];
-			i = a.buffer;
+	/**
+	* Decodes a packet encoded in a base64 string.
+	*
+	* @param {String} base64 encoded message
+	* @return {Object} with `type` and `data` (if any)
+	*/
+	function decodeBase64Packet(msg, binaryType) {
+		var type = packetslist[msg.charAt(0)];
+		var data = Buffer.from(msg.slice(1), "base64");
+		if (binaryType === "arraybuffer") {
+			var abv = new Uint8Array(data.length);
+			for (var i = 0; i < abv.length; i++) abv[i] = data[i];
+			data = abv.buffer;
 		}
 		return {
-			type: n,
-			data: i
+			type,
+			data
 		};
 	}
-	function f(e, t, r) {
-		if (typeof t == "function" && (r = t, t = null), t && n(e)) return y(e, r);
-		if (!e.length) return r("0:");
-		function i(e, n) {
-			o(e, t, !1, function(e) {
-				n(null, p(e));
+	/**
+	* Encodes multiple messages (payload).
+	*
+	*     <length>:data
+	*
+	* Example:
+	*
+	*     11:hello world2:hi
+	*
+	* If any contents are binary, they will be encoded as base64 strings. Base64
+	* encoded strings are marked with a b before the length specifier
+	*
+	* @param {Array} packets
+	* @api private
+	*/
+	function encodePayload(packets, supportsBinary, callback) {
+		if (typeof supportsBinary === "function") {
+			callback = supportsBinary;
+			supportsBinary = null;
+		}
+		if (supportsBinary && hasBinary(packets)) return encodePayloadAsBinary(packets, callback);
+		if (!packets.length) return callback("0:");
+		function encodeOne(packet, doneCallback) {
+			encodePacket(packet, supportsBinary, false, function(message) {
+				doneCallback(null, setLengthHeader(message));
 			});
 		}
-		m(e, i, function(e, t) {
-			return r(t.join(""));
+		map(packets, encodeOne, function(err, results) {
+			return callback(results.join(""));
 		});
 	}
-	function p(e) {
-		return e.length + ":" + e;
+	function setLengthHeader(message) {
+		return message.length + ":" + message;
 	}
-	function m(e, t, n) {
-		let r = Array(e.length), i = 0;
-		for (let a = 0; a < e.length; a++) t(e[a], (t, o) => {
-			r[a] = o, ++i === e.length && n(null, r);
+	/**
+	* Async array map using after
+	*/
+	function map(ary, each, done) {
+		const results = new Array(ary.length);
+		let count = 0;
+		for (let i = 0; i < ary.length; i++) each(ary[i], (error, msg) => {
+			results[i] = msg;
+			if (++count === ary.length) done(null, results);
 		});
 	}
-	function h(e, t, n) {
-		if (typeof e != "string") return x(e, t, n);
-		if (typeof t == "function" && (n = t, t = null), e === "") return n(i, 0, 1);
-		for (var r = "", a, o, s, c = 0, u = e.length; c < u; c++) {
-			var d = e.charAt(c);
-			if (d !== ":") {
-				r += d;
+	function decodePayload(data, binaryType, callback) {
+		if (typeof data !== "string") return decodePayloadAsBinary(data, binaryType, callback);
+		if (typeof binaryType === "function") {
+			callback = binaryType;
+			binaryType = null;
+		}
+		if (data === "") return callback(err, 0, 1);
+		var length = "", n, msg, packet;
+		for (var i = 0, l = data.length; i < l; i++) {
+			var chr = data.charAt(i);
+			if (chr !== ":") {
+				length += chr;
 				continue;
 			}
-			if (r === "" || r != (a = Number(r)) || (o = e.slice(c + 1, c + 1 + a), r != o.length)) return n(i, 0, 1);
-			if (o.length) {
-				if (s = l(o, t, !1), i.type === s.type && i.data === s.data) return n(i, 0, 1);
-				if (!1 === n(s, c + a, u)) return;
+			if (length === "" || length != (n = Number(length))) return callback(err, 0, 1);
+			msg = data.slice(i + 1, i + 1 + n);
+			if (length != msg.length) return callback(err, 0, 1);
+			if (msg.length) {
+				packet = decodePacket(msg, binaryType, false);
+				if (err.type === packet.type && err.data === packet.data) return callback(err, 0, 1);
+				if (false === callback(packet, i + n, l)) return;
 			}
-			c += a, r = "";
+			i += n;
+			length = "";
 		}
-		if (r !== "") return n(i, 0, 1);
+		if (length !== "") return callback(err, 0, 1);
 	}
-	function g(e) {
-		for (var t = "", n = 0, r = e.length; n < r; n++) t += String.fromCharCode(e[n]);
-		return t;
+	/**
+	*
+	* Converts a buffer to a utf8.js encoded string
+	*
+	* @api private
+	*/
+	function bufferToString(buffer) {
+		var str = "";
+		for (var i = 0, l = buffer.length; i < l; i++) str += String.fromCharCode(buffer[i]);
+		return str;
 	}
-	function _(e) {
-		for (var t = Buffer.allocUnsafe(e.length), n = 0, r = e.length; n < r; n++) t.writeUInt8(e.charCodeAt(n), n);
-		return t;
+	/**
+	*
+	* Converts a utf8.js encoded string to a buffer
+	*
+	* @api private
+	*/
+	function stringToBuffer(string) {
+		var buf = Buffer.allocUnsafe(string.length);
+		for (var i = 0, l = string.length; i < l; i++) buf.writeUInt8(string.charCodeAt(i), i);
+		return buf;
 	}
-	function v(e) {
-		var t = e.byteLength || e.length, n = e.byteOffset || 0;
-		return Buffer.from(e.buffer || e, n, t);
+	/**
+	*
+	* Converts an ArrayBuffer to a Buffer
+	*
+	* @api private
+	*/
+	function arrayBufferToBuffer(data) {
+		var length = data.byteLength || data.length;
+		var offset = data.byteOffset || 0;
+		return Buffer.from(data.buffer || data, offset, length);
 	}
-	function y(e, t) {
-		if (!e.length) return t(a);
-		m(e, b, function(e, n) {
-			return t(Buffer.concat(n));
+	/**
+	* Encodes multiple messages (payload) as binary.
+	*
+	* <1 = binary, 0 = string><number from 0-9><number from 0-9>[...]<number
+	* 255><data>
+	*
+	* Example:
+	* 1 3 255 1 2 3, if the binary contents are interpreted as 8 bit integers
+	*
+	* @param {Array} packets
+	* @return {Buffer} encoded payload
+	* @api private
+	*/
+	function encodePayloadAsBinary(packets, callback) {
+		if (!packets.length) return callback(EMPTY_BUFFER);
+		map(packets, encodeOneBinaryPacket, function(err, results) {
+			return callback(Buffer.concat(results));
 		});
 	}
-	function b(e, t) {
-		function n(e) {
-			var n = "" + e.length, r;
-			if (typeof e == "string") {
-				r = Buffer.allocUnsafe(n.length + 2), r[0] = 0;
-				for (var i = 0; i < n.length; i++) r[i + 1] = parseInt(n[i], 10);
-				return r[r.length - 1] = 255, t(null, Buffer.concat([r, _(e)]));
+	function encodeOneBinaryPacket(p, doneCallback) {
+		function onBinaryPacketEncode(packet) {
+			var encodingLength = "" + packet.length;
+			var sizeBuffer;
+			if (typeof packet === "string") {
+				sizeBuffer = Buffer.allocUnsafe(encodingLength.length + 2);
+				sizeBuffer[0] = 0;
+				for (var i = 0; i < encodingLength.length; i++) sizeBuffer[i + 1] = parseInt(encodingLength[i], 10);
+				sizeBuffer[sizeBuffer.length - 1] = 255;
+				return doneCallback(null, Buffer.concat([sizeBuffer, stringToBuffer(packet)]));
 			}
-			r = Buffer.allocUnsafe(n.length + 2), r[0] = 1;
-			for (var i = 0; i < n.length; i++) r[i + 1] = parseInt(n[i], 10);
-			r[r.length - 1] = 255, t(null, Buffer.concat([r, e]));
+			sizeBuffer = Buffer.allocUnsafe(encodingLength.length + 2);
+			sizeBuffer[0] = 1;
+			for (var i = 0; i < encodingLength.length; i++) sizeBuffer[i + 1] = parseInt(encodingLength[i], 10);
+			sizeBuffer[sizeBuffer.length - 1] = 255;
+			doneCallback(null, Buffer.concat([sizeBuffer, packet]));
 		}
-		o(e, !0, !0, n);
+		encodePacket(p, true, true, onBinaryPacketEncode);
 	}
-	function x(e, t, n) {
-		typeof t == "function" && (n = t, t = null);
-		for (var r = e, a = [], o; r.length > 0;) {
-			var s = "", c = r[0] === 0;
-			for (o = 1; r[o] !== 255; o++) {
-				if (s.length > 310) return n(i, 0, 1);
-				s += "" + r[o];
+	function decodePayloadAsBinary(data, binaryType, callback) {
+		if (typeof binaryType === "function") {
+			callback = binaryType;
+			binaryType = null;
+		}
+		var bufferTail = data;
+		var buffers = [];
+		var i;
+		while (bufferTail.length > 0) {
+			var strLen = "";
+			var isString = bufferTail[0] === 0;
+			for (i = 1;; i++) {
+				if (bufferTail[i] === 255) break;
+				if (strLen.length > 310) return callback(err, 0, 1);
+				strLen += "" + bufferTail[i];
 			}
-			r = r.slice(s.length + 1);
-			var u = parseInt(s, 10), d = r.slice(1, u + 1);
-			c && (d = g(d)), a.push(d), r = r.slice(u + 1);
+			bufferTail = bufferTail.slice(strLen.length + 1);
+			var msgLength = parseInt(strLen, 10);
+			var msg = bufferTail.slice(1, msgLength + 1);
+			if (isString) msg = bufferToString(msg);
+			buffers.push(msg);
+			bufferTail = bufferTail.slice(msgLength + 1);
 		}
-		var f = a.length;
-		for (o = 0; o < f; o++) {
-			var p = a[o];
-			n(l(p, t, !0), o, f);
+		var total = buffers.length;
+		for (i = 0; i < total; i++) {
+			var buffer = buffers[i];
+			callback(decodePacket(buffer, binaryType, true), i, total);
 		}
 	}
-})), I = /* @__PURE__ */ p(((e, t) => {
-	var n = 1e3, r = n * 60, i = r * 60, a = i * 24, o = a * 7, s = a * 365.25;
-	t.exports = function(e, t) {
-		t ||= {};
-		var n = typeof e;
-		if (n === "string" && e.length > 0) return c(e);
-		if (n === "number" && isFinite(e)) return t.long ? u(e) : l(e);
-		throw Error("val is not a non-empty string or a valid number. val=" + JSON.stringify(e));
+}));
+//#endregion
+//#region node_modules/ms/index.js
+var require_ms = /* @__PURE__ */ __commonJSMin(((exports, module) => {
+	/**
+	* Helpers.
+	*/
+	var s = 1e3;
+	var m = s * 60;
+	var h = m * 60;
+	var d = h * 24;
+	var w = d * 7;
+	var y = d * 365.25;
+	/**
+	* Parse or format the given `val`.
+	*
+	* Options:
+	*
+	*  - `long` verbose formatting [false]
+	*
+	* @param {String|Number} val
+	* @param {Object} [options]
+	* @throws {Error} throw an error if val is not a non-empty string or a number
+	* @return {String|Number}
+	* @api public
+	*/
+	module.exports = function(val, options) {
+		options = options || {};
+		var type = typeof val;
+		if (type === "string" && val.length > 0) return parse(val);
+		else if (type === "number" && isFinite(val)) return options.long ? fmtLong(val) : fmtShort(val);
+		throw new Error("val is not a non-empty string or a valid number. val=" + JSON.stringify(val));
 	};
-	function c(e) {
-		if (e = String(e), !(e.length > 100)) {
-			var t = /^(-?(?:\d+)?\.?\d+) *(milliseconds?|msecs?|ms|seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|weeks?|w|years?|yrs?|y)?$/i.exec(e);
-			if (t) {
-				var c = parseFloat(t[1]);
-				switch ((t[2] || "ms").toLowerCase()) {
-					case "years":
-					case "year":
-					case "yrs":
-					case "yr":
-					case "y": return c * s;
-					case "weeks":
-					case "week":
-					case "w": return c * o;
-					case "days":
-					case "day":
-					case "d": return c * a;
-					case "hours":
-					case "hour":
-					case "hrs":
-					case "hr":
-					case "h": return c * i;
-					case "minutes":
-					case "minute":
-					case "mins":
-					case "min":
-					case "m": return c * r;
-					case "seconds":
-					case "second":
-					case "secs":
-					case "sec":
-					case "s": return c * n;
-					case "milliseconds":
-					case "millisecond":
-					case "msecs":
-					case "msec":
-					case "ms": return c;
-					default: return;
-				}
+	/**
+	* Parse the given `str` and return milliseconds.
+	*
+	* @param {String} str
+	* @return {Number}
+	* @api private
+	*/
+	function parse(str) {
+		str = String(str);
+		if (str.length > 100) return;
+		var match = /^(-?(?:\d+)?\.?\d+) *(milliseconds?|msecs?|ms|seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|weeks?|w|years?|yrs?|y)?$/i.exec(str);
+		if (!match) return;
+		var n = parseFloat(match[1]);
+		switch ((match[2] || "ms").toLowerCase()) {
+			case "years":
+			case "year":
+			case "yrs":
+			case "yr":
+			case "y": return n * y;
+			case "weeks":
+			case "week":
+			case "w": return n * w;
+			case "days":
+			case "day":
+			case "d": return n * d;
+			case "hours":
+			case "hour":
+			case "hrs":
+			case "hr":
+			case "h": return n * h;
+			case "minutes":
+			case "minute":
+			case "mins":
+			case "min":
+			case "m": return n * m;
+			case "seconds":
+			case "second":
+			case "secs":
+			case "sec":
+			case "s": return n * s;
+			case "milliseconds":
+			case "millisecond":
+			case "msecs":
+			case "msec":
+			case "ms": return n;
+			default: return;
+		}
+	}
+	/**
+	* Short format for `ms`.
+	*
+	* @param {Number} ms
+	* @return {String}
+	* @api private
+	*/
+	function fmtShort(ms) {
+		var msAbs = Math.abs(ms);
+		if (msAbs >= d) return Math.round(ms / d) + "d";
+		if (msAbs >= h) return Math.round(ms / h) + "h";
+		if (msAbs >= m) return Math.round(ms / m) + "m";
+		if (msAbs >= s) return Math.round(ms / s) + "s";
+		return ms + "ms";
+	}
+	/**
+	* Long format for `ms`.
+	*
+	* @param {Number} ms
+	* @return {String}
+	* @api private
+	*/
+	function fmtLong(ms) {
+		var msAbs = Math.abs(ms);
+		if (msAbs >= d) return plural(ms, msAbs, d, "day");
+		if (msAbs >= h) return plural(ms, msAbs, h, "hour");
+		if (msAbs >= m) return plural(ms, msAbs, m, "minute");
+		if (msAbs >= s) return plural(ms, msAbs, s, "second");
+		return ms + " ms";
+	}
+	/**
+	* Pluralization helper.
+	*/
+	function plural(ms, msAbs, n, name) {
+		var isPlural = msAbs >= n * 1.5;
+		return Math.round(ms / n) + " " + name + (isPlural ? "s" : "");
+	}
+}));
+//#endregion
+//#region node_modules/debug/src/common.js
+var require_common = /* @__PURE__ */ __commonJSMin(((exports, module) => {
+	/**
+	* This is the common logic for both the Node.js and web browser
+	* implementations of `debug()`.
+	*/
+	function setup(env) {
+		createDebug.debug = createDebug;
+		createDebug.default = createDebug;
+		createDebug.coerce = coerce;
+		createDebug.disable = disable;
+		createDebug.enable = enable;
+		createDebug.enabled = enabled;
+		createDebug.humanize = require_ms();
+		createDebug.destroy = destroy;
+		Object.keys(env).forEach((key) => {
+			createDebug[key] = env[key];
+		});
+		/**
+		* The currently active debug mode names, and names to skip.
+		*/
+		createDebug.names = [];
+		createDebug.skips = [];
+		/**
+		* Map of special "%n" handling functions, for the debug "format" argument.
+		*
+		* Valid key names are a single, lower or upper-case letter, i.e. "n" and "N".
+		*/
+		createDebug.formatters = {};
+		/**
+		* Selects a color for a debug namespace
+		* @param {String} namespace The namespace string for the debug instance to be colored
+		* @return {Number|String} An ANSI color code for the given namespace
+		* @api private
+		*/
+		function selectColor(namespace) {
+			let hash = 0;
+			for (let i = 0; i < namespace.length; i++) {
+				hash = (hash << 5) - hash + namespace.charCodeAt(i);
+				hash |= 0;
 			}
+			return createDebug.colors[Math.abs(hash) % createDebug.colors.length];
 		}
-	}
-	function l(e) {
-		var t = Math.abs(e);
-		return t >= a ? Math.round(e / a) + "d" : t >= i ? Math.round(e / i) + "h" : t >= r ? Math.round(e / r) + "m" : t >= n ? Math.round(e / n) + "s" : e + "ms";
-	}
-	function u(e) {
-		var t = Math.abs(e);
-		return t >= a ? d(e, t, a, "day") : t >= i ? d(e, t, i, "hour") : t >= r ? d(e, t, r, "minute") : t >= n ? d(e, t, n, "second") : e + " ms";
-	}
-	function d(e, t, n, r) {
-		var i = t >= n * 1.5;
-		return Math.round(e / n) + " " + r + (i ? "s" : "");
-	}
-})), te = /* @__PURE__ */ p(((e, t) => {
-	function n(e) {
-		n.debug = n, n.default = n, n.coerce = c, n.disable = o, n.enable = i, n.enabled = s, n.humanize = I(), n.destroy = l, Object.keys(e).forEach((t) => {
-			n[t] = e[t];
-		}), n.names = [], n.skips = [], n.formatters = {};
-		function t(e) {
-			let t = 0;
-			for (let n = 0; n < e.length; n++) t = (t << 5) - t + e.charCodeAt(n), t |= 0;
-			return n.colors[Math.abs(t) % n.colors.length];
-		}
-		n.selectColor = t;
-		function n(e) {
-			let t, i = null, a, o;
-			function s(...e) {
-				if (!s.enabled) return;
-				let r = s, i = Number(/* @__PURE__ */ new Date());
-				r.diff = i - (t || i), r.prev = t, r.curr = i, t = i, e[0] = n.coerce(e[0]), typeof e[0] != "string" && e.unshift("%O");
-				let a = 0;
-				e[0] = e[0].replace(/%([a-zA-Z%])/g, (t, i) => {
-					if (t === "%%") return "%";
-					a++;
-					let o = n.formatters[i];
-					if (typeof o == "function") {
-						let n = e[a];
-						t = o.call(r, n), e.splice(a, 1), a--;
+		createDebug.selectColor = selectColor;
+		/**
+		* Create a debugger with the given `namespace`.
+		*
+		* @param {String} namespace
+		* @return {Function}
+		* @api public
+		*/
+		function createDebug(namespace) {
+			let prevTime;
+			let enableOverride = null;
+			let namespacesCache;
+			let enabledCache;
+			function debug(...args) {
+				if (!debug.enabled) return;
+				const self = debug;
+				const curr = Number(/* @__PURE__ */ new Date());
+				self.diff = curr - (prevTime || curr);
+				self.prev = prevTime;
+				self.curr = curr;
+				prevTime = curr;
+				args[0] = createDebug.coerce(args[0]);
+				if (typeof args[0] !== "string") args.unshift("%O");
+				let index = 0;
+				args[0] = args[0].replace(/%([a-zA-Z%])/g, (match, format) => {
+					if (match === "%%") return "%";
+					index++;
+					const formatter = createDebug.formatters[format];
+					if (typeof formatter === "function") {
+						const val = args[index];
+						match = formatter.call(self, val);
+						args.splice(index, 1);
+						index--;
 					}
-					return t;
-				}), n.formatArgs.call(r, e), (r.log || n.log).apply(r, e);
+					return match;
+				});
+				createDebug.formatArgs.call(self, args);
+				(self.log || createDebug.log).apply(self, args);
 			}
-			return s.namespace = e, s.useColors = n.useColors(), s.color = n.selectColor(e), s.extend = r, s.destroy = n.destroy, Object.defineProperty(s, "enabled", {
-				enumerable: !0,
-				configurable: !1,
-				get: () => i === null ? (a !== n.namespaces && (a = n.namespaces, o = n.enabled(e)), o) : i,
-				set: (e) => {
-					i = e;
+			debug.namespace = namespace;
+			debug.useColors = createDebug.useColors();
+			debug.color = createDebug.selectColor(namespace);
+			debug.extend = extend;
+			debug.destroy = createDebug.destroy;
+			Object.defineProperty(debug, "enabled", {
+				enumerable: true,
+				configurable: false,
+				get: () => {
+					if (enableOverride !== null) return enableOverride;
+					if (namespacesCache !== createDebug.namespaces) {
+						namespacesCache = createDebug.namespaces;
+						enabledCache = createDebug.enabled(namespace);
+					}
+					return enabledCache;
+				},
+				set: (v) => {
+					enableOverride = v;
 				}
-			}), typeof n.init == "function" && n.init(s), s;
+			});
+			if (typeof createDebug.init === "function") createDebug.init(debug);
+			return debug;
 		}
-		function r(e, t) {
-			let r = n(this.namespace + (t === void 0 ? ":" : t) + e);
-			return r.log = this.log, r;
+		function extend(namespace, delimiter) {
+			const newDebug = createDebug(this.namespace + (typeof delimiter === "undefined" ? ":" : delimiter) + namespace);
+			newDebug.log = this.log;
+			return newDebug;
 		}
-		function i(e) {
-			n.save(e), n.namespaces = e, n.names = [], n.skips = [];
-			let t = (typeof e == "string" ? e : "").trim().replace(/\s+/g, ",").split(",").filter(Boolean);
-			for (let e of t) e[0] === "-" ? n.skips.push(e.slice(1)) : n.names.push(e);
+		/**
+		* Enables a debug mode by namespaces. This can include modes
+		* separated by a colon and wildcards.
+		*
+		* @param {String} namespaces
+		* @api public
+		*/
+		function enable(namespaces) {
+			createDebug.save(namespaces);
+			createDebug.namespaces = namespaces;
+			createDebug.names = [];
+			createDebug.skips = [];
+			const split = (typeof namespaces === "string" ? namespaces : "").trim().replace(/\s+/g, ",").split(",").filter(Boolean);
+			for (const ns of split) if (ns[0] === "-") createDebug.skips.push(ns.slice(1));
+			else createDebug.names.push(ns);
 		}
-		function a(e, t) {
-			let n = 0, r = 0, i = -1, a = 0;
-			for (; n < e.length;) if (r < t.length && (t[r] === e[n] || t[r] === "*")) t[r] === "*" ? (i = r, a = n, r++) : (n++, r++);
-			else if (i !== -1) r = i + 1, a++, n = a;
-			else return !1;
-			for (; r < t.length && t[r] === "*";) r++;
-			return r === t.length;
+		/**
+		* Checks if the given string matches a namespace template, honoring
+		* asterisks as wildcards.
+		*
+		* @param {String} search
+		* @param {String} template
+		* @return {Boolean}
+		*/
+		function matchesTemplate(search, template) {
+			let searchIndex = 0;
+			let templateIndex = 0;
+			let starIndex = -1;
+			let matchIndex = 0;
+			while (searchIndex < search.length) if (templateIndex < template.length && (template[templateIndex] === search[searchIndex] || template[templateIndex] === "*")) {
+				if (template[templateIndex] === "*") {
+					starIndex = templateIndex;
+					matchIndex = searchIndex;
+					templateIndex++;
+				} else {
+					searchIndex++;
+					templateIndex++;
+				}
+			} else if (starIndex !== -1) {
+				templateIndex = starIndex + 1;
+				matchIndex++;
+				searchIndex = matchIndex;
+			} else return false;
+			while (templateIndex < template.length && template[templateIndex] === "*") templateIndex++;
+			return templateIndex === template.length;
 		}
-		function o() {
-			let e = [...n.names, ...n.skips.map((e) => "-" + e)].join(",");
-			return n.enable(""), e;
+		/**
+		* Disable debug output.
+		*
+		* @return {String} namespaces
+		* @api public
+		*/
+		function disable() {
+			const namespaces = [...createDebug.names, ...createDebug.skips.map((namespace) => "-" + namespace)].join(",");
+			createDebug.enable("");
+			return namespaces;
 		}
-		function s(e) {
-			for (let t of n.skips) if (a(e, t)) return !1;
-			for (let t of n.names) if (a(e, t)) return !0;
-			return !1;
+		/**
+		* Returns true if the given mode name is enabled, false otherwise.
+		*
+		* @param {String} name
+		* @return {Boolean}
+		* @api public
+		*/
+		function enabled(name) {
+			for (const skip of createDebug.skips) if (matchesTemplate(name, skip)) return false;
+			for (const ns of createDebug.names) if (matchesTemplate(name, ns)) return true;
+			return false;
 		}
-		function c(e) {
-			return e instanceof Error ? e.stack || e.message : e;
+		/**
+		* Coerce `val`.
+		*
+		* @param {Mixed} val
+		* @return {Mixed}
+		* @api private
+		*/
+		function coerce(val) {
+			if (val instanceof Error) return val.stack || val.message;
+			return val;
 		}
-		function l() {
+		/**
+		* XXX DO NOT USE. This is a temporary stub function.
+		* XXX It WILL be removed in the next major release.
+		*/
+		function destroy() {
 			console.warn("Instance method `debug.destroy()` is deprecated and no longer does anything. It will be removed in the next major version of `debug`.");
 		}
-		return n.enable(n.load()), n;
+		createDebug.enable(createDebug.load());
+		return createDebug;
 	}
-	t.exports = n;
-})), ne = /* @__PURE__ */ p(((e, t) => {
-	e.formatArgs = r, e.save = i, e.load = a, e.useColors = n, e.storage = o(), e.destroy = (() => {
-		let e = !1;
+	module.exports = setup;
+}));
+//#endregion
+//#region node_modules/debug/src/browser.js
+var require_browser = /* @__PURE__ */ __commonJSMin(((exports, module) => {
+	/**
+	* This is the web browser implementation of `debug()`.
+	*/
+	exports.formatArgs = formatArgs;
+	exports.save = save;
+	exports.load = load;
+	exports.useColors = useColors;
+	exports.storage = localstorage();
+	exports.destroy = (() => {
+		let warned = false;
 		return () => {
-			e || (e = !0, console.warn("Instance method `debug.destroy()` is deprecated and no longer does anything. It will be removed in the next major version of `debug`."));
+			if (!warned) {
+				warned = true;
+				console.warn("Instance method `debug.destroy()` is deprecated and no longer does anything. It will be removed in the next major version of `debug`.");
+			}
 		};
-	})(), e.colors = /* @__PURE__ */ "#0000CC.#0000FF.#0033CC.#0033FF.#0066CC.#0066FF.#0099CC.#0099FF.#00CC00.#00CC33.#00CC66.#00CC99.#00CCCC.#00CCFF.#3300CC.#3300FF.#3333CC.#3333FF.#3366CC.#3366FF.#3399CC.#3399FF.#33CC00.#33CC33.#33CC66.#33CC99.#33CCCC.#33CCFF.#6600CC.#6600FF.#6633CC.#6633FF.#66CC00.#66CC33.#9900CC.#9900FF.#9933CC.#9933FF.#99CC00.#99CC33.#CC0000.#CC0033.#CC0066.#CC0099.#CC00CC.#CC00FF.#CC3300.#CC3333.#CC3366.#CC3399.#CC33CC.#CC33FF.#CC6600.#CC6633.#CC9900.#CC9933.#CCCC00.#CCCC33.#FF0000.#FF0033.#FF0066.#FF0099.#FF00CC.#FF00FF.#FF3300.#FF3333.#FF3366.#FF3399.#FF33CC.#FF33FF.#FF6600.#FF6633.#FF9900.#FF9933.#FFCC00.#FFCC33".split(".");
-	function n() {
-		if (typeof window < "u" && window.process && (window.process.type === "renderer" || window.process.__nwjs)) return !0;
-		if (typeof navigator < "u" && navigator.userAgent && navigator.userAgent.toLowerCase().match(/(edge|trident)\/(\d+)/)) return !1;
-		let e;
-		return typeof document < "u" && document.documentElement && document.documentElement.style && document.documentElement.style.WebkitAppearance || typeof window < "u" && window.console && (window.console.firebug || window.console.exception && window.console.table) || typeof navigator < "u" && navigator.userAgent && (e = navigator.userAgent.toLowerCase().match(/firefox\/(\d+)/)) && parseInt(e[1], 10) >= 31 || typeof navigator < "u" && navigator.userAgent && navigator.userAgent.toLowerCase().match(/applewebkit\/(\d+)/);
+	})();
+	/**
+	* Colors.
+	*/
+	exports.colors = [
+		"#0000CC",
+		"#0000FF",
+		"#0033CC",
+		"#0033FF",
+		"#0066CC",
+		"#0066FF",
+		"#0099CC",
+		"#0099FF",
+		"#00CC00",
+		"#00CC33",
+		"#00CC66",
+		"#00CC99",
+		"#00CCCC",
+		"#00CCFF",
+		"#3300CC",
+		"#3300FF",
+		"#3333CC",
+		"#3333FF",
+		"#3366CC",
+		"#3366FF",
+		"#3399CC",
+		"#3399FF",
+		"#33CC00",
+		"#33CC33",
+		"#33CC66",
+		"#33CC99",
+		"#33CCCC",
+		"#33CCFF",
+		"#6600CC",
+		"#6600FF",
+		"#6633CC",
+		"#6633FF",
+		"#66CC00",
+		"#66CC33",
+		"#9900CC",
+		"#9900FF",
+		"#9933CC",
+		"#9933FF",
+		"#99CC00",
+		"#99CC33",
+		"#CC0000",
+		"#CC0033",
+		"#CC0066",
+		"#CC0099",
+		"#CC00CC",
+		"#CC00FF",
+		"#CC3300",
+		"#CC3333",
+		"#CC3366",
+		"#CC3399",
+		"#CC33CC",
+		"#CC33FF",
+		"#CC6600",
+		"#CC6633",
+		"#CC9900",
+		"#CC9933",
+		"#CCCC00",
+		"#CCCC33",
+		"#FF0000",
+		"#FF0033",
+		"#FF0066",
+		"#FF0099",
+		"#FF00CC",
+		"#FF00FF",
+		"#FF3300",
+		"#FF3333",
+		"#FF3366",
+		"#FF3399",
+		"#FF33CC",
+		"#FF33FF",
+		"#FF6600",
+		"#FF6633",
+		"#FF9900",
+		"#FF9933",
+		"#FFCC00",
+		"#FFCC33"
+	];
+	/**
+	* Currently only WebKit-based Web Inspectors, Firefox >= v31,
+	* and the Firebug extension (any Firefox version) are known
+	* to support "%c" CSS customizations.
+	*
+	* TODO: add a `localStorage` variable to explicitly enable/disable colors
+	*/
+	function useColors() {
+		if (typeof window !== "undefined" && window.process && (window.process.type === "renderer" || window.process.__nwjs)) return true;
+		if (typeof navigator !== "undefined" && navigator.userAgent && navigator.userAgent.toLowerCase().match(/(edge|trident)\/(\d+)/)) return false;
+		let m;
+		return typeof document !== "undefined" && document.documentElement && document.documentElement.style && document.documentElement.style.WebkitAppearance || typeof window !== "undefined" && window.console && (window.console.firebug || window.console.exception && window.console.table) || typeof navigator !== "undefined" && navigator.userAgent && (m = navigator.userAgent.toLowerCase().match(/firefox\/(\d+)/)) && parseInt(m[1], 10) >= 31 || typeof navigator !== "undefined" && navigator.userAgent && navigator.userAgent.toLowerCase().match(/applewebkit\/(\d+)/);
 	}
-	function r(e) {
-		if (e[0] = (this.useColors ? "%c" : "") + this.namespace + (this.useColors ? " %c" : " ") + e[0] + (this.useColors ? "%c " : " ") + "+" + t.exports.humanize(this.diff), !this.useColors) return;
-		let n = "color: " + this.color;
-		e.splice(1, 0, n, "color: inherit");
-		let r = 0, i = 0;
-		e[0].replace(/%[a-zA-Z%]/g, (e) => {
-			e !== "%%" && (r++, e === "%c" && (i = r));
-		}), e.splice(i, 0, n);
+	/**
+	* Colorize log arguments if enabled.
+	*
+	* @api public
+	*/
+	function formatArgs(args) {
+		args[0] = (this.useColors ? "%c" : "") + this.namespace + (this.useColors ? " %c" : " ") + args[0] + (this.useColors ? "%c " : " ") + "+" + module.exports.humanize(this.diff);
+		if (!this.useColors) return;
+		const c = "color: " + this.color;
+		args.splice(1, 0, c, "color: inherit");
+		let index = 0;
+		let lastC = 0;
+		args[0].replace(/%[a-zA-Z%]/g, (match) => {
+			if (match === "%%") return;
+			index++;
+			if (match === "%c") lastC = index;
+		});
+		args.splice(lastC, 0, c);
 	}
-	e.log = console.debug || console.log || (() => {});
-	function i(t) {
+	/**
+	* Invokes `console.debug()` when available.
+	* No-op when `console.debug` is not a "function".
+	* If `console.debug` is not available, falls back
+	* to `console.log`.
+	*
+	* @api public
+	*/
+	exports.log = console.debug || console.log || (() => {});
+	/**
+	* Save `namespaces`.
+	*
+	* @param {String} namespaces
+	* @api private
+	*/
+	function save(namespaces) {
 		try {
-			t ? e.storage.setItem("debug", t) : e.storage.removeItem("debug");
-		} catch {}
+			if (namespaces) exports.storage.setItem("debug", namespaces);
+			else exports.storage.removeItem("debug");
+		} catch (error) {}
 	}
-	function a() {
-		let t;
+	/**
+	* Load `namespaces`.
+	*
+	* @return {String} returns the previously persisted debug modes
+	* @api private
+	*/
+	function load() {
+		let r;
 		try {
-			t = e.storage.getItem("debug") || e.storage.getItem("DEBUG");
-		} catch {}
-		return !t && typeof process < "u" && "env" in process && (t = process.env.DEBUG), t;
+			r = exports.storage.getItem("debug") || exports.storage.getItem("DEBUG");
+		} catch (error) {}
+		if (!r && typeof process !== "undefined" && "env" in process) r = process.env.DEBUG;
+		return r;
 	}
-	function o() {
+	/**
+	* Localstorage attempts to return the localstorage.
+	*
+	* This is necessary because safari throws
+	* when a user disables cookies/localstorage
+	* and you attempt to access it.
+	*
+	* @return {LocalStorage}
+	* @api private
+	*/
+	function localstorage() {
 		try {
 			return localStorage;
-		} catch {}
+		} catch (error) {}
 	}
-	t.exports = te()(e);
-	var { formatters: s } = t.exports;
-	s.j = function(e) {
+	module.exports = require_common()(exports);
+	var { formatters } = module.exports;
+	/**
+	* Map %j to `JSON.stringify()`, since no Web Inspectors do that by default.
+	*/
+	formatters.j = function(v) {
 		try {
-			return JSON.stringify(e);
-		} catch (e) {
-			return "[UnexpectedJSONParseError]: " + e.message;
+			return JSON.stringify(v);
+		} catch (error) {
+			return "[UnexpectedJSONParseError]: " + error.message;
 		}
 	};
-})), L = /* @__PURE__ */ p(((e, t) => {
-	t.exports = (e, t = process.argv) => {
-		let n = e.startsWith("-") ? "" : e.length === 1 ? "-" : "--", r = t.indexOf(n + e), i = t.indexOf("--");
-		return r !== -1 && (i === -1 || r < i);
+}));
+//#endregion
+//#region node_modules/has-flag/index.js
+var require_has_flag = /* @__PURE__ */ __commonJSMin(((exports, module) => {
+	module.exports = (flag, argv = process.argv) => {
+		const prefix = flag.startsWith("-") ? "" : flag.length === 1 ? "-" : "--";
+		const position = argv.indexOf(prefix + flag);
+		const terminatorPosition = argv.indexOf("--");
+		return position !== -1 && (terminatorPosition === -1 || position < terminatorPosition);
 	};
-})), R = /* @__PURE__ */ p(((e, t) => {
-	var n = v("os"), r = v("tty"), i = L(), { env: a } = process, o;
-	i("no-color") || i("no-colors") || i("color=false") || i("color=never") ? o = 0 : (i("color") || i("colors") || i("color=true") || i("color=always")) && (o = 1), "FORCE_COLOR" in a && (o = a.FORCE_COLOR === "true" ? 1 : a.FORCE_COLOR === "false" ? 0 : a.FORCE_COLOR.length === 0 ? 1 : Math.min(parseInt(a.FORCE_COLOR, 10), 3));
-	function s(e) {
-		return e !== 0 && {
-			level: e,
-			hasBasic: !0,
-			has256: e >= 2,
-			has16m: e >= 3
+}));
+//#endregion
+//#region node_modules/supports-color/index.js
+var require_supports_color = /* @__PURE__ */ __commonJSMin(((exports, module) => {
+	var os$1 = __require("os");
+	var tty$1 = __require("tty");
+	var hasFlag = require_has_flag();
+	var { env } = process;
+	var forceColor;
+	if (hasFlag("no-color") || hasFlag("no-colors") || hasFlag("color=false") || hasFlag("color=never")) forceColor = 0;
+	else if (hasFlag("color") || hasFlag("colors") || hasFlag("color=true") || hasFlag("color=always")) forceColor = 1;
+	if ("FORCE_COLOR" in env) {
+		if (env.FORCE_COLOR === "true") forceColor = 1;
+		else if (env.FORCE_COLOR === "false") forceColor = 0;
+		else forceColor = env.FORCE_COLOR.length === 0 ? 1 : Math.min(parseInt(env.FORCE_COLOR, 10), 3);
+	}
+	function translateLevel(level) {
+		if (level === 0) return false;
+		return {
+			level,
+			hasBasic: true,
+			has256: level >= 2,
+			has16m: level >= 3
 		};
 	}
-	function c(e, t) {
-		if (o === 0) return 0;
-		if (i("color=16m") || i("color=full") || i("color=truecolor")) return 3;
-		if (i("color=256")) return 2;
-		if (e && !t && o === void 0) return 0;
-		let r = o || 0;
-		if (a.TERM === "dumb") return r;
+	function supportsColor(haveStream, streamIsTTY) {
+		if (forceColor === 0) return 0;
+		if (hasFlag("color=16m") || hasFlag("color=full") || hasFlag("color=truecolor")) return 3;
+		if (hasFlag("color=256")) return 2;
+		if (haveStream && !streamIsTTY && forceColor === void 0) return 0;
+		const min = forceColor || 0;
+		if (env.TERM === "dumb") return min;
 		if (process.platform === "win32") {
-			let e = n.release().split(".");
-			return Number(e[0]) >= 10 && Number(e[2]) >= 10586 ? Number(e[2]) >= 14931 ? 3 : 2 : 1;
+			const osRelease = os$1.release().split(".");
+			if (Number(osRelease[0]) >= 10 && Number(osRelease[2]) >= 10586) return Number(osRelease[2]) >= 14931 ? 3 : 2;
+			return 1;
 		}
-		if ("CI" in a) return [
-			"TRAVIS",
-			"CIRCLECI",
-			"APPVEYOR",
-			"GITLAB_CI",
-			"GITHUB_ACTIONS",
-			"BUILDKITE"
-		].some((e) => e in a) || a.CI_NAME === "codeship" ? 1 : r;
-		if ("TEAMCITY_VERSION" in a) return +!!/^(9\.(0*[1-9]\d*)\.|\d{2,}\.)/.test(a.TEAMCITY_VERSION);
-		if (a.COLORTERM === "truecolor") return 3;
-		if ("TERM_PROGRAM" in a) {
-			let e = parseInt((a.TERM_PROGRAM_VERSION || "").split(".")[0], 10);
-			switch (a.TERM_PROGRAM) {
-				case "iTerm.app": return e >= 3 ? 3 : 2;
+		if ("CI" in env) {
+			if ([
+				"TRAVIS",
+				"CIRCLECI",
+				"APPVEYOR",
+				"GITLAB_CI",
+				"GITHUB_ACTIONS",
+				"BUILDKITE"
+			].some((sign) => sign in env) || env.CI_NAME === "codeship") return 1;
+			return min;
+		}
+		if ("TEAMCITY_VERSION" in env) return /^(9\.(0*[1-9]\d*)\.|\d{2,}\.)/.test(env.TEAMCITY_VERSION) ? 1 : 0;
+		if (env.COLORTERM === "truecolor") return 3;
+		if ("TERM_PROGRAM" in env) {
+			const version = parseInt((env.TERM_PROGRAM_VERSION || "").split(".")[0], 10);
+			switch (env.TERM_PROGRAM) {
+				case "iTerm.app": return version >= 3 ? 3 : 2;
 				case "Apple_Terminal": return 2;
 			}
 		}
-		return /-256(color)?$/i.test(a.TERM) ? 2 : /^screen|^xterm|^vt100|^vt220|^rxvt|color|ansi|cygwin|linux/i.test(a.TERM) || "COLORTERM" in a ? 1 : r;
+		if (/-256(color)?$/i.test(env.TERM)) return 2;
+		if (/^screen|^xterm|^vt100|^vt220|^rxvt|color|ansi|cygwin|linux/i.test(env.TERM)) return 1;
+		if ("COLORTERM" in env) return 1;
+		return min;
 	}
-	function l(e) {
-		return s(c(e, e && e.isTTY));
+	function getSupportLevel(stream) {
+		return translateLevel(supportsColor(stream, stream && stream.isTTY));
 	}
-	t.exports = {
-		supportsColor: l,
-		stdout: s(c(!0, r.isatty(1))),
-		stderr: s(c(!0, r.isatty(2)))
+	module.exports = {
+		supportsColor: getSupportLevel,
+		stdout: translateLevel(supportsColor(true, tty$1.isatty(1))),
+		stderr: translateLevel(supportsColor(true, tty$1.isatty(2)))
 	};
-})), re = /* @__PURE__ */ p(((e, t) => {
-	var n = v("tty"), r = v("util");
-	e.init = u, e.log = s, e.formatArgs = a, e.save = c, e.load = l, e.useColors = i, e.destroy = r.deprecate(() => {}, "Instance method `debug.destroy()` is deprecated and no longer does anything. It will be removed in the next major version of `debug`."), e.colors = [
+}));
+//#endregion
+//#region node_modules/debug/src/node.js
+var require_node = /* @__PURE__ */ __commonJSMin(((exports, module) => {
+	/**
+	* Module dependencies.
+	*/
+	var tty = __require("tty");
+	var util = __require("util");
+	/**
+	* This is the Node.js implementation of `debug()`.
+	*/
+	exports.init = init;
+	exports.log = log;
+	exports.formatArgs = formatArgs;
+	exports.save = save;
+	exports.load = load;
+	exports.useColors = useColors;
+	exports.destroy = util.deprecate(() => {}, "Instance method `debug.destroy()` is deprecated and no longer does anything. It will be removed in the next major version of `debug`.");
+	/**
+	* Colors.
+	*/
+	exports.colors = [
 		6,
 		2,
 		3,
@@ -8146,8 +9442,8 @@ var o = Object.create, s = Object.defineProperty, c = Object.getOwnPropertyDescr
 		1
 	];
 	try {
-		let t = R();
-		t && (t.stderr || t).level >= 2 && (e.colors = [
+		const supportsColor = require_supports_color();
+		if (supportsColor && (supportsColor.stderr || supportsColor).level >= 2) exports.colors = [
 			20,
 			21,
 			26,
@@ -8224,948 +9520,2130 @@ var o = Object.create, s = Object.defineProperty, c = Object.getOwnPropertyDescr
 			215,
 			220,
 			221
-		]);
-	} catch {}
-	e.inspectOpts = Object.keys(process.env).filter((e) => /^debug_/i.test(e)).reduce((e, t) => {
-		let n = t.substring(6).toLowerCase().replace(/_([a-z])/g, (e, t) => t.toUpperCase()), r = process.env[t];
-		return r = /^(yes|on|true|enabled)$/i.test(r) ? !0 : /^(no|off|false|disabled)$/i.test(r) ? !1 : r === "null" ? null : Number(r), e[n] = r, e;
+		];
+	} catch (error) {}
+	/**
+	* Build up the default `inspectOpts` object from the environment variables.
+	*
+	*   $ DEBUG_COLORS=no DEBUG_DEPTH=10 DEBUG_SHOW_HIDDEN=enabled node script.js
+	*/
+	exports.inspectOpts = Object.keys(process.env).filter((key) => {
+		return /^debug_/i.test(key);
+	}).reduce((obj, key) => {
+		const prop = key.substring(6).toLowerCase().replace(/_([a-z])/g, (_, k) => {
+			return k.toUpperCase();
+		});
+		let val = process.env[key];
+		if (/^(yes|on|true|enabled)$/i.test(val)) val = true;
+		else if (/^(no|off|false|disabled)$/i.test(val)) val = false;
+		else if (val === "null") val = null;
+		else val = Number(val);
+		obj[prop] = val;
+		return obj;
 	}, {});
-	function i() {
-		return "colors" in e.inspectOpts ? !!e.inspectOpts.colors : n.isatty(process.stderr.fd);
+	/**
+	* Is stdout a TTY? Colored output is enabled when `true`.
+	*/
+	function useColors() {
+		return "colors" in exports.inspectOpts ? Boolean(exports.inspectOpts.colors) : tty.isatty(process.stderr.fd);
 	}
-	function a(e) {
-		let { namespace: n, useColors: r } = this;
-		if (r) {
-			let r = this.color, i = "\x1B[3" + (r < 8 ? r : "8;5;" + r), a = `  ${i};1m${n} \u001B[0m`;
-			e[0] = a + e[0].split("\n").join("\n" + a), e.push(i + "m+" + t.exports.humanize(this.diff) + "\x1B[0m");
-		} else e[0] = o() + n + " " + e[0];
+	/**
+	* Adds ANSI color escape codes if enabled.
+	*
+	* @api public
+	*/
+	function formatArgs(args) {
+		const { namespace: name, useColors } = this;
+		if (useColors) {
+			const c = this.color;
+			const colorCode = "\x1B[3" + (c < 8 ? c : "8;5;" + c);
+			const prefix = `  ${colorCode};1m${name} \u001B[0m`;
+			args[0] = prefix + args[0].split("\n").join("\n" + prefix);
+			args.push(colorCode + "m+" + module.exports.humanize(this.diff) + "\x1B[0m");
+		} else args[0] = getDate() + name + " " + args[0];
 	}
-	function o() {
-		return e.inspectOpts.hideDate ? "" : (/* @__PURE__ */ new Date()).toISOString() + " ";
+	function getDate() {
+		if (exports.inspectOpts.hideDate) return "";
+		return (/* @__PURE__ */ new Date()).toISOString() + " ";
 	}
-	function s(...t) {
-		return process.stderr.write(r.formatWithOptions(e.inspectOpts, ...t) + "\n");
+	/**
+	* Invokes `util.formatWithOptions()` with the specified arguments and writes to stderr.
+	*/
+	function log(...args) {
+		return process.stderr.write(util.formatWithOptions(exports.inspectOpts, ...args) + "\n");
 	}
-	function c(e) {
-		e ? process.env.DEBUG = e : delete process.env.DEBUG;
+	/**
+	* Save `namespaces`.
+	*
+	* @param {String} namespaces
+	* @api private
+	*/
+	function save(namespaces) {
+		if (namespaces) process.env.DEBUG = namespaces;
+		else delete process.env.DEBUG;
 	}
-	function l() {
+	/**
+	* Load `namespaces`.
+	*
+	* @return {String} returns the previously persisted debug modes
+	* @api private
+	*/
+	function load() {
 		return process.env.DEBUG;
 	}
-	function u(t) {
-		t.inspectOpts = {};
-		let n = Object.keys(e.inspectOpts);
-		for (let r = 0; r < n.length; r++) t.inspectOpts[n[r]] = e.inspectOpts[n[r]];
+	/**
+	* Init logic for `debug` instances.
+	*
+	* Create a new `inspectOpts` object in case `useColors` is set
+	* differently for a particular `debug` instance.
+	*/
+	function init(debug) {
+		debug.inspectOpts = {};
+		const keys = Object.keys(exports.inspectOpts);
+		for (let i = 0; i < keys.length; i++) debug.inspectOpts[keys[i]] = exports.inspectOpts[keys[i]];
 	}
-	t.exports = te()(e);
-	var { formatters: d } = t.exports;
-	d.o = function(e) {
-		return this.inspectOpts.colors = this.useColors, r.inspect(e, this.inspectOpts).split("\n").map((e) => e.trim()).join(" ");
-	}, d.O = function(e) {
-		return this.inspectOpts.colors = this.useColors, r.inspect(e, this.inspectOpts);
+	module.exports = require_common()(exports);
+	var { formatters } = module.exports;
+	/**
+	* Map %o to `util.inspect()`, all on a single line.
+	*/
+	formatters.o = function(v) {
+		this.inspectOpts.colors = this.useColors;
+		return util.inspect(v, this.inspectOpts).split("\n").map((str) => str.trim()).join(" ");
 	};
-})), z = /* @__PURE__ */ p(((e, t) => {
-	t.exports = typeof process > "u" || process.type === "renderer" || process.browser === !0 || process.__nwjs ? ne() : re();
-})), B = /* @__PURE__ */ p(((e) => {
-	Object.defineProperty(e, "__esModule", { value: !0 }), e.Transport = void 0;
-	var t = v("events"), n = P(), r = ee(), i = (0, z().default)("engine:transport");
-	function a() {}
-	var o = class extends t.EventEmitter {
+	/**
+	* Map %O to `util.inspect()`, allowing multiple lines if needed.
+	*/
+	formatters.O = function(v) {
+		this.inspectOpts.colors = this.useColors;
+		return util.inspect(v, this.inspectOpts);
+	};
+}));
+//#endregion
+//#region node_modules/debug/src/index.js
+var require_src = /* @__PURE__ */ __commonJSMin(((exports, module) => {
+	/**
+	* Detect Electron renderer / nwjs process, which is node, but we should
+	* treat as a browser.
+	*/
+	if (typeof process === "undefined" || process.type === "renderer" || process.browser === true || process.__nwjs) module.exports = require_browser();
+	else module.exports = require_node();
+}));
+//#endregion
+//#region node_modules/engine.io/build/transport.js
+var require_transport = /* @__PURE__ */ __commonJSMin(((exports) => {
+	Object.defineProperty(exports, "__esModule", { value: true });
+	exports.Transport = void 0;
+	var events_1$5 = __require("events");
+	var parser_v4 = require_cjs$1();
+	var parser_v3 = require_parser_v3();
+	var debug = (0, require_src().default)("engine:transport");
+	function noop() {}
+	var Transport = class extends events_1$5.EventEmitter {
 		get readyState() {
 			return this._readyState;
 		}
-		set readyState(e) {
-			i("readyState updated from %s to %s (%s)", this._readyState, e, this.name), this._readyState = e;
+		set readyState(state) {
+			debug("readyState updated from %s to %s (%s)", this._readyState, state, this.name);
+			this._readyState = state;
 		}
-		constructor(e) {
-			super(), this.writable = !1, this._readyState = "open", this.discarded = !1, this.protocol = e._query.EIO === "4" ? 4 : 3, this.parser = this.protocol === 4 ? n : r, this.supportsBinary = !(e._query && e._query.b64);
+		/**
+		* Transport constructor.
+		*
+		* @param {EngineRequest} req
+		*/
+		constructor(req) {
+			super();
+			/**
+			* Whether the transport is currently ready to send packets.
+			*/
+			this.writable = false;
+			/**
+			* The current state of the transport.
+			* @protected
+			*/
+			this._readyState = "open";
+			/**
+			* Whether the transport is discarded and can be safely closed (used during upgrade).
+			* @protected
+			*/
+			this.discarded = false;
+			this.protocol = req._query.EIO === "4" ? 4 : 3;
+			this.parser = this.protocol === 4 ? parser_v4 : parser_v3;
+			this.supportsBinary = !(req._query && req._query.b64);
 		}
+		/**
+		* Flags the transport as discarded.
+		*
+		* @package
+		*/
 		discard() {
-			this.discarded = !0;
+			this.discarded = true;
 		}
-		onRequest(e) {}
-		close(e) {
-			this.readyState !== "closed" && this.readyState !== "closing" && (this.readyState = "closing", this.doClose(e || a));
+		/**
+		* Called with an incoming HTTP request.
+		*
+		* @param req
+		* @package
+		*/
+		onRequest(req) {}
+		/**
+		* Closes the transport.
+		*
+		* @package
+		*/
+		close(fn) {
+			if ("closed" === this.readyState || "closing" === this.readyState) return;
+			this.readyState = "closing";
+			this.doClose(fn || noop);
 		}
-		onError(e, t) {
+		/**
+		* Called with a transport error.
+		*
+		* @param {String} msg - message error
+		* @param {Object} desc - error description
+		* @protected
+		*/
+		onError(msg, desc) {
 			if (this.listeners("error").length) {
-				let n = Error(e);
-				n.type = "TransportError", n.description = t, this.emit("error", n);
-			} else i("ignored transport error %s (%s)", e, t);
+				const err = new Error(msg);
+				err.type = "TransportError";
+				err.description = desc;
+				this.emit("error", err);
+			} else debug("ignored transport error %s (%s)", msg, desc);
 		}
-		onPacket(e) {
-			this.emit("packet", e);
+		/**
+		* Called with parsed out a packets from the data stream.
+		*
+		* @param {Object} packet
+		* @protected
+		*/
+		onPacket(packet) {
+			this.emit("packet", packet);
 		}
-		onData(e) {
-			this.onPacket(this.parser.decodePacket(e));
+		/**
+		* Called with the encoded packet data.
+		*
+		* @param data
+		* @protected
+		*/
+		onData(data) {
+			this.onPacket(this.parser.decodePacket(data));
 		}
+		/**
+		* Called upon transport close.
+		*
+		* @protected
+		*/
 		onClose() {
-			this.readyState = "closed", this.emit("close");
+			this.readyState = "closed";
+			this.emit("close");
 		}
 	};
-	e.Transport = o, o.upgradesTo = [];
-})), V = /* @__PURE__ */ p(((e) => {
-	Object.defineProperty(e, "__esModule", { value: !0 }), e.Polling = void 0;
-	var t = B(), n = v("zlib"), r = k(), i = (0, z().default)("engine:polling"), a = {
-		gzip: n.createGzip,
-		deflate: n.createDeflate
+	exports.Transport = Transport;
+	/**
+	* The list of transports this transport can be upgraded to.
+	*/
+	Transport.upgradesTo = [];
+}));
+//#endregion
+//#region node_modules/engine.io/build/transports/polling.js
+var require_polling$1 = /* @__PURE__ */ __commonJSMin(((exports) => {
+	Object.defineProperty(exports, "__esModule", { value: true });
+	exports.Polling = void 0;
+	var transport_1 = require_transport();
+	var zlib_1$2 = __require("zlib");
+	var accepts = require_accepts();
+	var debug = (0, require_src().default)("engine:polling");
+	var compressionMethods = {
+		gzip: zlib_1$2.createGzip,
+		deflate: zlib_1$2.createDeflate
 	};
-	e.Polling = class extends t.Transport {
-		constructor(e) {
-			super(e), this.closeTimeout = 3e4;
+	var Polling = class extends transport_1.Transport {
+		/**
+		* HTTP polling constructor.
+		*/
+		constructor(req) {
+			super(req);
+			this.closeTimeout = 3e4;
 		}
+		/**
+		* Transport name
+		*/
 		get name() {
 			return "polling";
 		}
-		onRequest(e) {
-			let t = e.res;
-			e.res = null, e.method === "GET" ? this.onPollRequest(e, t) : e.method === "POST" ? this.onDataRequest(e, t) : (t.writeHead(500), t.end());
+		/**
+		* Overrides onRequest.
+		*
+		* @param {EngineRequest} req
+		* @package
+		*/
+		onRequest(req) {
+			const res = req.res;
+			req.res = null;
+			if ("GET" === req.method) this.onPollRequest(req, res);
+			else if ("POST" === req.method) this.onDataRequest(req, res);
+			else {
+				res.writeHead(500);
+				res.end();
+			}
 		}
-		onPollRequest(e, t) {
+		/**
+		* The client sends a request awaiting for us to send data.
+		*
+		* @private
+		*/
+		onPollRequest(req, res) {
 			if (this.req) {
-				i("request overlap"), this.onError("overlap from client"), t.writeHead(400), t.end();
+				debug("request overlap");
+				this.onError("overlap from client");
+				res.writeHead(400);
+				res.end();
 				return;
 			}
-			i("setting request"), this.req = e, this.res = t;
-			let n = () => {
+			debug("setting request");
+			this.req = req;
+			this.res = res;
+			const onClose = () => {
 				this.onError("poll connection closed prematurely");
 			};
-			e.cleanup = () => {
-				e.removeListener("close", n), this.req = this.res = null;
-			}, e.on("close", n), this.writable = !0, this.emit("ready"), this.writable && this.shouldClose && (i("triggering empty send to append close packet"), this.send([{ type: "noop" }]));
+			const cleanup = () => {
+				req.removeListener("close", onClose);
+				this.req = this.res = null;
+			};
+			req.cleanup = cleanup;
+			req.on("close", onClose);
+			this.writable = true;
+			this.emit("ready");
+			if (this.writable && this.shouldClose) {
+				debug("triggering empty send to append close packet");
+				this.send([{ type: "noop" }]);
+			}
 		}
-		onDataRequest(e, t) {
+		/**
+		* The client sends a request with data.
+		*
+		* @private
+		*/
+		onDataRequest(req, res) {
 			if (this.dataReq) {
-				this.onError("data request overlap from client"), t.writeHead(400), t.end();
+				this.onError("data request overlap from client");
+				res.writeHead(400);
+				res.end();
 				return;
 			}
-			let n = e.headers["content-type"] === "application/octet-stream";
-			if (n && this.protocol === 4) return this.onError("invalid content"), t.writeHead(400).end();
-			this.dataReq = e, this.dataRes = t;
-			let r = n ? Buffer.concat([]) : "", i = () => {
-				e.removeListener("data", o), e.removeListener("end", s), e.removeListener("close", a), this.dataReq = this.dataRes = r = null;
-			}, a = () => {
-				i(), this.onError("data request connection closed prematurely");
-			}, o = (e) => {
-				let a;
-				n ? (r = Buffer.concat([r, e]), a = r.length) : (r += e, a = Buffer.byteLength(r)), a > this.maxHttpBufferSize && (t.writeHead(413).end(), i());
-			}, s = () => {
-				this.onData(r), t.writeHead(200, this.headers(e, {
+			const isBinary = "application/octet-stream" === req.headers["content-type"];
+			if (isBinary && this.protocol === 4) {
+				this.onError("invalid content");
+				return res.writeHead(400).end();
+			}
+			this.dataReq = req;
+			this.dataRes = res;
+			let chunks = isBinary ? Buffer.concat([]) : "";
+			const cleanup = () => {
+				req.removeListener("data", onData);
+				req.removeListener("end", onEnd);
+				req.removeListener("close", onClose);
+				this.dataReq = this.dataRes = chunks = null;
+			};
+			const onClose = () => {
+				cleanup();
+				this.onError("data request connection closed prematurely");
+			};
+			const onData = (data) => {
+				let contentLength;
+				if (isBinary) {
+					chunks = Buffer.concat([chunks, data]);
+					contentLength = chunks.length;
+				} else {
+					chunks += data;
+					contentLength = Buffer.byteLength(chunks);
+				}
+				if (contentLength > this.maxHttpBufferSize) {
+					res.writeHead(413).end();
+					cleanup();
+				}
+			};
+			const onEnd = () => {
+				this.onData(chunks);
+				res.writeHead(200, this.headers(req, {
 					"Content-Type": "text/html",
 					"Content-Length": "2"
-				})), t.end("ok"), i();
+				}));
+				res.end("ok");
+				cleanup();
 			};
-			e.on("close", a), n || e.setEncoding("utf8"), e.on("data", o), e.on("end", s);
+			req.on("close", onClose);
+			if (!isBinary) req.setEncoding("utf8");
+			req.on("data", onData);
+			req.on("end", onEnd);
 		}
-		onData(e) {
-			i("received \"%s\"", e);
-			let t = (e) => {
-				if (e.type === "close") return i("got xhr close packet"), this.onClose(), !1;
-				this.onPacket(e);
+		/**
+		* Processes the incoming data payload.
+		*
+		* @param data - encoded payload
+		* @protected
+		*/
+		onData(data) {
+			debug("received \"%s\"", data);
+			const callback = (packet) => {
+				if ("close" === packet.type) {
+					debug("got xhr close packet");
+					this.onClose();
+					return false;
+				}
+				this.onPacket(packet);
 			};
-			this.protocol === 3 ? this.parser.decodePayload(e, t) : this.parser.decodePayload(e).forEach(t);
+			if (this.protocol === 3) this.parser.decodePayload(data, callback);
+			else this.parser.decodePayload(data).forEach(callback);
 		}
+		/**
+		* Overrides onClose.
+		*
+		* @private
+		*/
 		onClose() {
-			this.writable && this.send([{ type: "noop" }]), super.onClose();
+			if (this.writable) this.send([{ type: "noop" }]);
+			super.onClose();
 		}
-		send(e) {
-			this.writable = !1, this.shouldClose &&= (i("appending close packet to payload"), e.push({ type: "close" }), this.shouldClose(), null);
-			let t = (t) => {
-				let n = e.some((e) => e.options && e.options.compress);
-				this.write(t, { compress: n });
+		send(packets) {
+			this.writable = false;
+			if (this.shouldClose) {
+				debug("appending close packet to payload");
+				packets.push({ type: "close" });
+				this.shouldClose();
+				this.shouldClose = null;
+			}
+			const doWrite = (data) => {
+				const compress = packets.some((packet) => {
+					return packet.options && packet.options.compress;
+				});
+				this.write(data, { compress });
 			};
-			this.protocol === 3 ? this.parser.encodePayload(e, this.supportsBinary, t) : this.parser.encodePayload(e, t);
+			if (this.protocol === 3) this.parser.encodePayload(packets, this.supportsBinary, doWrite);
+			else this.parser.encodePayload(packets, doWrite);
 		}
-		write(e, t) {
-			i("writing \"%s\"", e), this.doWrite(e, t, () => {
-				this.req.cleanup(), this.emit("drain");
+		/**
+		* Writes data as response to poll request.
+		*
+		* @param {String} data
+		* @param {Object} options
+		* @private
+		*/
+		write(data, options) {
+			debug("writing \"%s\"", data);
+			this.doWrite(data, options, () => {
+				this.req.cleanup();
+				this.emit("drain");
 			});
 		}
-		doWrite(e, t, n) {
-			let i = typeof e == "string", a = { "Content-Type": i ? "text/plain; charset=UTF-8" : "application/octet-stream" }, o = (e) => {
-				a["Content-Length"] = typeof e == "string" ? Buffer.byteLength(e) : e.length, this.res.writeHead(200, this.headers(this.req, a)), this.res.end(e), n();
+		/**
+		* Performs the write.
+		*
+		* @protected
+		*/
+		doWrite(data, options, callback) {
+			const isString = typeof data === "string";
+			const headers = { "Content-Type": isString ? "text/plain; charset=UTF-8" : "application/octet-stream" };
+			const respond = (data) => {
+				headers["Content-Length"] = "string" === typeof data ? Buffer.byteLength(data) : data.length;
+				this.res.writeHead(200, this.headers(this.req, headers));
+				this.res.end(data);
+				callback();
 			};
-			if (!this.httpCompression || !t.compress) {
-				o(e);
+			if (!this.httpCompression || !options.compress) {
+				respond(data);
 				return;
 			}
-			if ((i ? Buffer.byteLength(e) : e.length) < this.httpCompression.threshold) {
-				o(e);
+			if ((isString ? Buffer.byteLength(data) : data.length) < this.httpCompression.threshold) {
+				respond(data);
 				return;
 			}
-			let s = r(this.req).encodings(["gzip", "deflate"]);
-			if (!s) {
-				o(e);
+			const encoding = accepts(this.req).encodings(["gzip", "deflate"]);
+			if (!encoding) {
+				respond(data);
 				return;
 			}
-			this.compress(e, s, (e, t) => {
-				if (e) {
-					this.res.writeHead(500), this.res.end(), n(e);
+			this.compress(data, encoding, (err, data) => {
+				if (err) {
+					this.res.writeHead(500);
+					this.res.end();
+					callback(err);
 					return;
 				}
-				a["Content-Encoding"] = s, o(t);
+				headers["Content-Encoding"] = encoding;
+				respond(data);
 			});
 		}
-		compress(e, t, n) {
-			i("compressing");
-			let r = [], o = 0;
-			a[t](this.httpCompression).on("error", n).on("data", function(e) {
-				r.push(e), o += e.length;
+		/**
+		* Compresses data.
+		*
+		* @private
+		*/
+		compress(data, encoding, callback) {
+			debug("compressing");
+			const buffers = [];
+			let nread = 0;
+			compressionMethods[encoding](this.httpCompression).on("error", callback).on("data", function(chunk) {
+				buffers.push(chunk);
+				nread += chunk.length;
 			}).on("end", function() {
-				n(null, Buffer.concat(r, o));
-			}).end(e);
+				callback(null, Buffer.concat(buffers, nread));
+			}).end(data);
 		}
-		doClose(e) {
-			i("closing");
-			let t;
-			this.dataReq && (i("aborting ongoing data request"), this.dataReq.destroy());
-			let n = () => {
-				clearTimeout(t), e(), this.onClose();
+		/**
+		* Closes the transport.
+		*
+		* @private
+		*/
+		doClose(fn) {
+			debug("closing");
+			let closeTimeoutTimer;
+			if (this.dataReq) {
+				debug("aborting ongoing data request");
+				this.dataReq.destroy();
+			}
+			const onClose = () => {
+				clearTimeout(closeTimeoutTimer);
+				fn();
+				this.onClose();
 			};
-			this.writable ? (i("transport writable - closing right away"), this.send([{ type: "close" }]), n()) : this.discarded ? (i("transport discarded - closing right away"), n()) : (i("transport not writable - buffering orderly close"), this.shouldClose = n, t = setTimeout(n, this.closeTimeout));
+			if (this.writable) {
+				debug("transport writable - closing right away");
+				this.send([{ type: "close" }]);
+				onClose();
+			} else if (this.discarded) {
+				debug("transport discarded - closing right away");
+				onClose();
+			} else {
+				debug("transport not writable - buffering orderly close");
+				this.shouldClose = onClose;
+				closeTimeoutTimer = setTimeout(onClose, this.closeTimeout);
+			}
 		}
-		headers(e, t = {}) {
-			let n = e.headers["user-agent"];
-			return n && (~n.indexOf(";MSIE") || ~n.indexOf("Trident/")) && (t["X-XSS-Protection"] = "0"), t["cache-control"] = "no-store", this.emit("headers", t, e), t;
+		/**
+		* Returns headers for a response.
+		*
+		* @param {http.IncomingMessage} req
+		* @param {Object} headers - extra headers
+		* @private
+		*/
+		headers(req, headers = {}) {
+			const ua = req.headers["user-agent"];
+			if (ua && (~ua.indexOf(";MSIE") || ~ua.indexOf("Trident/"))) headers["X-XSS-Protection"] = "0";
+			headers["cache-control"] = "no-store";
+			this.emit("headers", headers, req);
+			return headers;
 		}
 	};
-})), ie = /* @__PURE__ */ p(((e) => {
-	Object.defineProperty(e, "__esModule", { value: !0 }), e.JSONP = void 0;
-	var t = V(), n = v("querystring"), r = /\\\\n/g, i = /(\\)?\\n/g;
-	e.JSONP = class extends t.Polling {
-		constructor(e) {
-			super(e), this.head = "___eio[" + (e._query.j || "").replace(/[^0-9]/g, "") + "](", this.foot = ");";
+	exports.Polling = Polling;
+}));
+//#endregion
+//#region node_modules/engine.io/build/transports/polling-jsonp.js
+var require_polling_jsonp = /* @__PURE__ */ __commonJSMin(((exports) => {
+	Object.defineProperty(exports, "__esModule", { value: true });
+	exports.JSONP = void 0;
+	var polling_1 = require_polling$1();
+	var qs = __require("querystring");
+	var rDoubleSlashes = /\\\\n/g;
+	var rSlashes = /(\\)?\\n/g;
+	var JSONP = class extends polling_1.Polling {
+		/**
+		* JSON-P polling transport.
+		*/
+		constructor(req) {
+			super(req);
+			this.head = "___eio[" + (req._query.j || "").replace(/[^0-9]/g, "") + "](";
+			this.foot = ");";
 		}
-		onData(e) {
-			e = n.parse(e).d, typeof e == "string" && (e = e.replace(i, function(e, t) {
-				return t ? e : "\n";
-			}), super.onData(e.replace(r, "\\n")));
+		onData(data) {
+			data = qs.parse(data).d;
+			if ("string" === typeof data) {
+				data = data.replace(rSlashes, function(match, slashes) {
+					return slashes ? match : "\n";
+				});
+				super.onData(data.replace(rDoubleSlashes, "\\n"));
+			}
 		}
-		doWrite(e, t, n) {
-			let r = JSON.stringify(e).replace(/\u2028/g, "\\u2028").replace(/\u2029/g, "\\u2029");
-			e = this.head + r + this.foot, super.doWrite(e, t, n);
+		doWrite(data, options, callback) {
+			const js = JSON.stringify(data).replace(/\u2028/g, "\\u2028").replace(/\u2029/g, "\\u2029");
+			data = this.head + js + this.foot;
+			super.doWrite(data, options, callback);
 		}
 	};
-})), ae = /* @__PURE__ */ p(((e) => {
-	Object.defineProperty(e, "__esModule", { value: !0 }), e.WebSocket = void 0;
-	var t = B(), n = (0, z().default)("engine:ws");
-	e.WebSocket = class extends t.Transport {
-		constructor(e) {
-			super(e), this._doSend = (e) => {
-				this.socket.send(e, this._onSent);
-			}, this._doSendLast = (e) => {
-				this.socket.send(e, this._onSentLast);
-			}, this._onSent = (e) => {
-				e && this.onError("write error", e.stack);
-			}, this._onSentLast = (e) => {
-				e ? this.onError("write error", e.stack) : (this.emit("drain"), this.writable = !0, this.emit("ready"));
-			}, this.socket = e.websocket, this.socket.on("message", (e, t) => {
-				let r = t ? e : e.toString();
-				n("received \"%s\"", r), super.onData(r);
-			}), this.socket.once("close", this.onClose.bind(this)), this.socket.on("error", this.onError.bind(this)), this.writable = !0, this.perMessageDeflate = null;
+	exports.JSONP = JSONP;
+}));
+//#endregion
+//#region node_modules/engine.io/build/transports/websocket.js
+var require_websocket$2 = /* @__PURE__ */ __commonJSMin(((exports) => {
+	Object.defineProperty(exports, "__esModule", { value: true });
+	exports.WebSocket = void 0;
+	var transport_1 = require_transport();
+	var debug = (0, require_src().default)("engine:ws");
+	var WebSocket = class extends transport_1.Transport {
+		/**
+		* WebSocket transport
+		*
+		* @param {EngineRequest} req
+		*/
+		constructor(req) {
+			super(req);
+			this._doSend = (data) => {
+				this.socket.send(data, this._onSent);
+			};
+			this._doSendLast = (data) => {
+				this.socket.send(data, this._onSentLast);
+			};
+			this._onSent = (err) => {
+				if (err) this.onError("write error", err.stack);
+			};
+			this._onSentLast = (err) => {
+				if (err) this.onError("write error", err.stack);
+				else {
+					this.emit("drain");
+					this.writable = true;
+					this.emit("ready");
+				}
+			};
+			this.socket = req.websocket;
+			this.socket.on("message", (data, isBinary) => {
+				const message = isBinary ? data : data.toString();
+				debug("received \"%s\"", message);
+				super.onData(message);
+			});
+			this.socket.once("close", this.onClose.bind(this));
+			this.socket.on("error", this.onError.bind(this));
+			this.writable = true;
+			this.perMessageDeflate = null;
 		}
+		/**
+		* Transport name
+		*/
 		get name() {
 			return "websocket";
 		}
+		/**
+		* Advertise upgrade support.
+		*/
 		get handlesUpgrades() {
-			return !0;
+			return true;
 		}
-		send(e) {
-			this.writable = !1;
-			for (let t = 0; t < e.length; t++) {
-				let n = e[t], r = t + 1 === e.length;
-				this._canSendPreEncodedFrame(n) ? this.socket._sender.sendFrame(n.options.wsPreEncodedFrame, r ? this._onSentLast : this._onSent) : this.parser.encodePacket(n, this.supportsBinary, r ? this._doSendLast : this._doSend);
+		send(packets) {
+			this.writable = false;
+			for (let i = 0; i < packets.length; i++) {
+				const packet = packets[i];
+				const isLast = i + 1 === packets.length;
+				if (this._canSendPreEncodedFrame(packet)) this.socket._sender.sendFrame(packet.options.wsPreEncodedFrame, isLast ? this._onSentLast : this._onSent);
+				else this.parser.encodePacket(packet, this.supportsBinary, isLast ? this._doSendLast : this._doSend);
 			}
 		}
-		_canSendPreEncodedFrame(e) {
-			return !this.perMessageDeflate && typeof this.socket?._sender?.sendFrame == "function" && e.options?.wsPreEncodedFrame !== void 0;
+		/**
+		* Whether the encoding of the WebSocket frame can be skipped.
+		* @param packet
+		* @private
+		*/
+		_canSendPreEncodedFrame(packet) {
+			var _a, _b, _c;
+			return !this.perMessageDeflate && typeof ((_b = (_a = this.socket) === null || _a === void 0 ? void 0 : _a._sender) === null || _b === void 0 ? void 0 : _b.sendFrame) === "function" && ((_c = packet.options) === null || _c === void 0 ? void 0 : _c.wsPreEncodedFrame) !== void 0;
 		}
-		doClose(e) {
-			n("closing"), this.socket.close(), e && e();
+		doClose(fn) {
+			debug("closing");
+			this.socket.close();
+			fn && fn();
 		}
 	};
-})), oe = /* @__PURE__ */ p(((e) => {
-	Object.defineProperty(e, "__esModule", { value: !0 }), e.WebTransport = void 0;
-	var t = B(), n = z(), r = P(), i = (0, n.default)("engine:webtransport");
-	e.WebTransport = class extends t.Transport {
-		constructor(e, t, n) {
-			super({ _query: { EIO: "4" } }), this.session = e;
-			let a = (0, r.createPacketEncoderStream)();
-			a.readable.pipeTo(t.writable).catch(() => {
-				i("the stream was closed");
-			}), this.writer = a.writable.getWriter(), (async () => {
+	exports.WebSocket = WebSocket;
+}));
+//#endregion
+//#region node_modules/engine.io/build/transports/webtransport.js
+var require_webtransport = /* @__PURE__ */ __commonJSMin(((exports) => {
+	Object.defineProperty(exports, "__esModule", { value: true });
+	exports.WebTransport = void 0;
+	var transport_1 = require_transport();
+	var debug_1 = require_src();
+	var engine_io_parser_1 = require_cjs$1();
+	var debug = (0, debug_1.default)("engine:webtransport");
+	/**
+	* Reference: https://developer.mozilla.org/en-US/docs/Web/API/WebTransport_API
+	*/
+	var WebTransport = class extends transport_1.Transport {
+		constructor(session, stream, reader) {
+			super({ _query: { EIO: "4" } });
+			this.session = session;
+			const transformStream = (0, engine_io_parser_1.createPacketEncoderStream)();
+			transformStream.readable.pipeTo(stream.writable).catch(() => {
+				debug("the stream was closed");
+			});
+			this.writer = transformStream.writable.getWriter();
+			(async () => {
 				try {
-					for (;;) {
-						let { value: e, done: t } = await n.read();
-						if (t) {
-							i("session is closed");
+					while (true) {
+						const { value, done } = await reader.read();
+						if (done) {
+							debug("session is closed");
 							break;
 						}
-						i("received chunk: %o", e), this.onPacket(e);
+						debug("received chunk: %o", value);
+						this.onPacket(value);
 					}
 				} catch (e) {
-					i("error while reading: %s", e.message);
+					debug("error while reading: %s", e.message);
 				}
-			})(), e.closed.then(() => this.onClose()), this.writable = !0;
+			})();
+			session.closed.then(() => this.onClose());
+			this.writable = true;
 		}
 		get name() {
 			return "webtransport";
 		}
-		async send(e) {
-			this.writable = !1;
+		async send(packets) {
+			this.writable = false;
 			try {
-				for (let t = 0; t < e.length; t++) {
-					let n = e[t];
-					await this.writer.write(n);
+				for (let i = 0; i < packets.length; i++) {
+					const packet = packets[i];
+					await this.writer.write(packet);
 				}
 			} catch (e) {
-				i("error while writing: %s", e.message);
+				debug("error while writing: %s", e.message);
 			}
-			this.emit("drain"), this.writable = !0, this.emit("ready");
+			this.emit("drain");
+			this.writable = true;
+			this.emit("ready");
 		}
-		doClose(e) {
-			i("closing WebTransport session"), this.session.close(), e && e();
+		doClose(fn) {
+			debug("closing WebTransport session");
+			this.session.close();
+			fn && fn();
 		}
 	};
-})), H = /* @__PURE__ */ p(((e) => {
-	Object.defineProperty(e, "__esModule", { value: !0 });
-	var t = V(), n = ie(), r = ae(), i = oe();
-	e.default = {
-		polling: a,
-		websocket: r.WebSocket,
-		webtransport: i.WebTransport
+	exports.WebTransport = WebTransport;
+}));
+//#endregion
+//#region node_modules/engine.io/build/transports/index.js
+var require_transports = /* @__PURE__ */ __commonJSMin(((exports) => {
+	Object.defineProperty(exports, "__esModule", { value: true });
+	var polling_1 = require_polling$1();
+	var polling_jsonp_1 = require_polling_jsonp();
+	var websocket_1 = require_websocket$2();
+	var webtransport_1 = require_webtransport();
+	exports.default = {
+		polling,
+		websocket: websocket_1.WebSocket,
+		webtransport: webtransport_1.WebTransport
 	};
-	function a(e) {
-		return typeof e._query.j == "string" ? new n.JSONP(e) : new t.Polling(e);
+	/**
+	* Polling polymorphic constructor.
+	*/
+	function polling(req) {
+		if ("string" === typeof req._query.j) return new polling_jsonp_1.JSONP(req);
+		else return new polling_1.Polling(req);
 	}
-	a.upgradesTo = ["websocket", "webtransport"];
-})), U = /* @__PURE__ */ p(((e) => {
-	Object.defineProperty(e, "__esModule", { value: !0 }), e.Socket = void 0;
-	var t = v("events"), n = z(), r = v("timers"), i = (0, n.default)("engine:socket");
-	e.Socket = class extends t.EventEmitter {
+	polling.upgradesTo = ["websocket", "webtransport"];
+}));
+//#endregion
+//#region node_modules/engine.io/build/socket.js
+var require_socket$1 = /* @__PURE__ */ __commonJSMin(((exports) => {
+	Object.defineProperty(exports, "__esModule", { value: true });
+	exports.Socket = void 0;
+	var events_1$4 = __require("events");
+	var debug_1 = require_src();
+	var timers_1 = __require("timers");
+	var debug = (0, debug_1.default)("engine:socket");
+	var Socket = class extends events_1$4.EventEmitter {
 		get readyState() {
 			return this._readyState;
 		}
-		set readyState(e) {
-			i("readyState updated from %s to %s", this._readyState, e), this._readyState = e;
+		set readyState(state) {
+			debug("readyState updated from %s to %s", this._readyState, state);
+			this._readyState = state;
 		}
-		constructor(e, t, n, r, i) {
-			super(), this._readyState = "opening", this.upgrading = !1, this.upgraded = !1, this.writeBuffer = [], this.packetsFn = [], this.sentCallbackFn = [], this.cleanupFn = [], this.id = e, this.server = t, this.request = r, this.protocol = i, r && (this.remoteAddress = r.websocket && r.websocket._socket ? r.websocket._socket.remoteAddress : r.connection.remoteAddress), this.pingTimeoutTimer = null, this.pingIntervalTimer = null, this.setTransport(n), this.onOpen();
+		constructor(id, server, transport, req, protocol) {
+			super();
+			/**
+			* The current state of the socket.
+			*/
+			this._readyState = "opening";
+			this.upgrading = false;
+			this.upgraded = false;
+			this.writeBuffer = [];
+			this.packetsFn = [];
+			this.sentCallbackFn = [];
+			this.cleanupFn = [];
+			this.id = id;
+			this.server = server;
+			this.request = req;
+			this.protocol = protocol;
+			if (req) {
+				if (req.websocket && req.websocket._socket) this.remoteAddress = req.websocket._socket.remoteAddress;
+				else this.remoteAddress = req.connection.remoteAddress;
+			}
+			this.pingTimeoutTimer = null;
+			this.pingIntervalTimer = null;
+			this.setTransport(transport);
+			this.onOpen();
 		}
+		/**
+		* Called upon transport considered open.
+		*
+		* @private
+		*/
 		onOpen() {
-			this.readyState = "open", this.transport.sid = this.id, this.sendPacket("open", JSON.stringify({
+			this.readyState = "open";
+			this.transport.sid = this.id;
+			this.sendPacket("open", JSON.stringify({
 				sid: this.id,
 				upgrades: this.getAvailableUpgrades(),
 				pingInterval: this.server.opts.pingInterval,
 				pingTimeout: this.server.opts.pingTimeout,
 				maxPayload: this.server.opts.maxHttpBufferSize
-			})), this.server.opts.initialPacket && this.sendPacket("message", this.server.opts.initialPacket), this.emit("open"), this.protocol === 3 ? this.resetPingTimeout() : this.schedulePing();
+			}));
+			if (this.server.opts.initialPacket) this.sendPacket("message", this.server.opts.initialPacket);
+			this.emit("open");
+			if (this.protocol === 3) this.resetPingTimeout();
+			else this.schedulePing();
 		}
-		onPacket(e) {
-			if (this.readyState !== "open") return i("packet received with closed socket");
-			switch (i(`received packet ${e.type}`), this.emit("packet", e), e.type) {
+		/**
+		* Called upon transport packet.
+		*
+		* @param {Object} packet
+		* @private
+		*/
+		onPacket(packet) {
+			if ("open" !== this.readyState) return debug("packet received with closed socket");
+			debug(`received packet ${packet.type}`);
+			this.emit("packet", packet);
+			switch (packet.type) {
 				case "ping":
 					if (this.transport.protocol !== 3) {
-						this.onError(/* @__PURE__ */ Error("invalid heartbeat direction"));
+						this.onError(/* @__PURE__ */ new Error("invalid heartbeat direction"));
 						return;
 					}
-					i("got ping"), this.pingTimeoutTimer.refresh(), this.sendPacket("pong"), this.emit("heartbeat");
+					debug("got ping");
+					this.pingTimeoutTimer.refresh();
+					this.sendPacket("pong");
+					this.emit("heartbeat");
 					break;
 				case "pong":
 					if (this.transport.protocol === 3) {
-						this.onError(/* @__PURE__ */ Error("invalid heartbeat direction"));
+						this.onError(/* @__PURE__ */ new Error("invalid heartbeat direction"));
 						return;
 					}
-					i("got pong"), (0, r.clearTimeout)(this.pingTimeoutTimer), this.pingIntervalTimer.refresh(), this.emit("heartbeat");
+					debug("got pong");
+					(0, timers_1.clearTimeout)(this.pingTimeoutTimer);
+					this.pingIntervalTimer.refresh();
+					this.emit("heartbeat");
 					break;
 				case "error":
 					this.onClose("parse error");
 					break;
-				case "message": this.emit("data", e.data), this.emit("message", e.data);
+				case "message":
+					this.emit("data", packet.data);
+					this.emit("message", packet.data);
 			}
 		}
-		onError(e) {
-			i("transport error"), this.onClose("transport error", e);
+		/**
+		* Called upon transport error.
+		*
+		* @param {Error} err - error object
+		* @private
+		*/
+		onError(err) {
+			debug("transport error");
+			this.onClose("transport error", err);
 		}
+		/**
+		* Pings client every `this.pingInterval` and expects response
+		* within `this.pingTimeout` or closes connection.
+		*
+		* @private
+		*/
 		schedulePing() {
-			this.pingIntervalTimer = (0, r.setTimeout)(() => {
-				i("writing ping packet - expecting pong within %sms", this.server.opts.pingTimeout), this.sendPacket("ping"), this.resetPingTimeout();
+			this.pingIntervalTimer = (0, timers_1.setTimeout)(() => {
+				debug("writing ping packet - expecting pong within %sms", this.server.opts.pingTimeout);
+				this.sendPacket("ping");
+				this.resetPingTimeout();
 			}, this.server.opts.pingInterval);
 		}
+		/**
+		* Resets ping timeout.
+		*
+		* @private
+		*/
 		resetPingTimeout() {
-			(0, r.clearTimeout)(this.pingTimeoutTimer), this.pingTimeoutTimer = (0, r.setTimeout)(() => {
-				this.readyState !== "closed" && this.onClose("ping timeout");
+			(0, timers_1.clearTimeout)(this.pingTimeoutTimer);
+			this.pingTimeoutTimer = (0, timers_1.setTimeout)(() => {
+				if (this.readyState === "closed") return;
+				this.onClose("ping timeout");
 			}, this.protocol === 3 ? this.server.opts.pingInterval + this.server.opts.pingTimeout : this.server.opts.pingTimeout);
 		}
-		setTransport(e) {
-			let t = this.onError.bind(this), n = () => this.flush(), r = this.onPacket.bind(this), i = this.onDrain.bind(this), a = this.onClose.bind(this, "transport close");
-			this.transport = e, this.transport.once("error", t), this.transport.on("ready", n), this.transport.on("packet", r), this.transport.on("drain", i), this.transport.once("close", a), this.cleanupFn.push(function() {
-				e.removeListener("error", t), e.removeListener("ready", n), e.removeListener("packet", r), e.removeListener("drain", i), e.removeListener("close", a);
+		/**
+		* Attaches handlers for the given transport.
+		*
+		* @param {Transport} transport
+		* @private
+		*/
+		setTransport(transport) {
+			const onError = this.onError.bind(this);
+			const onReady = () => this.flush();
+			const onPacket = this.onPacket.bind(this);
+			const onDrain = this.onDrain.bind(this);
+			const onClose = this.onClose.bind(this, "transport close");
+			this.transport = transport;
+			this.transport.once("error", onError);
+			this.transport.on("ready", onReady);
+			this.transport.on("packet", onPacket);
+			this.transport.on("drain", onDrain);
+			this.transport.once("close", onClose);
+			this.cleanupFn.push(function() {
+				transport.removeListener("error", onError);
+				transport.removeListener("ready", onReady);
+				transport.removeListener("packet", onPacket);
+				transport.removeListener("drain", onDrain);
+				transport.removeListener("close", onClose);
 			});
 		}
+		/**
+		* Upon transport "drain" event
+		*
+		* @private
+		*/
 		onDrain() {
 			if (this.sentCallbackFn.length > 0) {
-				i("executing batch send callback");
-				let e = this.sentCallbackFn.shift();
-				if (e) for (let t = 0; t < e.length; t++) e[t](this.transport);
+				debug("executing batch send callback");
+				const seqFn = this.sentCallbackFn.shift();
+				if (seqFn) for (let i = 0; i < seqFn.length; i++) seqFn[i](this.transport);
 			}
 		}
-		_maybeUpgrade(e) {
-			i("might upgrade socket transport from \"%s\" to \"%s\"", this.transport.name, e.name), this.upgrading = !0;
-			let t = (0, r.setTimeout)(() => {
-				i("client did not complete upgrade - closing transport"), s(), e.readyState === "open" && e.close();
-			}, this.server.opts.upgradeTimeout), n, a = (t) => {
-				t.type === "ping" && t.data === "probe" ? (i("got probe ping packet, sending pong"), e.send([{
-					type: "pong",
-					data: "probe"
-				}]), this.emit("upgrading", e), clearInterval(n), n = setInterval(o, 100)) : t.type === "upgrade" && this.readyState !== "closed" ? (i("got upgrade packet - upgrading"), s(), this.transport.discard(), this.upgraded = !0, this.clearTransport(), this.setTransport(e), this.emit("upgrade", e), this.flush(), this.readyState === "closing" && e.close(() => {
-					this.onClose("forced close");
-				})) : (s(), e.close());
-			}, o = () => {
-				this.transport.name === "polling" && this.transport.writable && (i("writing a noop packet to polling for fast upgrade"), this.transport.send([{ type: "noop" }]));
-			}, s = () => {
-				this.upgrading = !1, clearInterval(n), (0, r.clearTimeout)(t), e.removeListener("packet", a), e.removeListener("close", l), e.removeListener("error", c), this.removeListener("close", u);
-			}, c = (t) => {
-				i("client did not complete upgrade - %s", t), s(), e.close(), e = null;
-			}, l = () => {
-				c("transport closed");
-			}, u = () => {
-				c("socket closed");
-			};
-			e.on("packet", a), e.once("close", l), e.once("error", c), this.once("close", u);
-		}
-		clearTransport() {
-			let e, t = this.cleanupFn.length;
-			for (let n = 0; n < t; n++) e = this.cleanupFn.shift(), e();
-			this.transport.on("error", function() {
-				i("error triggered by discarded transport");
-			}), this.transport.close(), (0, r.clearTimeout)(this.pingTimeoutTimer);
-		}
-		onClose(e, t) {
-			this.readyState !== "closed" && (this.readyState = "closed", (0, r.clearTimeout)(this.pingIntervalTimer), (0, r.clearTimeout)(this.pingTimeoutTimer), process.nextTick(() => {
-				this.writeBuffer = [];
-			}), this.packetsFn = [], this.sentCallbackFn = [], this.clearTransport(), this.emit("close", e, t));
-		}
-		send(e, t, n) {
-			return this.sendPacket("message", e, t, n), this;
-		}
-		write(e, t, n) {
-			return this.sendPacket("message", e, t, n), this;
-		}
-		sendPacket(e, t, n = {}, r) {
-			if (typeof n == "function" && (r = n, n = {}), this.readyState !== "closing" && this.readyState !== "closed") {
-				i("sending packet \"%s\" (%s)", e, t), n.compress = n.compress !== !1;
-				let a = {
-					type: e,
-					options: n
-				};
-				t && (a.data = t), this.emit("packetCreate", a), this.writeBuffer.push(a), typeof r == "function" && this.packetsFn.push(r), this.flush();
-			}
-		}
-		flush() {
-			if (this.readyState !== "closed" && this.transport.writable && this.writeBuffer.length) {
-				i("flushing buffer to transport"), this.emit("flush", this.writeBuffer), this.server.emit("flush", this, this.writeBuffer);
-				let e = this.writeBuffer;
-				this.writeBuffer = [], this.packetsFn.length ? (this.sentCallbackFn.push(this.packetsFn), this.packetsFn = []) : this.sentCallbackFn.push(null), this.transport.send(e), this.emit("drain"), this.server.emit("drain", this);
-			}
-		}
-		getAvailableUpgrades() {
-			let e = [], t = this.server.upgrades(this.transport.name);
-			for (let n = 0; n < t.length; ++n) {
-				let r = t[n];
-				this.server.opts.transports.indexOf(r) !== -1 && e.push(r);
-			}
-			return e;
-		}
-		close(e) {
-			if (e && (this.readyState === "open" || this.readyState === "closing")) return this.closeTransport(e);
-			if (this.readyState === "open") {
-				if (this.readyState = "closing", this.writeBuffer.length) {
-					i("there are %d remaining packets in the buffer, waiting for the 'drain' event", this.writeBuffer.length), this.once("drain", () => {
-						i("all packets have been sent, closing the transport"), this.closeTransport(e);
+		/**
+		* Upgrades socket to the given transport
+		*
+		* @param {Transport} transport
+		* @private
+		*/
+		_maybeUpgrade(transport) {
+			debug("might upgrade socket transport from \"%s\" to \"%s\"", this.transport.name, transport.name);
+			this.upgrading = true;
+			const upgradeTimeoutTimer = (0, timers_1.setTimeout)(() => {
+				debug("client did not complete upgrade - closing transport");
+				cleanup();
+				if ("open" === transport.readyState) transport.close();
+			}, this.server.opts.upgradeTimeout);
+			let checkIntervalTimer;
+			const onPacket = (packet) => {
+				if ("ping" === packet.type && "probe" === packet.data) {
+					debug("got probe ping packet, sending pong");
+					transport.send([{
+						type: "pong",
+						data: "probe"
+					}]);
+					this.emit("upgrading", transport);
+					clearInterval(checkIntervalTimer);
+					checkIntervalTimer = setInterval(check, 100);
+				} else if ("upgrade" === packet.type && this.readyState !== "closed") {
+					debug("got upgrade packet - upgrading");
+					cleanup();
+					this.transport.discard();
+					this.upgraded = true;
+					this.clearTransport();
+					this.setTransport(transport);
+					this.emit("upgrade", transport);
+					this.flush();
+					if (this.readyState === "closing") transport.close(() => {
+						this.onClose("forced close");
 					});
-					return;
+				} else {
+					cleanup();
+					transport.close();
 				}
-				i("the buffer is empty, closing the transport right away"), this.closeTransport(e);
+			};
+			const check = () => {
+				if ("polling" === this.transport.name && this.transport.writable) {
+					debug("writing a noop packet to polling for fast upgrade");
+					this.transport.send([{ type: "noop" }]);
+				}
+			};
+			const cleanup = () => {
+				this.upgrading = false;
+				clearInterval(checkIntervalTimer);
+				(0, timers_1.clearTimeout)(upgradeTimeoutTimer);
+				transport.removeListener("packet", onPacket);
+				transport.removeListener("close", onTransportClose);
+				transport.removeListener("error", onError);
+				this.removeListener("close", onClose);
+			};
+			const onError = (err) => {
+				debug("client did not complete upgrade - %s", err);
+				cleanup();
+				transport.close();
+				transport = null;
+			};
+			const onTransportClose = () => {
+				onError("transport closed");
+			};
+			const onClose = () => {
+				onError("socket closed");
+			};
+			transport.on("packet", onPacket);
+			transport.once("close", onTransportClose);
+			transport.once("error", onError);
+			this.once("close", onClose);
+		}
+		/**
+		* Clears listeners and timers associated with current transport.
+		*
+		* @private
+		*/
+		clearTransport() {
+			let cleanup;
+			const toCleanUp = this.cleanupFn.length;
+			for (let i = 0; i < toCleanUp; i++) {
+				cleanup = this.cleanupFn.shift();
+				cleanup();
+			}
+			this.transport.on("error", function() {
+				debug("error triggered by discarded transport");
+			});
+			this.transport.close();
+			(0, timers_1.clearTimeout)(this.pingTimeoutTimer);
+		}
+		/**
+		* Called upon transport considered closed.
+		* Possible reasons: `ping timeout`, `client error`, `parse error`,
+		* `transport error`, `server close`, `transport close`
+		*/
+		onClose(reason, description) {
+			if ("closed" !== this.readyState) {
+				this.readyState = "closed";
+				(0, timers_1.clearTimeout)(this.pingIntervalTimer);
+				(0, timers_1.clearTimeout)(this.pingTimeoutTimer);
+				process.nextTick(() => {
+					this.writeBuffer = [];
+				});
+				this.packetsFn = [];
+				this.sentCallbackFn = [];
+				this.clearTransport();
+				this.emit("close", reason, description);
 			}
 		}
-		closeTransport(e) {
-			i("closing the transport (discard? %s)", !!e), e && this.transport.discard(), this.transport.close(this.onClose.bind(this, "forced close"));
+		/**
+		* Sends a message packet.
+		*
+		* @param {Object} data
+		* @param {Object} options
+		* @param {Function} callback
+		* @return {Socket} for chaining
+		*/
+		send(data, options, callback) {
+			this.sendPacket("message", data, options, callback);
+			return this;
+		}
+		/**
+		* Alias of {@link send}.
+		*
+		* @param data
+		* @param options
+		* @param callback
+		*/
+		write(data, options, callback) {
+			this.sendPacket("message", data, options, callback);
+			return this;
+		}
+		/**
+		* Sends a packet.
+		*
+		* @param {String} type - packet type
+		* @param {String} data
+		* @param {Object} options
+		* @param {Function} callback
+		*
+		* @private
+		*/
+		sendPacket(type, data, options = {}, callback) {
+			if ("function" === typeof options) {
+				callback = options;
+				options = {};
+			}
+			if ("closing" !== this.readyState && "closed" !== this.readyState) {
+				debug("sending packet \"%s\" (%s)", type, data);
+				options.compress = options.compress !== false;
+				const packet = {
+					type,
+					options
+				};
+				if (data) packet.data = data;
+				this.emit("packetCreate", packet);
+				this.writeBuffer.push(packet);
+				if ("function" === typeof callback) this.packetsFn.push(callback);
+				this.flush();
+			}
+		}
+		/**
+		* Attempts to flush the packets buffer.
+		*
+		* @private
+		*/
+		flush() {
+			if ("closed" !== this.readyState && this.transport.writable && this.writeBuffer.length) {
+				debug("flushing buffer to transport");
+				this.emit("flush", this.writeBuffer);
+				this.server.emit("flush", this, this.writeBuffer);
+				const wbuf = this.writeBuffer;
+				this.writeBuffer = [];
+				if (this.packetsFn.length) {
+					this.sentCallbackFn.push(this.packetsFn);
+					this.packetsFn = [];
+				} else this.sentCallbackFn.push(null);
+				this.transport.send(wbuf);
+				this.emit("drain");
+				this.server.emit("drain", this);
+			}
+		}
+		/**
+		* Get available upgrades for this socket.
+		*
+		* @private
+		*/
+		getAvailableUpgrades() {
+			const availableUpgrades = [];
+			const allUpgrades = this.server.upgrades(this.transport.name);
+			for (let i = 0; i < allUpgrades.length; ++i) {
+				const upg = allUpgrades[i];
+				if (this.server.opts.transports.indexOf(upg) !== -1) availableUpgrades.push(upg);
+			}
+			return availableUpgrades;
+		}
+		/**
+		* Closes the socket and underlying transport.
+		*
+		* @param {Boolean} discard - optional, discard the transport
+		* @return {Socket} for chaining
+		*/
+		close(discard) {
+			if (discard && (this.readyState === "open" || this.readyState === "closing")) return this.closeTransport(discard);
+			if ("open" !== this.readyState) return;
+			this.readyState = "closing";
+			if (this.writeBuffer.length) {
+				debug("there are %d remaining packets in the buffer, waiting for the 'drain' event", this.writeBuffer.length);
+				this.once("drain", () => {
+					debug("all packets have been sent, closing the transport");
+					this.closeTransport(discard);
+				});
+				return;
+			}
+			debug("the buffer is empty, closing the transport right away");
+			this.closeTransport(discard);
+		}
+		/**
+		* Closes the underlying transport.
+		*
+		* @param {Boolean} discard
+		* @private
+		*/
+		closeTransport(discard) {
+			debug("closing the transport (discard? %s)", !!discard);
+			if (discard) this.transport.discard();
+			this.transport.close(this.onClose.bind(this, "forced close"));
 		}
 	};
-})), se = /* @__PURE__ */ p(((e) => {
-	e.parse = s, e.serialize = u;
-	var t = Object.prototype.toString, n = Object.prototype.hasOwnProperty, r = /^[!#$%&'*+\-.^_`|~0-9A-Za-z]+$/, i = /^("?)[\u0021\u0023-\u002B\u002D-\u003A\u003C-\u005B\u005D-\u007E]*\1$/, a = /^([.]?[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?)([.][a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?)*$/i, o = /^[\u0020-\u003A\u003D-\u007E]*$/;
-	function s(e, t) {
-		if (typeof e != "string") throw TypeError("argument str must be a string");
-		var r = {}, i = e.length;
-		if (i < 2) return r;
-		var a = t && t.decode || d, o = 0, s = 0, u = 0;
+	exports.Socket = Socket;
+}));
+//#endregion
+//#region node_modules/engine.io/node_modules/cookie/index.js
+/*!
+* cookie
+* Copyright(c) 2012-2014 Roman Shtylman
+* Copyright(c) 2015 Douglas Christopher Wilson
+* MIT Licensed
+*/
+var require_cookie = /* @__PURE__ */ __commonJSMin(((exports) => {
+	/**
+	* Module exports.
+	* @public
+	*/
+	exports.parse = parse;
+	exports.serialize = serialize;
+	/**
+	* Module variables.
+	* @private
+	*/
+	var __toString = Object.prototype.toString;
+	var __hasOwnProperty = Object.prototype.hasOwnProperty;
+	/**
+	* RegExp to match cookie-name in RFC 6265 sec 4.1.1
+	* This refers out to the obsoleted definition of token in RFC 2616 sec 2.2
+	* which has been replaced by the token definition in RFC 7230 appendix B.
+	*
+	* cookie-name       = token
+	* token             = 1*tchar
+	* tchar             = "!" / "#" / "$" / "%" / "&" / "'" /
+	*                     "*" / "+" / "-" / "." / "^" / "_" /
+	*                     "`" / "|" / "~" / DIGIT / ALPHA
+	*/
+	var cookieNameRegExp = /^[!#$%&'*+\-.^_`|~0-9A-Za-z]+$/;
+	/**
+	* RegExp to match cookie-value in RFC 6265 sec 4.1.1
+	*
+	* cookie-value      = *cookie-octet / ( DQUOTE *cookie-octet DQUOTE )
+	* cookie-octet      = %x21 / %x23-2B / %x2D-3A / %x3C-5B / %x5D-7E
+	*                     ; US-ASCII characters excluding CTLs,
+	*                     ; whitespace DQUOTE, comma, semicolon,
+	*                     ; and backslash
+	*/
+	var cookieValueRegExp = /^("?)[\u0021\u0023-\u002B\u002D-\u003A\u003C-\u005B\u005D-\u007E]*\1$/;
+	/**
+	* RegExp to match domain-value in RFC 6265 sec 4.1.1
+	*
+	* domain-value      = <subdomain>
+	*                     ; defined in [RFC1034], Section 3.5, as
+	*                     ; enhanced by [RFC1123], Section 2.1
+	* <subdomain>       = <label> | <subdomain> "." <label>
+	* <label>           = <let-dig> [ [ <ldh-str> ] <let-dig> ]
+	*                     Labels must be 63 characters or less.
+	*                     'let-dig' not 'letter' in the first char, per RFC1123
+	* <ldh-str>         = <let-dig-hyp> | <let-dig-hyp> <ldh-str>
+	* <let-dig-hyp>     = <let-dig> | "-"
+	* <let-dig>         = <letter> | <digit>
+	* <letter>          = any one of the 52 alphabetic characters A through Z in
+	*                     upper case and a through z in lower case
+	* <digit>           = any one of the ten digits 0 through 9
+	*
+	* Keep support for leading dot: https://github.com/jshttp/cookie/issues/173
+	*
+	* > (Note that a leading %x2E ("."), if present, is ignored even though that
+	* character is not permitted, but a trailing %x2E ("."), if present, will
+	* cause the user agent to ignore the attribute.)
+	*/
+	var domainValueRegExp = /^([.]?[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?)([.][a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?)*$/i;
+	/**
+	* RegExp to match path-value in RFC 6265 sec 4.1.1
+	*
+	* path-value        = <any CHAR except CTLs or ";">
+	* CHAR              = %x01-7F
+	*                     ; defined in RFC 5234 appendix B.1
+	*/
+	var pathValueRegExp = /^[\u0020-\u003A\u003D-\u007E]*$/;
+	/**
+	* Parse a cookie header.
+	*
+	* Parse the given cookie header string into an object
+	* The object has the various cookies as keys(names) => values
+	*
+	* @param {string} str
+	* @param {object} [opt]
+	* @return {object}
+	* @public
+	*/
+	function parse(str, opt) {
+		if (typeof str !== "string") throw new TypeError("argument str must be a string");
+		var obj = {};
+		var len = str.length;
+		if (len < 2) return obj;
+		var dec = opt && opt.decode || decode;
+		var index = 0;
+		var eqIdx = 0;
+		var endIdx = 0;
 		do {
-			if (s = e.indexOf("=", o), s === -1) break;
-			if (u = e.indexOf(";", o), u === -1) u = i;
-			else if (s > u) {
-				o = e.lastIndexOf(";", s - 1) + 1;
+			eqIdx = str.indexOf("=", index);
+			if (eqIdx === -1) break;
+			endIdx = str.indexOf(";", index);
+			if (endIdx === -1) endIdx = len;
+			else if (eqIdx > endIdx) {
+				index = str.lastIndexOf(";", eqIdx - 1) + 1;
 				continue;
 			}
-			var f = c(e, o, s), m = l(e, s, f), h = e.slice(f, m);
-			if (!n.call(r, h)) {
-				var g = c(e, s + 1, u), _ = l(e, u, g);
-				e.charCodeAt(g) === 34 && e.charCodeAt(_ - 1) === 34 && (g++, _--), r[h] = p(e.slice(g, _), a);
+			var keyStartIdx = startIndex(str, index, eqIdx);
+			var keyEndIdx = endIndex(str, eqIdx, keyStartIdx);
+			var key = str.slice(keyStartIdx, keyEndIdx);
+			if (!__hasOwnProperty.call(obj, key)) {
+				var valStartIdx = startIndex(str, eqIdx + 1, endIdx);
+				var valEndIdx = endIndex(str, endIdx, valStartIdx);
+				if (str.charCodeAt(valStartIdx) === 34 && str.charCodeAt(valEndIdx - 1) === 34) {
+					valStartIdx++;
+					valEndIdx--;
+				}
+				obj[key] = tryDecode(str.slice(valStartIdx, valEndIdx), dec);
 			}
-			o = u + 1;
-		} while (o < i);
-		return r;
+			index = endIdx + 1;
+		} while (index < len);
+		return obj;
 	}
-	function c(e, t, n) {
+	function startIndex(str, index, max) {
 		do {
-			var r = e.charCodeAt(t);
-			if (r !== 32 && r !== 9) return t;
-		} while (++t < n);
-		return n;
+			var code = str.charCodeAt(index);
+			if (code !== 32 && code !== 9) return index;
+		} while (++index < max);
+		return max;
 	}
-	function l(e, t, n) {
-		for (; t > n;) {
-			var r = e.charCodeAt(--t);
-			if (r !== 32 && r !== 9) return t + 1;
+	function endIndex(str, index, min) {
+		while (index > min) {
+			var code = str.charCodeAt(--index);
+			if (code !== 32 && code !== 9) return index + 1;
 		}
-		return n;
+		return min;
 	}
-	function u(e, t, n) {
-		var s = n && n.encode || encodeURIComponent;
-		if (typeof s != "function") throw TypeError("option encode is invalid");
-		if (!r.test(e)) throw TypeError("argument name is invalid");
-		var c = s(t);
-		if (!i.test(c)) throw TypeError("argument val is invalid");
-		var l = e + "=" + c;
-		if (!n) return l;
-		if (n.maxAge != null) {
-			var u = Math.floor(n.maxAge);
-			if (!isFinite(u)) throw TypeError("option maxAge is invalid");
-			l += "; Max-Age=" + u;
+	/**
+	* Serialize data into a cookie header.
+	*
+	* Serialize a name value pair into a cookie string suitable for
+	* http headers. An optional options object specifies cookie parameters.
+	*
+	* serialize('foo', 'bar', { httpOnly: true })
+	*   => "foo=bar; httpOnly"
+	*
+	* @param {string} name
+	* @param {string} val
+	* @param {object} [opt]
+	* @return {string}
+	* @public
+	*/
+	function serialize(name, val, opt) {
+		var enc = opt && opt.encode || encodeURIComponent;
+		if (typeof enc !== "function") throw new TypeError("option encode is invalid");
+		if (!cookieNameRegExp.test(name)) throw new TypeError("argument name is invalid");
+		var value = enc(val);
+		if (!cookieValueRegExp.test(value)) throw new TypeError("argument val is invalid");
+		var str = name + "=" + value;
+		if (!opt) return str;
+		if (null != opt.maxAge) {
+			var maxAge = Math.floor(opt.maxAge);
+			if (!isFinite(maxAge)) throw new TypeError("option maxAge is invalid");
+			str += "; Max-Age=" + maxAge;
 		}
-		if (n.domain) {
-			if (!a.test(n.domain)) throw TypeError("option domain is invalid");
-			l += "; Domain=" + n.domain;
+		if (opt.domain) {
+			if (!domainValueRegExp.test(opt.domain)) throw new TypeError("option domain is invalid");
+			str += "; Domain=" + opt.domain;
 		}
-		if (n.path) {
-			if (!o.test(n.path)) throw TypeError("option path is invalid");
-			l += "; Path=" + n.path;
+		if (opt.path) {
+			if (!pathValueRegExp.test(opt.path)) throw new TypeError("option path is invalid");
+			str += "; Path=" + opt.path;
 		}
-		if (n.expires) {
-			var d = n.expires;
-			if (!f(d) || isNaN(d.valueOf())) throw TypeError("option expires is invalid");
-			l += "; Expires=" + d.toUTCString();
+		if (opt.expires) {
+			var expires = opt.expires;
+			if (!isDate(expires) || isNaN(expires.valueOf())) throw new TypeError("option expires is invalid");
+			str += "; Expires=" + expires.toUTCString();
 		}
-		if (n.httpOnly && (l += "; HttpOnly"), n.secure && (l += "; Secure"), n.partitioned && (l += "; Partitioned"), n.priority) switch (typeof n.priority == "string" ? n.priority.toLowerCase() : n.priority) {
+		if (opt.httpOnly) str += "; HttpOnly";
+		if (opt.secure) str += "; Secure";
+		if (opt.partitioned) str += "; Partitioned";
+		if (opt.priority) switch (typeof opt.priority === "string" ? opt.priority.toLowerCase() : opt.priority) {
 			case "low":
-				l += "; Priority=Low";
+				str += "; Priority=Low";
 				break;
 			case "medium":
-				l += "; Priority=Medium";
+				str += "; Priority=Medium";
 				break;
 			case "high":
-				l += "; Priority=High";
+				str += "; Priority=High";
 				break;
-			default: throw TypeError("option priority is invalid");
+			default: throw new TypeError("option priority is invalid");
 		}
-		if (n.sameSite) switch (typeof n.sameSite == "string" ? n.sameSite.toLowerCase() : n.sameSite) {
-			case !0:
-				l += "; SameSite=Strict";
+		if (opt.sameSite) switch (typeof opt.sameSite === "string" ? opt.sameSite.toLowerCase() : opt.sameSite) {
+			case true:
+				str += "; SameSite=Strict";
 				break;
 			case "lax":
-				l += "; SameSite=Lax";
+				str += "; SameSite=Lax";
 				break;
 			case "strict":
-				l += "; SameSite=Strict";
+				str += "; SameSite=Strict";
 				break;
 			case "none":
-				l += "; SameSite=None";
+				str += "; SameSite=None";
 				break;
-			default: throw TypeError("option sameSite is invalid");
+			default: throw new TypeError("option sameSite is invalid");
 		}
-		return l;
+		return str;
 	}
-	function d(e) {
-		return e.indexOf("%") === -1 ? e : decodeURIComponent(e);
+	/**
+	* URL-decode string value. Optimized to skip native call when no %.
+	*
+	* @param {string} str
+	* @returns {string}
+	*/
+	function decode(str) {
+		return str.indexOf("%") !== -1 ? decodeURIComponent(str) : str;
 	}
-	function f(e) {
-		return t.call(e) === "[object Date]";
+	/**
+	* Determine if value is a Date.
+	*
+	* @param {*} val
+	* @private
+	*/
+	function isDate(val) {
+		return __toString.call(val) === "[object Date]";
 	}
-	function p(e, t) {
+	/**
+	* Try decoding a string using a decoding function.
+	*
+	* @param {string} str
+	* @param {function} decode
+	* @private
+	*/
+	function tryDecode(str, decode) {
 		try {
-			return t(e);
-		} catch {
-			return e;
+			return decode(str);
+		} catch (e) {
+			return str;
 		}
 	}
-})), W = /* @__PURE__ */ p(((e, t) => {
-	var n = [
+}));
+//#endregion
+//#region node_modules/ws/lib/constants.js
+var require_constants = /* @__PURE__ */ __commonJSMin(((exports, module) => {
+	var BINARY_TYPES = [
 		"nodebuffer",
 		"arraybuffer",
 		"fragments"
-	], r = typeof Blob < "u";
-	r && n.push("blob"), t.exports = {
-		BINARY_TYPES: n,
+	];
+	var hasBlob = typeof Blob !== "undefined";
+	if (hasBlob) BINARY_TYPES.push("blob");
+	module.exports = {
+		BINARY_TYPES,
 		CLOSE_TIMEOUT: 3e4,
 		EMPTY_BUFFER: Buffer.alloc(0),
 		GUID: "258EAFA5-E914-47DA-95CA-C5AB0DC85B11",
-		hasBlob: r,
+		hasBlob,
 		kForOnEventAttribute: Symbol("kIsForOnEventAttribute"),
 		kListener: Symbol("kListener"),
 		kStatusCode: Symbol("status-code"),
 		kWebSocket: Symbol("websocket"),
 		NOOP: () => {}
 	};
-})), ce = /* @__PURE__ */ p(((e, t) => {
-	var n = v("fs"), r = v("path"), i = v("os"), a = typeof __webpack_require__ == "function" ? __non_webpack_require__ : v, o = process.config && process.config.variables || {}, s = !!process.env.PREBUILDS_ONLY, c = process.versions.modules, l = O() ? "electron" : D() ? "node-webkit" : "node", u = process.env.npm_config_arch || i.arch(), d = process.env.npm_config_platform || i.platform(), f = process.env.LIBC || (k(d) ? "musl" : "glibc"), p = process.env.ARM_VERSION || (u === "arm64" ? "8" : o.arm_version) || "", m = (process.versions.uv || "").split(".")[0];
-	t.exports = h;
-	function h(e) {
-		return a(h.resolve(e));
+}));
+//#endregion
+//#region node_modules/node-gyp-build/node-gyp-build.js
+var require_node_gyp_build$1 = /* @__PURE__ */ __commonJSMin(((exports, module) => {
+	var fs$1 = __require("fs");
+	var path$2 = __require("path");
+	var os = __require("os");
+	var runtimeRequire = typeof __webpack_require__ === "function" ? __non_webpack_require__ : __require;
+	var vars = process.config && process.config.variables || {};
+	var prebuildsOnly = !!process.env.PREBUILDS_ONLY;
+	var abi = process.versions.modules;
+	var runtime = isElectron() ? "electron" : isNwjs() ? "node-webkit" : "node";
+	var arch = process.env.npm_config_arch || os.arch();
+	var platform = process.env.npm_config_platform || os.platform();
+	var libc = process.env.LIBC || (isAlpine(platform) ? "musl" : "glibc");
+	var armv = process.env.ARM_VERSION || (arch === "arm64" ? "8" : vars.arm_version) || "";
+	var uv = (process.versions.uv || "").split(".")[0];
+	module.exports = load;
+	function load(dir) {
+		return runtimeRequire(load.resolve(dir));
 	}
-	h.resolve = h.path = function(e) {
-		e = r.resolve(e || ".");
+	load.resolve = load.path = function(dir) {
+		dir = path$2.resolve(dir || ".");
 		try {
-			var t = a(r.join(e, "package.json")).name.toUpperCase().replace(/-/g, "_");
-			process.env[t + "_PREBUILD"] && (e = process.env[t + "_PREBUILD"]);
-		} catch {}
-		if (!s) {
-			var n = _(r.join(e, "build/Release"), y);
-			if (n) return n;
-			var i = _(r.join(e, "build/Debug"), y);
-			if (i) return i;
+			var name = runtimeRequire(path$2.join(dir, "package.json")).name.toUpperCase().replace(/-/g, "_");
+			if (process.env[name + "_PREBUILD"]) dir = process.env[name + "_PREBUILD"];
+		} catch (err) {}
+		if (!prebuildsOnly) {
+			var release = getFirst(path$2.join(dir, "build/Release"), matchBuild);
+			if (release) return release;
+			var debug = getFirst(path$2.join(dir, "build/Debug"), matchBuild);
+			if (debug) return debug;
 		}
-		var o = T(e);
-		if (o) return o;
-		var h = T(r.dirname(process.execPath));
-		if (h) return h;
-		var v = [
-			"platform=" + d,
-			"arch=" + u,
-			"runtime=" + l,
-			"abi=" + c,
-			"uv=" + m,
-			p ? "armv=" + p : "",
-			"libc=" + f,
+		var prebuild = resolve(dir);
+		if (prebuild) return prebuild;
+		var nearby = resolve(path$2.dirname(process.execPath));
+		if (nearby) return nearby;
+		var target = [
+			"platform=" + platform,
+			"arch=" + arch,
+			"runtime=" + runtime,
+			"abi=" + abi,
+			"uv=" + uv,
+			armv ? "armv=" + armv : "",
+			"libc=" + libc,
 			"node=" + process.versions.node,
 			process.versions.electron ? "electron=" + process.versions.electron : "",
-			typeof __webpack_require__ == "function" ? "webpack=true" : ""
+			typeof __webpack_require__ === "function" ? "webpack=true" : ""
 		].filter(Boolean).join(" ");
-		throw Error("No native build was found for " + v + "\n    loaded from: " + e + "\n");
-		function T(e) {
-			var t = g(r.join(e, "prebuilds")).map(b).filter(x(d, u)).sort(S)[0];
-			if (t) {
-				var n = r.join(e, "prebuilds", t.name), i = g(n).map(C).filter(w(l, c)).sort(E(l))[0];
-				if (i) return r.join(n, i.file);
-			}
+		throw new Error("No native build was found for " + target + "\n    loaded from: " + dir + "\n");
+		function resolve(dir) {
+			var tuple = readdirSync(path$2.join(dir, "prebuilds")).map(parseTuple).filter(matchTuple(platform, arch)).sort(compareTuples)[0];
+			if (!tuple) return;
+			var prebuilds = path$2.join(dir, "prebuilds", tuple.name);
+			var winner = readdirSync(prebuilds).map(parseTags).filter(matchTags(runtime, abi)).sort(compareTags(runtime))[0];
+			if (winner) return path$2.join(prebuilds, winner.file);
 		}
 	};
-	function g(e) {
+	function readdirSync(dir) {
 		try {
-			return n.readdirSync(e);
-		} catch {
+			return fs$1.readdirSync(dir);
+		} catch (err) {
 			return [];
 		}
 	}
-	function _(e, t) {
-		var n = g(e).filter(t);
-		return n[0] && r.join(e, n[0]);
+	function getFirst(dir, filter) {
+		var files = readdirSync(dir).filter(filter);
+		return files[0] && path$2.join(dir, files[0]);
 	}
-	function y(e) {
-		return /\.node$/.test(e);
+	function matchBuild(name) {
+		return /\.node$/.test(name);
 	}
-	function b(e) {
-		var t = e.split("-");
-		if (t.length === 2) {
-			var n = t[0], r = t[1].split("+");
-			if (n && r.length && r.every(Boolean)) return {
-				name: e,
-				platform: n,
-				architectures: r
-			};
-		}
-	}
-	function x(e, t) {
-		return function(n) {
-			return n == null || n.platform !== e ? !1 : n.architectures.includes(t);
+	function parseTuple(name) {
+		var arr = name.split("-");
+		if (arr.length !== 2) return;
+		var platform = arr[0];
+		var architectures = arr[1].split("+");
+		if (!platform) return;
+		if (!architectures.length) return;
+		if (!architectures.every(Boolean)) return;
+		return {
+			name,
+			platform,
+			architectures
 		};
 	}
-	function S(e, t) {
-		return e.architectures.length - t.architectures.length;
+	function matchTuple(platform, arch) {
+		return function(tuple) {
+			if (tuple == null) return false;
+			if (tuple.platform !== platform) return false;
+			return tuple.architectures.includes(arch);
+		};
 	}
-	function C(e) {
-		var t = e.split("."), n = t.pop(), r = {
-			file: e,
+	function compareTuples(a, b) {
+		return a.architectures.length - b.architectures.length;
+	}
+	function parseTags(file) {
+		var arr = file.split(".");
+		var extension = arr.pop();
+		var tags = {
+			file,
 			specificity: 0
 		};
-		if (n === "node") {
-			for (var i = 0; i < t.length; i++) {
-				var a = t[i];
-				if (a === "node" || a === "electron" || a === "node-webkit") r.runtime = a;
-				else if (a === "napi") r.napi = !0;
-				else if (a.slice(0, 3) === "abi") r.abi = a.slice(3);
-				else if (a.slice(0, 2) === "uv") r.uv = a.slice(2);
-				else if (a.slice(0, 4) === "armv") r.armv = a.slice(4);
-				else if (a === "glibc" || a === "musl") r.libc = a;
-				else continue;
-				r.specificity++;
-			}
-			return r;
+		if (extension !== "node") return;
+		for (var i = 0; i < arr.length; i++) {
+			var tag = arr[i];
+			if (tag === "node" || tag === "electron" || tag === "node-webkit") tags.runtime = tag;
+			else if (tag === "napi") tags.napi = true;
+			else if (tag.slice(0, 3) === "abi") tags.abi = tag.slice(3);
+			else if (tag.slice(0, 2) === "uv") tags.uv = tag.slice(2);
+			else if (tag.slice(0, 4) === "armv") tags.armv = tag.slice(4);
+			else if (tag === "glibc" || tag === "musl") tags.libc = tag;
+			else continue;
+			tags.specificity++;
 		}
+		return tags;
 	}
-	function w(e, t) {
-		return function(n) {
-			return !(n == null || n.runtime && n.runtime !== e && !T(n) || n.abi && n.abi !== t && !n.napi || n.uv && n.uv !== m || n.armv && n.armv !== p || n.libc && n.libc !== f);
+	function matchTags(runtime, abi) {
+		return function(tags) {
+			if (tags == null) return false;
+			if (tags.runtime && tags.runtime !== runtime && !runtimeAgnostic(tags)) return false;
+			if (tags.abi && tags.abi !== abi && !tags.napi) return false;
+			if (tags.uv && tags.uv !== uv) return false;
+			if (tags.armv && tags.armv !== armv) return false;
+			if (tags.libc && tags.libc !== libc) return false;
+			return true;
 		};
 	}
-	function T(e) {
-		return e.runtime === "node" && e.napi;
+	function runtimeAgnostic(tags) {
+		return tags.runtime === "node" && tags.napi;
 	}
-	function E(e) {
-		return function(t, n) {
-			return t.runtime === n.runtime ? t.abi === n.abi ? t.specificity === n.specificity ? 0 : t.specificity > n.specificity ? -1 : 1 : t.abi ? -1 : 1 : t.runtime === e ? -1 : 1;
+	function compareTags(runtime) {
+		return function(a, b) {
+			if (a.runtime !== b.runtime) return a.runtime === runtime ? -1 : 1;
+			else if (a.abi !== b.abi) return a.abi ? -1 : 1;
+			else if (a.specificity !== b.specificity) return a.specificity > b.specificity ? -1 : 1;
+			else return 0;
 		};
 	}
-	function D() {
+	function isNwjs() {
 		return !!(process.versions && process.versions.nw);
 	}
-	function O() {
-		return process.versions && process.versions.electron || process.env.ELECTRON_RUN_AS_NODE ? !0 : typeof window < "u" && window.process && window.process.type === "renderer";
+	function isElectron() {
+		if (process.versions && process.versions.electron) return true;
+		if (process.env.ELECTRON_RUN_AS_NODE) return true;
+		return typeof window !== "undefined" && window.process && window.process.type === "renderer";
 	}
-	function k(e) {
-		return e === "linux" && n.existsSync("/etc/alpine-release");
+	function isAlpine(platform) {
+		return platform === "linux" && fs$1.existsSync("/etc/alpine-release");
 	}
-	h.parseTags = C, h.matchTags = w, h.compareTags = E, h.parseTuple = b, h.matchTuple = x, h.compareTuples = S;
-})), G = /* @__PURE__ */ p(((e, t) => {
-	var n = typeof __webpack_require__ == "function" ? __non_webpack_require__ : v;
-	t.exports = typeof n.addon == "function" ? n.addon.bind(n) : ce();
-})), le = /* @__PURE__ */ p(((e, t) => {
-	t.exports = {
-		mask: (e, t, n, r, i) => {
-			for (var a = 0; a < i; a++) n[r + a] = e[a] ^ t[a & 3];
-		},
-		unmask: (e, t) => {
-			let n = e.length;
-			for (var r = 0; r < n; r++) e[r] ^= t[r & 3];
-		}
+	load.parseTags = parseTags;
+	load.matchTags = matchTags;
+	load.compareTags = compareTags;
+	load.parseTuple = parseTuple;
+	load.matchTuple = matchTuple;
+	load.compareTuples = compareTuples;
+}));
+//#endregion
+//#region node_modules/node-gyp-build/index.js
+var require_node_gyp_build = /* @__PURE__ */ __commonJSMin(((exports, module) => {
+	var runtimeRequire = typeof __webpack_require__ === "function" ? __non_webpack_require__ : __require;
+	if (typeof runtimeRequire.addon === "function") module.exports = runtimeRequire.addon.bind(runtimeRequire);
+	else module.exports = require_node_gyp_build$1();
+}));
+//#endregion
+//#region node_modules/bufferutil/fallback.js
+var require_fallback$1 = /* @__PURE__ */ __commonJSMin(((exports, module) => {
+	/**
+	* Masks a buffer using the given mask.
+	*
+	* @param {Buffer} source The buffer to mask
+	* @param {Buffer} mask The mask to use
+	* @param {Buffer} output The buffer where to store the result
+	* @param {Number} offset The offset at which to start writing
+	* @param {Number} length The number of bytes to mask.
+	* @public
+	*/
+	var mask = (source, mask, output, offset, length) => {
+		for (var i = 0; i < length; i++) output[offset + i] = source[i] ^ mask[i & 3];
 	};
-})), ue = /* @__PURE__ */ p(((e, t) => {
+	/**
+	* Unmasks a buffer using the given mask.
+	*
+	* @param {Buffer} buffer The buffer to unmask
+	* @param {Buffer} mask The mask to use
+	* @public
+	*/
+	var unmask = (buffer, mask) => {
+		const length = buffer.length;
+		for (var i = 0; i < length; i++) buffer[i] ^= mask[i & 3];
+	};
+	module.exports = {
+		mask,
+		unmask
+	};
+}));
+//#endregion
+//#region node_modules/bufferutil/index.js
+var require_bufferutil = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 	try {
-		t.exports = G()(__dirname);
-	} catch {
-		t.exports = le();
+		module.exports = require_node_gyp_build()(__dirname);
+	} catch (e) {
+		module.exports = require_fallback$1();
 	}
-})), K = /* @__PURE__ */ p(((e, t) => {
-	var { EMPTY_BUFFER: n } = W(), r = Buffer[Symbol.species];
-	function i(e, t) {
-		if (e.length === 0) return n;
-		if (e.length === 1) return e[0];
-		let i = Buffer.allocUnsafe(t), a = 0;
-		for (let t = 0; t < e.length; t++) {
-			let n = e[t];
-			i.set(n, a), a += n.length;
+}));
+//#endregion
+//#region node_modules/ws/lib/buffer-util.js
+var require_buffer_util = /* @__PURE__ */ __commonJSMin(((exports, module) => {
+	var { EMPTY_BUFFER } = require_constants();
+	var FastBuffer = Buffer[Symbol.species];
+	/**
+	* Merges an array of buffers into a new buffer.
+	*
+	* @param {Buffer[]} list The array of buffers to concat
+	* @param {Number} totalLength The total length of buffers in the list
+	* @return {Buffer} The resulting buffer
+	* @public
+	*/
+	function concat(list, totalLength) {
+		if (list.length === 0) return EMPTY_BUFFER;
+		if (list.length === 1) return list[0];
+		const target = Buffer.allocUnsafe(totalLength);
+		let offset = 0;
+		for (let i = 0; i < list.length; i++) {
+			const buf = list[i];
+			target.set(buf, offset);
+			offset += buf.length;
 		}
-		return a < t ? new r(i.buffer, i.byteOffset, a) : i;
+		if (offset < totalLength) return new FastBuffer(target.buffer, target.byteOffset, offset);
+		return target;
 	}
-	function a(e, t, n, r, i) {
-		for (let a = 0; a < i; a++) n[r + a] = e[a] ^ t[a & 3];
+	/**
+	* Masks a buffer using the given mask.
+	*
+	* @param {Buffer} source The buffer to mask
+	* @param {Buffer} mask The mask to use
+	* @param {Buffer} output The buffer where to store the result
+	* @param {Number} offset The offset at which to start writing
+	* @param {Number} length The number of bytes to mask.
+	* @public
+	*/
+	function _mask(source, mask, output, offset, length) {
+		for (let i = 0; i < length; i++) output[offset + i] = source[i] ^ mask[i & 3];
 	}
-	function o(e, t) {
-		for (let n = 0; n < e.length; n++) e[n] ^= t[n & 3];
+	/**
+	* Unmasks a buffer using the given mask.
+	*
+	* @param {Buffer} buffer The buffer to unmask
+	* @param {Buffer} mask The mask to use
+	* @public
+	*/
+	function _unmask(buffer, mask) {
+		for (let i = 0; i < buffer.length; i++) buffer[i] ^= mask[i & 3];
 	}
-	function s(e) {
-		return e.length === e.buffer.byteLength ? e.buffer : e.buffer.slice(e.byteOffset, e.byteOffset + e.length);
+	/**
+	* Converts a buffer to an `ArrayBuffer`.
+	*
+	* @param {Buffer} buf The buffer to convert
+	* @return {ArrayBuffer} Converted buffer
+	* @public
+	*/
+	function toArrayBuffer(buf) {
+		if (buf.length === buf.buffer.byteLength) return buf.buffer;
+		return buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.length);
 	}
-	function c(e) {
-		if (c.readOnly = !0, Buffer.isBuffer(e)) return e;
-		let t;
-		return e instanceof ArrayBuffer ? t = new r(e) : ArrayBuffer.isView(e) ? t = new r(e.buffer, e.byteOffset, e.byteLength) : (t = Buffer.from(e), c.readOnly = !1), t;
+	/**
+	* Converts `data` to a `Buffer`.
+	*
+	* @param {*} data The data to convert
+	* @return {Buffer} The buffer
+	* @throws {TypeError}
+	* @public
+	*/
+	function toBuffer(data) {
+		toBuffer.readOnly = true;
+		if (Buffer.isBuffer(data)) return data;
+		let buf;
+		if (data instanceof ArrayBuffer) buf = new FastBuffer(data);
+		else if (ArrayBuffer.isView(data)) buf = new FastBuffer(data.buffer, data.byteOffset, data.byteLength);
+		else {
+			buf = Buffer.from(data);
+			toBuffer.readOnly = false;
+		}
+		return buf;
 	}
+	module.exports = {
+		concat,
+		mask: _mask,
+		toArrayBuffer,
+		toBuffer,
+		unmask: _unmask
+	};
 	/* istanbul ignore else  */
-	if (t.exports = {
-		concat: i,
-		mask: a,
-		toArrayBuffer: s,
-		toBuffer: c,
-		unmask: o
-	}, !process.env.WS_NO_BUFFER_UTIL) try {
-		let e = ue();
-		t.exports.mask = function(t, n, r, i, o) {
-			o < 48 ? a(t, n, r, i, o) : e.mask(t, n, r, i, o);
-		}, t.exports.unmask = function(t, n) {
-			t.length < 32 ? o(t, n) : e.unmask(t, n);
+	if (!process.env.WS_NO_BUFFER_UTIL) try {
+		const bufferUtil = require_bufferutil();
+		module.exports.mask = function(source, mask, output, offset, length) {
+			if (length < 48) _mask(source, mask, output, offset, length);
+			else bufferUtil.mask(source, mask, output, offset, length);
 		};
-	} catch {}
-})), de = /* @__PURE__ */ p(((e, t) => {
-	var n = Symbol("kDone"), r = Symbol("kRun");
-	t.exports = class {
-		constructor(e) {
-			this[n] = () => {
-				this.pending--, this[r]();
-			}, this.concurrency = e || Infinity, this.jobs = [], this.pending = 0;
+		module.exports.unmask = function(buffer, mask) {
+			if (buffer.length < 32) _unmask(buffer, mask);
+			else bufferUtil.unmask(buffer, mask);
+		};
+	} catch (e) {}
+}));
+//#endregion
+//#region node_modules/ws/lib/limiter.js
+var require_limiter = /* @__PURE__ */ __commonJSMin(((exports, module) => {
+	var kDone = Symbol("kDone");
+	var kRun = Symbol("kRun");
+	/**
+	* A very simple job queue with adjustable concurrency. Adapted from
+	* https://github.com/STRML/async-limiter
+	*/
+	var Limiter = class {
+		/**
+		* Creates a new `Limiter`.
+		*
+		* @param {Number} [concurrency=Infinity] The maximum number of jobs allowed
+		*     to run concurrently
+		*/
+		constructor(concurrency) {
+			this[kDone] = () => {
+				this.pending--;
+				this[kRun]();
+			};
+			this.concurrency = concurrency || Infinity;
+			this.jobs = [];
+			this.pending = 0;
 		}
-		add(e) {
-			this.jobs.push(e), this[r]();
+		/**
+		* Adds a job to the queue.
+		*
+		* @param {Function} job The job to run
+		* @public
+		*/
+		add(job) {
+			this.jobs.push(job);
+			this[kRun]();
 		}
-		[r]() {
-			if (this.pending !== this.concurrency && this.jobs.length) {
-				let e = this.jobs.shift();
-				this.pending++, e(this[n]);
+		/**
+		* Removes a job from the queue and runs it if possible.
+		*
+		* @private
+		*/
+		[kRun]() {
+			if (this.pending === this.concurrency) return;
+			if (this.jobs.length) {
+				const job = this.jobs.shift();
+				this.pending++;
+				job(this[kDone]);
 			}
 		}
 	};
-})), q = /* @__PURE__ */ p(((e, t) => {
-	var n = v("zlib"), r = K(), i = de(), { kStatusCode: a } = W(), o = Buffer[Symbol.species], s = Buffer.from([
+	module.exports = Limiter;
+}));
+//#endregion
+//#region node_modules/ws/lib/permessage-deflate.js
+var require_permessage_deflate = /* @__PURE__ */ __commonJSMin(((exports, module) => {
+	var zlib = __require("zlib");
+	var bufferUtil = require_buffer_util();
+	var Limiter = require_limiter();
+	var { kStatusCode } = require_constants();
+	var FastBuffer = Buffer[Symbol.species];
+	var TRAILER = Buffer.from([
 		0,
 		0,
 		255,
 		255
-	]), c = Symbol("permessage-deflate"), l = Symbol("total-length"), u = Symbol("callback"), d = Symbol("buffers"), f = Symbol("error"), p;
-	t.exports = class {
-		constructor(e) {
-			this._options = e || {}, this._threshold = this._options.threshold === void 0 ? 1024 : this._options.threshold, this._maxPayload = this._options.maxPayload | 0, this._isServer = !!this._options.isServer, this._deflate = null, this._inflate = null, this.params = null, p ||= new i(this._options.concurrencyLimit === void 0 ? 10 : this._options.concurrencyLimit);
+	]);
+	var kPerMessageDeflate = Symbol("permessage-deflate");
+	var kTotalLength = Symbol("total-length");
+	var kCallback = Symbol("callback");
+	var kBuffers = Symbol("buffers");
+	var kError = Symbol("error");
+	var zlibLimiter;
+	/**
+	* permessage-deflate implementation.
+	*/
+	var PerMessageDeflate = class {
+		/**
+		* Creates a PerMessageDeflate instance.
+		*
+		* @param {Object} [options] Configuration options
+		* @param {(Boolean|Number)} [options.clientMaxWindowBits] Advertise support
+		*     for, or request, a custom client window size
+		* @param {Boolean} [options.clientNoContextTakeover=false] Advertise/
+		*     acknowledge disabling of client context takeover
+		* @param {Number} [options.concurrencyLimit=10] The number of concurrent
+		*     calls to zlib
+		* @param {Boolean} [options.isServer=false] Create the instance in either
+		*     server or client mode
+		* @param {Number} [options.maxPayload=0] The maximum allowed message length
+		* @param {(Boolean|Number)} [options.serverMaxWindowBits] Request/confirm the
+		*     use of a custom server window size
+		* @param {Boolean} [options.serverNoContextTakeover=false] Request/accept
+		*     disabling of server context takeover
+		* @param {Number} [options.threshold=1024] Size (in bytes) below which
+		*     messages should not be compressed if context takeover is disabled
+		* @param {Object} [options.zlibDeflateOptions] Options to pass to zlib on
+		*     deflate
+		* @param {Object} [options.zlibInflateOptions] Options to pass to zlib on
+		*     inflate
+		*/
+		constructor(options) {
+			this._options = options || {};
+			this._threshold = this._options.threshold !== void 0 ? this._options.threshold : 1024;
+			this._maxPayload = this._options.maxPayload | 0;
+			this._isServer = !!this._options.isServer;
+			this._deflate = null;
+			this._inflate = null;
+			this.params = null;
+			if (!zlibLimiter) zlibLimiter = new Limiter(this._options.concurrencyLimit !== void 0 ? this._options.concurrencyLimit : 10);
 		}
+		/**
+		* @type {String}
+		*/
 		static get extensionName() {
 			return "permessage-deflate";
 		}
+		/**
+		* Create an extension negotiation offer.
+		*
+		* @return {Object} Extension parameters
+		* @public
+		*/
 		offer() {
-			let e = {};
-			return this._options.serverNoContextTakeover && (e.server_no_context_takeover = !0), this._options.clientNoContextTakeover && (e.client_no_context_takeover = !0), this._options.serverMaxWindowBits && (e.server_max_window_bits = this._options.serverMaxWindowBits), this._options.clientMaxWindowBits ? e.client_max_window_bits = this._options.clientMaxWindowBits : this._options.clientMaxWindowBits ?? (e.client_max_window_bits = !0), e;
+			const params = {};
+			if (this._options.serverNoContextTakeover) params.server_no_context_takeover = true;
+			if (this._options.clientNoContextTakeover) params.client_no_context_takeover = true;
+			if (this._options.serverMaxWindowBits) params.server_max_window_bits = this._options.serverMaxWindowBits;
+			if (this._options.clientMaxWindowBits) params.client_max_window_bits = this._options.clientMaxWindowBits;
+			else if (this._options.clientMaxWindowBits == null) params.client_max_window_bits = true;
+			return params;
 		}
-		accept(e) {
-			return e = this.normalizeParams(e), this.params = this._isServer ? this.acceptAsServer(e) : this.acceptAsClient(e), this.params;
+		/**
+		* Accept an extension negotiation offer/response.
+		*
+		* @param {Array} configurations The extension negotiation offers/reponse
+		* @return {Object} Accepted configuration
+		* @public
+		*/
+		accept(configurations) {
+			configurations = this.normalizeParams(configurations);
+			this.params = this._isServer ? this.acceptAsServer(configurations) : this.acceptAsClient(configurations);
+			return this.params;
 		}
+		/**
+		* Releases all resources used by the extension.
+		*
+		* @public
+		*/
 		cleanup() {
-			if (this._inflate &&= (this._inflate.close(), null), this._deflate) {
-				let e = this._deflate[u];
-				this._deflate.close(), this._deflate = null, e && e(/* @__PURE__ */ Error("The deflate stream was closed while data was being processed"));
+			if (this._inflate) {
+				this._inflate.close();
+				this._inflate = null;
+			}
+			if (this._deflate) {
+				const callback = this._deflate[kCallback];
+				this._deflate.close();
+				this._deflate = null;
+				if (callback) callback(/* @__PURE__ */ new Error("The deflate stream was closed while data was being processed"));
 			}
 		}
-		acceptAsServer(e) {
-			let t = this._options, n = e.find((e) => !(t.serverNoContextTakeover === !1 && e.server_no_context_takeover || e.server_max_window_bits && (t.serverMaxWindowBits === !1 || typeof t.serverMaxWindowBits == "number" && t.serverMaxWindowBits > e.server_max_window_bits) || typeof t.clientMaxWindowBits == "number" && (typeof e.client_max_window_bits == "number" ? t.clientMaxWindowBits > e.client_max_window_bits : !e.client_max_window_bits)));
-			if (!n) throw Error("None of the extension offers can be accepted");
-			return t.serverNoContextTakeover && (n.server_no_context_takeover = !0), t.clientNoContextTakeover && (n.client_no_context_takeover = !0), typeof t.serverMaxWindowBits == "number" && (n.server_max_window_bits = t.serverMaxWindowBits), typeof t.clientMaxWindowBits == "number" ? n.client_max_window_bits = t.clientMaxWindowBits : (n.client_max_window_bits === !0 || t.clientMaxWindowBits === !1) && delete n.client_max_window_bits, n;
+		/**
+		*  Accept an extension negotiation offer.
+		*
+		* @param {Array} offers The extension negotiation offers
+		* @return {Object} Accepted configuration
+		* @private
+		*/
+		acceptAsServer(offers) {
+			const opts = this._options;
+			const accepted = offers.find((params) => {
+				if (opts.serverNoContextTakeover === false && params.server_no_context_takeover || params.server_max_window_bits && (opts.serverMaxWindowBits === false || typeof opts.serverMaxWindowBits === "number" && opts.serverMaxWindowBits > params.server_max_window_bits) || typeof opts.clientMaxWindowBits === "number" && (typeof params.client_max_window_bits === "number" ? opts.clientMaxWindowBits > params.client_max_window_bits : !params.client_max_window_bits)) return false;
+				return true;
+			});
+			if (!accepted) throw new Error("None of the extension offers can be accepted");
+			if (opts.serverNoContextTakeover) accepted.server_no_context_takeover = true;
+			if (opts.clientNoContextTakeover) accepted.client_no_context_takeover = true;
+			if (typeof opts.serverMaxWindowBits === "number") accepted.server_max_window_bits = opts.serverMaxWindowBits;
+			if (typeof opts.clientMaxWindowBits === "number") accepted.client_max_window_bits = opts.clientMaxWindowBits;
+			else if (accepted.client_max_window_bits === true || opts.clientMaxWindowBits === false) delete accepted.client_max_window_bits;
+			return accepted;
 		}
-		acceptAsClient(e) {
-			let t = e[0];
-			if (this._options.clientNoContextTakeover === !1 && t.client_no_context_takeover) throw Error("Unexpected parameter \"client_no_context_takeover\"");
-			if (!t.client_max_window_bits) typeof this._options.clientMaxWindowBits == "number" && (t.client_max_window_bits = this._options.clientMaxWindowBits);
-			else if (this._options.clientMaxWindowBits === !1 || typeof this._options.clientMaxWindowBits == "number" && t.client_max_window_bits > this._options.clientMaxWindowBits) throw Error("Unexpected or invalid parameter \"client_max_window_bits\"");
-			return t;
+		/**
+		* Accept the extension negotiation response.
+		*
+		* @param {Array} response The extension negotiation response
+		* @return {Object} Accepted configuration
+		* @private
+		*/
+		acceptAsClient(response) {
+			const params = response[0];
+			if (this._options.clientNoContextTakeover === false && params.client_no_context_takeover) throw new Error("Unexpected parameter \"client_no_context_takeover\"");
+			if (!params.client_max_window_bits) {
+				if (typeof this._options.clientMaxWindowBits === "number") params.client_max_window_bits = this._options.clientMaxWindowBits;
+			} else if (this._options.clientMaxWindowBits === false || typeof this._options.clientMaxWindowBits === "number" && params.client_max_window_bits > this._options.clientMaxWindowBits) throw new Error("Unexpected or invalid parameter \"client_max_window_bits\"");
+			return params;
 		}
-		normalizeParams(e) {
-			return e.forEach((e) => {
-				Object.keys(e).forEach((t) => {
-					let n = e[t];
-					if (n.length > 1) throw Error(`Parameter "${t}" must have only a single value`);
-					if (n = n[0], t === "client_max_window_bits") {
-						if (n !== !0) {
-							let e = +n;
-							if (!Number.isInteger(e) || e < 8 || e > 15) throw TypeError(`Invalid value for parameter "${t}": ${n}`);
-							n = e;
-						} else if (!this._isServer) throw TypeError(`Invalid value for parameter "${t}": ${n}`);
-					} else if (t === "server_max_window_bits") {
-						let e = +n;
-						if (!Number.isInteger(e) || e < 8 || e > 15) throw TypeError(`Invalid value for parameter "${t}": ${n}`);
-						n = e;
-					} else if (t === "client_no_context_takeover" || t === "server_no_context_takeover") {
-						if (n !== !0) throw TypeError(`Invalid value for parameter "${t}": ${n}`);
-					} else throw Error(`Unknown parameter "${t}"`);
-					e[t] = n;
+		/**
+		* Normalize parameters.
+		*
+		* @param {Array} configurations The extension negotiation offers/reponse
+		* @return {Array} The offers/response with normalized parameters
+		* @private
+		*/
+		normalizeParams(configurations) {
+			configurations.forEach((params) => {
+				Object.keys(params).forEach((key) => {
+					let value = params[key];
+					if (value.length > 1) throw new Error(`Parameter "${key}" must have only a single value`);
+					value = value[0];
+					if (key === "client_max_window_bits") {
+						if (value !== true) {
+							const num = +value;
+							if (!Number.isInteger(num) || num < 8 || num > 15) throw new TypeError(`Invalid value for parameter "${key}": ${value}`);
+							value = num;
+						} else if (!this._isServer) throw new TypeError(`Invalid value for parameter "${key}": ${value}`);
+					} else if (key === "server_max_window_bits") {
+						const num = +value;
+						if (!Number.isInteger(num) || num < 8 || num > 15) throw new TypeError(`Invalid value for parameter "${key}": ${value}`);
+						value = num;
+					} else if (key === "client_no_context_takeover" || key === "server_no_context_takeover") {
+						if (value !== true) throw new TypeError(`Invalid value for parameter "${key}": ${value}`);
+					} else throw new Error(`Unknown parameter "${key}"`);
+					params[key] = value;
 				});
-			}), e;
+			});
+			return configurations;
 		}
-		decompress(e, t, n) {
-			p.add((r) => {
-				this._decompress(e, t, (e, t) => {
-					r(), n(e, t);
+		/**
+		* Decompress data. Concurrency limited.
+		*
+		* @param {Buffer} data Compressed data
+		* @param {Boolean} fin Specifies whether or not this is the last fragment
+		* @param {Function} callback Callback
+		* @public
+		*/
+		decompress(data, fin, callback) {
+			zlibLimiter.add((done) => {
+				this._decompress(data, fin, (err, result) => {
+					done();
+					callback(err, result);
 				});
 			});
 		}
-		compress(e, t, n) {
-			p.add((r) => {
-				this._compress(e, t, (e, t) => {
-					r(), n(e, t);
+		/**
+		* Compress data. Concurrency limited.
+		*
+		* @param {(Buffer|String)} data Data to compress
+		* @param {Boolean} fin Specifies whether or not this is the last fragment
+		* @param {Function} callback Callback
+		* @public
+		*/
+		compress(data, fin, callback) {
+			zlibLimiter.add((done) => {
+				this._compress(data, fin, (err, result) => {
+					done();
+					callback(err, result);
 				});
 			});
 		}
-		_decompress(e, t, i) {
-			let a = this._isServer ? "client" : "server";
+		/**
+		* Decompress data.
+		*
+		* @param {Buffer} data Compressed data
+		* @param {Boolean} fin Specifies whether or not this is the last fragment
+		* @param {Function} callback Callback
+		* @private
+		*/
+		_decompress(data, fin, callback) {
+			const endpoint = this._isServer ? "client" : "server";
 			if (!this._inflate) {
-				let e = `${a}_max_window_bits`, t = typeof this.params[e] == "number" ? this.params[e] : n.Z_DEFAULT_WINDOWBITS;
-				this._inflate = n.createInflateRaw({
+				const key = `${endpoint}_max_window_bits`;
+				const windowBits = typeof this.params[key] !== "number" ? zlib.Z_DEFAULT_WINDOWBITS : this.params[key];
+				this._inflate = zlib.createInflateRaw({
 					...this._options.zlibInflateOptions,
-					windowBits: t
-				}), this._inflate[c] = this, this._inflate[l] = 0, this._inflate[d] = [], this._inflate.on("error", g), this._inflate.on("data", h);
+					windowBits
+				});
+				this._inflate[kPerMessageDeflate] = this;
+				this._inflate[kTotalLength] = 0;
+				this._inflate[kBuffers] = [];
+				this._inflate.on("error", inflateOnError);
+				this._inflate.on("data", inflateOnData);
 			}
-			this._inflate[u] = i, this._inflate.write(e), t && this._inflate.write(s), this._inflate.flush(() => {
-				let e = this._inflate[f];
-				if (e) {
-					this._inflate.close(), this._inflate = null, i(e);
+			this._inflate[kCallback] = callback;
+			this._inflate.write(data);
+			if (fin) this._inflate.write(TRAILER);
+			this._inflate.flush(() => {
+				const err = this._inflate[kError];
+				if (err) {
+					this._inflate.close();
+					this._inflate = null;
+					callback(err);
 					return;
 				}
-				let n = r.concat(this._inflate[d], this._inflate[l]);
-				this._inflate._readableState.endEmitted ? (this._inflate.close(), this._inflate = null) : (this._inflate[l] = 0, this._inflate[d] = [], t && this.params[`${a}_no_context_takeover`] && this._inflate.reset()), i(null, n);
+				const data = bufferUtil.concat(this._inflate[kBuffers], this._inflate[kTotalLength]);
+				if (this._inflate._readableState.endEmitted) {
+					this._inflate.close();
+					this._inflate = null;
+				} else {
+					this._inflate[kTotalLength] = 0;
+					this._inflate[kBuffers] = [];
+					if (fin && this.params[`${endpoint}_no_context_takeover`]) this._inflate.reset();
+				}
+				callback(null, data);
 			});
 		}
-		_compress(e, t, i) {
-			let a = this._isServer ? "server" : "client";
+		/**
+		* Compress data.
+		*
+		* @param {(Buffer|String)} data Data to compress
+		* @param {Boolean} fin Specifies whether or not this is the last fragment
+		* @param {Function} callback Callback
+		* @private
+		*/
+		_compress(data, fin, callback) {
+			const endpoint = this._isServer ? "server" : "client";
 			if (!this._deflate) {
-				let e = `${a}_max_window_bits`, t = typeof this.params[e] == "number" ? this.params[e] : n.Z_DEFAULT_WINDOWBITS;
-				this._deflate = n.createDeflateRaw({
+				const key = `${endpoint}_max_window_bits`;
+				const windowBits = typeof this.params[key] !== "number" ? zlib.Z_DEFAULT_WINDOWBITS : this.params[key];
+				this._deflate = zlib.createDeflateRaw({
 					...this._options.zlibDeflateOptions,
-					windowBits: t
-				}), this._deflate[l] = 0, this._deflate[d] = [], this._deflate.on("data", m);
+					windowBits
+				});
+				this._deflate[kTotalLength] = 0;
+				this._deflate[kBuffers] = [];
+				this._deflate.on("data", deflateOnData);
 			}
-			this._deflate[u] = i, this._deflate.write(e), this._deflate.flush(n.Z_SYNC_FLUSH, () => {
+			this._deflate[kCallback] = callback;
+			this._deflate.write(data);
+			this._deflate.flush(zlib.Z_SYNC_FLUSH, () => {
 				if (!this._deflate) return;
-				let e = r.concat(this._deflate[d], this._deflate[l]);
-				t && (e = new o(e.buffer, e.byteOffset, e.length - 4)), this._deflate[u] = null, this._deflate[l] = 0, this._deflate[d] = [], t && this.params[`${a}_no_context_takeover`] && this._deflate.reset(), i(null, e);
+				let data = bufferUtil.concat(this._deflate[kBuffers], this._deflate[kTotalLength]);
+				if (fin) data = new FastBuffer(data.buffer, data.byteOffset, data.length - 4);
+				this._deflate[kCallback] = null;
+				this._deflate[kTotalLength] = 0;
+				this._deflate[kBuffers] = [];
+				if (fin && this.params[`${endpoint}_no_context_takeover`]) this._deflate.reset();
+				callback(null, data);
 			});
 		}
 	};
-	function m(e) {
-		this[d].push(e), this[l] += e.length;
+	module.exports = PerMessageDeflate;
+	/**
+	* The listener of the `zlib.DeflateRaw` stream `'data'` event.
+	*
+	* @param {Buffer} chunk A chunk of data
+	* @private
+	*/
+	function deflateOnData(chunk) {
+		this[kBuffers].push(chunk);
+		this[kTotalLength] += chunk.length;
 	}
-	function h(e) {
-		if (this[l] += e.length, this[c]._maxPayload < 1 || this[l] <= this[c]._maxPayload) {
-			this[d].push(e);
+	/**
+	* The listener of the `zlib.InflateRaw` stream `'data'` event.
+	*
+	* @param {Buffer} chunk A chunk of data
+	* @private
+	*/
+	function inflateOnData(chunk) {
+		this[kTotalLength] += chunk.length;
+		if (this[kPerMessageDeflate]._maxPayload < 1 || this[kTotalLength] <= this[kPerMessageDeflate]._maxPayload) {
+			this[kBuffers].push(chunk);
 			return;
 		}
-		this[f] = /* @__PURE__ */ RangeError("Max payload size exceeded"), this[f].code = "WS_ERR_UNSUPPORTED_MESSAGE_LENGTH", this[f][a] = 1009, this.removeListener("data", h), this.reset();
+		this[kError] = /* @__PURE__ */ new RangeError("Max payload size exceeded");
+		this[kError].code = "WS_ERR_UNSUPPORTED_MESSAGE_LENGTH";
+		this[kError][kStatusCode] = 1009;
+		this.removeListener("data", inflateOnData);
+		this.reset();
 	}
-	function g(e) {
-		if (this[c]._inflate = null, this[f]) {
-			this[u](this[f]);
+	/**
+	* The listener of the `zlib.InflateRaw` stream `'error'` event.
+	*
+	* @param {Error} err The emitted error
+	* @private
+	*/
+	function inflateOnError(err) {
+		this[kPerMessageDeflate]._inflate = null;
+		if (this[kError]) {
+			this[kCallback](this[kError]);
 			return;
 		}
-		e[a] = 1007, this[u](e);
+		err[kStatusCode] = 1007;
+		this[kCallback](err);
 	}
-})), fe = /* @__PURE__ */ p(((e, t) => {
-	function n(e) {
-		let t = e.length, n = 0;
-		for (; n < t;) if (!(e[n] & 128)) n++;
-		else if ((e[n] & 224) == 192) {
-			if (n + 1 === t || (e[n + 1] & 192) != 128 || (e[n] & 254) == 192) return !1;
-			n += 2;
-		} else if ((e[n] & 240) == 224) {
-			if (n + 2 >= t || (e[n + 1] & 192) != 128 || (e[n + 2] & 192) != 128 || e[n] === 224 && (e[n + 1] & 224) == 128 || e[n] === 237 && (e[n + 1] & 224) == 160) return !1;
-			n += 3;
-		} else if ((e[n] & 248) == 240) {
-			if (n + 3 >= t || (e[n + 1] & 192) != 128 || (e[n + 2] & 192) != 128 || (e[n + 3] & 192) != 128 || e[n] === 240 && (e[n + 1] & 240) == 128 || e[n] === 244 && e[n + 1] > 143 || e[n] > 244) return !1;
-			n += 4;
-		} else return !1;
-		return !0;
+}));
+//#endregion
+//#region node_modules/utf-8-validate/fallback.js
+var require_fallback = /* @__PURE__ */ __commonJSMin(((exports, module) => {
+	/**
+	* Checks if a given buffer contains only correct UTF-8.
+	* Ported from https://www.cl.cam.ac.uk/%7Emgk25/ucs/utf8_check.c by
+	* Markus Kuhn.
+	*
+	* @param {Buffer} buf The buffer to check
+	* @return {Boolean} `true` if `buf` contains only correct UTF-8, else `false`
+	* @public
+	*/
+	function isValidUTF8(buf) {
+		const len = buf.length;
+		let i = 0;
+		while (i < len) if ((buf[i] & 128) === 0) i++;
+		else if ((buf[i] & 224) === 192) {
+			if (i + 1 === len || (buf[i + 1] & 192) !== 128 || (buf[i] & 254) === 192) return false;
+			i += 2;
+		} else if ((buf[i] & 240) === 224) {
+			if (i + 2 >= len || (buf[i + 1] & 192) !== 128 || (buf[i + 2] & 192) !== 128 || buf[i] === 224 && (buf[i + 1] & 224) === 128 || buf[i] === 237 && (buf[i + 1] & 224) === 160) return false;
+			i += 3;
+		} else if ((buf[i] & 248) === 240) {
+			if (i + 3 >= len || (buf[i + 1] & 192) !== 128 || (buf[i + 2] & 192) !== 128 || (buf[i + 3] & 192) !== 128 || buf[i] === 240 && (buf[i + 1] & 240) === 128 || buf[i] === 244 && buf[i + 1] > 143 || buf[i] > 244) return false;
+			i += 4;
+		} else return false;
+		return true;
 	}
-	t.exports = n;
-})), pe = /* @__PURE__ */ p(((e, t) => {
+	module.exports = isValidUTF8;
+}));
+//#endregion
+//#region node_modules/utf-8-validate/index.js
+var require_utf_8_validate = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 	try {
-		t.exports = G()(__dirname);
-	} catch {
-		t.exports = fe();
+		module.exports = require_node_gyp_build()(__dirname);
+	} catch (e) {
+		module.exports = require_fallback();
 	}
-})), J = /* @__PURE__ */ p(((e, t) => {
-	var { isUtf8: n } = v("buffer"), { hasBlob: r } = W(), i = [
+}));
+//#endregion
+//#region node_modules/ws/lib/validation.js
+var require_validation = /* @__PURE__ */ __commonJSMin(((exports, module) => {
+	var { isUtf8 } = __require("buffer");
+	var { hasBlob } = require_constants();
+	var tokenChars = [
 		0,
 		0,
 		0,
@@ -9295,765 +11773,1856 @@ var o = Object.create, s = Object.defineProperty, c = Object.getOwnPropertyDescr
 		1,
 		0
 	];
-	function a(e) {
-		return e >= 1e3 && e <= 1014 && e !== 1004 && e !== 1005 && e !== 1006 || e >= 3e3 && e <= 4999;
+	/**
+	* Checks if a status code is allowed in a close frame.
+	*
+	* @param {Number} code The status code
+	* @return {Boolean} `true` if the status code is valid, else `false`
+	* @public
+	*/
+	function isValidStatusCode(code) {
+		return code >= 1e3 && code <= 1014 && code !== 1004 && code !== 1005 && code !== 1006 || code >= 3e3 && code <= 4999;
 	}
-	function o(e) {
-		let t = e.length, n = 0;
-		for (; n < t;) if (!(e[n] & 128)) n++;
-		else if ((e[n] & 224) == 192) {
-			if (n + 1 === t || (e[n + 1] & 192) != 128 || (e[n] & 254) == 192) return !1;
-			n += 2;
-		} else if ((e[n] & 240) == 224) {
-			if (n + 2 >= t || (e[n + 1] & 192) != 128 || (e[n + 2] & 192) != 128 || e[n] === 224 && (e[n + 1] & 224) == 128 || e[n] === 237 && (e[n + 1] & 224) == 160) return !1;
-			n += 3;
-		} else if ((e[n] & 248) == 240) {
-			if (n + 3 >= t || (e[n + 1] & 192) != 128 || (e[n + 2] & 192) != 128 || (e[n + 3] & 192) != 128 || e[n] === 240 && (e[n + 1] & 240) == 128 || e[n] === 244 && e[n + 1] > 143 || e[n] > 244) return !1;
-			n += 4;
-		} else return !1;
-		return !0;
+	/**
+	* Checks if a given buffer contains only correct UTF-8.
+	* Ported from https://www.cl.cam.ac.uk/%7Emgk25/ucs/utf8_check.c by
+	* Markus Kuhn.
+	*
+	* @param {Buffer} buf The buffer to check
+	* @return {Boolean} `true` if `buf` contains only correct UTF-8, else `false`
+	* @public
+	*/
+	function _isValidUTF8(buf) {
+		const len = buf.length;
+		let i = 0;
+		while (i < len) if ((buf[i] & 128) === 0) i++;
+		else if ((buf[i] & 224) === 192) {
+			if (i + 1 === len || (buf[i + 1] & 192) !== 128 || (buf[i] & 254) === 192) return false;
+			i += 2;
+		} else if ((buf[i] & 240) === 224) {
+			if (i + 2 >= len || (buf[i + 1] & 192) !== 128 || (buf[i + 2] & 192) !== 128 || buf[i] === 224 && (buf[i + 1] & 224) === 128 || buf[i] === 237 && (buf[i + 1] & 224) === 160) return false;
+			i += 3;
+		} else if ((buf[i] & 248) === 240) {
+			if (i + 3 >= len || (buf[i + 1] & 192) !== 128 || (buf[i + 2] & 192) !== 128 || (buf[i + 3] & 192) !== 128 || buf[i] === 240 && (buf[i + 1] & 240) === 128 || buf[i] === 244 && buf[i + 1] > 143 || buf[i] > 244) return false;
+			i += 4;
+		} else return false;
+		return true;
 	}
-	function s(e) {
-		return r && typeof e == "object" && typeof e.arrayBuffer == "function" && typeof e.type == "string" && typeof e.stream == "function" && (e[Symbol.toStringTag] === "Blob" || e[Symbol.toStringTag] === "File");
+	/**
+	* Determines whether a value is a `Blob`.
+	*
+	* @param {*} value The value to be tested
+	* @return {Boolean} `true` if `value` is a `Blob`, else `false`
+	* @private
+	*/
+	function isBlob(value) {
+		return hasBlob && typeof value === "object" && typeof value.arrayBuffer === "function" && typeof value.type === "string" && typeof value.stream === "function" && (value[Symbol.toStringTag] === "Blob" || value[Symbol.toStringTag] === "File");
 	}
-	if (t.exports = {
-		isBlob: s,
-		isValidStatusCode: a,
-		isValidUTF8: o,
-		tokenChars: i
-	}, n) t.exports.isValidUTF8 = function(e) {
-		return e.length < 24 ? o(e) : n(e);
+	module.exports = {
+		isBlob,
+		isValidStatusCode,
+		isValidUTF8: _isValidUTF8,
+		tokenChars
+	};
+	if (isUtf8) module.exports.isValidUTF8 = function(buf) {
+		return buf.length < 24 ? _isValidUTF8(buf) : isUtf8(buf);
 	};
 	else if (!process.env.WS_NO_UTF_8_VALIDATE) try {
-		let e = pe();
-		t.exports.isValidUTF8 = function(t) {
-			return t.length < 32 ? o(t) : e(t);
+		const isValidUTF8 = require_utf_8_validate();
+		module.exports.isValidUTF8 = function(buf) {
+			return buf.length < 32 ? _isValidUTF8(buf) : isValidUTF8(buf);
 		};
-	} catch {}
-})), me = /* @__PURE__ */ p(((e, t) => {
-	var { Writable: n } = v("stream"), r = q(), { BINARY_TYPES: i, EMPTY_BUFFER: a, kStatusCode: o, kWebSocket: s } = W(), { concat: c, toArrayBuffer: l, unmask: u } = K(), { isValidStatusCode: d, isValidUTF8: f } = J(), p = Buffer[Symbol.species], m = 0, h = 1, g = 2, _ = 3, y = 4, b = 5, x = 6;
-	t.exports = class extends n {
-		constructor(e = {}) {
-			super(), this._allowSynchronousEvents = e.allowSynchronousEvents === void 0 || e.allowSynchronousEvents, this._binaryType = e.binaryType || i[0], this._extensions = e.extensions || {}, this._isServer = !!e.isServer, this._maxBufferedChunks = e.maxBufferedChunks | 0, this._maxFragments = e.maxFragments | 0, this._maxPayload = e.maxPayload | 0, this._skipUTF8Validation = !!e.skipUTF8Validation, this[s] = void 0, this._bufferedBytes = 0, this._buffers = [], this._compressed = !1, this._payloadLength = 0, this._mask = void 0, this._fragmented = 0, this._masked = !1, this._fin = !1, this._opcode = 0, this._totalPayloadLength = 0, this._messageLength = 0, this._numFragments = 0, this._fragments = [], this._errored = !1, this._loop = !1, this._state = m;
+	} catch (e) {}
+}));
+//#endregion
+//#region node_modules/ws/lib/receiver.js
+var require_receiver = /* @__PURE__ */ __commonJSMin(((exports, module) => {
+	var { Writable } = __require("stream");
+	var PerMessageDeflate = require_permessage_deflate();
+	var { BINARY_TYPES, EMPTY_BUFFER, kStatusCode, kWebSocket } = require_constants();
+	var { concat, toArrayBuffer, unmask } = require_buffer_util();
+	var { isValidStatusCode, isValidUTF8 } = require_validation();
+	var FastBuffer = Buffer[Symbol.species];
+	var GET_INFO = 0;
+	var GET_PAYLOAD_LENGTH_16 = 1;
+	var GET_PAYLOAD_LENGTH_64 = 2;
+	var GET_MASK = 3;
+	var GET_DATA = 4;
+	var INFLATING = 5;
+	var DEFER_EVENT = 6;
+	/**
+	* HyBi Receiver implementation.
+	*
+	* @extends Writable
+	*/
+	var Receiver = class extends Writable {
+		/**
+		* Creates a Receiver instance.
+		*
+		* @param {Object} [options] Options object
+		* @param {Boolean} [options.allowSynchronousEvents=true] Specifies whether
+		*     any of the `'message'`, `'ping'`, and `'pong'` events can be emitted
+		*     multiple times in the same tick
+		* @param {String} [options.binaryType=nodebuffer] The type for binary data
+		* @param {Object} [options.extensions] An object containing the negotiated
+		*     extensions
+		* @param {Boolean} [options.isServer=false] Specifies whether to operate in
+		*     client or server mode
+		* @param {Number} [options.maxBufferedChunks=0] The maximum number of
+		*     buffered data chunks
+		* @param {Number} [options.maxFragments=0] The maximum number of message
+		*     fragments
+		* @param {Number} [options.maxPayload=0] The maximum allowed message length
+		* @param {Boolean} [options.skipUTF8Validation=false] Specifies whether or
+		*     not to skip UTF-8 validation for text and close messages
+		*/
+		constructor(options = {}) {
+			super();
+			this._allowSynchronousEvents = options.allowSynchronousEvents !== void 0 ? options.allowSynchronousEvents : true;
+			this._binaryType = options.binaryType || BINARY_TYPES[0];
+			this._extensions = options.extensions || {};
+			this._isServer = !!options.isServer;
+			this._maxBufferedChunks = options.maxBufferedChunks | 0;
+			this._maxFragments = options.maxFragments | 0;
+			this._maxPayload = options.maxPayload | 0;
+			this._skipUTF8Validation = !!options.skipUTF8Validation;
+			this[kWebSocket] = void 0;
+			this._bufferedBytes = 0;
+			this._buffers = [];
+			this._compressed = false;
+			this._payloadLength = 0;
+			this._mask = void 0;
+			this._fragmented = 0;
+			this._masked = false;
+			this._fin = false;
+			this._opcode = 0;
+			this._totalPayloadLength = 0;
+			this._messageLength = 0;
+			this._numFragments = 0;
+			this._fragments = [];
+			this._errored = false;
+			this._loop = false;
+			this._state = GET_INFO;
 		}
-		_write(e, t, n) {
-			if (this._opcode === 8 && this._state == m) return n();
+		/**
+		* Implements `Writable.prototype._write()`.
+		*
+		* @param {Buffer} chunk The chunk of data to write
+		* @param {String} encoding The character encoding of `chunk`
+		* @param {Function} cb Callback
+		* @private
+		*/
+		_write(chunk, encoding, cb) {
+			if (this._opcode === 8 && this._state == GET_INFO) return cb();
 			if (this._maxBufferedChunks > 0 && this._buffers.length >= this._maxBufferedChunks) {
-				n(this.createError(RangeError, "Too many buffered chunks", !1, 1008, "WS_ERR_TOO_MANY_BUFFERED_PARTS"));
+				cb(this.createError(RangeError, "Too many buffered chunks", false, 1008, "WS_ERR_TOO_MANY_BUFFERED_PARTS"));
 				return;
 			}
-			this._bufferedBytes += e.length, this._buffers.push(e), this.startLoop(n);
+			this._bufferedBytes += chunk.length;
+			this._buffers.push(chunk);
+			this.startLoop(cb);
 		}
-		consume(e) {
-			if (this._bufferedBytes -= e, e === this._buffers[0].length) return this._buffers.shift();
-			if (e < this._buffers[0].length) {
-				let t = this._buffers[0];
-				return this._buffers[0] = new p(t.buffer, t.byteOffset + e, t.length - e), new p(t.buffer, t.byteOffset, e);
+		/**
+		* Consumes `n` bytes from the buffered data.
+		*
+		* @param {Number} n The number of bytes to consume
+		* @return {Buffer} The consumed bytes
+		* @private
+		*/
+		consume(n) {
+			this._bufferedBytes -= n;
+			if (n === this._buffers[0].length) return this._buffers.shift();
+			if (n < this._buffers[0].length) {
+				const buf = this._buffers[0];
+				this._buffers[0] = new FastBuffer(buf.buffer, buf.byteOffset + n, buf.length - n);
+				return new FastBuffer(buf.buffer, buf.byteOffset, n);
 			}
-			let t = Buffer.allocUnsafe(e);
+			const dst = Buffer.allocUnsafe(n);
 			do {
-				let n = this._buffers[0], r = t.length - e;
-				e >= n.length ? t.set(this._buffers.shift(), r) : (t.set(new Uint8Array(n.buffer, n.byteOffset, e), r), this._buffers[0] = new p(n.buffer, n.byteOffset + e, n.length - e)), e -= n.length;
-			} while (e > 0);
-			return t;
+				const buf = this._buffers[0];
+				const offset = dst.length - n;
+				if (n >= buf.length) dst.set(this._buffers.shift(), offset);
+				else {
+					dst.set(new Uint8Array(buf.buffer, buf.byteOffset, n), offset);
+					this._buffers[0] = new FastBuffer(buf.buffer, buf.byteOffset + n, buf.length - n);
+				}
+				n -= buf.length;
+			} while (n > 0);
+			return dst;
 		}
-		startLoop(e) {
-			this._loop = !0;
+		/**
+		* Starts the parsing loop.
+		*
+		* @param {Function} cb Callback
+		* @private
+		*/
+		startLoop(cb) {
+			this._loop = true;
 			do
 				switch (this._state) {
-					case m:
-						this.getInfo(e);
+					case GET_INFO:
+						this.getInfo(cb);
 						break;
-					case h:
-						this.getPayloadLength16(e);
+					case GET_PAYLOAD_LENGTH_16:
+						this.getPayloadLength16(cb);
 						break;
-					case g:
-						this.getPayloadLength64(e);
+					case GET_PAYLOAD_LENGTH_64:
+						this.getPayloadLength64(cb);
 						break;
-					case _:
+					case GET_MASK:
 						this.getMask();
 						break;
-					case y:
-						this.getData(e);
+					case GET_DATA:
+						this.getData(cb);
 						break;
-					case b:
-					case x:
-						this._loop = !1;
+					case INFLATING:
+					case DEFER_EVENT:
+						this._loop = false;
 						return;
 				}
 			while (this._loop);
-			this._errored || e();
+			if (!this._errored) cb();
 		}
-		getInfo(e) {
+		/**
+		* Reads the first two bytes of a frame.
+		*
+		* @param {Function} cb Callback
+		* @private
+		*/
+		getInfo(cb) {
 			if (this._bufferedBytes < 2) {
-				this._loop = !1;
+				this._loop = false;
 				return;
 			}
-			let t = this.consume(2);
-			if (t[0] & 48) {
-				e(this.createError(RangeError, "RSV2 and RSV3 must be clear", !0, 1002, "WS_ERR_UNEXPECTED_RSV_2_3"));
+			const buf = this.consume(2);
+			if ((buf[0] & 48) !== 0) {
+				cb(this.createError(RangeError, "RSV2 and RSV3 must be clear", true, 1002, "WS_ERR_UNEXPECTED_RSV_2_3"));
 				return;
 			}
-			let n = (t[0] & 64) == 64;
-			if (n && !this._extensions[r.extensionName]) {
-				e(this.createError(RangeError, "RSV1 must be clear", !0, 1002, "WS_ERR_UNEXPECTED_RSV_1"));
+			const compressed = (buf[0] & 64) === 64;
+			if (compressed && !this._extensions[PerMessageDeflate.extensionName]) {
+				cb(this.createError(RangeError, "RSV1 must be clear", true, 1002, "WS_ERR_UNEXPECTED_RSV_1"));
 				return;
 			}
-			if (this._fin = (t[0] & 128) == 128, this._opcode = t[0] & 15, this._payloadLength = t[1] & 127, this._opcode === 0) {
-				if (n) {
-					e(this.createError(RangeError, "RSV1 must be clear", !0, 1002, "WS_ERR_UNEXPECTED_RSV_1"));
+			this._fin = (buf[0] & 128) === 128;
+			this._opcode = buf[0] & 15;
+			this._payloadLength = buf[1] & 127;
+			if (this._opcode === 0) {
+				if (compressed) {
+					cb(this.createError(RangeError, "RSV1 must be clear", true, 1002, "WS_ERR_UNEXPECTED_RSV_1"));
 					return;
 				}
 				if (!this._fragmented) {
-					e(this.createError(RangeError, "invalid opcode 0", !0, 1002, "WS_ERR_INVALID_OPCODE"));
+					cb(this.createError(RangeError, "invalid opcode 0", true, 1002, "WS_ERR_INVALID_OPCODE"));
 					return;
 				}
 				this._opcode = this._fragmented;
 			} else if (this._opcode === 1 || this._opcode === 2) {
 				if (this._fragmented) {
-					e(this.createError(RangeError, `invalid opcode ${this._opcode}`, !0, 1002, "WS_ERR_INVALID_OPCODE"));
+					cb(this.createError(RangeError, `invalid opcode ${this._opcode}`, true, 1002, "WS_ERR_INVALID_OPCODE"));
 					return;
 				}
-				this._compressed = n;
+				this._compressed = compressed;
 			} else if (this._opcode > 7 && this._opcode < 11) {
 				if (!this._fin) {
-					e(this.createError(RangeError, "FIN must be set", !0, 1002, "WS_ERR_EXPECTED_FIN"));
+					cb(this.createError(RangeError, "FIN must be set", true, 1002, "WS_ERR_EXPECTED_FIN"));
 					return;
 				}
-				if (n) {
-					e(this.createError(RangeError, "RSV1 must be clear", !0, 1002, "WS_ERR_UNEXPECTED_RSV_1"));
+				if (compressed) {
+					cb(this.createError(RangeError, "RSV1 must be clear", true, 1002, "WS_ERR_UNEXPECTED_RSV_1"));
 					return;
 				}
 				if (this._payloadLength > 125 || this._opcode === 8 && this._payloadLength === 1) {
-					e(this.createError(RangeError, `invalid payload length ${this._payloadLength}`, !0, 1002, "WS_ERR_INVALID_CONTROL_PAYLOAD_LENGTH"));
+					cb(this.createError(RangeError, `invalid payload length ${this._payloadLength}`, true, 1002, "WS_ERR_INVALID_CONTROL_PAYLOAD_LENGTH"));
 					return;
 				}
 			} else {
-				e(this.createError(RangeError, `invalid opcode ${this._opcode}`, !0, 1002, "WS_ERR_INVALID_OPCODE"));
+				cb(this.createError(RangeError, `invalid opcode ${this._opcode}`, true, 1002, "WS_ERR_INVALID_OPCODE"));
 				return;
 			}
-			if (!this._fin && !this._fragmented && (this._fragmented = this._opcode), this._masked = (t[1] & 128) == 128, this._isServer) {
+			if (!this._fin && !this._fragmented) this._fragmented = this._opcode;
+			this._masked = (buf[1] & 128) === 128;
+			if (this._isServer) {
 				if (!this._masked) {
-					e(this.createError(RangeError, "MASK must be set", !0, 1002, "WS_ERR_EXPECTED_MASK"));
+					cb(this.createError(RangeError, "MASK must be set", true, 1002, "WS_ERR_EXPECTED_MASK"));
 					return;
 				}
 			} else if (this._masked) {
-				e(this.createError(RangeError, "MASK must be clear", !0, 1002, "WS_ERR_UNEXPECTED_MASK"));
+				cb(this.createError(RangeError, "MASK must be clear", true, 1002, "WS_ERR_UNEXPECTED_MASK"));
 				return;
 			}
-			this._payloadLength === 126 ? this._state = h : this._payloadLength === 127 ? this._state = g : this.haveLength(e);
+			if (this._payloadLength === 126) this._state = GET_PAYLOAD_LENGTH_16;
+			else if (this._payloadLength === 127) this._state = GET_PAYLOAD_LENGTH_64;
+			else this.haveLength(cb);
 		}
-		getPayloadLength16(e) {
+		/**
+		* Gets extended payload length (7+16).
+		*
+		* @param {Function} cb Callback
+		* @private
+		*/
+		getPayloadLength16(cb) {
 			if (this._bufferedBytes < 2) {
-				this._loop = !1;
+				this._loop = false;
 				return;
 			}
-			this._payloadLength = this.consume(2).readUInt16BE(0), this.haveLength(e);
+			this._payloadLength = this.consume(2).readUInt16BE(0);
+			this.haveLength(cb);
 		}
-		getPayloadLength64(e) {
+		/**
+		* Gets extended payload length (7+64).
+		*
+		* @param {Function} cb Callback
+		* @private
+		*/
+		getPayloadLength64(cb) {
 			if (this._bufferedBytes < 8) {
-				this._loop = !1;
+				this._loop = false;
 				return;
 			}
-			let t = this.consume(8), n = t.readUInt32BE(0);
-			if (n > 2 ** 21 - 1) {
-				e(this.createError(RangeError, "Unsupported WebSocket frame: payload length > 2^53 - 1", !1, 1009, "WS_ERR_UNSUPPORTED_DATA_PAYLOAD_LENGTH"));
+			const buf = this.consume(8);
+			const num = buf.readUInt32BE(0);
+			if (num > Math.pow(2, 21) - 1) {
+				cb(this.createError(RangeError, "Unsupported WebSocket frame: payload length > 2^53 - 1", false, 1009, "WS_ERR_UNSUPPORTED_DATA_PAYLOAD_LENGTH"));
 				return;
 			}
-			this._payloadLength = n * 2 ** 32 + t.readUInt32BE(4), this.haveLength(e);
+			this._payloadLength = num * Math.pow(2, 32) + buf.readUInt32BE(4);
+			this.haveLength(cb);
 		}
-		haveLength(e) {
-			if (this._payloadLength && this._opcode < 8 && (this._totalPayloadLength += this._payloadLength, this._totalPayloadLength > this._maxPayload && this._maxPayload > 0)) {
-				e(this.createError(RangeError, "Max payload size exceeded", !1, 1009, "WS_ERR_UNSUPPORTED_MESSAGE_LENGTH"));
-				return;
-			}
-			this._state = this._masked ? _ : y;
-		}
-		getMask() {
-			if (this._bufferedBytes < 4) {
-				this._loop = !1;
-				return;
-			}
-			this._mask = this.consume(4), this._state = y;
-		}
-		getData(e) {
-			let t = a;
-			if (this._payloadLength) {
-				if (this._bufferedBytes < this._payloadLength) {
-					this._loop = !1;
+		/**
+		* Payload length has been read.
+		*
+		* @param {Function} cb Callback
+		* @private
+		*/
+		haveLength(cb) {
+			if (this._payloadLength && this._opcode < 8) {
+				this._totalPayloadLength += this._payloadLength;
+				if (this._totalPayloadLength > this._maxPayload && this._maxPayload > 0) {
+					cb(this.createError(RangeError, "Max payload size exceeded", false, 1009, "WS_ERR_UNSUPPORTED_MESSAGE_LENGTH"));
 					return;
 				}
-				t = this.consume(this._payloadLength), this._masked && (this._mask[0] | this._mask[1] | this._mask[2] | this._mask[3]) !== 0 && u(t, this._mask);
+			}
+			if (this._masked) this._state = GET_MASK;
+			else this._state = GET_DATA;
+		}
+		/**
+		* Reads mask bytes.
+		*
+		* @private
+		*/
+		getMask() {
+			if (this._bufferedBytes < 4) {
+				this._loop = false;
+				return;
+			}
+			this._mask = this.consume(4);
+			this._state = GET_DATA;
+		}
+		/**
+		* Reads data bytes.
+		*
+		* @param {Function} cb Callback
+		* @private
+		*/
+		getData(cb) {
+			let data = EMPTY_BUFFER;
+			if (this._payloadLength) {
+				if (this._bufferedBytes < this._payloadLength) {
+					this._loop = false;
+					return;
+				}
+				data = this.consume(this._payloadLength);
+				if (this._masked && (this._mask[0] | this._mask[1] | this._mask[2] | this._mask[3]) !== 0) unmask(data, this._mask);
 			}
 			if (this._opcode > 7) {
-				this.controlMessage(t, e);
+				this.controlMessage(data, cb);
 				return;
 			}
 			if (this._maxFragments > 0 && ++this._numFragments > this._maxFragments) {
-				e(this.createError(RangeError, "Too many message fragments", !1, 1008, "WS_ERR_TOO_MANY_BUFFERED_PARTS"));
+				cb(this.createError(RangeError, "Too many message fragments", false, 1008, "WS_ERR_TOO_MANY_BUFFERED_PARTS"));
 				return;
 			}
 			if (this._compressed) {
-				this._state = b, this.decompress(t, e);
+				this._state = INFLATING;
+				this.decompress(data, cb);
 				return;
 			}
-			t.length && (this._messageLength = this._totalPayloadLength, this._fragments.push(t)), this.dataMessage(e);
+			if (data.length) {
+				this._messageLength = this._totalPayloadLength;
+				this._fragments.push(data);
+			}
+			this.dataMessage(cb);
 		}
-		decompress(e, t) {
-			this._extensions[r.extensionName].decompress(e, this._fin, (e, n) => {
-				if (e) return t(e);
-				if (n.length) {
-					if (this._messageLength += n.length, this._messageLength > this._maxPayload && this._maxPayload > 0) {
-						t(this.createError(RangeError, "Max payload size exceeded", !1, 1009, "WS_ERR_UNSUPPORTED_MESSAGE_LENGTH"));
+		/**
+		* Decompresses data.
+		*
+		* @param {Buffer} data Compressed data
+		* @param {Function} cb Callback
+		* @private
+		*/
+		decompress(data, cb) {
+			this._extensions[PerMessageDeflate.extensionName].decompress(data, this._fin, (err, buf) => {
+				if (err) return cb(err);
+				if (buf.length) {
+					this._messageLength += buf.length;
+					if (this._messageLength > this._maxPayload && this._maxPayload > 0) {
+						cb(this.createError(RangeError, "Max payload size exceeded", false, 1009, "WS_ERR_UNSUPPORTED_MESSAGE_LENGTH"));
 						return;
 					}
-					this._fragments.push(n);
+					this._fragments.push(buf);
 				}
-				this.dataMessage(t), this._state === m && this.startLoop(t);
+				this.dataMessage(cb);
+				if (this._state === GET_INFO) this.startLoop(cb);
 			});
 		}
-		dataMessage(e) {
+		/**
+		* Handles a data message.
+		*
+		* @param {Function} cb Callback
+		* @private
+		*/
+		dataMessage(cb) {
 			if (!this._fin) {
-				this._state = m;
+				this._state = GET_INFO;
 				return;
 			}
-			let t = this._messageLength, n = this._fragments;
-			if (this._totalPayloadLength = 0, this._messageLength = 0, this._fragmented = 0, this._numFragments = 0, this._fragments = [], this._opcode === 2) {
-				let r;
-				r = this._binaryType === "nodebuffer" ? c(n, t) : this._binaryType === "arraybuffer" ? l(c(n, t)) : this._binaryType === "blob" ? new Blob(n) : n, this._allowSynchronousEvents ? (this.emit("message", r, !0), this._state = m) : (this._state = x, setImmediate(() => {
-					this.emit("message", r, !0), this._state = m, this.startLoop(e);
-				}));
+			const messageLength = this._messageLength;
+			const fragments = this._fragments;
+			this._totalPayloadLength = 0;
+			this._messageLength = 0;
+			this._fragmented = 0;
+			this._numFragments = 0;
+			this._fragments = [];
+			if (this._opcode === 2) {
+				let data;
+				if (this._binaryType === "nodebuffer") data = concat(fragments, messageLength);
+				else if (this._binaryType === "arraybuffer") data = toArrayBuffer(concat(fragments, messageLength));
+				else if (this._binaryType === "blob") data = new Blob(fragments);
+				else data = fragments;
+				if (this._allowSynchronousEvents) {
+					this.emit("message", data, true);
+					this._state = GET_INFO;
+				} else {
+					this._state = DEFER_EVENT;
+					setImmediate(() => {
+						this.emit("message", data, true);
+						this._state = GET_INFO;
+						this.startLoop(cb);
+					});
+				}
 			} else {
-				let r = c(n, t);
-				if (!this._skipUTF8Validation && !f(r)) {
-					e(this.createError(Error, "invalid UTF-8 sequence", !0, 1007, "WS_ERR_INVALID_UTF8"));
+				const buf = concat(fragments, messageLength);
+				if (!this._skipUTF8Validation && !isValidUTF8(buf)) {
+					cb(this.createError(Error, "invalid UTF-8 sequence", true, 1007, "WS_ERR_INVALID_UTF8"));
 					return;
 				}
-				this._state === b || this._allowSynchronousEvents ? (this.emit("message", r, !1), this._state = m) : (this._state = x, setImmediate(() => {
-					this.emit("message", r, !1), this._state = m, this.startLoop(e);
-				}));
+				if (this._state === INFLATING || this._allowSynchronousEvents) {
+					this.emit("message", buf, false);
+					this._state = GET_INFO;
+				} else {
+					this._state = DEFER_EVENT;
+					setImmediate(() => {
+						this.emit("message", buf, false);
+						this._state = GET_INFO;
+						this.startLoop(cb);
+					});
+				}
 			}
 		}
-		controlMessage(e, t) {
+		/**
+		* Handles a control message.
+		*
+		* @param {Buffer} data Data to handle
+		* @return {(Error|RangeError|undefined)} A possible error
+		* @private
+		*/
+		controlMessage(data, cb) {
 			if (this._opcode === 8) {
-				if (e.length === 0) this._loop = !1, this.emit("conclude", 1005, a), this.end();
-				else {
-					let n = e.readUInt16BE(0);
-					if (!d(n)) {
-						t(this.createError(RangeError, `invalid status code ${n}`, !0, 1002, "WS_ERR_INVALID_CLOSE_CODE"));
+				if (data.length === 0) {
+					this._loop = false;
+					this.emit("conclude", 1005, EMPTY_BUFFER);
+					this.end();
+				} else {
+					const code = data.readUInt16BE(0);
+					if (!isValidStatusCode(code)) {
+						cb(this.createError(RangeError, `invalid status code ${code}`, true, 1002, "WS_ERR_INVALID_CLOSE_CODE"));
 						return;
 					}
-					let r = new p(e.buffer, e.byteOffset + 2, e.length - 2);
-					if (!this._skipUTF8Validation && !f(r)) {
-						t(this.createError(Error, "invalid UTF-8 sequence", !0, 1007, "WS_ERR_INVALID_UTF8"));
+					const buf = new FastBuffer(data.buffer, data.byteOffset + 2, data.length - 2);
+					if (!this._skipUTF8Validation && !isValidUTF8(buf)) {
+						cb(this.createError(Error, "invalid UTF-8 sequence", true, 1007, "WS_ERR_INVALID_UTF8"));
 						return;
 					}
-					this._loop = !1, this.emit("conclude", n, r), this.end();
+					this._loop = false;
+					this.emit("conclude", code, buf);
+					this.end();
 				}
-				this._state = m;
+				this._state = GET_INFO;
 				return;
 			}
-			this._allowSynchronousEvents ? (this.emit(this._opcode === 9 ? "ping" : "pong", e), this._state = m) : (this._state = x, setImmediate(() => {
-				this.emit(this._opcode === 9 ? "ping" : "pong", e), this._state = m, this.startLoop(t);
-			}));
+			if (this._allowSynchronousEvents) {
+				this.emit(this._opcode === 9 ? "ping" : "pong", data);
+				this._state = GET_INFO;
+			} else {
+				this._state = DEFER_EVENT;
+				setImmediate(() => {
+					this.emit(this._opcode === 9 ? "ping" : "pong", data);
+					this._state = GET_INFO;
+					this.startLoop(cb);
+				});
+			}
 		}
-		createError(e, t, n, r, i) {
-			this._loop = !1, this._errored = !0;
-			let a = new e(n ? `Invalid WebSocket frame: ${t}` : t);
-			return Error.captureStackTrace(a, this.createError), a.code = i, a[o] = r, a;
+		/**
+		* Builds an error object.
+		*
+		* @param {function(new:Error|RangeError)} ErrorCtor The error constructor
+		* @param {String} message The error message
+		* @param {Boolean} prefix Specifies whether or not to add a default prefix to
+		*     `message`
+		* @param {Number} statusCode The status code
+		* @param {String} errorCode The exposed error code
+		* @return {(Error|RangeError)} The error
+		* @private
+		*/
+		createError(ErrorCtor, message, prefix, statusCode, errorCode) {
+			this._loop = false;
+			this._errored = true;
+			const err = new ErrorCtor(prefix ? `Invalid WebSocket frame: ${message}` : message);
+			Error.captureStackTrace(err, this.createError);
+			err.code = errorCode;
+			err[kStatusCode] = statusCode;
+			return err;
 		}
 	};
-})), he = /* @__PURE__ */ p(((e, t) => {
-	var { Duplex: n } = v("stream"), { randomFillSync: r } = v("crypto"), { types: { isUint8Array: i } } = v("util"), a = q(), { EMPTY_BUFFER: o, kWebSocket: s, NOOP: c } = W(), { isBlob: l, isValidStatusCode: u } = J(), { mask: d, toBuffer: f } = K(), p = Symbol("kByteLength"), m = Buffer.alloc(4), h = 8192, g, _ = h, y = 0, b = 1, x = 2;
-	t.exports = class e {
-		constructor(e, t, n) {
-			this._extensions = t || {}, n && (this._generateMask = n, this._maskBuffer = Buffer.alloc(4)), this._socket = e, this._firstFragment = !0, this._compress = !1, this._bufferedBytes = 0, this._queue = [], this._state = y, this.onerror = c, this[s] = void 0;
-		}
-		static frame(e, t) {
-			let n, i = !1, a = 2, o = !1;
-			t.mask && (n = t.maskBuffer || m, t.generateMask ? t.generateMask(n) : (_ === h && 
-			/* istanbul ignore else  */
-			(g === void 0 && (g = Buffer.alloc(h)), r(g, 0, h), _ = 0), n[0] = g[_++], n[1] = g[_++], n[2] = g[_++], n[3] = g[_++]), o = (n[0] | n[1] | n[2] | n[3]) === 0, a = 6);
-			let s;
-			typeof e == "string" ? (!t.mask || o) && t[p] !== void 0 ? s = t[p] : (e = Buffer.from(e), s = e.length) : (s = e.length, i = t.mask && t.readOnly && !o);
-			let c = s;
-			s >= 65536 ? (a += 8, c = 127) : s > 125 && (a += 2, c = 126);
-			let l = Buffer.allocUnsafe(i ? s + a : a);
-			return l[0] = t.fin ? t.opcode | 128 : t.opcode, t.rsv1 && (l[0] |= 64), l[1] = c, c === 126 ? l.writeUInt16BE(s, 2) : c === 127 && (l[2] = l[3] = 0, l.writeUIntBE(s, 4, 6)), !t.mask || (l[1] |= 128, l[a - 4] = n[0], l[a - 3] = n[1], l[a - 2] = n[2], l[a - 1] = n[3], o) ? [l, e] : i ? (d(e, n, l, a, s), [l]) : (d(e, n, e, 0, s), [l, e]);
-		}
-		close(t, n, r, a) {
-			let s;
-			if (t === void 0) s = o;
-			else if (typeof t != "number" || !u(t)) throw TypeError("First argument must be a valid error code number");
-			else if (n === void 0 || !n.length) s = Buffer.allocUnsafe(2), s.writeUInt16BE(t, 0);
-			else {
-				let e = Buffer.byteLength(n);
-				if (e > 123) throw RangeError("The message must not be greater than 123 bytes");
-				if (s = Buffer.allocUnsafe(2 + e), s.writeUInt16BE(t, 0), typeof n == "string") s.write(n, 2);
-				else if (i(n)) s.set(n, 2);
-				else throw TypeError("Second argument must be a string or a Uint8Array");
+	module.exports = Receiver;
+}));
+//#endregion
+//#region node_modules/ws/lib/sender.js
+var require_sender = /* @__PURE__ */ __commonJSMin(((exports, module) => {
+	var { Duplex: Duplex$3 } = __require("stream");
+	var { randomFillSync } = __require("crypto");
+	var { types: { isUint8Array } } = __require("util");
+	var PerMessageDeflate = require_permessage_deflate();
+	var { EMPTY_BUFFER, kWebSocket, NOOP } = require_constants();
+	var { isBlob, isValidStatusCode } = require_validation();
+	var { mask: applyMask, toBuffer } = require_buffer_util();
+	var kByteLength = Symbol("kByteLength");
+	var maskBuffer = Buffer.alloc(4);
+	var RANDOM_POOL_SIZE = 8192;
+	var randomPool;
+	var randomPoolPointer = RANDOM_POOL_SIZE;
+	var DEFAULT = 0;
+	var DEFLATING = 1;
+	var GET_BLOB_DATA = 2;
+	module.exports = class Sender {
+		/**
+		* Creates a Sender instance.
+		*
+		* @param {Duplex} socket The connection socket
+		* @param {Object} [extensions] An object containing the negotiated extensions
+		* @param {Function} [generateMask] The function used to generate the masking
+		*     key
+		*/
+		constructor(socket, extensions, generateMask) {
+			this._extensions = extensions || {};
+			if (generateMask) {
+				this._generateMask = generateMask;
+				this._maskBuffer = Buffer.alloc(4);
 			}
-			let c = {
-				[p]: s.length,
-				fin: !0,
+			this._socket = socket;
+			this._firstFragment = true;
+			this._compress = false;
+			this._bufferedBytes = 0;
+			this._queue = [];
+			this._state = DEFAULT;
+			this.onerror = NOOP;
+			this[kWebSocket] = void 0;
+		}
+		/**
+		* Frames a piece of data according to the HyBi WebSocket protocol.
+		*
+		* @param {(Buffer|String)} data The data to frame
+		* @param {Object} options Options object
+		* @param {Boolean} [options.fin=false] Specifies whether or not to set the
+		*     FIN bit
+		* @param {Function} [options.generateMask] The function used to generate the
+		*     masking key
+		* @param {Boolean} [options.mask=false] Specifies whether or not to mask
+		*     `data`
+		* @param {Buffer} [options.maskBuffer] The buffer used to store the masking
+		*     key
+		* @param {Number} options.opcode The opcode
+		* @param {Boolean} [options.readOnly=false] Specifies whether `data` can be
+		*     modified
+		* @param {Boolean} [options.rsv1=false] Specifies whether or not to set the
+		*     RSV1 bit
+		* @return {(Buffer|String)[]} The framed data
+		* @public
+		*/
+		static frame(data, options) {
+			let mask;
+			let merge = false;
+			let offset = 2;
+			let skipMasking = false;
+			if (options.mask) {
+				mask = options.maskBuffer || maskBuffer;
+				if (options.generateMask) options.generateMask(mask);
+				else {
+					if (randomPoolPointer === RANDOM_POOL_SIZE) {
+						/* istanbul ignore else  */
+						if (randomPool === void 0) randomPool = Buffer.alloc(RANDOM_POOL_SIZE);
+						randomFillSync(randomPool, 0, RANDOM_POOL_SIZE);
+						randomPoolPointer = 0;
+					}
+					mask[0] = randomPool[randomPoolPointer++];
+					mask[1] = randomPool[randomPoolPointer++];
+					mask[2] = randomPool[randomPoolPointer++];
+					mask[3] = randomPool[randomPoolPointer++];
+				}
+				skipMasking = (mask[0] | mask[1] | mask[2] | mask[3]) === 0;
+				offset = 6;
+			}
+			let dataLength;
+			if (typeof data === "string") {
+				if ((!options.mask || skipMasking) && options[kByteLength] !== void 0) dataLength = options[kByteLength];
+				else {
+					data = Buffer.from(data);
+					dataLength = data.length;
+				}
+			} else {
+				dataLength = data.length;
+				merge = options.mask && options.readOnly && !skipMasking;
+			}
+			let payloadLength = dataLength;
+			if (dataLength >= 65536) {
+				offset += 8;
+				payloadLength = 127;
+			} else if (dataLength > 125) {
+				offset += 2;
+				payloadLength = 126;
+			}
+			const target = Buffer.allocUnsafe(merge ? dataLength + offset : offset);
+			target[0] = options.fin ? options.opcode | 128 : options.opcode;
+			if (options.rsv1) target[0] |= 64;
+			target[1] = payloadLength;
+			if (payloadLength === 126) target.writeUInt16BE(dataLength, 2);
+			else if (payloadLength === 127) {
+				target[2] = target[3] = 0;
+				target.writeUIntBE(dataLength, 4, 6);
+			}
+			if (!options.mask) return [target, data];
+			target[1] |= 128;
+			target[offset - 4] = mask[0];
+			target[offset - 3] = mask[1];
+			target[offset - 2] = mask[2];
+			target[offset - 1] = mask[3];
+			if (skipMasking) return [target, data];
+			if (merge) {
+				applyMask(data, mask, target, offset, dataLength);
+				return [target];
+			}
+			applyMask(data, mask, data, 0, dataLength);
+			return [target, data];
+		}
+		/**
+		* Sends a close message to the other peer.
+		*
+		* @param {Number} [code] The status code component of the body
+		* @param {(String|Buffer)} [data] The message component of the body
+		* @param {Boolean} [mask=false] Specifies whether or not to mask the message
+		* @param {Function} [cb] Callback
+		* @public
+		*/
+		close(code, data, mask, cb) {
+			let buf;
+			if (code === void 0) buf = EMPTY_BUFFER;
+			else if (typeof code !== "number" || !isValidStatusCode(code)) throw new TypeError("First argument must be a valid error code number");
+			else if (data === void 0 || !data.length) {
+				buf = Buffer.allocUnsafe(2);
+				buf.writeUInt16BE(code, 0);
+			} else {
+				const length = Buffer.byteLength(data);
+				if (length > 123) throw new RangeError("The message must not be greater than 123 bytes");
+				buf = Buffer.allocUnsafe(2 + length);
+				buf.writeUInt16BE(code, 0);
+				if (typeof data === "string") buf.write(data, 2);
+				else if (isUint8Array(data)) buf.set(data, 2);
+				else throw new TypeError("Second argument must be a string or a Uint8Array");
+			}
+			const options = {
+				[kByteLength]: buf.length,
+				fin: true,
 				generateMask: this._generateMask,
-				mask: r,
+				mask,
 				maskBuffer: this._maskBuffer,
 				opcode: 8,
-				readOnly: !1,
-				rsv1: !1
+				readOnly: false,
+				rsv1: false
 			};
-			this._state === y ? this.sendFrame(e.frame(s, c), a) : this.enqueue([
+			if (this._state !== DEFAULT) this.enqueue([
 				this.dispatch,
-				s,
-				!1,
-				c,
-				a
+				buf,
+				false,
+				options,
+				cb
 			]);
+			else this.sendFrame(Sender.frame(buf, options), cb);
 		}
-		ping(t, n, r) {
-			let i, a;
-			if (typeof t == "string" ? (i = Buffer.byteLength(t), a = !1) : l(t) ? (i = t.size, a = !1) : (t = f(t), i = t.length, a = f.readOnly), i > 125) throw RangeError("The data size must not be greater than 125 bytes");
-			let o = {
-				[p]: i,
-				fin: !0,
+		/**
+		* Sends a ping message to the other peer.
+		*
+		* @param {*} data The message to send
+		* @param {Boolean} [mask=false] Specifies whether or not to mask `data`
+		* @param {Function} [cb] Callback
+		* @public
+		*/
+		ping(data, mask, cb) {
+			let byteLength;
+			let readOnly;
+			if (typeof data === "string") {
+				byteLength = Buffer.byteLength(data);
+				readOnly = false;
+			} else if (isBlob(data)) {
+				byteLength = data.size;
+				readOnly = false;
+			} else {
+				data = toBuffer(data);
+				byteLength = data.length;
+				readOnly = toBuffer.readOnly;
+			}
+			if (byteLength > 125) throw new RangeError("The data size must not be greater than 125 bytes");
+			const options = {
+				[kByteLength]: byteLength,
+				fin: true,
 				generateMask: this._generateMask,
-				mask: n,
+				mask,
 				maskBuffer: this._maskBuffer,
 				opcode: 9,
-				readOnly: a,
-				rsv1: !1
+				readOnly,
+				rsv1: false
 			};
-			l(t) ? this._state === y ? this.getBlobData(t, !1, o, r) : this.enqueue([
-				this.getBlobData,
-				t,
-				!1,
-				o,
-				r
-			]) : this._state === y ? this.sendFrame(e.frame(t, o), r) : this.enqueue([
+			if (isBlob(data)) {
+				if (this._state !== DEFAULT) this.enqueue([
+					this.getBlobData,
+					data,
+					false,
+					options,
+					cb
+				]);
+				else this.getBlobData(data, false, options, cb);
+			} else if (this._state !== DEFAULT) this.enqueue([
 				this.dispatch,
-				t,
-				!1,
-				o,
-				r
+				data,
+				false,
+				options,
+				cb
 			]);
+			else this.sendFrame(Sender.frame(data, options), cb);
 		}
-		pong(t, n, r) {
-			let i, a;
-			if (typeof t == "string" ? (i = Buffer.byteLength(t), a = !1) : l(t) ? (i = t.size, a = !1) : (t = f(t), i = t.length, a = f.readOnly), i > 125) throw RangeError("The data size must not be greater than 125 bytes");
-			let o = {
-				[p]: i,
-				fin: !0,
+		/**
+		* Sends a pong message to the other peer.
+		*
+		* @param {*} data The message to send
+		* @param {Boolean} [mask=false] Specifies whether or not to mask `data`
+		* @param {Function} [cb] Callback
+		* @public
+		*/
+		pong(data, mask, cb) {
+			let byteLength;
+			let readOnly;
+			if (typeof data === "string") {
+				byteLength = Buffer.byteLength(data);
+				readOnly = false;
+			} else if (isBlob(data)) {
+				byteLength = data.size;
+				readOnly = false;
+			} else {
+				data = toBuffer(data);
+				byteLength = data.length;
+				readOnly = toBuffer.readOnly;
+			}
+			if (byteLength > 125) throw new RangeError("The data size must not be greater than 125 bytes");
+			const options = {
+				[kByteLength]: byteLength,
+				fin: true,
 				generateMask: this._generateMask,
-				mask: n,
+				mask,
 				maskBuffer: this._maskBuffer,
 				opcode: 10,
-				readOnly: a,
-				rsv1: !1
+				readOnly,
+				rsv1: false
 			};
-			l(t) ? this._state === y ? this.getBlobData(t, !1, o, r) : this.enqueue([
-				this.getBlobData,
-				t,
-				!1,
-				o,
-				r
-			]) : this._state === y ? this.sendFrame(e.frame(t, o), r) : this.enqueue([
+			if (isBlob(data)) {
+				if (this._state !== DEFAULT) this.enqueue([
+					this.getBlobData,
+					data,
+					false,
+					options,
+					cb
+				]);
+				else this.getBlobData(data, false, options, cb);
+			} else if (this._state !== DEFAULT) this.enqueue([
 				this.dispatch,
-				t,
-				!1,
-				o,
-				r
+				data,
+				false,
+				options,
+				cb
 			]);
+			else this.sendFrame(Sender.frame(data, options), cb);
 		}
-		send(e, t, n) {
-			let r = this._extensions[a.extensionName], i = t.binary ? 2 : 1, o = t.compress, s, c;
-			typeof e == "string" ? (s = Buffer.byteLength(e), c = !1) : l(e) ? (s = e.size, c = !1) : (e = f(e), s = e.length, c = f.readOnly), this._firstFragment ? (this._firstFragment = !1, o && r && r.params[r._isServer ? "server_no_context_takeover" : "client_no_context_takeover"] && (o = s >= r._threshold), this._compress = o) : (o = !1, i = 0), t.fin && (this._firstFragment = !0);
-			let u = {
-				[p]: s,
-				fin: t.fin,
+		/**
+		* Sends a data message to the other peer.
+		*
+		* @param {*} data The message to send
+		* @param {Object} options Options object
+		* @param {Boolean} [options.binary=false] Specifies whether `data` is binary
+		*     or text
+		* @param {Boolean} [options.compress=false] Specifies whether or not to
+		*     compress `data`
+		* @param {Boolean} [options.fin=false] Specifies whether the fragment is the
+		*     last one
+		* @param {Boolean} [options.mask=false] Specifies whether or not to mask
+		*     `data`
+		* @param {Function} [cb] Callback
+		* @public
+		*/
+		send(data, options, cb) {
+			const perMessageDeflate = this._extensions[PerMessageDeflate.extensionName];
+			let opcode = options.binary ? 2 : 1;
+			let rsv1 = options.compress;
+			let byteLength;
+			let readOnly;
+			if (typeof data === "string") {
+				byteLength = Buffer.byteLength(data);
+				readOnly = false;
+			} else if (isBlob(data)) {
+				byteLength = data.size;
+				readOnly = false;
+			} else {
+				data = toBuffer(data);
+				byteLength = data.length;
+				readOnly = toBuffer.readOnly;
+			}
+			if (this._firstFragment) {
+				this._firstFragment = false;
+				if (rsv1 && perMessageDeflate && perMessageDeflate.params[perMessageDeflate._isServer ? "server_no_context_takeover" : "client_no_context_takeover"]) rsv1 = byteLength >= perMessageDeflate._threshold;
+				this._compress = rsv1;
+			} else {
+				rsv1 = false;
+				opcode = 0;
+			}
+			if (options.fin) this._firstFragment = true;
+			const opts = {
+				[kByteLength]: byteLength,
+				fin: options.fin,
 				generateMask: this._generateMask,
-				mask: t.mask,
+				mask: options.mask,
 				maskBuffer: this._maskBuffer,
-				opcode: i,
-				readOnly: c,
-				rsv1: o
+				opcode,
+				readOnly,
+				rsv1
 			};
-			l(e) ? this._state === y ? this.getBlobData(e, this._compress, u, n) : this.enqueue([
-				this.getBlobData,
-				e,
-				this._compress,
-				u,
-				n
-			]) : this._state === y ? this.dispatch(e, this._compress, u, n) : this.enqueue([
+			if (isBlob(data)) {
+				if (this._state !== DEFAULT) this.enqueue([
+					this.getBlobData,
+					data,
+					this._compress,
+					opts,
+					cb
+				]);
+				else this.getBlobData(data, this._compress, opts, cb);
+			} else if (this._state !== DEFAULT) this.enqueue([
 				this.dispatch,
-				e,
+				data,
 				this._compress,
-				u,
-				n
+				opts,
+				cb
 			]);
+			else this.dispatch(data, this._compress, opts, cb);
 		}
-		getBlobData(t, n, r, i) {
-			this._bufferedBytes += r[p], this._state = x, t.arrayBuffer().then((t) => {
+		/**
+		* Gets the contents of a blob as binary data.
+		*
+		* @param {Blob} blob The blob
+		* @param {Boolean} [compress=false] Specifies whether or not to compress
+		*     the data
+		* @param {Object} options Options object
+		* @param {Boolean} [options.fin=false] Specifies whether or not to set the
+		*     FIN bit
+		* @param {Function} [options.generateMask] The function used to generate the
+		*     masking key
+		* @param {Boolean} [options.mask=false] Specifies whether or not to mask
+		*     `data`
+		* @param {Buffer} [options.maskBuffer] The buffer used to store the masking
+		*     key
+		* @param {Number} options.opcode The opcode
+		* @param {Boolean} [options.readOnly=false] Specifies whether `data` can be
+		*     modified
+		* @param {Boolean} [options.rsv1=false] Specifies whether or not to set the
+		*     RSV1 bit
+		* @param {Function} [cb] Callback
+		* @private
+		*/
+		getBlobData(blob, compress, options, cb) {
+			this._bufferedBytes += options[kByteLength];
+			this._state = GET_BLOB_DATA;
+			blob.arrayBuffer().then((arrayBuffer) => {
 				if (this._socket.destroyed) {
-					let e = /* @__PURE__ */ Error("The socket was closed while the blob was being read");
-					process.nextTick(S, this, e, i);
+					const err = /* @__PURE__ */ new Error("The socket was closed while the blob was being read");
+					process.nextTick(callCallbacks, this, err, cb);
 					return;
 				}
-				this._bufferedBytes -= r[p];
-				let a = f(t);
-				n ? this.dispatch(a, n, r, i) : (this._state = y, this.sendFrame(e.frame(a, r), i), this.dequeue());
-			}).catch((e) => {
-				process.nextTick(C, this, e, i);
+				this._bufferedBytes -= options[kByteLength];
+				const data = toBuffer(arrayBuffer);
+				if (!compress) {
+					this._state = DEFAULT;
+					this.sendFrame(Sender.frame(data, options), cb);
+					this.dequeue();
+				} else this.dispatch(data, compress, options, cb);
+			}).catch((err) => {
+				process.nextTick(onError, this, err, cb);
 			});
 		}
-		dispatch(t, n, r, i) {
-			if (!n) {
-				this.sendFrame(e.frame(t, r), i);
+		/**
+		* Dispatches a message.
+		*
+		* @param {(Buffer|String)} data The message to send
+		* @param {Boolean} [compress=false] Specifies whether or not to compress
+		*     `data`
+		* @param {Object} options Options object
+		* @param {Boolean} [options.fin=false] Specifies whether or not to set the
+		*     FIN bit
+		* @param {Function} [options.generateMask] The function used to generate the
+		*     masking key
+		* @param {Boolean} [options.mask=false] Specifies whether or not to mask
+		*     `data`
+		* @param {Buffer} [options.maskBuffer] The buffer used to store the masking
+		*     key
+		* @param {Number} options.opcode The opcode
+		* @param {Boolean} [options.readOnly=false] Specifies whether `data` can be
+		*     modified
+		* @param {Boolean} [options.rsv1=false] Specifies whether or not to set the
+		*     RSV1 bit
+		* @param {Function} [cb] Callback
+		* @private
+		*/
+		dispatch(data, compress, options, cb) {
+			if (!compress) {
+				this.sendFrame(Sender.frame(data, options), cb);
 				return;
 			}
-			let o = this._extensions[a.extensionName];
-			this._bufferedBytes += r[p], this._state = b, o.compress(t, r.fin, (t, n) => {
+			const perMessageDeflate = this._extensions[PerMessageDeflate.extensionName];
+			this._bufferedBytes += options[kByteLength];
+			this._state = DEFLATING;
+			perMessageDeflate.compress(data, options.fin, (_, buf) => {
 				if (this._socket.destroyed) {
-					let e = /* @__PURE__ */ Error("The socket was closed while data was being compressed");
-					S(this, e, i);
+					const err = /* @__PURE__ */ new Error("The socket was closed while data was being compressed");
+					callCallbacks(this, err, cb);
 					return;
 				}
-				this._bufferedBytes -= r[p], this._state = y, r.readOnly = !1, this.sendFrame(e.frame(n, r), i), this.dequeue();
+				this._bufferedBytes -= options[kByteLength];
+				this._state = DEFAULT;
+				options.readOnly = false;
+				this.sendFrame(Sender.frame(buf, options), cb);
+				this.dequeue();
 			});
 		}
+		/**
+		* Executes queued send operations.
+		*
+		* @private
+		*/
 		dequeue() {
-			for (; this._state === y && this._queue.length;) {
-				let e = this._queue.shift();
-				this._bufferedBytes -= e[3][p], Reflect.apply(e[0], this, e.slice(1));
+			while (this._state === DEFAULT && this._queue.length) {
+				const params = this._queue.shift();
+				this._bufferedBytes -= params[3][kByteLength];
+				Reflect.apply(params[0], this, params.slice(1));
 			}
 		}
-		enqueue(e) {
-			this._bufferedBytes += e[3][p], this._queue.push(e);
+		/**
+		* Enqueues a send operation.
+		*
+		* @param {Array} params Send operation parameters.
+		* @private
+		*/
+		enqueue(params) {
+			this._bufferedBytes += params[3][kByteLength];
+			this._queue.push(params);
 		}
-		sendFrame(e, t) {
-			e.length === 2 ? (this._socket.cork(), this._socket.write(e[0]), this._socket.write(e[1], t), this._socket.uncork()) : this._socket.write(e[0], t);
+		/**
+		* Sends a frame.
+		*
+		* @param {(Buffer | String)[]} list The frame to send
+		* @param {Function} [cb] Callback
+		* @private
+		*/
+		sendFrame(list, cb) {
+			if (list.length === 2) {
+				this._socket.cork();
+				this._socket.write(list[0]);
+				this._socket.write(list[1], cb);
+				this._socket.uncork();
+			} else this._socket.write(list[0], cb);
 		}
 	};
-	function S(e, t, n) {
-		typeof n == "function" && n(t);
-		for (let n = 0; n < e._queue.length; n++) {
-			let r = e._queue[n], i = r[r.length - 1];
-			typeof i == "function" && i(t);
+	/**
+	* Calls queued callbacks with an error.
+	*
+	* @param {Sender} sender The `Sender` instance
+	* @param {Error} err The error to call the callbacks with
+	* @param {Function} [cb] The first callback
+	* @private
+	*/
+	function callCallbacks(sender, err, cb) {
+		if (typeof cb === "function") cb(err);
+		for (let i = 0; i < sender._queue.length; i++) {
+			const params = sender._queue[i];
+			const callback = params[params.length - 1];
+			if (typeof callback === "function") callback(err);
 		}
 	}
-	function C(e, t, n) {
-		S(e, t, n), e.onerror(t);
+	/**
+	* Handles a `Sender` error.
+	*
+	* @param {Sender} sender The `Sender` instance
+	* @param {Error} err The error
+	* @param {Function} [cb] The first pending callback
+	* @private
+	*/
+	function onError(sender, err, cb) {
+		callCallbacks(sender, err, cb);
+		sender.onerror(err);
 	}
-})), ge = /* @__PURE__ */ p(((e, t) => {
-	var { kForOnEventAttribute: n, kListener: r } = W(), i = Symbol("kCode"), a = Symbol("kData"), o = Symbol("kError"), s = Symbol("kMessage"), c = Symbol("kReason"), l = Symbol("kTarget"), u = Symbol("kType"), d = Symbol("kWasClean"), f = class {
-		constructor(e) {
-			this[l] = null, this[u] = e;
+}));
+//#endregion
+//#region node_modules/ws/lib/event-target.js
+var require_event_target = /* @__PURE__ */ __commonJSMin(((exports, module) => {
+	var { kForOnEventAttribute, kListener } = require_constants();
+	var kCode = Symbol("kCode");
+	var kData = Symbol("kData");
+	var kError = Symbol("kError");
+	var kMessage = Symbol("kMessage");
+	var kReason = Symbol("kReason");
+	var kTarget = Symbol("kTarget");
+	var kType = Symbol("kType");
+	var kWasClean = Symbol("kWasClean");
+	/**
+	* Class representing an event.
+	*/
+	var Event = class {
+		/**
+		* Create a new `Event`.
+		*
+		* @param {String} type The name of the event
+		* @throws {TypeError} If the `type` argument is not specified
+		*/
+		constructor(type) {
+			this[kTarget] = null;
+			this[kType] = type;
 		}
+		/**
+		* @type {*}
+		*/
 		get target() {
-			return this[l];
+			return this[kTarget];
 		}
+		/**
+		* @type {String}
+		*/
 		get type() {
-			return this[u];
+			return this[kType];
 		}
 	};
-	Object.defineProperty(f.prototype, "target", { enumerable: !0 }), Object.defineProperty(f.prototype, "type", { enumerable: !0 });
-	var p = class extends f {
-		constructor(e, t = {}) {
-			super(e), this[i] = t.code === void 0 ? 0 : t.code, this[c] = t.reason === void 0 ? "" : t.reason, this[d] = t.wasClean !== void 0 && t.wasClean;
+	Object.defineProperty(Event.prototype, "target", { enumerable: true });
+	Object.defineProperty(Event.prototype, "type", { enumerable: true });
+	/**
+	* Class representing a close event.
+	*
+	* @extends Event
+	*/
+	var CloseEvent = class extends Event {
+		/**
+		* Create a new `CloseEvent`.
+		*
+		* @param {String} type The name of the event
+		* @param {Object} [options] A dictionary object that allows for setting
+		*     attributes via object members of the same name
+		* @param {Number} [options.code=0] The status code explaining why the
+		*     connection was closed
+		* @param {String} [options.reason=''] A human-readable string explaining why
+		*     the connection was closed
+		* @param {Boolean} [options.wasClean=false] Indicates whether or not the
+		*     connection was cleanly closed
+		*/
+		constructor(type, options = {}) {
+			super(type);
+			this[kCode] = options.code === void 0 ? 0 : options.code;
+			this[kReason] = options.reason === void 0 ? "" : options.reason;
+			this[kWasClean] = options.wasClean === void 0 ? false : options.wasClean;
 		}
+		/**
+		* @type {Number}
+		*/
 		get code() {
-			return this[i];
+			return this[kCode];
 		}
+		/**
+		* @type {String}
+		*/
 		get reason() {
-			return this[c];
+			return this[kReason];
 		}
+		/**
+		* @type {Boolean}
+		*/
 		get wasClean() {
-			return this[d];
+			return this[kWasClean];
 		}
 	};
-	Object.defineProperty(p.prototype, "code", { enumerable: !0 }), Object.defineProperty(p.prototype, "reason", { enumerable: !0 }), Object.defineProperty(p.prototype, "wasClean", { enumerable: !0 });
-	var m = class extends f {
-		constructor(e, t = {}) {
-			super(e), this[o] = t.error === void 0 ? null : t.error, this[s] = t.message === void 0 ? "" : t.message;
+	Object.defineProperty(CloseEvent.prototype, "code", { enumerable: true });
+	Object.defineProperty(CloseEvent.prototype, "reason", { enumerable: true });
+	Object.defineProperty(CloseEvent.prototype, "wasClean", { enumerable: true });
+	/**
+	* Class representing an error event.
+	*
+	* @extends Event
+	*/
+	var ErrorEvent = class extends Event {
+		/**
+		* Create a new `ErrorEvent`.
+		*
+		* @param {String} type The name of the event
+		* @param {Object} [options] A dictionary object that allows for setting
+		*     attributes via object members of the same name
+		* @param {*} [options.error=null] The error that generated this event
+		* @param {String} [options.message=''] The error message
+		*/
+		constructor(type, options = {}) {
+			super(type);
+			this[kError] = options.error === void 0 ? null : options.error;
+			this[kMessage] = options.message === void 0 ? "" : options.message;
 		}
+		/**
+		* @type {*}
+		*/
 		get error() {
-			return this[o];
+			return this[kError];
 		}
+		/**
+		* @type {String}
+		*/
 		get message() {
-			return this[s];
+			return this[kMessage];
 		}
 	};
-	Object.defineProperty(m.prototype, "error", { enumerable: !0 }), Object.defineProperty(m.prototype, "message", { enumerable: !0 });
-	var h = class extends f {
-		constructor(e, t = {}) {
-			super(e), this[a] = t.data === void 0 ? null : t.data;
+	Object.defineProperty(ErrorEvent.prototype, "error", { enumerable: true });
+	Object.defineProperty(ErrorEvent.prototype, "message", { enumerable: true });
+	/**
+	* Class representing a message event.
+	*
+	* @extends Event
+	*/
+	var MessageEvent = class extends Event {
+		/**
+		* Create a new `MessageEvent`.
+		*
+		* @param {String} type The name of the event
+		* @param {Object} [options] A dictionary object that allows for setting
+		*     attributes via object members of the same name
+		* @param {*} [options.data=null] The message content
+		*/
+		constructor(type, options = {}) {
+			super(type);
+			this[kData] = options.data === void 0 ? null : options.data;
 		}
+		/**
+		* @type {*}
+		*/
 		get data() {
-			return this[a];
+			return this[kData];
 		}
 	};
-	Object.defineProperty(h.prototype, "data", { enumerable: !0 }), t.exports = {
-		CloseEvent: p,
-		ErrorEvent: m,
-		Event: f,
+	Object.defineProperty(MessageEvent.prototype, "data", { enumerable: true });
+	module.exports = {
+		CloseEvent,
+		ErrorEvent,
+		Event,
 		EventTarget: {
-			addEventListener(e, t, i = {}) {
-				for (let a of this.listeners(e)) if (!i[n] && a[r] === t && !a[n]) return;
-				let a;
-				if (e === "message") a = function(e, n) {
-					let r = new h("message", { data: n ? e : e.toString() });
-					r[l] = this, g(t, this, r);
+			/**
+			* Register an event listener.
+			*
+			* @param {String} type A string representing the event type to listen for
+			* @param {(Function|Object)} handler The listener to add
+			* @param {Object} [options] An options object specifies characteristics about
+			*     the event listener
+			* @param {Boolean} [options.once=false] A `Boolean` indicating that the
+			*     listener should be invoked at most once after being added. If `true`,
+			*     the listener would be automatically removed when invoked.
+			* @public
+			*/
+			addEventListener(type, handler, options = {}) {
+				for (const listener of this.listeners(type)) if (!options[kForOnEventAttribute] && listener[kListener] === handler && !listener[kForOnEventAttribute]) return;
+				let wrapper;
+				if (type === "message") wrapper = function onMessage(data, isBinary) {
+					const event = new MessageEvent("message", { data: isBinary ? data : data.toString() });
+					event[kTarget] = this;
+					callListener(handler, this, event);
 				};
-				else if (e === "close") a = function(e, n) {
-					let r = new p("close", {
-						code: e,
-						reason: n.toString(),
+				else if (type === "close") wrapper = function onClose(code, message) {
+					const event = new CloseEvent("close", {
+						code,
+						reason: message.toString(),
 						wasClean: this._closeFrameReceived && this._closeFrameSent
 					});
-					r[l] = this, g(t, this, r);
+					event[kTarget] = this;
+					callListener(handler, this, event);
 				};
-				else if (e === "error") a = function(e) {
-					let n = new m("error", {
-						error: e,
-						message: e.message
+				else if (type === "error") wrapper = function onError(error) {
+					const event = new ErrorEvent("error", {
+						error,
+						message: error.message
 					});
-					n[l] = this, g(t, this, n);
+					event[kTarget] = this;
+					callListener(handler, this, event);
 				};
-				else if (e === "open") a = function() {
-					let e = new f("open");
-					e[l] = this, g(t, this, e);
+				else if (type === "open") wrapper = function onOpen() {
+					const event = new Event("open");
+					event[kTarget] = this;
+					callListener(handler, this, event);
 				};
 				else return;
-				a[n] = !!i[n], a[r] = t, i.once ? this.once(e, a) : this.on(e, a);
+				wrapper[kForOnEventAttribute] = !!options[kForOnEventAttribute];
+				wrapper[kListener] = handler;
+				if (options.once) this.once(type, wrapper);
+				else this.on(type, wrapper);
 			},
-			removeEventListener(e, t) {
-				for (let i of this.listeners(e)) if (i[r] === t && !i[n]) {
-					this.removeListener(e, i);
+			/**
+			* Remove an event listener.
+			*
+			* @param {String} type A string representing the event type to remove
+			* @param {(Function|Object)} handler The listener to remove
+			* @public
+			*/
+			removeEventListener(type, handler) {
+				for (const listener of this.listeners(type)) if (listener[kListener] === handler && !listener[kForOnEventAttribute]) {
+					this.removeListener(type, listener);
 					break;
 				}
 			}
 		},
-		MessageEvent: h
+		MessageEvent
 	};
-	function g(e, t, n) {
-		typeof e == "object" && e.handleEvent ? e.handleEvent.call(e, n) : e.call(t, n);
+	/**
+	* Call an event listener
+	*
+	* @param {(Function|Object)} listener The listener to call
+	* @param {*} thisArg The value to use as `this`` when calling the listener
+	* @param {Event} event The event to pass to the listener
+	* @private
+	*/
+	function callListener(listener, thisArg, event) {
+		if (typeof listener === "object" && listener.handleEvent) listener.handleEvent.call(listener, event);
+		else listener.call(thisArg, event);
 	}
-})), _e = /* @__PURE__ */ p(((e, t) => {
-	var { tokenChars: n } = J();
-	function r(e, t, n) {
-		e[t] === void 0 ? e[t] = [n] : e[t].push(n);
+}));
+//#endregion
+//#region node_modules/ws/lib/extension.js
+var require_extension = /* @__PURE__ */ __commonJSMin(((exports, module) => {
+	var { tokenChars } = require_validation();
+	/**
+	* Adds an offer to the map of extension offers or a parameter to the map of
+	* parameters.
+	*
+	* @param {Object} dest The map of extension offers or parameters
+	* @param {String} name The extension or parameter name
+	* @param {(Object|Boolean|String)} elem The extension parameters or the
+	*     parameter value
+	* @private
+	*/
+	function push(dest, name, elem) {
+		if (dest[name] === void 0) dest[name] = [elem];
+		else dest[name].push(elem);
 	}
-	function i(e) {
-		let t = Object.create(null), i = Object.create(null), a = !1, o = !1, s = !1, c, l, u = -1, d = -1, f = -1, p = 0;
-		for (; p < e.length; p++) if (d = e.charCodeAt(p), c === void 0) {
-			if (f === -1 && n[d] === 1) u === -1 && (u = p);
-			else if (p !== 0 && (d === 32 || d === 9)) f === -1 && u !== -1 && (f = p);
-			else if (d === 59 || d === 44) {
-				if (u === -1) throw SyntaxError(`Unexpected character at index ${p}`);
-				f === -1 && (f = p);
-				let n = e.slice(u, f);
-				d === 44 ? (r(t, n, i), i = Object.create(null)) : c = n, u = f = -1;
-			} else throw SyntaxError(`Unexpected character at index ${p}`);
-		} else if (l === void 0) {
-			if (f === -1 && n[d] === 1) u === -1 && (u = p);
-			else if (d === 32 || d === 9) f === -1 && u !== -1 && (f = p);
-			else if (d === 59 || d === 44) {
-				if (u === -1) throw SyntaxError(`Unexpected character at index ${p}`);
-				f === -1 && (f = p), r(i, e.slice(u, f), !0), d === 44 && (r(t, c, i), i = Object.create(null), c = void 0), u = f = -1;
-			} else if (d === 61 && u !== -1 && f === -1) l = e.slice(u, p), u = f = -1;
-			else throw SyntaxError(`Unexpected character at index ${p}`);
-		} else if (o) {
-			if (n[d] !== 1) throw SyntaxError(`Unexpected character at index ${p}`);
-			u === -1 ? u = p : a ||= !0, o = !1;
-		} else if (s) {
-			if (n[d] === 1) u === -1 && (u = p);
-			else if (d === 34 && u !== -1) s = !1, f = p;
-			else if (d === 92) o = !0;
-			else throw SyntaxError(`Unexpected character at index ${p}`);
-		} else if (d === 34 && e.charCodeAt(p - 1) === 61) s = !0;
-		else if (f === -1 && n[d] === 1) u === -1 && (u = p);
-		else if (u !== -1 && (d === 32 || d === 9)) f === -1 && (f = p);
-		else if (d === 59 || d === 44) {
-			if (u === -1) throw SyntaxError(`Unexpected character at index ${p}`);
-			f === -1 && (f = p);
-			let n = e.slice(u, f);
-			a &&= (n = n.replace(/\\/g, ""), !1), r(i, l, n), d === 44 && (r(t, c, i), i = Object.create(null), c = void 0), l = void 0, u = f = -1;
-		} else throw SyntaxError(`Unexpected character at index ${p}`);
-		if (u === -1 || s || d === 32 || d === 9) throw SyntaxError("Unexpected end of input");
-		f === -1 && (f = p);
-		let m = e.slice(u, f);
-		return c === void 0 ? r(t, m, i) : (l === void 0 ? r(i, m, !0) : a ? r(i, l, m.replace(/\\/g, "")) : r(i, l, m), r(t, c, i)), t;
+	/**
+	* Parses the `Sec-WebSocket-Extensions` header into an object.
+	*
+	* @param {String} header The field value of the header
+	* @return {Object} The parsed object
+	* @public
+	*/
+	function parse(header) {
+		const offers = Object.create(null);
+		let params = Object.create(null);
+		let mustUnescape = false;
+		let isEscaping = false;
+		let inQuotes = false;
+		let extensionName;
+		let paramName;
+		let start = -1;
+		let code = -1;
+		let end = -1;
+		let i = 0;
+		for (; i < header.length; i++) {
+			code = header.charCodeAt(i);
+			if (extensionName === void 0) {
+				if (end === -1 && tokenChars[code] === 1) {
+					if (start === -1) start = i;
+				} else if (i !== 0 && (code === 32 || code === 9)) {
+					if (end === -1 && start !== -1) end = i;
+				} else if (code === 59 || code === 44) {
+					if (start === -1) throw new SyntaxError(`Unexpected character at index ${i}`);
+					if (end === -1) end = i;
+					const name = header.slice(start, end);
+					if (code === 44) {
+						push(offers, name, params);
+						params = Object.create(null);
+					} else extensionName = name;
+					start = end = -1;
+				} else throw new SyntaxError(`Unexpected character at index ${i}`);
+			} else if (paramName === void 0) {
+				if (end === -1 && tokenChars[code] === 1) {
+					if (start === -1) start = i;
+				} else if (code === 32 || code === 9) {
+					if (end === -1 && start !== -1) end = i;
+				} else if (code === 59 || code === 44) {
+					if (start === -1) throw new SyntaxError(`Unexpected character at index ${i}`);
+					if (end === -1) end = i;
+					push(params, header.slice(start, end), true);
+					if (code === 44) {
+						push(offers, extensionName, params);
+						params = Object.create(null);
+						extensionName = void 0;
+					}
+					start = end = -1;
+				} else if (code === 61 && start !== -1 && end === -1) {
+					paramName = header.slice(start, i);
+					start = end = -1;
+				} else throw new SyntaxError(`Unexpected character at index ${i}`);
+			} else if (isEscaping) {
+				if (tokenChars[code] !== 1) throw new SyntaxError(`Unexpected character at index ${i}`);
+				if (start === -1) start = i;
+				else if (!mustUnescape) mustUnescape = true;
+				isEscaping = false;
+			} else if (inQuotes) {
+				if (tokenChars[code] === 1) {
+					if (start === -1) start = i;
+				} else if (code === 34 && start !== -1) {
+					inQuotes = false;
+					end = i;
+				} else if (code === 92) isEscaping = true;
+				else throw new SyntaxError(`Unexpected character at index ${i}`);
+			} else if (code === 34 && header.charCodeAt(i - 1) === 61) inQuotes = true;
+			else if (end === -1 && tokenChars[code] === 1) {
+				if (start === -1) start = i;
+			} else if (start !== -1 && (code === 32 || code === 9)) {
+				if (end === -1) end = i;
+			} else if (code === 59 || code === 44) {
+				if (start === -1) throw new SyntaxError(`Unexpected character at index ${i}`);
+				if (end === -1) end = i;
+				let value = header.slice(start, end);
+				if (mustUnescape) {
+					value = value.replace(/\\/g, "");
+					mustUnescape = false;
+				}
+				push(params, paramName, value);
+				if (code === 44) {
+					push(offers, extensionName, params);
+					params = Object.create(null);
+					extensionName = void 0;
+				}
+				paramName = void 0;
+				start = end = -1;
+			} else throw new SyntaxError(`Unexpected character at index ${i}`);
+		}
+		if (start === -1 || inQuotes || code === 32 || code === 9) throw new SyntaxError("Unexpected end of input");
+		if (end === -1) end = i;
+		const token = header.slice(start, end);
+		if (extensionName === void 0) push(offers, token, params);
+		else {
+			if (paramName === void 0) push(params, token, true);
+			else if (mustUnescape) push(params, paramName, token.replace(/\\/g, ""));
+			else push(params, paramName, token);
+			push(offers, extensionName, params);
+		}
+		return offers;
 	}
-	function a(e) {
-		return Object.keys(e).map((t) => {
-			let n = e[t];
-			return Array.isArray(n) || (n = [n]), n.map((e) => [t].concat(Object.keys(e).map((t) => {
-				let n = e[t];
-				return Array.isArray(n) || (n = [n]), n.map((e) => e === !0 ? t : `${t}=${e}`).join("; ");
-			})).join("; ")).join(", ");
+	/**
+	* Builds the `Sec-WebSocket-Extensions` header field value.
+	*
+	* @param {Object} extensions The map of extensions and parameters to format
+	* @return {String} A string representing the given object
+	* @public
+	*/
+	function format(extensions) {
+		return Object.keys(extensions).map((extension) => {
+			let configurations = extensions[extension];
+			if (!Array.isArray(configurations)) configurations = [configurations];
+			return configurations.map((params) => {
+				return [extension].concat(Object.keys(params).map((k) => {
+					let values = params[k];
+					if (!Array.isArray(values)) values = [values];
+					return values.map((v) => v === true ? k : `${k}=${v}`).join("; ");
+				})).join("; ");
+			}).join(", ");
 		}).join(", ");
 	}
-	t.exports = {
-		format: a,
-		parse: i
+	module.exports = {
+		format,
+		parse
 	};
-})), ve = /* @__PURE__ */ p(((e, t) => {
-	var n = v("events"), r = v("https"), i = v("http"), a = v("net"), o = v("tls"), { randomBytes: s, createHash: c } = v("crypto"), { Duplex: l, Readable: u } = v("stream"), { URL: d } = v("url"), f = q(), p = me(), m = he(), { isBlob: h } = J(), { BINARY_TYPES: g, CLOSE_TIMEOUT: _, EMPTY_BUFFER: y, GUID: b, kForOnEventAttribute: x, kListener: S, kStatusCode: C, kWebSocket: w, NOOP: T } = W(), { EventTarget: { addEventListener: E, removeEventListener: D } } = ge(), { format: O, parse: k } = _e(), { toBuffer: A } = K(), j = Symbol("kAborted"), M = [8, 13], N = [
+}));
+//#endregion
+//#region node_modules/ws/lib/websocket.js
+var require_websocket$1 = /* @__PURE__ */ __commonJSMin(((exports, module) => {
+	var EventEmitter$1 = __require("events");
+	var https = __require("https");
+	var http$1 = __require("http");
+	var net = __require("net");
+	var tls = __require("tls");
+	var { randomBytes, createHash: createHash$1 } = __require("crypto");
+	var { Duplex: Duplex$2, Readable } = __require("stream");
+	var { URL: URL$1 } = __require("url");
+	var PerMessageDeflate = require_permessage_deflate();
+	var Receiver = require_receiver();
+	var Sender = require_sender();
+	var { isBlob } = require_validation();
+	var { BINARY_TYPES, CLOSE_TIMEOUT, EMPTY_BUFFER, GUID, kForOnEventAttribute, kListener, kStatusCode, kWebSocket, NOOP } = require_constants();
+	var { EventTarget: { addEventListener, removeEventListener } } = require_event_target();
+	var { format, parse } = require_extension();
+	var { toBuffer } = require_buffer_util();
+	var kAborted = Symbol("kAborted");
+	var protocolVersions = [8, 13];
+	var readyStates = [
 		"CONNECTING",
 		"OPEN",
 		"CLOSING",
 		"CLOSED"
-	], P = /^[!#$%&'*+\-.0-9A-Z^_`|a-z~]+$/, F = class e extends n {
-		constructor(t, n, r) {
-			super(), this._binaryType = g[0], this._closeCode = 1006, this._closeFrameReceived = !1, this._closeFrameSent = !1, this._closeMessage = y, this._closeTimer = null, this._errorEmitted = !1, this._extensions = {}, this._paused = !1, this._protocol = "", this._readyState = e.CONNECTING, this._receiver = null, this._sender = null, this._socket = null, t === null ? (this._autoPong = r.autoPong, this._closeTimeout = r.closeTimeout, this._isServer = !0) : (this._bufferedAmount = 0, this._isServer = !1, this._redirects = 0, n === void 0 ? n = [] : Array.isArray(n) || (typeof n == "object" && n ? (r = n, n = []) : n = [n]), ee(this, t, n, r));
+	];
+	var subprotocolRegex = /^[!#$%&'*+\-.0-9A-Z^_`|a-z~]+$/;
+	/**
+	* Class representing a WebSocket.
+	*
+	* @extends EventEmitter
+	*/
+	var WebSocket = class WebSocket extends EventEmitter$1 {
+		/**
+		* Create a new `WebSocket`.
+		*
+		* @param {(String|URL)} address The URL to which to connect
+		* @param {(String|String[])} [protocols] The subprotocols
+		* @param {Object} [options] Connection options
+		*/
+		constructor(address, protocols, options) {
+			super();
+			this._binaryType = BINARY_TYPES[0];
+			this._closeCode = 1006;
+			this._closeFrameReceived = false;
+			this._closeFrameSent = false;
+			this._closeMessage = EMPTY_BUFFER;
+			this._closeTimer = null;
+			this._errorEmitted = false;
+			this._extensions = {};
+			this._paused = false;
+			this._protocol = "";
+			this._readyState = WebSocket.CONNECTING;
+			this._receiver = null;
+			this._sender = null;
+			this._socket = null;
+			if (address !== null) {
+				this._bufferedAmount = 0;
+				this._isServer = false;
+				this._redirects = 0;
+				if (protocols === void 0) protocols = [];
+				else if (!Array.isArray(protocols)) {
+					if (typeof protocols === "object" && protocols !== null) {
+						options = protocols;
+						protocols = [];
+					} else protocols = [protocols];
+				}
+				initAsClient(this, address, protocols, options);
+			} else {
+				this._autoPong = options.autoPong;
+				this._closeTimeout = options.closeTimeout;
+				this._isServer = true;
+			}
 		}
+		/**
+		* For historical reasons, the custom "nodebuffer" type is used by the default
+		* instead of "blob".
+		*
+		* @type {String}
+		*/
 		get binaryType() {
 			return this._binaryType;
 		}
-		set binaryType(e) {
-			g.includes(e) && (this._binaryType = e, this._receiver && (this._receiver._binaryType = e));
+		set binaryType(type) {
+			if (!BINARY_TYPES.includes(type)) return;
+			this._binaryType = type;
+			if (this._receiver) this._receiver._binaryType = type;
 		}
+		/**
+		* @type {Number}
+		*/
 		get bufferedAmount() {
-			return this._socket ? this._socket._writableState.length + this._sender._bufferedBytes : this._bufferedAmount;
+			if (!this._socket) return this._bufferedAmount;
+			return this._socket._writableState.length + this._sender._bufferedBytes;
 		}
+		/**
+		* @type {String}
+		*/
 		get extensions() {
 			return Object.keys(this._extensions).join();
 		}
+		/**
+		* @type {Boolean}
+		*/
 		get isPaused() {
 			return this._paused;
 		}
+		/**
+		* @type {Function}
+		*/
 		/* istanbul ignore next */
 		get onclose() {
 			return null;
 		}
+		/**
+		* @type {Function}
+		*/
 		/* istanbul ignore next */
 		get onerror() {
 			return null;
 		}
+		/**
+		* @type {Function}
+		*/
 		/* istanbul ignore next */
 		get onopen() {
 			return null;
 		}
+		/**
+		* @type {Function}
+		*/
 		/* istanbul ignore next */
 		get onmessage() {
 			return null;
 		}
+		/**
+		* @type {String}
+		*/
 		get protocol() {
 			return this._protocol;
 		}
+		/**
+		* @type {Number}
+		*/
 		get readyState() {
 			return this._readyState;
 		}
+		/**
+		* @type {String}
+		*/
 		get url() {
 			return this._url;
 		}
-		setSocket(t, n, r) {
-			let i = new p({
-				allowSynchronousEvents: r.allowSynchronousEvents,
+		/**
+		* Set up the socket and the internal resources.
+		*
+		* @param {Duplex} socket The network socket between the server and client
+		* @param {Buffer} head The first packet of the upgraded stream
+		* @param {Object} options Options object
+		* @param {Boolean} [options.allowSynchronousEvents=false] Specifies whether
+		*     any of the `'message'`, `'ping'`, and `'pong'` events can be emitted
+		*     multiple times in the same tick
+		* @param {Function} [options.generateMask] The function used to generate the
+		*     masking key
+		* @param {Number} [options.maxBufferedChunks=0] The maximum number of
+		*     buffered data chunks
+		* @param {Number} [options.maxFragments=0] The maximum number of message
+		*     fragments
+		* @param {Number} [options.maxPayload=0] The maximum allowed message size
+		* @param {Boolean} [options.skipUTF8Validation=false] Specifies whether or
+		*     not to skip UTF-8 validation for text and close messages
+		* @private
+		*/
+		setSocket(socket, head, options) {
+			const receiver = new Receiver({
+				allowSynchronousEvents: options.allowSynchronousEvents,
 				binaryType: this.binaryType,
 				extensions: this._extensions,
 				isServer: this._isServer,
-				maxBufferedChunks: r.maxBufferedChunks,
-				maxFragments: r.maxFragments,
-				maxPayload: r.maxPayload,
-				skipUTF8Validation: r.skipUTF8Validation
-			}), a = new m(t, this._extensions, r.generateMask);
-			this._receiver = i, this._sender = a, this._socket = t, i[w] = this, a[w] = this, t[w] = this, i.on("conclude", re), i.on("drain", z), i.on("error", B), i.on("message", ie), i.on("ping", ae), i.on("pong", oe), a.onerror = U, t.setTimeout && t.setTimeout(0), t.setNoDelay && t.setNoDelay(), n.length > 0 && t.unshift(n), t.on("close", ce), t.on("data", G), t.on("end", le), t.on("error", ue), this._readyState = e.OPEN, this.emit("open");
+				maxBufferedChunks: options.maxBufferedChunks,
+				maxFragments: options.maxFragments,
+				maxPayload: options.maxPayload,
+				skipUTF8Validation: options.skipUTF8Validation
+			});
+			const sender = new Sender(socket, this._extensions, options.generateMask);
+			this._receiver = receiver;
+			this._sender = sender;
+			this._socket = socket;
+			receiver[kWebSocket] = this;
+			sender[kWebSocket] = this;
+			socket[kWebSocket] = this;
+			receiver.on("conclude", receiverOnConclude);
+			receiver.on("drain", receiverOnDrain);
+			receiver.on("error", receiverOnError);
+			receiver.on("message", receiverOnMessage);
+			receiver.on("ping", receiverOnPing);
+			receiver.on("pong", receiverOnPong);
+			sender.onerror = senderOnError;
+			if (socket.setTimeout) socket.setTimeout(0);
+			if (socket.setNoDelay) socket.setNoDelay();
+			if (head.length > 0) socket.unshift(head);
+			socket.on("close", socketOnClose);
+			socket.on("data", socketOnData);
+			socket.on("end", socketOnEnd);
+			socket.on("error", socketOnError);
+			this._readyState = WebSocket.OPEN;
+			this.emit("open");
 		}
+		/**
+		* Emit the `'close'` event.
+		*
+		* @private
+		*/
 		emitClose() {
 			if (!this._socket) {
-				this._readyState = e.CLOSED, this.emit("close", this._closeCode, this._closeMessage);
+				this._readyState = WebSocket.CLOSED;
+				this.emit("close", this._closeCode, this._closeMessage);
 				return;
 			}
-			this._extensions[f.extensionName] && this._extensions[f.extensionName].cleanup(), this._receiver.removeAllListeners(), this._readyState = e.CLOSED, this.emit("close", this._closeCode, this._closeMessage);
+			if (this._extensions[PerMessageDeflate.extensionName]) this._extensions[PerMessageDeflate.extensionName].cleanup();
+			this._receiver.removeAllListeners();
+			this._readyState = WebSocket.CLOSED;
+			this.emit("close", this._closeCode, this._closeMessage);
 		}
-		close(t, n) {
-			if (this.readyState !== e.CLOSED) {
-				if (this.readyState === e.CONNECTING) {
-					L(this, this._req, "WebSocket was closed before the connection was established");
-					return;
-				}
-				if (this.readyState === e.CLOSING) {
-					this._closeFrameSent && (this._closeFrameReceived || this._receiver._writableState.errorEmitted) && this._socket.end();
-					return;
-				}
-				this._readyState = e.CLOSING, this._sender.close(t, n, !this._isServer, (e) => {
-					e || (this._closeFrameSent = !0, (this._closeFrameReceived || this._receiver._writableState.errorEmitted) && this._socket.end());
-				}), se(this);
+		/**
+		* Start a closing handshake.
+		*
+		*          +----------+   +-----------+   +----------+
+		*     - - -|ws.close()|-->|close frame|-->|ws.close()|- - -
+		*    |     +----------+   +-----------+   +----------+     |
+		*          +----------+   +-----------+         |
+		* CLOSING  |ws.close()|<--|close frame|<--+-----+       CLOSING
+		*          +----------+   +-----------+   |
+		*    |           |                        |   +---+        |
+		*                +------------------------+-->|fin| - - - -
+		*    |         +---+                      |   +---+
+		*     - - - - -|fin|<---------------------+
+		*              +---+
+		*
+		* @param {Number} [code] Status code explaining why the connection is closing
+		* @param {(String|Buffer)} [data] The reason why the connection is
+		*     closing
+		* @public
+		*/
+		close(code, data) {
+			if (this.readyState === WebSocket.CLOSED) return;
+			if (this.readyState === WebSocket.CONNECTING) {
+				abortHandshake(this, this._req, "WebSocket was closed before the connection was established");
+				return;
 			}
+			if (this.readyState === WebSocket.CLOSING) {
+				if (this._closeFrameSent && (this._closeFrameReceived || this._receiver._writableState.errorEmitted)) this._socket.end();
+				return;
+			}
+			this._readyState = WebSocket.CLOSING;
+			this._sender.close(code, data, !this._isServer, (err) => {
+				if (err) return;
+				this._closeFrameSent = true;
+				if (this._closeFrameReceived || this._receiver._writableState.errorEmitted) this._socket.end();
+			});
+			setCloseTimer(this);
 		}
+		/**
+		* Pause the socket.
+		*
+		* @public
+		*/
 		pause() {
-			this.readyState !== e.CONNECTING && this.readyState !== e.CLOSED && (this._paused = !0, this._socket.pause());
+			if (this.readyState === WebSocket.CONNECTING || this.readyState === WebSocket.CLOSED) return;
+			this._paused = true;
+			this._socket.pause();
 		}
-		ping(t, n, r) {
-			if (this.readyState === e.CONNECTING) throw Error("WebSocket is not open: readyState 0 (CONNECTING)");
-			if (typeof t == "function" ? (r = t, t = n = void 0) : typeof n == "function" && (r = n, n = void 0), typeof t == "number" && (t = t.toString()), this.readyState !== e.OPEN) {
-				R(this, t, r);
+		/**
+		* Send a ping.
+		*
+		* @param {*} [data] The data to send
+		* @param {Boolean} [mask] Indicates whether or not to mask `data`
+		* @param {Function} [cb] Callback which is executed when the ping is sent
+		* @public
+		*/
+		ping(data, mask, cb) {
+			if (this.readyState === WebSocket.CONNECTING) throw new Error("WebSocket is not open: readyState 0 (CONNECTING)");
+			if (typeof data === "function") {
+				cb = data;
+				data = mask = void 0;
+			} else if (typeof mask === "function") {
+				cb = mask;
+				mask = void 0;
+			}
+			if (typeof data === "number") data = data.toString();
+			if (this.readyState !== WebSocket.OPEN) {
+				sendAfterClose(this, data, cb);
 				return;
 			}
-			n === void 0 && (n = !this._isServer), this._sender.ping(t || y, n, r);
+			if (mask === void 0) mask = !this._isServer;
+			this._sender.ping(data || EMPTY_BUFFER, mask, cb);
 		}
-		pong(t, n, r) {
-			if (this.readyState === e.CONNECTING) throw Error("WebSocket is not open: readyState 0 (CONNECTING)");
-			if (typeof t == "function" ? (r = t, t = n = void 0) : typeof n == "function" && (r = n, n = void 0), typeof t == "number" && (t = t.toString()), this.readyState !== e.OPEN) {
-				R(this, t, r);
+		/**
+		* Send a pong.
+		*
+		* @param {*} [data] The data to send
+		* @param {Boolean} [mask] Indicates whether or not to mask `data`
+		* @param {Function} [cb] Callback which is executed when the pong is sent
+		* @public
+		*/
+		pong(data, mask, cb) {
+			if (this.readyState === WebSocket.CONNECTING) throw new Error("WebSocket is not open: readyState 0 (CONNECTING)");
+			if (typeof data === "function") {
+				cb = data;
+				data = mask = void 0;
+			} else if (typeof mask === "function") {
+				cb = mask;
+				mask = void 0;
+			}
+			if (typeof data === "number") data = data.toString();
+			if (this.readyState !== WebSocket.OPEN) {
+				sendAfterClose(this, data, cb);
 				return;
 			}
-			n === void 0 && (n = !this._isServer), this._sender.pong(t || y, n, r);
+			if (mask === void 0) mask = !this._isServer;
+			this._sender.pong(data || EMPTY_BUFFER, mask, cb);
 		}
+		/**
+		* Resume the socket.
+		*
+		* @public
+		*/
 		resume() {
-			this.readyState !== e.CONNECTING && this.readyState !== e.CLOSED && (this._paused = !1, this._receiver._writableState.needDrain || this._socket.resume());
+			if (this.readyState === WebSocket.CONNECTING || this.readyState === WebSocket.CLOSED) return;
+			this._paused = false;
+			if (!this._receiver._writableState.needDrain) this._socket.resume();
 		}
-		send(t, n, r) {
-			if (this.readyState === e.CONNECTING) throw Error("WebSocket is not open: readyState 0 (CONNECTING)");
-			if (typeof n == "function" && (r = n, n = {}), typeof t == "number" && (t = t.toString()), this.readyState !== e.OPEN) {
-				R(this, t, r);
+		/**
+		* Send a data message.
+		*
+		* @param {*} data The message to send
+		* @param {Object} [options] Options object
+		* @param {Boolean} [options.binary] Specifies whether `data` is binary or
+		*     text
+		* @param {Boolean} [options.compress] Specifies whether or not to compress
+		*     `data`
+		* @param {Boolean} [options.fin=true] Specifies whether the fragment is the
+		*     last one
+		* @param {Boolean} [options.mask] Specifies whether or not to mask `data`
+		* @param {Function} [cb] Callback which is executed when data is written out
+		* @public
+		*/
+		send(data, options, cb) {
+			if (this.readyState === WebSocket.CONNECTING) throw new Error("WebSocket is not open: readyState 0 (CONNECTING)");
+			if (typeof options === "function") {
+				cb = options;
+				options = {};
+			}
+			if (typeof data === "number") data = data.toString();
+			if (this.readyState !== WebSocket.OPEN) {
+				sendAfterClose(this, data, cb);
 				return;
 			}
-			let i = {
-				binary: typeof t != "string",
+			const opts = {
+				binary: typeof data !== "string",
 				mask: !this._isServer,
-				compress: !0,
-				fin: !0,
-				...n
+				compress: true,
+				fin: true,
+				...options
 			};
-			this._extensions[f.extensionName] || (i.compress = !1), this._sender.send(t || y, i, r);
+			if (!this._extensions[PerMessageDeflate.extensionName]) opts.compress = false;
+			this._sender.send(data || EMPTY_BUFFER, opts, cb);
 		}
+		/**
+		* Forcibly close the connection.
+		*
+		* @public
+		*/
 		terminate() {
-			if (this.readyState !== e.CLOSED) {
-				if (this.readyState === e.CONNECTING) {
-					L(this, this._req, "WebSocket was closed before the connection was established");
-					return;
-				}
-				this._socket && (this._readyState = e.CLOSING, this._socket.destroy());
+			if (this.readyState === WebSocket.CLOSED) return;
+			if (this.readyState === WebSocket.CONNECTING) {
+				abortHandshake(this, this._req, "WebSocket was closed before the connection was established");
+				return;
+			}
+			if (this._socket) {
+				this._readyState = WebSocket.CLOSING;
+				this._socket.destroy();
 			}
 		}
 	};
-	Object.defineProperty(F, "CONNECTING", {
-		enumerable: !0,
-		value: N.indexOf("CONNECTING")
-	}), Object.defineProperty(F.prototype, "CONNECTING", {
-		enumerable: !0,
-		value: N.indexOf("CONNECTING")
-	}), Object.defineProperty(F, "OPEN", {
-		enumerable: !0,
-		value: N.indexOf("OPEN")
-	}), Object.defineProperty(F.prototype, "OPEN", {
-		enumerable: !0,
-		value: N.indexOf("OPEN")
-	}), Object.defineProperty(F, "CLOSING", {
-		enumerable: !0,
-		value: N.indexOf("CLOSING")
-	}), Object.defineProperty(F.prototype, "CLOSING", {
-		enumerable: !0,
-		value: N.indexOf("CLOSING")
-	}), Object.defineProperty(F, "CLOSED", {
-		enumerable: !0,
-		value: N.indexOf("CLOSED")
-	}), Object.defineProperty(F.prototype, "CLOSED", {
-		enumerable: !0,
-		value: N.indexOf("CLOSED")
-	}), [
+	/**
+	* @constant {Number} CONNECTING
+	* @memberof WebSocket
+	*/
+	Object.defineProperty(WebSocket, "CONNECTING", {
+		enumerable: true,
+		value: readyStates.indexOf("CONNECTING")
+	});
+	/**
+	* @constant {Number} CONNECTING
+	* @memberof WebSocket.prototype
+	*/
+	Object.defineProperty(WebSocket.prototype, "CONNECTING", {
+		enumerable: true,
+		value: readyStates.indexOf("CONNECTING")
+	});
+	/**
+	* @constant {Number} OPEN
+	* @memberof WebSocket
+	*/
+	Object.defineProperty(WebSocket, "OPEN", {
+		enumerable: true,
+		value: readyStates.indexOf("OPEN")
+	});
+	/**
+	* @constant {Number} OPEN
+	* @memberof WebSocket.prototype
+	*/
+	Object.defineProperty(WebSocket.prototype, "OPEN", {
+		enumerable: true,
+		value: readyStates.indexOf("OPEN")
+	});
+	/**
+	* @constant {Number} CLOSING
+	* @memberof WebSocket
+	*/
+	Object.defineProperty(WebSocket, "CLOSING", {
+		enumerable: true,
+		value: readyStates.indexOf("CLOSING")
+	});
+	/**
+	* @constant {Number} CLOSING
+	* @memberof WebSocket.prototype
+	*/
+	Object.defineProperty(WebSocket.prototype, "CLOSING", {
+		enumerable: true,
+		value: readyStates.indexOf("CLOSING")
+	});
+	/**
+	* @constant {Number} CLOSED
+	* @memberof WebSocket
+	*/
+	Object.defineProperty(WebSocket, "CLOSED", {
+		enumerable: true,
+		value: readyStates.indexOf("CLOSED")
+	});
+	/**
+	* @constant {Number} CLOSED
+	* @memberof WebSocket.prototype
+	*/
+	Object.defineProperty(WebSocket.prototype, "CLOSED", {
+		enumerable: true,
+		value: readyStates.indexOf("CLOSED")
+	});
+	[
 		"binaryType",
 		"bufferedAmount",
 		"extensions",
@@ -10061,43 +13630,88 @@ var o = Object.create, s = Object.defineProperty, c = Object.getOwnPropertyDescr
 		"protocol",
 		"readyState",
 		"url"
-	].forEach((e) => {
-		Object.defineProperty(F.prototype, e, { enumerable: !0 });
-	}), [
+	].forEach((property) => {
+		Object.defineProperty(WebSocket.prototype, property, { enumerable: true });
+	});
+	[
 		"open",
 		"error",
 		"close",
 		"message"
-	].forEach((e) => {
-		Object.defineProperty(F.prototype, `on${e}`, {
-			enumerable: !0,
+	].forEach((method) => {
+		Object.defineProperty(WebSocket.prototype, `on${method}`, {
+			enumerable: true,
 			get() {
-				for (let t of this.listeners(e)) if (t[x]) return t[S];
+				for (const listener of this.listeners(method)) if (listener[kForOnEventAttribute]) return listener[kListener];
 				return null;
 			},
-			set(t) {
-				for (let t of this.listeners(e)) if (t[x]) {
-					this.removeListener(e, t);
+			set(handler) {
+				for (const listener of this.listeners(method)) if (listener[kForOnEventAttribute]) {
+					this.removeListener(method, listener);
 					break;
 				}
-				typeof t == "function" && this.addEventListener(e, t, { [x]: !0 });
+				if (typeof handler !== "function") return;
+				this.addEventListener(method, handler, { [kForOnEventAttribute]: true });
 			}
 		});
-	}), F.prototype.addEventListener = E, F.prototype.removeEventListener = D, t.exports = F;
-	function ee(e, t, n, a) {
-		let o = {
-			allowSynchronousEvents: !0,
-			autoPong: !0,
-			closeTimeout: _,
-			protocolVersion: M[1],
+	});
+	WebSocket.prototype.addEventListener = addEventListener;
+	WebSocket.prototype.removeEventListener = removeEventListener;
+	module.exports = WebSocket;
+	/**
+	* Initialize a WebSocket client.
+	*
+	* @param {WebSocket} websocket The client to initialize
+	* @param {(String|URL)} address The URL to which to connect
+	* @param {Array} protocols The subprotocols
+	* @param {Object} [options] Connection options
+	* @param {Boolean} [options.allowSynchronousEvents=true] Specifies whether any
+	*     of the `'message'`, `'ping'`, and `'pong'` events can be emitted multiple
+	*     times in the same tick
+	* @param {Boolean} [options.autoPong=true] Specifies whether or not to
+	*     automatically send a pong in response to a ping
+	* @param {Number} [options.closeTimeout=30000] Duration in milliseconds to wait
+	*     for the closing handshake to finish after `websocket.close()` is called
+	* @param {Function} [options.finishRequest] A function which can be used to
+	*     customize the headers of each http request before it is sent
+	* @param {Boolean} [options.followRedirects=false] Whether or not to follow
+	*     redirects
+	* @param {Function} [options.generateMask] The function used to generate the
+	*     masking key
+	* @param {Number} [options.handshakeTimeout] Timeout in milliseconds for the
+	*     handshake request
+	* @param {Number} [options.maxBufferedChunks=262144] The maximum number of
+	*     buffered data chunks
+	* @param {Number} [options.maxFragments=16384] The maximum number of message
+	*     fragments
+	* @param {Number} [options.maxPayload=104857600] The maximum allowed message
+	*     size
+	* @param {Number} [options.maxRedirects=10] The maximum number of redirects
+	*     allowed
+	* @param {String} [options.origin] Value of the `Origin` or
+	*     `Sec-WebSocket-Origin` header
+	* @param {(Boolean|Object)} [options.perMessageDeflate=true] Enable/disable
+	*     permessage-deflate
+	* @param {Number} [options.protocolVersion=13] Value of the
+	*     `Sec-WebSocket-Version` header
+	* @param {Boolean} [options.skipUTF8Validation=false] Specifies whether or
+	*     not to skip UTF-8 validation for text and close messages
+	* @private
+	*/
+	function initAsClient(websocket, address, protocols, options) {
+		const opts = {
+			allowSynchronousEvents: true,
+			autoPong: true,
+			closeTimeout: CLOSE_TIMEOUT,
+			protocolVersion: protocolVersions[1],
 			maxBufferedChunks: 262144,
 			maxFragments: 16384,
 			maxPayload: 104857600,
-			skipUTF8Validation: !1,
-			perMessageDeflate: !0,
-			followRedirects: !1,
+			skipUTF8Validation: false,
+			perMessageDeflate: true,
+			followRedirects: false,
 			maxRedirects: 10,
-			...a,
+			...options,
 			socketPath: void 0,
 			hostname: void 0,
 			protocol: void 0,
@@ -10107,845 +13721,1665 @@ var o = Object.create, s = Object.defineProperty, c = Object.getOwnPropertyDescr
 			path: void 0,
 			port: void 0
 		};
-		if (e._autoPong = o.autoPong, e._closeTimeout = o.closeTimeout, !M.includes(o.protocolVersion)) throw RangeError(`Unsupported protocol version: ${o.protocolVersion} (supported versions: ${M.join(", ")})`);
-		let l;
-		if (t instanceof d) l = t;
+		websocket._autoPong = opts.autoPong;
+		websocket._closeTimeout = opts.closeTimeout;
+		if (!protocolVersions.includes(opts.protocolVersion)) throw new RangeError(`Unsupported protocol version: ${opts.protocolVersion} (supported versions: ${protocolVersions.join(", ")})`);
+		let parsedUrl;
+		if (address instanceof URL$1) parsedUrl = address;
 		else try {
-			l = new d(t);
+			parsedUrl = new URL$1(address);
 		} catch {
-			throw SyntaxError(`Invalid URL: ${t}`);
+			throw new SyntaxError(`Invalid URL: ${address}`);
 		}
-		l.protocol === "http:" ? l.protocol = "ws:" : l.protocol === "https:" && (l.protocol = "wss:"), e._url = l.href;
-		let u = l.protocol === "wss:", p = l.protocol === "ws+unix:", m;
-		if (l.protocol !== "ws:" && !u && !p ? m = "The URL's protocol must be one of \"ws:\", \"wss:\", \"http:\", \"https:\", or \"ws+unix:\"" : p && !l.pathname ? m = "The URL's pathname is empty" : l.hash && (m = "The URL contains a fragment identifier"), m) {
-			let t = SyntaxError(m);
-			if (e._redirects === 0) throw t;
-			I(e, t);
-			return;
+		if (parsedUrl.protocol === "http:") parsedUrl.protocol = "ws:";
+		else if (parsedUrl.protocol === "https:") parsedUrl.protocol = "wss:";
+		websocket._url = parsedUrl.href;
+		const isSecure = parsedUrl.protocol === "wss:";
+		const isIpcUrl = parsedUrl.protocol === "ws+unix:";
+		let invalidUrlMessage;
+		if (parsedUrl.protocol !== "ws:" && !isSecure && !isIpcUrl) invalidUrlMessage = "The URL's protocol must be one of \"ws:\", \"wss:\", \"http:\", \"https:\", or \"ws+unix:\"";
+		else if (isIpcUrl && !parsedUrl.pathname) invalidUrlMessage = "The URL's pathname is empty";
+		else if (parsedUrl.hash) invalidUrlMessage = "The URL contains a fragment identifier";
+		if (invalidUrlMessage) {
+			const err = new SyntaxError(invalidUrlMessage);
+			if (websocket._redirects === 0) throw err;
+			else {
+				emitErrorAndClose(websocket, err);
+				return;
+			}
 		}
-		let h = u ? 443 : 80, g = s(16).toString("base64"), v = u ? r.request : i.request, y = /* @__PURE__ */ new Set(), x;
-		if (o.createConnection = o.createConnection || (u ? ne : te), o.defaultPort = o.defaultPort || h, o.port = l.port || h, o.host = l.hostname.startsWith("[") ? l.hostname.slice(1, -1) : l.hostname, o.headers = {
-			...o.headers,
-			"Sec-WebSocket-Version": o.protocolVersion,
-			"Sec-WebSocket-Key": g,
+		const defaultPort = isSecure ? 443 : 80;
+		const key = randomBytes(16).toString("base64");
+		const request = isSecure ? https.request : http$1.request;
+		const protocolSet = /* @__PURE__ */ new Set();
+		let perMessageDeflate;
+		opts.createConnection = opts.createConnection || (isSecure ? tlsConnect : netConnect);
+		opts.defaultPort = opts.defaultPort || defaultPort;
+		opts.port = parsedUrl.port || defaultPort;
+		opts.host = parsedUrl.hostname.startsWith("[") ? parsedUrl.hostname.slice(1, -1) : parsedUrl.hostname;
+		opts.headers = {
+			...opts.headers,
+			"Sec-WebSocket-Version": opts.protocolVersion,
+			"Sec-WebSocket-Key": key,
 			Connection: "Upgrade",
 			Upgrade: "websocket"
-		}, o.path = l.pathname + l.search, o.timeout = o.handshakeTimeout, o.perMessageDeflate && (x = new f({
-			...o.perMessageDeflate,
-			isServer: !1,
-			maxPayload: o.maxPayload
-		}), o.headers["Sec-WebSocket-Extensions"] = O({ [f.extensionName]: x.offer() })), n.length) {
-			for (let e of n) {
-				if (typeof e != "string" || !P.test(e) || y.has(e)) throw SyntaxError("An invalid or duplicated subprotocol was specified");
-				y.add(e);
-			}
-			o.headers["Sec-WebSocket-Protocol"] = n.join(",");
-		}
-		if (o.origin && (o.protocolVersion < 13 ? o.headers["Sec-WebSocket-Origin"] = o.origin : o.headers.Origin = o.origin), (l.username || l.password) && (o.auth = `${l.username}:${l.password}`), p) {
-			let e = o.path.split(":");
-			o.socketPath = e[0], o.path = e[1];
-		}
-		let S;
-		if (o.followRedirects) {
-			if (e._redirects === 0) {
-				e._originalIpc = p, e._originalSecure = u, e._originalHostOrSocketPath = p ? o.socketPath : l.host;
-				let t = a && a.headers;
-				if (a = {
-					...a,
-					headers: {}
-				}, t) for (let [e, n] of Object.entries(t)) a.headers[e.toLowerCase()] = n;
-			} else if (e.listenerCount("redirect") === 0) {
-				let t = p ? e._originalIpc ? o.socketPath === e._originalHostOrSocketPath : !1 : !e._originalIpc && l.host === e._originalHostOrSocketPath;
-				(!t || e._originalSecure && !u) && (delete o.headers.authorization, delete o.headers.cookie, t || delete o.headers.host, o.auth = void 0);
-			}
-			o.auth && !a.headers.authorization && (a.headers.authorization = "Basic " + Buffer.from(o.auth).toString("base64")), S = e._req = v(o), e._redirects && e.emit("redirect", e.url, S);
-		} else S = e._req = v(o);
-		o.timeout && S.on("timeout", () => {
-			L(e, S, "Opening handshake has timed out");
-		}), S.on("error", (t) => {
-			S === null || S[j] || (S = e._req = null, I(e, t));
-		}), S.on("response", (r) => {
-			let i = r.headers.location, s = r.statusCode;
-			if (i && o.followRedirects && s >= 300 && s < 400) {
-				if (++e._redirects > o.maxRedirects) {
-					L(e, S, "Maximum redirects exceeded");
-					return;
-				}
-				S.abort();
-				let r;
-				try {
-					r = new d(i, t);
-				} catch {
-					I(e, /* @__PURE__ */ SyntaxError(`Invalid URL: ${i}`));
-					return;
-				}
-				ee(e, r, n, a);
-			} else e.emit("unexpected-response", S, r) || L(e, S, `Unexpected server response: ${r.statusCode}`);
-		}), S.on("upgrade", (t, n, r) => {
-			if (e.emit("upgrade", t), e.readyState !== F.CONNECTING) return;
-			S = e._req = null;
-			let i = t.headers.upgrade;
-			if (i === void 0 || i.toLowerCase() !== "websocket") {
-				L(e, n, "Invalid Upgrade header");
-				return;
-			}
-			let a = c("sha1").update(g + b).digest("base64");
-			if (t.headers["sec-websocket-accept"] !== a) {
-				L(e, n, "Invalid Sec-WebSocket-Accept header");
-				return;
-			}
-			let s = t.headers["sec-websocket-protocol"], l;
-			if (s === void 0 ? y.size && (l = "Server sent no subprotocol") : y.size ? y.has(s) || (l = "Server sent an invalid subprotocol") : l = "Server sent a subprotocol but none was requested", l) {
-				L(e, n, l);
-				return;
-			}
-			s && (e._protocol = s);
-			let u = t.headers["sec-websocket-extensions"];
-			if (u !== void 0) {
-				if (!x) {
-					L(e, n, "Server sent a Sec-WebSocket-Extensions header but no extension was requested");
-					return;
-				}
-				let t;
-				try {
-					t = k(u);
-				} catch {
-					L(e, n, "Invalid Sec-WebSocket-Extensions header");
-					return;
-				}
-				let r = Object.keys(t);
-				if (r.length !== 1 || r[0] !== f.extensionName) {
-					L(e, n, "Server indicated an extension that was not requested");
-					return;
-				}
-				try {
-					x.accept(t[f.extensionName]);
-				} catch {
-					L(e, n, "Invalid Sec-WebSocket-Extensions header");
-					return;
-				}
-				e._extensions[f.extensionName] = x;
-			}
-			e.setSocket(n, r, {
-				allowSynchronousEvents: o.allowSynchronousEvents,
-				generateMask: o.generateMask,
-				maxBufferedChunks: o.maxBufferedChunks,
-				maxFragments: o.maxFragments,
-				maxPayload: o.maxPayload,
-				skipUTF8Validation: o.skipUTF8Validation
+		};
+		opts.path = parsedUrl.pathname + parsedUrl.search;
+		opts.timeout = opts.handshakeTimeout;
+		if (opts.perMessageDeflate) {
+			perMessageDeflate = new PerMessageDeflate({
+				...opts.perMessageDeflate,
+				isServer: false,
+				maxPayload: opts.maxPayload
 			});
-		}), o.finishRequest ? o.finishRequest(S, e) : S.end();
-	}
-	function I(e, t) {
-		e._readyState = F.CLOSING, e._errorEmitted = !0, e.emit("error", t), e.emitClose();
-	}
-	function te(e) {
-		return e.path = e.socketPath, a.connect(e);
-	}
-	function ne(e) {
-		return e.path = void 0, !e.servername && e.servername !== "" && (e.servername = a.isIP(e.host) ? "" : e.host), o.connect(e);
-	}
-	function L(e, t, n) {
-		e._readyState = F.CLOSING;
-		let r = Error(n);
-		Error.captureStackTrace(r, L), t.setHeader ? (t[j] = !0, t.abort(), t.socket && !t.socket.destroyed && t.socket.destroy(), process.nextTick(I, e, r)) : (t.destroy(r), t.once("error", e.emit.bind(e, "error")), t.once("close", e.emitClose.bind(e)));
-	}
-	function R(e, t, n) {
-		if (t) {
-			let n = h(t) ? t.size : A(t).length;
-			e._socket ? e._sender._bufferedBytes += n : e._bufferedAmount += n;
+			opts.headers["Sec-WebSocket-Extensions"] = format({ [PerMessageDeflate.extensionName]: perMessageDeflate.offer() });
 		}
-		if (n) {
-			let t = /* @__PURE__ */ Error(`WebSocket is not open: readyState ${e.readyState} (${N[e.readyState]})`);
-			process.nextTick(n, t);
+		if (protocols.length) {
+			for (const protocol of protocols) {
+				if (typeof protocol !== "string" || !subprotocolRegex.test(protocol) || protocolSet.has(protocol)) throw new SyntaxError("An invalid or duplicated subprotocol was specified");
+				protocolSet.add(protocol);
+			}
+			opts.headers["Sec-WebSocket-Protocol"] = protocols.join(",");
 		}
-	}
-	function re(e, t) {
-		let n = this[w];
-		n._closeFrameReceived = !0, n._closeMessage = t, n._closeCode = e, n._socket[w] !== void 0 && (n._socket.removeListener("data", G), process.nextTick(H, n._socket), e === 1005 ? n.close() : n.close(e, t));
-	}
-	function z() {
-		let e = this[w];
-		e.isPaused || e._socket.resume();
-	}
-	function B(e) {
-		let t = this[w];
-		t._socket[w] !== void 0 && (t._socket.removeListener("data", G), process.nextTick(H, t._socket), t.close(e[C])), t._errorEmitted || (t._errorEmitted = !0, t.emit("error", e));
-	}
-	function V() {
-		this[w].emitClose();
-	}
-	function ie(e, t) {
-		this[w].emit("message", e, t);
-	}
-	function ae(e) {
-		let t = this[w];
-		t._autoPong && t.pong(e, !this._isServer, T), t.emit("ping", e);
-	}
-	function oe(e) {
-		this[w].emit("pong", e);
-	}
-	function H(e) {
-		e.resume();
-	}
-	function U(e) {
-		let t = this[w];
-		t.readyState !== F.CLOSED && (t.readyState === F.OPEN && (t._readyState = F.CLOSING, se(t)), this._socket.end(), t._errorEmitted || (t._errorEmitted = !0, t.emit("error", e)));
-	}
-	function se(e) {
-		e._closeTimer = setTimeout(e._socket.destroy.bind(e._socket), e._closeTimeout);
-	}
-	function ce() {
-		let e = this[w];
-		if (this.removeListener("close", ce), this.removeListener("data", G), this.removeListener("end", le), e._readyState = F.CLOSING, !this._readableState.endEmitted && !e._closeFrameReceived && !e._receiver._writableState.errorEmitted && this._readableState.length !== 0) {
-			let t = this.read(this._readableState.length);
-			e._receiver.write(t);
+		if (opts.origin) {
+			if (opts.protocolVersion < 13) opts.headers["Sec-WebSocket-Origin"] = opts.origin;
+			else opts.headers.Origin = opts.origin;
 		}
-		e._receiver.end(), this[w] = void 0, clearTimeout(e._closeTimer), e._receiver._writableState.finished || e._receiver._writableState.errorEmitted ? e.emitClose() : (e._receiver.on("error", V), e._receiver.on("finish", V));
-	}
-	function G(e) {
-		this[w]._receiver.write(e) || this.pause();
-	}
-	function le() {
-		let e = this[w];
-		e._readyState = F.CLOSING, e._receiver.end(), this.end();
-	}
-	function ue() {
-		let e = this[w];
-		this.removeListener("error", ue), this.on("error", T), e && (e._readyState = F.CLOSING, this.destroy());
-	}
-})), ye = /* @__PURE__ */ p(((e, t) => {
-	ve();
-	var { Duplex: n } = v("stream");
-	function r(e) {
-		e.emit("close");
-	}
-	function i() {
-		!this.destroyed && this._writableState.finished && this.destroy();
-	}
-	function a(e) {
-		this.removeListener("error", a), this.destroy(), this.listenerCount("error") === 0 && this.emit("error", e);
-	}
-	function o(e, t) {
-		let o = !0, s = new n({
-			...t,
-			autoDestroy: !1,
-			emitClose: !1,
-			objectMode: !1,
-			writableObjectMode: !1
+		if (parsedUrl.username || parsedUrl.password) opts.auth = `${parsedUrl.username}:${parsedUrl.password}`;
+		if (isIpcUrl) {
+			const parts = opts.path.split(":");
+			opts.socketPath = parts[0];
+			opts.path = parts[1];
+		}
+		let req;
+		if (opts.followRedirects) {
+			if (websocket._redirects === 0) {
+				websocket._originalIpc = isIpcUrl;
+				websocket._originalSecure = isSecure;
+				websocket._originalHostOrSocketPath = isIpcUrl ? opts.socketPath : parsedUrl.host;
+				const headers = options && options.headers;
+				options = {
+					...options,
+					headers: {}
+				};
+				if (headers) for (const [key, value] of Object.entries(headers)) options.headers[key.toLowerCase()] = value;
+			} else if (websocket.listenerCount("redirect") === 0) {
+				const isSameHost = isIpcUrl ? websocket._originalIpc ? opts.socketPath === websocket._originalHostOrSocketPath : false : websocket._originalIpc ? false : parsedUrl.host === websocket._originalHostOrSocketPath;
+				if (!isSameHost || websocket._originalSecure && !isSecure) {
+					delete opts.headers.authorization;
+					delete opts.headers.cookie;
+					if (!isSameHost) delete opts.headers.host;
+					opts.auth = void 0;
+				}
+			}
+			if (opts.auth && !options.headers.authorization) options.headers.authorization = "Basic " + Buffer.from(opts.auth).toString("base64");
+			req = websocket._req = request(opts);
+			if (websocket._redirects) websocket.emit("redirect", websocket.url, req);
+		} else req = websocket._req = request(opts);
+		if (opts.timeout) req.on("timeout", () => {
+			abortHandshake(websocket, req, "Opening handshake has timed out");
 		});
-		return e.on("message", function(t, n) {
-			let r = !n && s._readableState.objectMode ? t.toString() : t;
-			s.push(r) || e.pause();
-		}), e.once("error", function(e) {
-			s.destroyed || (o = !1, s.destroy(e));
-		}), e.once("close", function() {
-			s.destroyed || s.push(null);
-		}), s._destroy = function(t, n) {
-			if (e.readyState === e.CLOSED) {
-				n(t), process.nextTick(r, s);
+		req.on("error", (err) => {
+			if (req === null || req[kAborted]) return;
+			req = websocket._req = null;
+			emitErrorAndClose(websocket, err);
+		});
+		req.on("response", (res) => {
+			const location = res.headers.location;
+			const statusCode = res.statusCode;
+			if (location && opts.followRedirects && statusCode >= 300 && statusCode < 400) {
+				if (++websocket._redirects > opts.maxRedirects) {
+					abortHandshake(websocket, req, "Maximum redirects exceeded");
+					return;
+				}
+				req.abort();
+				let addr;
+				try {
+					addr = new URL$1(location, address);
+				} catch (e) {
+					emitErrorAndClose(websocket, /* @__PURE__ */ new SyntaxError(`Invalid URL: ${location}`));
+					return;
+				}
+				initAsClient(websocket, addr, protocols, options);
+			} else if (!websocket.emit("unexpected-response", req, res)) abortHandshake(websocket, req, `Unexpected server response: ${res.statusCode}`);
+		});
+		req.on("upgrade", (res, socket, head) => {
+			websocket.emit("upgrade", res);
+			if (websocket.readyState !== WebSocket.CONNECTING) return;
+			req = websocket._req = null;
+			const upgrade = res.headers.upgrade;
+			if (upgrade === void 0 || upgrade.toLowerCase() !== "websocket") {
+				abortHandshake(websocket, socket, "Invalid Upgrade header");
 				return;
 			}
-			let i = !1;
-			e.once("error", function(e) {
-				i = !0, n(e);
-			}), e.once("close", function() {
-				i || n(t), process.nextTick(r, s);
-			}), o && e.terminate();
-		}, s._final = function(t) {
-			if (e.readyState === e.CONNECTING) {
-				e.once("open", function() {
-					s._final(t);
-				});
+			const digest = createHash$1("sha1").update(key + GUID).digest("base64");
+			if (res.headers["sec-websocket-accept"] !== digest) {
+				abortHandshake(websocket, socket, "Invalid Sec-WebSocket-Accept header");
 				return;
 			}
-			e._socket !== null && (e._socket._writableState.finished ? (t(), s._readableState.endEmitted && s.destroy()) : (e._socket.once("finish", function() {
-				t();
-			}), e.close()));
-		}, s._read = function() {
-			e.isPaused && e.resume();
-		}, s._write = function(t, n, r) {
-			if (e.readyState === e.CONNECTING) {
-				e.once("open", function() {
-					s._write(t, n, r);
-				});
+			const serverProt = res.headers["sec-websocket-protocol"];
+			let protError;
+			if (serverProt !== void 0) {
+				if (!protocolSet.size) protError = "Server sent a subprotocol but none was requested";
+				else if (!protocolSet.has(serverProt)) protError = "Server sent an invalid subprotocol";
+			} else if (protocolSet.size) protError = "Server sent no subprotocol";
+			if (protError) {
+				abortHandshake(websocket, socket, protError);
 				return;
 			}
-			e.send(t, r);
-		}, s.on("end", i), s.on("error", a), s;
+			if (serverProt) websocket._protocol = serverProt;
+			const secWebSocketExtensions = res.headers["sec-websocket-extensions"];
+			if (secWebSocketExtensions !== void 0) {
+				if (!perMessageDeflate) {
+					abortHandshake(websocket, socket, "Server sent a Sec-WebSocket-Extensions header but no extension was requested");
+					return;
+				}
+				let extensions;
+				try {
+					extensions = parse(secWebSocketExtensions);
+				} catch (err) {
+					abortHandshake(websocket, socket, "Invalid Sec-WebSocket-Extensions header");
+					return;
+				}
+				const extensionNames = Object.keys(extensions);
+				if (extensionNames.length !== 1 || extensionNames[0] !== PerMessageDeflate.extensionName) {
+					abortHandshake(websocket, socket, "Server indicated an extension that was not requested");
+					return;
+				}
+				try {
+					perMessageDeflate.accept(extensions[PerMessageDeflate.extensionName]);
+				} catch (err) {
+					abortHandshake(websocket, socket, "Invalid Sec-WebSocket-Extensions header");
+					return;
+				}
+				websocket._extensions[PerMessageDeflate.extensionName] = perMessageDeflate;
+			}
+			websocket.setSocket(socket, head, {
+				allowSynchronousEvents: opts.allowSynchronousEvents,
+				generateMask: opts.generateMask,
+				maxBufferedChunks: opts.maxBufferedChunks,
+				maxFragments: opts.maxFragments,
+				maxPayload: opts.maxPayload,
+				skipUTF8Validation: opts.skipUTF8Validation
+			});
+		});
+		if (opts.finishRequest) opts.finishRequest(req, websocket);
+		else req.end();
 	}
-	t.exports = o;
-})), be = /* @__PURE__ */ p(((e, t) => {
-	var { tokenChars: n } = J();
-	function r(e) {
-		let t = /* @__PURE__ */ new Set(), r = -1, i = -1, a = 0;
-		for (; a < e.length; a++) {
-			let o = e.charCodeAt(a);
-			if (i === -1 && n[o] === 1) r === -1 && (r = a);
-			else if (a !== 0 && (o === 32 || o === 9)) i === -1 && r !== -1 && (i = a);
-			else if (o === 44) {
-				if (r === -1) throw SyntaxError(`Unexpected character at index ${a}`);
-				i === -1 && (i = a);
-				let n = e.slice(r, i);
-				if (t.has(n)) throw SyntaxError(`The "${n}" subprotocol is duplicated`);
-				t.add(n), r = i = -1;
-			} else throw SyntaxError(`Unexpected character at index ${a}`);
+	/**
+	* Emit the `'error'` and `'close'` events.
+	*
+	* @param {WebSocket} websocket The WebSocket instance
+	* @param {Error} The error to emit
+	* @private
+	*/
+	function emitErrorAndClose(websocket, err) {
+		websocket._readyState = WebSocket.CLOSING;
+		websocket._errorEmitted = true;
+		websocket.emit("error", err);
+		websocket.emitClose();
+	}
+	/**
+	* Create a `net.Socket` and initiate a connection.
+	*
+	* @param {Object} options Connection options
+	* @return {net.Socket} The newly created socket used to start the connection
+	* @private
+	*/
+	function netConnect(options) {
+		options.path = options.socketPath;
+		return net.connect(options);
+	}
+	/**
+	* Create a `tls.TLSSocket` and initiate a connection.
+	*
+	* @param {Object} options Connection options
+	* @return {tls.TLSSocket} The newly created socket used to start the connection
+	* @private
+	*/
+	function tlsConnect(options) {
+		options.path = void 0;
+		if (!options.servername && options.servername !== "") options.servername = net.isIP(options.host) ? "" : options.host;
+		return tls.connect(options);
+	}
+	/**
+	* Abort the handshake and emit an error.
+	*
+	* @param {WebSocket} websocket The WebSocket instance
+	* @param {(http.ClientRequest|net.Socket|tls.Socket)} stream The request to
+	*     abort or the socket to destroy
+	* @param {String} message The error message
+	* @private
+	*/
+	function abortHandshake(websocket, stream, message) {
+		websocket._readyState = WebSocket.CLOSING;
+		const err = new Error(message);
+		Error.captureStackTrace(err, abortHandshake);
+		if (stream.setHeader) {
+			stream[kAborted] = true;
+			stream.abort();
+			if (stream.socket && !stream.socket.destroyed) stream.socket.destroy();
+			process.nextTick(emitErrorAndClose, websocket, err);
+		} else {
+			stream.destroy(err);
+			stream.once("error", websocket.emit.bind(websocket, "error"));
+			stream.once("close", websocket.emitClose.bind(websocket));
 		}
-		if (r === -1 || i !== -1) throw SyntaxError("Unexpected end of input");
-		let o = e.slice(r, a);
-		if (t.has(o)) throw SyntaxError(`The "${o}" subprotocol is duplicated`);
-		return t.add(o), t;
 	}
-	t.exports = { parse: r };
-})), xe = /* @__PURE__ */ p(((e, t) => {
-	var n = v("events"), r = v("http"), { Duplex: i } = v("stream"), { createHash: a } = v("crypto"), o = _e(), s = q(), c = be(), l = ve(), { CLOSE_TIMEOUT: u, GUID: d, kWebSocket: f } = W(), p = /^[+/0-9A-Za-z]{22}==$/, m = 0, h = 1, g = 2;
-	t.exports = class extends n {
-		constructor(e, t) {
-			if (super(), e = {
-				allowSynchronousEvents: !0,
-				autoPong: !0,
+	/**
+	* Handle cases where the `ping()`, `pong()`, or `send()` methods are called
+	* when the `readyState` attribute is `CLOSING` or `CLOSED`.
+	*
+	* @param {WebSocket} websocket The WebSocket instance
+	* @param {*} [data] The data to send
+	* @param {Function} [cb] Callback
+	* @private
+	*/
+	function sendAfterClose(websocket, data, cb) {
+		if (data) {
+			const length = isBlob(data) ? data.size : toBuffer(data).length;
+			if (websocket._socket) websocket._sender._bufferedBytes += length;
+			else websocket._bufferedAmount += length;
+		}
+		if (cb) {
+			const err = /* @__PURE__ */ new Error(`WebSocket is not open: readyState ${websocket.readyState} (${readyStates[websocket.readyState]})`);
+			process.nextTick(cb, err);
+		}
+	}
+	/**
+	* The listener of the `Receiver` `'conclude'` event.
+	*
+	* @param {Number} code The status code
+	* @param {Buffer} reason The reason for closing
+	* @private
+	*/
+	function receiverOnConclude(code, reason) {
+		const websocket = this[kWebSocket];
+		websocket._closeFrameReceived = true;
+		websocket._closeMessage = reason;
+		websocket._closeCode = code;
+		if (websocket._socket[kWebSocket] === void 0) return;
+		websocket._socket.removeListener("data", socketOnData);
+		process.nextTick(resume, websocket._socket);
+		if (code === 1005) websocket.close();
+		else websocket.close(code, reason);
+	}
+	/**
+	* The listener of the `Receiver` `'drain'` event.
+	*
+	* @private
+	*/
+	function receiverOnDrain() {
+		const websocket = this[kWebSocket];
+		if (!websocket.isPaused) websocket._socket.resume();
+	}
+	/**
+	* The listener of the `Receiver` `'error'` event.
+	*
+	* @param {(RangeError|Error)} err The emitted error
+	* @private
+	*/
+	function receiverOnError(err) {
+		const websocket = this[kWebSocket];
+		if (websocket._socket[kWebSocket] !== void 0) {
+			websocket._socket.removeListener("data", socketOnData);
+			process.nextTick(resume, websocket._socket);
+			websocket.close(err[kStatusCode]);
+		}
+		if (!websocket._errorEmitted) {
+			websocket._errorEmitted = true;
+			websocket.emit("error", err);
+		}
+	}
+	/**
+	* The listener of the `Receiver` `'finish'` event.
+	*
+	* @private
+	*/
+	function receiverOnFinish() {
+		this[kWebSocket].emitClose();
+	}
+	/**
+	* The listener of the `Receiver` `'message'` event.
+	*
+	* @param {Buffer|ArrayBuffer|Buffer[])} data The message
+	* @param {Boolean} isBinary Specifies whether the message is binary or not
+	* @private
+	*/
+	function receiverOnMessage(data, isBinary) {
+		this[kWebSocket].emit("message", data, isBinary);
+	}
+	/**
+	* The listener of the `Receiver` `'ping'` event.
+	*
+	* @param {Buffer} data The data included in the ping frame
+	* @private
+	*/
+	function receiverOnPing(data) {
+		const websocket = this[kWebSocket];
+		if (websocket._autoPong) websocket.pong(data, !this._isServer, NOOP);
+		websocket.emit("ping", data);
+	}
+	/**
+	* The listener of the `Receiver` `'pong'` event.
+	*
+	* @param {Buffer} data The data included in the pong frame
+	* @private
+	*/
+	function receiverOnPong(data) {
+		this[kWebSocket].emit("pong", data);
+	}
+	/**
+	* Resume a readable stream
+	*
+	* @param {Readable} stream The readable stream
+	* @private
+	*/
+	function resume(stream) {
+		stream.resume();
+	}
+	/**
+	* The `Sender` error event handler.
+	*
+	* @param {Error} The error
+	* @private
+	*/
+	function senderOnError(err) {
+		const websocket = this[kWebSocket];
+		if (websocket.readyState === WebSocket.CLOSED) return;
+		if (websocket.readyState === WebSocket.OPEN) {
+			websocket._readyState = WebSocket.CLOSING;
+			setCloseTimer(websocket);
+		}
+		this._socket.end();
+		if (!websocket._errorEmitted) {
+			websocket._errorEmitted = true;
+			websocket.emit("error", err);
+		}
+	}
+	/**
+	* Set a timer to destroy the underlying raw socket of a WebSocket.
+	*
+	* @param {WebSocket} websocket The WebSocket instance
+	* @private
+	*/
+	function setCloseTimer(websocket) {
+		websocket._closeTimer = setTimeout(websocket._socket.destroy.bind(websocket._socket), websocket._closeTimeout);
+	}
+	/**
+	* The listener of the socket `'close'` event.
+	*
+	* @private
+	*/
+	function socketOnClose() {
+		const websocket = this[kWebSocket];
+		this.removeListener("close", socketOnClose);
+		this.removeListener("data", socketOnData);
+		this.removeListener("end", socketOnEnd);
+		websocket._readyState = WebSocket.CLOSING;
+		if (!this._readableState.endEmitted && !websocket._closeFrameReceived && !websocket._receiver._writableState.errorEmitted && this._readableState.length !== 0) {
+			const chunk = this.read(this._readableState.length);
+			websocket._receiver.write(chunk);
+		}
+		websocket._receiver.end();
+		this[kWebSocket] = void 0;
+		clearTimeout(websocket._closeTimer);
+		if (websocket._receiver._writableState.finished || websocket._receiver._writableState.errorEmitted) websocket.emitClose();
+		else {
+			websocket._receiver.on("error", receiverOnFinish);
+			websocket._receiver.on("finish", receiverOnFinish);
+		}
+	}
+	/**
+	* The listener of the socket `'data'` event.
+	*
+	* @param {Buffer} chunk A chunk of data
+	* @private
+	*/
+	function socketOnData(chunk) {
+		if (!this[kWebSocket]._receiver.write(chunk)) this.pause();
+	}
+	/**
+	* The listener of the socket `'end'` event.
+	*
+	* @private
+	*/
+	function socketOnEnd() {
+		const websocket = this[kWebSocket];
+		websocket._readyState = WebSocket.CLOSING;
+		websocket._receiver.end();
+		this.end();
+	}
+	/**
+	* The listener of the socket `'error'` event.
+	*
+	* @private
+	*/
+	function socketOnError() {
+		const websocket = this[kWebSocket];
+		this.removeListener("error", socketOnError);
+		this.on("error", NOOP);
+		if (websocket) {
+			websocket._readyState = WebSocket.CLOSING;
+			this.destroy();
+		}
+	}
+}));
+//#endregion
+//#region node_modules/ws/lib/stream.js
+var require_stream = /* @__PURE__ */ __commonJSMin(((exports, module) => {
+	require_websocket$1();
+	var { Duplex: Duplex$1 } = __require("stream");
+	/**
+	* Emits the `'close'` event on a stream.
+	*
+	* @param {Duplex} stream The stream.
+	* @private
+	*/
+	function emitClose(stream) {
+		stream.emit("close");
+	}
+	/**
+	* The listener of the `'end'` event.
+	*
+	* @private
+	*/
+	function duplexOnEnd() {
+		if (!this.destroyed && this._writableState.finished) this.destroy();
+	}
+	/**
+	* The listener of the `'error'` event.
+	*
+	* @param {Error} err The error
+	* @private
+	*/
+	function duplexOnError(err) {
+		this.removeListener("error", duplexOnError);
+		this.destroy();
+		if (this.listenerCount("error") === 0) this.emit("error", err);
+	}
+	/**
+	* Wraps a `WebSocket` in a duplex stream.
+	*
+	* @param {WebSocket} ws The `WebSocket` to wrap
+	* @param {Object} [options] The options for the `Duplex` constructor
+	* @return {Duplex} The duplex stream
+	* @public
+	*/
+	function createWebSocketStream(ws, options) {
+		let terminateOnDestroy = true;
+		const duplex = new Duplex$1({
+			...options,
+			autoDestroy: false,
+			emitClose: false,
+			objectMode: false,
+			writableObjectMode: false
+		});
+		ws.on("message", function message(msg, isBinary) {
+			const data = !isBinary && duplex._readableState.objectMode ? msg.toString() : msg;
+			if (!duplex.push(data)) ws.pause();
+		});
+		ws.once("error", function error(err) {
+			if (duplex.destroyed) return;
+			terminateOnDestroy = false;
+			duplex.destroy(err);
+		});
+		ws.once("close", function close() {
+			if (duplex.destroyed) return;
+			duplex.push(null);
+		});
+		duplex._destroy = function(err, callback) {
+			if (ws.readyState === ws.CLOSED) {
+				callback(err);
+				process.nextTick(emitClose, duplex);
+				return;
+			}
+			let called = false;
+			ws.once("error", function error(err) {
+				called = true;
+				callback(err);
+			});
+			ws.once("close", function close() {
+				if (!called) callback(err);
+				process.nextTick(emitClose, duplex);
+			});
+			if (terminateOnDestroy) ws.terminate();
+		};
+		duplex._final = function(callback) {
+			if (ws.readyState === ws.CONNECTING) {
+				ws.once("open", function open() {
+					duplex._final(callback);
+				});
+				return;
+			}
+			if (ws._socket === null) return;
+			if (ws._socket._writableState.finished) {
+				callback();
+				if (duplex._readableState.endEmitted) duplex.destroy();
+			} else {
+				ws._socket.once("finish", function finish() {
+					callback();
+				});
+				ws.close();
+			}
+		};
+		duplex._read = function() {
+			if (ws.isPaused) ws.resume();
+		};
+		duplex._write = function(chunk, encoding, callback) {
+			if (ws.readyState === ws.CONNECTING) {
+				ws.once("open", function open() {
+					duplex._write(chunk, encoding, callback);
+				});
+				return;
+			}
+			ws.send(chunk, callback);
+		};
+		duplex.on("end", duplexOnEnd);
+		duplex.on("error", duplexOnError);
+		return duplex;
+	}
+	module.exports = createWebSocketStream;
+}));
+//#endregion
+//#region node_modules/ws/lib/subprotocol.js
+var require_subprotocol = /* @__PURE__ */ __commonJSMin(((exports, module) => {
+	var { tokenChars } = require_validation();
+	/**
+	* Parses the `Sec-WebSocket-Protocol` header into a set of subprotocol names.
+	*
+	* @param {String} header The field value of the header
+	* @return {Set} The subprotocol names
+	* @public
+	*/
+	function parse(header) {
+		const protocols = /* @__PURE__ */ new Set();
+		let start = -1;
+		let end = -1;
+		let i = 0;
+		for (; i < header.length; i++) {
+			const code = header.charCodeAt(i);
+			if (end === -1 && tokenChars[code] === 1) {
+				if (start === -1) start = i;
+			} else if (i !== 0 && (code === 32 || code === 9)) {
+				if (end === -1 && start !== -1) end = i;
+			} else if (code === 44) {
+				if (start === -1) throw new SyntaxError(`Unexpected character at index ${i}`);
+				if (end === -1) end = i;
+				const protocol = header.slice(start, end);
+				if (protocols.has(protocol)) throw new SyntaxError(`The "${protocol}" subprotocol is duplicated`);
+				protocols.add(protocol);
+				start = end = -1;
+			} else throw new SyntaxError(`Unexpected character at index ${i}`);
+		}
+		if (start === -1 || end !== -1) throw new SyntaxError("Unexpected end of input");
+		const protocol = header.slice(start, i);
+		if (protocols.has(protocol)) throw new SyntaxError(`The "${protocol}" subprotocol is duplicated`);
+		protocols.add(protocol);
+		return protocols;
+	}
+	module.exports = { parse };
+}));
+//#endregion
+//#region node_modules/ws/lib/websocket-server.js
+var require_websocket_server = /* @__PURE__ */ __commonJSMin(((exports, module) => {
+	var EventEmitter = __require("events");
+	var http = __require("http");
+	var { Duplex } = __require("stream");
+	var { createHash } = __require("crypto");
+	var extension = require_extension();
+	var PerMessageDeflate = require_permessage_deflate();
+	var subprotocol = require_subprotocol();
+	var WebSocket = require_websocket$1();
+	var { CLOSE_TIMEOUT, GUID, kWebSocket } = require_constants();
+	var keyRegex = /^[+/0-9A-Za-z]{22}==$/;
+	var RUNNING = 0;
+	var CLOSING = 1;
+	var CLOSED = 2;
+	/**
+	* Class representing a WebSocket server.
+	*
+	* @extends EventEmitter
+	*/
+	var WebSocketServer = class extends EventEmitter {
+		/**
+		* Create a `WebSocketServer` instance.
+		*
+		* @param {Object} options Configuration options
+		* @param {Boolean} [options.allowSynchronousEvents=true] Specifies whether
+		*     any of the `'message'`, `'ping'`, and `'pong'` events can be emitted
+		*     multiple times in the same tick
+		* @param {Boolean} [options.autoPong=true] Specifies whether or not to
+		*     automatically send a pong in response to a ping
+		* @param {Number} [options.backlog=511] The maximum length of the queue of
+		*     pending connections
+		* @param {Boolean} [options.clientTracking=true] Specifies whether or not to
+		*     track clients
+		* @param {Number} [options.closeTimeout=30000] Duration in milliseconds to
+		*     wait for the closing handshake to finish after `websocket.close()` is
+		*     called
+		* @param {Function} [options.handleProtocols] A hook to handle protocols
+		* @param {String} [options.host] The hostname where to bind the server
+		* @param {Number} [options.maxBufferedChunks=262144] The maximum number of
+		*     buffered data chunks
+		* @param {Number} [options.maxFragments=16384] The maximum number of message
+		*     fragments
+		* @param {Number} [options.maxPayload=104857600] The maximum allowed message
+		*     size
+		* @param {Boolean} [options.noServer=false] Enable no server mode
+		* @param {String} [options.path] Accept only connections matching this path
+		* @param {(Boolean|Object)} [options.perMessageDeflate=false] Enable/disable
+		*     permessage-deflate
+		* @param {Number} [options.port] The port where to bind the server
+		* @param {(http.Server|https.Server)} [options.server] A pre-created HTTP/S
+		*     server to use
+		* @param {Boolean} [options.skipUTF8Validation=false] Specifies whether or
+		*     not to skip UTF-8 validation for text and close messages
+		* @param {Function} [options.verifyClient] A hook to reject connections
+		* @param {Function} [options.WebSocket=WebSocket] Specifies the `WebSocket`
+		*     class to use. It must be the `WebSocket` class or class that extends it
+		* @param {Function} [callback] A listener for the `listening` event
+		*/
+		constructor(options, callback) {
+			super();
+			options = {
+				allowSynchronousEvents: true,
+				autoPong: true,
 				maxBufferedChunks: 262144,
 				maxFragments: 16384,
 				maxPayload: 104857600,
-				skipUTF8Validation: !1,
-				perMessageDeflate: !1,
+				skipUTF8Validation: false,
+				perMessageDeflate: false,
 				handleProtocols: null,
-				clientTracking: !0,
-				closeTimeout: u,
+				clientTracking: true,
+				closeTimeout: CLOSE_TIMEOUT,
 				verifyClient: null,
-				noServer: !1,
+				noServer: false,
 				backlog: null,
 				server: null,
 				host: null,
 				path: null,
 				port: null,
-				WebSocket: l,
-				...e
-			}, e.port == null && !e.server && !e.noServer || e.port != null && (e.server || e.noServer) || e.server && e.noServer) throw TypeError("One and only one of the \"port\", \"server\", or \"noServer\" options must be specified");
-			if (e.port == null ? e.server && (this._server = e.server) : (this._server = r.createServer((e, t) => {
-				let n = r.STATUS_CODES[426];
-				t.writeHead(426, {
-					"Content-Length": n.length,
-					"Content-Type": "text/plain"
-				}), t.end(n);
-			}), this._server.listen(e.port, e.host, e.backlog, t)), this._server) {
-				let e = this.emit.bind(this, "connection");
-				this._removeListeners = _(this._server, {
+				WebSocket,
+				...options
+			};
+			if (options.port == null && !options.server && !options.noServer || options.port != null && (options.server || options.noServer) || options.server && options.noServer) throw new TypeError("One and only one of the \"port\", \"server\", or \"noServer\" options must be specified");
+			if (options.port != null) {
+				this._server = http.createServer((req, res) => {
+					const body = http.STATUS_CODES[426];
+					res.writeHead(426, {
+						"Content-Length": body.length,
+						"Content-Type": "text/plain"
+					});
+					res.end(body);
+				});
+				this._server.listen(options.port, options.host, options.backlog, callback);
+			} else if (options.server) this._server = options.server;
+			if (this._server) {
+				const emitConnection = this.emit.bind(this, "connection");
+				this._removeListeners = addListeners(this._server, {
 					listening: this.emit.bind(this, "listening"),
 					error: this.emit.bind(this, "error"),
-					upgrade: (t, n, r) => {
-						this.handleUpgrade(t, n, r, e);
+					upgrade: (req, socket, head) => {
+						this.handleUpgrade(req, socket, head, emitConnection);
 					}
 				});
 			}
-			e.perMessageDeflate === !0 && (e.perMessageDeflate = {}), e.clientTracking && (this.clients = /* @__PURE__ */ new Set(), this._shouldEmitClose = !1), this.options = e, this._state = m;
+			if (options.perMessageDeflate === true) options.perMessageDeflate = {};
+			if (options.clientTracking) {
+				this.clients = /* @__PURE__ */ new Set();
+				this._shouldEmitClose = false;
+			}
+			this.options = options;
+			this._state = RUNNING;
 		}
+		/**
+		* Returns the bound address, the address family name, and port of the server
+		* as reported by the operating system if listening on an IP socket.
+		* If the server is listening on a pipe or UNIX domain socket, the name is
+		* returned as a string.
+		*
+		* @return {(Object|String|null)} The address of the server
+		* @public
+		*/
 		address() {
-			if (this.options.noServer) throw Error("The server is operating in \"noServer\" mode");
-			return this._server ? this._server.address() : null;
+			if (this.options.noServer) throw new Error("The server is operating in \"noServer\" mode");
+			if (!this._server) return null;
+			return this._server.address();
 		}
-		close(e) {
-			if (this._state === g) {
-				e && this.once("close", () => {
-					e(/* @__PURE__ */ Error("The server is not running"));
-				}), process.nextTick(y, this);
+		/**
+		* Stop the server from accepting new connections and emit the `'close'` event
+		* when all existing connections are closed.
+		*
+		* @param {Function} [cb] A one-time listener for the `'close'` event
+		* @public
+		*/
+		close(cb) {
+			if (this._state === CLOSED) {
+				if (cb) this.once("close", () => {
+					cb(/* @__PURE__ */ new Error("The server is not running"));
+				});
+				process.nextTick(emitClose, this);
 				return;
 			}
-			if (e && this.once("close", e), this._state !== h) {
-				if (this._state = h, this.options.noServer || this.options.server) this._server && (this._removeListeners(), this._removeListeners = this._server = null), this.clients && this.clients.size ? this._shouldEmitClose = !0 : process.nextTick(y, this);
-				else {
-					let e = this._server;
-					this._removeListeners(), this._removeListeners = this._server = null, e.close(() => {
-						y(this);
-					});
+			if (cb) this.once("close", cb);
+			if (this._state === CLOSING) return;
+			this._state = CLOSING;
+			if (this.options.noServer || this.options.server) {
+				if (this._server) {
+					this._removeListeners();
+					this._removeListeners = this._server = null;
 				}
+				if (this.clients) {
+					if (!this.clients.size) process.nextTick(emitClose, this);
+					else this._shouldEmitClose = true;
+				} else process.nextTick(emitClose, this);
+			} else {
+				const server = this._server;
+				this._removeListeners();
+				this._removeListeners = this._server = null;
+				server.close(() => {
+					emitClose(this);
+				});
 			}
 		}
-		shouldHandle(e) {
+		/**
+		* See if a given request should be handled by this server instance.
+		*
+		* @param {http.IncomingMessage} req Request object to inspect
+		* @return {Boolean} `true` if the request is valid, else `false`
+		* @public
+		*/
+		shouldHandle(req) {
 			if (this.options.path) {
-				let t = e.url.indexOf("?");
-				if ((t === -1 ? e.url : e.url.slice(0, t)) !== this.options.path) return !1;
+				const index = req.url.indexOf("?");
+				if ((index !== -1 ? req.url.slice(0, index) : req.url) !== this.options.path) return false;
 			}
-			return !0;
+			return true;
 		}
-		handleUpgrade(e, t, n, r) {
-			t.on("error", b);
-			let i = e.headers["sec-websocket-key"], a = e.headers.upgrade, l = +e.headers["sec-websocket-version"];
-			if (e.method !== "GET") {
-				S(this, e, t, 405, "Invalid HTTP method");
+		/**
+		* Handle a HTTP Upgrade request.
+		*
+		* @param {http.IncomingMessage} req The request object
+		* @param {Duplex} socket The network socket between the server and client
+		* @param {Buffer} head The first packet of the upgraded stream
+		* @param {Function} cb Callback
+		* @public
+		*/
+		handleUpgrade(req, socket, head, cb) {
+			socket.on("error", socketOnError);
+			const key = req.headers["sec-websocket-key"];
+			const upgrade = req.headers.upgrade;
+			const version = +req.headers["sec-websocket-version"];
+			if (req.method !== "GET") {
+				abortHandshakeOrEmitwsClientError(this, req, socket, 405, "Invalid HTTP method");
 				return;
 			}
-			if (a === void 0 || a.toLowerCase() !== "websocket") {
-				S(this, e, t, 400, "Invalid Upgrade header");
+			if (upgrade === void 0 || upgrade.toLowerCase() !== "websocket") {
+				abortHandshakeOrEmitwsClientError(this, req, socket, 400, "Invalid Upgrade header");
 				return;
 			}
-			if (i === void 0 || !p.test(i)) {
-				S(this, e, t, 400, "Missing or invalid Sec-WebSocket-Key header");
+			if (key === void 0 || !keyRegex.test(key)) {
+				abortHandshakeOrEmitwsClientError(this, req, socket, 400, "Missing or invalid Sec-WebSocket-Key header");
 				return;
 			}
-			if (l !== 13 && l !== 8) {
-				S(this, e, t, 400, "Missing or invalid Sec-WebSocket-Version header", { "Sec-WebSocket-Version": "13, 8" });
+			if (version !== 13 && version !== 8) {
+				abortHandshakeOrEmitwsClientError(this, req, socket, 400, "Missing or invalid Sec-WebSocket-Version header", { "Sec-WebSocket-Version": "13, 8" });
 				return;
 			}
-			if (!this.shouldHandle(e)) {
-				x(t, 400);
+			if (!this.shouldHandle(req)) {
+				abortHandshake(socket, 400);
 				return;
 			}
-			let u = e.headers["sec-websocket-protocol"], d = /* @__PURE__ */ new Set();
-			if (u !== void 0) try {
-				d = c.parse(u);
-			} catch {
-				S(this, e, t, 400, "Invalid Sec-WebSocket-Protocol header");
+			const secWebSocketProtocol = req.headers["sec-websocket-protocol"];
+			let protocols = /* @__PURE__ */ new Set();
+			if (secWebSocketProtocol !== void 0) try {
+				protocols = subprotocol.parse(secWebSocketProtocol);
+			} catch (err) {
+				abortHandshakeOrEmitwsClientError(this, req, socket, 400, "Invalid Sec-WebSocket-Protocol header");
 				return;
 			}
-			let f = e.headers["sec-websocket-extensions"], m = {};
-			if (this.options.perMessageDeflate && f !== void 0) {
-				let n = new s({
+			const secWebSocketExtensions = req.headers["sec-websocket-extensions"];
+			const extensions = {};
+			if (this.options.perMessageDeflate && secWebSocketExtensions !== void 0) {
+				const perMessageDeflate = new PerMessageDeflate({
 					...this.options.perMessageDeflate,
-					isServer: !0,
+					isServer: true,
 					maxPayload: this.options.maxPayload
 				});
 				try {
-					let e = o.parse(f);
-					e[s.extensionName] && (n.accept(e[s.extensionName]), m[s.extensionName] = n);
-				} catch {
-					S(this, e, t, 400, "Invalid or unacceptable Sec-WebSocket-Extensions header");
+					const offers = extension.parse(secWebSocketExtensions);
+					if (offers[PerMessageDeflate.extensionName]) {
+						perMessageDeflate.accept(offers[PerMessageDeflate.extensionName]);
+						extensions[PerMessageDeflate.extensionName] = perMessageDeflate;
+					}
+				} catch (err) {
+					abortHandshakeOrEmitwsClientError(this, req, socket, 400, "Invalid or unacceptable Sec-WebSocket-Extensions header");
 					return;
 				}
 			}
 			if (this.options.verifyClient) {
-				let a = {
-					origin: e.headers[`${l === 8 ? "sec-websocket-origin" : "origin"}`],
-					secure: !!(e.socket.authorized || e.socket.encrypted),
-					req: e
+				const info = {
+					origin: req.headers[`${version === 8 ? "sec-websocket-origin" : "origin"}`],
+					secure: !!(req.socket.authorized || req.socket.encrypted),
+					req
 				};
 				if (this.options.verifyClient.length === 2) {
-					this.options.verifyClient(a, (a, o, s, c) => {
-						if (!a) return x(t, o || 401, s, c);
-						this.completeUpgrade(m, i, d, e, t, n, r);
+					this.options.verifyClient(info, (verified, code, message, headers) => {
+						if (!verified) return abortHandshake(socket, code || 401, message, headers);
+						this.completeUpgrade(extensions, key, protocols, req, socket, head, cb);
 					});
 					return;
 				}
-				if (!this.options.verifyClient(a)) return x(t, 401);
+				if (!this.options.verifyClient(info)) return abortHandshake(socket, 401);
 			}
-			this.completeUpgrade(m, i, d, e, t, n, r);
+			this.completeUpgrade(extensions, key, protocols, req, socket, head, cb);
 		}
-		completeUpgrade(e, t, n, r, i, c, l) {
-			if (!i.readable || !i.writable) return i.destroy();
-			if (i[f]) throw Error("server.handleUpgrade() was called more than once with the same socket, possibly due to a misconfiguration");
-			if (this._state > m) return x(i, 503);
-			let u = [
+		/**
+		* Upgrade the connection to WebSocket.
+		*
+		* @param {Object} extensions The accepted extensions
+		* @param {String} key The value of the `Sec-WebSocket-Key` header
+		* @param {Set} protocols The subprotocols
+		* @param {http.IncomingMessage} req The request object
+		* @param {Duplex} socket The network socket between the server and client
+		* @param {Buffer} head The first packet of the upgraded stream
+		* @param {Function} cb Callback
+		* @throws {Error} If called more than once with the same socket
+		* @private
+		*/
+		completeUpgrade(extensions, key, protocols, req, socket, head, cb) {
+			if (!socket.readable || !socket.writable) return socket.destroy();
+			if (socket[kWebSocket]) throw new Error("server.handleUpgrade() was called more than once with the same socket, possibly due to a misconfiguration");
+			if (this._state > RUNNING) return abortHandshake(socket, 503);
+			const headers = [
 				"HTTP/1.1 101 Switching Protocols",
 				"Upgrade: websocket",
 				"Connection: Upgrade",
-				`Sec-WebSocket-Accept: ${a("sha1").update(t + d).digest("base64")}`
-			], p = new this.options.WebSocket(null, void 0, this.options);
-			if (n.size) {
-				let e = this.options.handleProtocols ? this.options.handleProtocols(n, r) : n.values().next().value;
-				e && (u.push(`Sec-WebSocket-Protocol: ${e}`), p._protocol = e);
+				`Sec-WebSocket-Accept: ${createHash("sha1").update(key + GUID).digest("base64")}`
+			];
+			const ws = new this.options.WebSocket(null, void 0, this.options);
+			if (protocols.size) {
+				const protocol = this.options.handleProtocols ? this.options.handleProtocols(protocols, req) : protocols.values().next().value;
+				if (protocol) {
+					headers.push(`Sec-WebSocket-Protocol: ${protocol}`);
+					ws._protocol = protocol;
+				}
 			}
-			if (e[s.extensionName]) {
-				let t = e[s.extensionName].params, n = o.format({ [s.extensionName]: [t] });
-				u.push(`Sec-WebSocket-Extensions: ${n}`), p._extensions = e;
+			if (extensions[PerMessageDeflate.extensionName]) {
+				const params = extensions[PerMessageDeflate.extensionName].params;
+				const value = extension.format({ [PerMessageDeflate.extensionName]: [params] });
+				headers.push(`Sec-WebSocket-Extensions: ${value}`);
+				ws._extensions = extensions;
 			}
-			this.emit("headers", u, r), i.write(u.concat("\r\n").join("\r\n")), i.removeListener("error", b), p.setSocket(i, c, {
+			this.emit("headers", headers, req);
+			socket.write(headers.concat("\r\n").join("\r\n"));
+			socket.removeListener("error", socketOnError);
+			ws.setSocket(socket, head, {
 				allowSynchronousEvents: this.options.allowSynchronousEvents,
 				maxBufferedChunks: this.options.maxBufferedChunks,
 				maxFragments: this.options.maxFragments,
 				maxPayload: this.options.maxPayload,
 				skipUTF8Validation: this.options.skipUTF8Validation
-			}), this.clients && (this.clients.add(p), p.on("close", () => {
-				this.clients.delete(p), this._shouldEmitClose && !this.clients.size && process.nextTick(y, this);
-			})), l(p, r);
+			});
+			if (this.clients) {
+				this.clients.add(ws);
+				ws.on("close", () => {
+					this.clients.delete(ws);
+					if (this._shouldEmitClose && !this.clients.size) process.nextTick(emitClose, this);
+				});
+			}
+			cb(ws, req);
 		}
 	};
-	function _(e, t) {
-		for (let n of Object.keys(t)) e.on(n, t[n]);
-		return function() {
-			for (let n of Object.keys(t)) e.removeListener(n, t[n]);
+	module.exports = WebSocketServer;
+	/**
+	* Add event listeners on an `EventEmitter` using a map of <event, listener>
+	* pairs.
+	*
+	* @param {EventEmitter} server The event emitter
+	* @param {Object.<String, Function>} map The listeners to add
+	* @return {Function} A function that will remove the added listeners when
+	*     called
+	* @private
+	*/
+	function addListeners(server, map) {
+		for (const event of Object.keys(map)) server.on(event, map[event]);
+		return function removeListeners() {
+			for (const event of Object.keys(map)) server.removeListener(event, map[event]);
 		};
 	}
-	function y(e) {
-		e._state = g, e.emit("close");
+	/**
+	* Emit a `'close'` event on an `EventEmitter`.
+	*
+	* @param {EventEmitter} server The event emitter
+	* @private
+	*/
+	function emitClose(server) {
+		server._state = CLOSED;
+		server.emit("close");
 	}
-	function b() {
+	/**
+	* Handle socket errors.
+	*
+	* @private
+	*/
+	function socketOnError() {
 		this.destroy();
 	}
-	function x(e, t, n, i) {
-		n ||= r.STATUS_CODES[t], i = {
+	/**
+	* Close the connection when preconditions are not fulfilled.
+	*
+	* @param {Duplex} socket The socket of the upgrade request
+	* @param {Number} code The HTTP response status code
+	* @param {String} [message] The HTTP response body
+	* @param {Object} [headers] Additional HTTP response headers
+	* @private
+	*/
+	function abortHandshake(socket, code, message, headers) {
+		message = message || http.STATUS_CODES[code];
+		headers = {
 			Connection: "close",
 			"Content-Type": "text/html",
-			"Content-Length": Buffer.byteLength(n),
-			...i
-		}, e.once("finish", e.destroy), e.end(`HTTP/1.1 ${t} ${r.STATUS_CODES[t]}\r\n` + Object.keys(i).map((e) => `${e}: ${i[e]}`).join("\r\n") + "\r\n\r\n" + n);
+			"Content-Length": Buffer.byteLength(message),
+			...headers
+		};
+		socket.once("finish", socket.destroy);
+		socket.end(`HTTP/1.1 ${code} ${http.STATUS_CODES[code]}\r\n` + Object.keys(headers).map((h) => `${h}: ${headers[h]}`).join("\r\n") + "\r\n\r\n" + message);
 	}
-	function S(e, t, n, r, i, a) {
-		if (e.listenerCount("wsClientError")) {
-			let r = Error(i);
-			Error.captureStackTrace(r, S), e.emit("wsClientError", r, n, t);
-		} else x(n, r, i, a);
+	/**
+	* Emit a `'wsClientError'` event on a `WebSocketServer` if there is at least
+	* one listener for it, otherwise call `abortHandshake()`.
+	*
+	* @param {WebSocketServer} server The WebSocket server
+	* @param {http.IncomingMessage} req The request object
+	* @param {Duplex} socket The socket of the upgrade request
+	* @param {Number} code The HTTP response status code
+	* @param {String} message The HTTP response body
+	* @param {Object} [headers] The HTTP response headers
+	* @private
+	*/
+	function abortHandshakeOrEmitwsClientError(server, req, socket, code, message, headers) {
+		if (server.listenerCount("wsClientError")) {
+			const err = new Error(message);
+			Error.captureStackTrace(err, abortHandshakeOrEmitwsClientError);
+			server.emit("wsClientError", err, socket, req);
+		} else abortHandshake(socket, code, message, headers);
 	}
-})), Se = /* @__PURE__ */ p(((e, t) => {
-	var n = ye(), r = _e(), i = q(), a = me(), o = he(), s = be(), c = ve(), l = xe();
-	c.createWebSocketStream = n, c.extension = r, c.PerMessageDeflate = i, c.Receiver = a, c.Sender = o, c.Server = l, c.subprotocol = s, c.WebSocket = c, c.WebSocketServer = l, t.exports = c;
-})), Ce = /* @__PURE__ */ p(((e, t) => {
-	var n = Object.getOwnPropertySymbols, r = Object.prototype.hasOwnProperty, i = Object.prototype.propertyIsEnumerable;
-	function a(e) {
-		if (e == null) throw TypeError("Object.assign cannot be called with null or undefined");
-		return Object(e);
+}));
+//#endregion
+//#region node_modules/ws/index.js
+var require_ws = /* @__PURE__ */ __commonJSMin(((exports, module) => {
+	var createWebSocketStream = require_stream();
+	var extension = require_extension();
+	var PerMessageDeflate = require_permessage_deflate();
+	var Receiver = require_receiver();
+	var Sender = require_sender();
+	var subprotocol = require_subprotocol();
+	var WebSocket = require_websocket$1();
+	var WebSocketServer = require_websocket_server();
+	WebSocket.createWebSocketStream = createWebSocketStream;
+	WebSocket.extension = extension;
+	WebSocket.PerMessageDeflate = PerMessageDeflate;
+	WebSocket.Receiver = Receiver;
+	WebSocket.Sender = Sender;
+	WebSocket.Server = WebSocketServer;
+	WebSocket.subprotocol = subprotocol;
+	WebSocket.WebSocket = WebSocket;
+	WebSocket.WebSocketServer = WebSocketServer;
+	module.exports = WebSocket;
+}));
+//#endregion
+//#region node_modules/object-assign/index.js
+/*
+object-assign
+(c) Sindre Sorhus
+@license MIT
+*/
+var require_object_assign = /* @__PURE__ */ __commonJSMin(((exports, module) => {
+	var getOwnPropertySymbols = Object.getOwnPropertySymbols;
+	var hasOwnProperty = Object.prototype.hasOwnProperty;
+	var propIsEnumerable = Object.prototype.propertyIsEnumerable;
+	function toObject(val) {
+		if (val === null || val === void 0) throw new TypeError("Object.assign cannot be called with null or undefined");
+		return Object(val);
 	}
-	function o() {
+	function shouldUseNative() {
 		try {
-			if (!Object.assign) return !1;
-			var e = /* @__PURE__ */ new String("abc");
-			if (e[5] = "de", Object.getOwnPropertyNames(e)[0] === "5") return !1;
-			for (var t = {}, n = 0; n < 10; n++) t["_" + String.fromCharCode(n)] = n;
-			if (Object.getOwnPropertyNames(t).map(function(e) {
-				return t[e];
-			}).join("") !== "0123456789") return !1;
-			var r = {};
-			return "abcdefghijklmnopqrst".split("").forEach(function(e) {
-				r[e] = e;
-			}), Object.keys(Object.assign({}, r)).join("") === "abcdefghijklmnopqrst";
-		} catch {
-			return !1;
+			if (!Object.assign) return false;
+			var test1 = /* @__PURE__ */ new String("abc");
+			test1[5] = "de";
+			if (Object.getOwnPropertyNames(test1)[0] === "5") return false;
+			var test2 = {};
+			for (var i = 0; i < 10; i++) test2["_" + String.fromCharCode(i)] = i;
+			if (Object.getOwnPropertyNames(test2).map(function(n) {
+				return test2[n];
+			}).join("") !== "0123456789") return false;
+			var test3 = {};
+			"abcdefghijklmnopqrst".split("").forEach(function(letter) {
+				test3[letter] = letter;
+			});
+			if (Object.keys(Object.assign({}, test3)).join("") !== "abcdefghijklmnopqrst") return false;
+			return true;
+		} catch (err) {
+			return false;
 		}
 	}
-	t.exports = o() ? Object.assign : function(e, t) {
-		for (var o, s = a(e), c, l = 1; l < arguments.length; l++) {
-			for (var u in o = Object(arguments[l]), o) r.call(o, u) && (s[u] = o[u]);
-			if (n) {
-				c = n(o);
-				for (var d = 0; d < c.length; d++) i.call(o, c[d]) && (s[c[d]] = o[c[d]]);
+	module.exports = shouldUseNative() ? Object.assign : function(target, source) {
+		var from;
+		var to = toObject(target);
+		var symbols;
+		for (var s = 1; s < arguments.length; s++) {
+			from = Object(arguments[s]);
+			for (var key in from) if (hasOwnProperty.call(from, key)) to[key] = from[key];
+			if (getOwnPropertySymbols) {
+				symbols = getOwnPropertySymbols(from);
+				for (var i = 0; i < symbols.length; i++) if (propIsEnumerable.call(from, symbols[i])) to[symbols[i]] = from[symbols[i]];
 			}
 		}
-		return s;
+		return to;
 	};
-})), we = /* @__PURE__ */ p(((e, t) => {
-	t.exports = a, t.exports.append = r;
-	var n = /^[!#$%&'*+\-.^_`|~0-9A-Za-z]+$/;
-	function r(e, t) {
-		if (typeof e != "string") throw TypeError("header argument is required");
-		if (!t) throw TypeError("field argument is required");
-		for (var r = Array.isArray(t) ? t : i(String(t)), a = 0; a < r.length; a++) if (!n.test(r[a])) throw TypeError("field argument contains an invalid header name");
-		if (e === "*") return e;
-		var o = e, s = i(e.toLowerCase());
-		if (r.indexOf("*") !== -1 || s.indexOf("*") !== -1) return "*";
-		for (var c = 0; c < r.length; c++) {
-			var l = r[c].toLowerCase();
-			s.indexOf(l) === -1 && (s.push(l), o = o ? o + ", " + r[c] : r[c]);
+}));
+//#endregion
+//#region node_modules/vary/index.js
+/*!
+* vary
+* Copyright(c) 2014-2017 Douglas Christopher Wilson
+* MIT Licensed
+*/
+var require_vary = /* @__PURE__ */ __commonJSMin(((exports, module) => {
+	/**
+	* Module exports.
+	*/
+	module.exports = vary;
+	module.exports.append = append;
+	/**
+	* RegExp to match field-name in RFC 7230 sec 3.2
+	*
+	* field-name    = token
+	* token         = 1*tchar
+	* tchar         = "!" / "#" / "$" / "%" / "&" / "'" / "*"
+	*               / "+" / "-" / "." / "^" / "_" / "`" / "|" / "~"
+	*               / DIGIT / ALPHA
+	*               ; any VCHAR, except delimiters
+	*/
+	var FIELD_NAME_REGEXP = /^[!#$%&'*+\-.^_`|~0-9A-Za-z]+$/;
+	/**
+	* Append a field to a vary header.
+	*
+	* @param {String} header
+	* @param {String|Array} field
+	* @return {String}
+	* @public
+	*/
+	function append(header, field) {
+		if (typeof header !== "string") throw new TypeError("header argument is required");
+		if (!field) throw new TypeError("field argument is required");
+		var fields = !Array.isArray(field) ? parse(String(field)) : field;
+		for (var j = 0; j < fields.length; j++) if (!FIELD_NAME_REGEXP.test(fields[j])) throw new TypeError("field argument contains an invalid header name");
+		if (header === "*") return header;
+		var val = header;
+		var vals = parse(header.toLowerCase());
+		if (fields.indexOf("*") !== -1 || vals.indexOf("*") !== -1) return "*";
+		for (var i = 0; i < fields.length; i++) {
+			var fld = fields[i].toLowerCase();
+			if (vals.indexOf(fld) === -1) {
+				vals.push(fld);
+				val = val ? val + ", " + fields[i] : fields[i];
+			}
 		}
-		return o;
+		return val;
 	}
-	function i(e) {
-		for (var t = 0, n = [], r = 0, i = 0, a = e.length; i < a; i++) switch (e.charCodeAt(i)) {
+	/**
+	* Parse a vary header into an array.
+	*
+	* @param {String} header
+	* @return {Array}
+	* @private
+	*/
+	function parse(header) {
+		var end = 0;
+		var list = [];
+		var start = 0;
+		for (var i = 0, len = header.length; i < len; i++) switch (header.charCodeAt(i)) {
 			case 32:
-				r === t && (r = t = i + 1);
+				if (start === end) start = end = i + 1;
 				break;
 			case 44:
-				n.push(e.substring(r, t)), r = t = i + 1;
+				list.push(header.substring(start, end));
+				start = end = i + 1;
 				break;
-			default: t = i + 1;
+			default: end = i + 1;
 		}
-		return n.push(e.substring(r, t)), n;
+		list.push(header.substring(start, end));
+		return list;
 	}
-	function a(e, t) {
-		if (!e || !e.getHeader || !e.setHeader) throw TypeError("res argument is required");
-		var n = e.getHeader("Vary") || "";
-		(n = r(Array.isArray(n) ? n.join(", ") : String(n), t)) && e.setHeader("Vary", n);
+	/**
+	* Mark that a request is varied on a header field.
+	*
+	* @param {Object} res
+	* @param {String|Array} field
+	* @public
+	*/
+	function vary(res, field) {
+		if (!res || !res.getHeader || !res.setHeader) throw new TypeError("res argument is required");
+		var val = res.getHeader("Vary") || "";
+		if (val = append(Array.isArray(val) ? val.join(", ") : String(val), field)) res.setHeader("Vary", val);
 	}
-})), Te = /* @__PURE__ */ p(((e, t) => {
+}));
+//#endregion
+//#region node_modules/cors/lib/index.js
+var require_lib = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 	(function() {
-		var e = Ce(), n = we(), r = {
+		"use strict";
+		var assign = require_object_assign();
+		var vary = require_vary();
+		var defaults = {
 			origin: "*",
 			methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-			preflightContinue: !1,
+			preflightContinue: false,
 			optionsSuccessStatus: 204
 		};
-		function i(e) {
-			return typeof e == "string" || e instanceof String;
+		function isString(s) {
+			return typeof s === "string" || s instanceof String;
 		}
-		function a(e, t) {
-			if (Array.isArray(t)) {
-				for (var n = 0; n < t.length; ++n) if (a(e, t[n])) return !0;
-				return !1;
-			}
-			return i(t) ? e === t : t instanceof RegExp ? t.test(e) : !!t;
+		function isOriginAllowed(origin, allowedOrigin) {
+			if (Array.isArray(allowedOrigin)) {
+				for (var i = 0; i < allowedOrigin.length; ++i) if (isOriginAllowed(origin, allowedOrigin[i])) return true;
+				return false;
+			} else if (isString(allowedOrigin)) return origin === allowedOrigin;
+			else if (allowedOrigin instanceof RegExp) return allowedOrigin.test(origin);
+			else return !!allowedOrigin;
 		}
-		function o(e, t) {
-			var n = t.headers.origin, r = [], o;
-			return !e.origin || e.origin === "*" ? r.push([{
+		function configureOrigin(options, req) {
+			var requestOrigin = req.headers.origin, headers = [], isAllowed;
+			if (!options.origin || options.origin === "*") headers.push([{
 				key: "Access-Control-Allow-Origin",
 				value: "*"
-			}]) : i(e.origin) ? (r.push([{
-				key: "Access-Control-Allow-Origin",
-				value: e.origin
-			}]), r.push([{
-				key: "Vary",
-				value: "Origin"
-			}])) : (o = a(n, e.origin), r.push([{
-				key: "Access-Control-Allow-Origin",
-				value: o ? n : !1
-			}]), r.push([{
-				key: "Vary",
-				value: "Origin"
-			}])), r;
+			}]);
+			else if (isString(options.origin)) {
+				headers.push([{
+					key: "Access-Control-Allow-Origin",
+					value: options.origin
+				}]);
+				headers.push([{
+					key: "Vary",
+					value: "Origin"
+				}]);
+			} else {
+				isAllowed = isOriginAllowed(requestOrigin, options.origin);
+				headers.push([{
+					key: "Access-Control-Allow-Origin",
+					value: isAllowed ? requestOrigin : false
+				}]);
+				headers.push([{
+					key: "Vary",
+					value: "Origin"
+				}]);
+			}
+			return headers;
 		}
-		function s(e) {
-			var t = e.methods;
-			return t.join && (t = e.methods.join(",")), {
+		function configureMethods(options) {
+			var methods = options.methods;
+			if (methods.join) methods = options.methods.join(",");
+			return {
 				key: "Access-Control-Allow-Methods",
-				value: t
+				value: methods
 			};
 		}
-		function c(e) {
-			return e.credentials === !0 ? {
+		function configureCredentials(options) {
+			if (options.credentials === true) return {
 				key: "Access-Control-Allow-Credentials",
 				value: "true"
-			} : null;
+			};
+			return null;
 		}
-		function l(e, t) {
-			var n = e.allowedHeaders || e.headers, r = [];
-			return n ? n.join && (n = n.join(",")) : (n = t.headers["access-control-request-headers"], r.push([{
-				key: "Vary",
-				value: "Access-Control-Request-Headers"
-			}])), n && n.length && r.push([{
+		function configureAllowedHeaders(options, req) {
+			var allowedHeaders = options.allowedHeaders || options.headers;
+			var headers = [];
+			if (!allowedHeaders) {
+				allowedHeaders = req.headers["access-control-request-headers"];
+				headers.push([{
+					key: "Vary",
+					value: "Access-Control-Request-Headers"
+				}]);
+			} else if (allowedHeaders.join) allowedHeaders = allowedHeaders.join(",");
+			if (allowedHeaders && allowedHeaders.length) headers.push([{
 				key: "Access-Control-Allow-Headers",
-				value: n
-			}]), r;
+				value: allowedHeaders
+			}]);
+			return headers;
 		}
-		function u(e) {
-			var t = e.exposedHeaders;
-			if (t) t.join && (t = t.join(","));
-			else return null;
-			return t && t.length ? {
+		function configureExposedHeaders(options) {
+			var headers = options.exposedHeaders;
+			if (!headers) return null;
+			else if (headers.join) headers = headers.join(",");
+			if (headers && headers.length) return {
 				key: "Access-Control-Expose-Headers",
-				value: t
-			} : null;
+				value: headers
+			};
+			return null;
 		}
-		function d(e) {
-			var t = (typeof e.maxAge == "number" || e.maxAge) && e.maxAge.toString();
-			return t && t.length ? {
+		function configureMaxAge(options) {
+			var maxAge = (typeof options.maxAge === "number" || options.maxAge) && options.maxAge.toString();
+			if (maxAge && maxAge.length) return {
 				key: "Access-Control-Max-Age",
-				value: t
-			} : null;
+				value: maxAge
+			};
+			return null;
 		}
-		function f(e, t) {
-			for (var r = 0, i = e.length; r < i; r++) {
-				var a = e[r];
-				a && (Array.isArray(a) ? f(a, t) : a.key === "Vary" && a.value ? n(t, a.value) : a.value && t.setHeader(a.key, a.value));
+		function applyHeaders(headers, res) {
+			for (var i = 0, n = headers.length; i < n; i++) {
+				var header = headers[i];
+				if (header) {
+					if (Array.isArray(header)) applyHeaders(header, res);
+					else if (header.key === "Vary" && header.value) vary(res, header.value);
+					else if (header.value) res.setHeader(header.key, header.value);
+				}
 			}
 		}
-		function p(e, t, n, r) {
-			var i = [];
-			(t.method && t.method.toUpperCase && t.method.toUpperCase()) === "OPTIONS" ? (i.push(o(e, t)), i.push(c(e)), i.push(s(e)), i.push(l(e, t)), i.push(d(e)), i.push(u(e)), f(i, n), e.preflightContinue ? r() : (n.statusCode = e.optionsSuccessStatus, n.setHeader("Content-Length", "0"), n.end())) : (i.push(o(e, t)), i.push(c(e)), i.push(u(e)), f(i, n), r());
+		function cors(options, req, res, next) {
+			var headers = [];
+			if ((req.method && req.method.toUpperCase && req.method.toUpperCase()) === "OPTIONS") {
+				headers.push(configureOrigin(options, req));
+				headers.push(configureCredentials(options));
+				headers.push(configureMethods(options));
+				headers.push(configureAllowedHeaders(options, req));
+				headers.push(configureMaxAge(options));
+				headers.push(configureExposedHeaders(options));
+				applyHeaders(headers, res);
+				if (options.preflightContinue) next();
+				else {
+					res.statusCode = options.optionsSuccessStatus;
+					res.setHeader("Content-Length", "0");
+					res.end();
+				}
+			} else {
+				headers.push(configureOrigin(options, req));
+				headers.push(configureCredentials(options));
+				headers.push(configureExposedHeaders(options));
+				applyHeaders(headers, res);
+				next();
+			}
 		}
-		function m(t) {
-			var n = null;
-			return n = typeof t == "function" ? t : function(e, n) {
-				n(null, t);
-			}, function(t, i, a) {
-				n(t, function(n, o) {
-					if (n) a(n);
+		function middlewareWrapper(o) {
+			var optionsCallback = null;
+			if (typeof o === "function") optionsCallback = o;
+			else optionsCallback = function(req, cb) {
+				cb(null, o);
+			};
+			return function corsMiddleware(req, res, next) {
+				optionsCallback(req, function(err, options) {
+					if (err) next(err);
 					else {
-						var s = e({}, r, o), c = null;
-						s.origin && typeof s.origin == "function" ? c = s.origin : s.origin && (c = function(e, t) {
-							t(null, s.origin);
-						}), c ? c(t.headers.origin, function(e, n) {
-							e || !n ? a(e) : (s.origin = n, p(s, t, i, a));
-						}) : a();
+						var corsOptions = assign({}, defaults, options);
+						var originCallback = null;
+						if (corsOptions.origin && typeof corsOptions.origin === "function") originCallback = corsOptions.origin;
+						else if (corsOptions.origin) originCallback = function(origin, cb) {
+							cb(null, corsOptions.origin);
+						};
+						if (originCallback) originCallback(req.headers.origin, function(err2, origin) {
+							if (err2 || !origin) next(err2);
+							else {
+								corsOptions.origin = origin;
+								cors(corsOptions, req, res, next);
+							}
+						});
+						else next();
 					}
 				});
 			};
 		}
-		t.exports = m;
+		module.exports = middlewareWrapper;
 	})();
-})), Ee = /* @__PURE__ */ p(((e) => {
-	Object.defineProperty(e, "__esModule", { value: !0 }), e.Server = e.BaseServer = void 0;
-	var t = A(), n = H(), r = v("events"), i = U(), a = z(), o = se(), s = Se(), c = oe(), l = P(), u = (0, a.default)("engine"), d = Symbol("responseHeaders");
-	function f(e) {
+}));
+//#endregion
+//#region node_modules/engine.io/build/server.js
+var require_server = /* @__PURE__ */ __commonJSMin(((exports) => {
+	Object.defineProperty(exports, "__esModule", { value: true });
+	exports.Server = exports.BaseServer = void 0;
+	var base64id = require_base64id();
+	var transports_1 = require_transports();
+	var events_1$3 = __require("events");
+	var socket_1 = require_socket$1();
+	var debug_1 = require_src();
+	var cookie_1 = require_cookie();
+	var ws_1 = require_ws();
+	var webtransport_1 = require_webtransport();
+	var engine_io_parser_1 = require_cjs$1();
+	var debug = (0, debug_1.default)("engine");
+	var kResponseHeaders = Symbol("responseHeaders");
+	function parseSessionId(data) {
 		try {
-			let t = JSON.parse(e);
-			if (typeof t.sid == "string") return t.sid;
-		} catch {}
+			const parsed = JSON.parse(data);
+			if (typeof parsed.sid === "string") return parsed.sid;
+		} catch (e) {}
 	}
-	function p(e, t) {
-		return Object.prototype.hasOwnProperty.call(e, t);
+	function hasOwn(obj, key) {
+		return Object.prototype.hasOwnProperty.call(obj, key);
 	}
-	var m = class extends r.EventEmitter {
-		constructor(e = {}) {
-			super(), this.middlewares = [], this.clients = {}, this.clientsCount = 0, this.opts = Object.assign({
-				wsEngine: s.Server,
+	var BaseServer = class extends events_1$3.EventEmitter {
+		/**
+		* Server constructor.
+		*
+		* @param {Object} opts - options
+		*/
+		constructor(opts = {}) {
+			super();
+			this.middlewares = [];
+			this.clients = {};
+			this.clientsCount = 0;
+			this.opts = Object.assign({
+				wsEngine: ws_1.Server,
 				pingTimeout: 2e4,
 				pingInterval: 25e3,
 				upgradeTimeout: 1e4,
 				maxHttpBufferSize: 1e6,
 				transports: ["polling", "websocket"],
-				allowUpgrades: !0,
+				allowUpgrades: true,
 				httpCompression: { threshold: 1024 },
-				cors: !1,
-				allowEIO3: !1
-			}, e), e.cookie && (this.opts.cookie = Object.assign({
+				cors: false,
+				allowEIO3: false
+			}, opts);
+			if (opts.cookie) this.opts.cookie = Object.assign({
 				name: "io",
 				path: "/",
-				httpOnly: !0,
+				httpOnly: true,
 				sameSite: "lax"
-			}, e.cookie)), this.opts.cors && this.use(Te()(this.opts.cors)), e.perMessageDeflate && (this.opts.perMessageDeflate = Object.assign({ threshold: 1024 }, e.perMessageDeflate)), this.init();
+			}, opts.cookie);
+			if (this.opts.cors) this.use(require_lib()(this.opts.cors));
+			if (opts.perMessageDeflate) this.opts.perMessageDeflate = Object.assign({ threshold: 1024 }, opts.perMessageDeflate);
+			this.init();
 		}
-		_computePath(e) {
-			let t = (e.path || "/engine.io").replace(/\/$/, "");
-			return e.addTrailingSlash !== !1 && (t += "/"), t;
+		/**
+		* Compute the pathname of the requests that are handled by the server
+		* @param options
+		* @protected
+		*/
+		_computePath(options) {
+			let path = (options.path || "/engine.io").replace(/\/$/, "");
+			if (options.addTrailingSlash !== false) path += "/";
+			return path;
 		}
-		upgrades(e) {
-			return this.opts.allowUpgrades && n.default[e].upgradesTo || [];
+		/**
+		* Returns a list of available transports for upgrade given a certain transport.
+		*/
+		upgrades(transport) {
+			if (!this.opts.allowUpgrades) return [];
+			return transports_1.default[transport].upgradesTo || [];
 		}
-		verify(e, t, n) {
-			let r = e._query.transport;
-			if (!~this.opts.transports.indexOf(r) || r === "webtransport") return u("unknown transport \"%s\"", r), n(g.errors.UNKNOWN_TRANSPORT, { transport: r });
-			if (x(e.headers.origin)) {
-				let t = e.headers.origin;
-				return e.headers.origin = null, u("origin header invalid"), n(g.errors.BAD_REQUEST, {
+		/**
+		* Verifies a request.
+		*
+		* @param {EngineRequest} req
+		* @param upgrade - whether it's an upgrade request
+		* @param fn
+		* @protected
+		* @return whether the request is valid
+		*/
+		verify(req, upgrade, fn) {
+			const transport = req._query.transport;
+			if (!~this.opts.transports.indexOf(transport) || transport === "webtransport") {
+				debug("unknown transport \"%s\"", transport);
+				return fn(Server.errors.UNKNOWN_TRANSPORT, { transport });
+			}
+			if (checkInvalidHeaderChar(req.headers.origin)) {
+				const origin = req.headers.origin;
+				req.headers.origin = null;
+				debug("origin header invalid");
+				return fn(Server.errors.BAD_REQUEST, {
 					name: "INVALID_ORIGIN",
-					origin: t
+					origin
 				});
 			}
-			let i = e._query.sid;
-			if (i) {
-				if (!p(this.clients, i)) return u("unknown sid \"%s\"", i), n(g.errors.UNKNOWN_SID, { sid: i });
-				let e = this.clients[i].transport.name;
-				if (!t && e !== r) return u("bad request: unexpected transport without upgrade"), n(g.errors.BAD_REQUEST, {
-					name: "TRANSPORT_MISMATCH",
-					transport: r,
-					previousTransport: e
+			const sid = req._query.sid;
+			if (sid) {
+				if (!hasOwn(this.clients, sid)) {
+					debug("unknown sid \"%s\"", sid);
+					return fn(Server.errors.UNKNOWN_SID, { sid });
+				}
+				const previousTransport = this.clients[sid].transport.name;
+				if (!upgrade && previousTransport !== transport) {
+					debug("bad request: unexpected transport without upgrade");
+					return fn(Server.errors.BAD_REQUEST, {
+						name: "TRANSPORT_MISMATCH",
+						transport,
+						previousTransport
+					});
+				}
+			} else {
+				if ("GET" !== req.method) return fn(Server.errors.BAD_HANDSHAKE_METHOD, { method: req.method });
+				if (transport === "websocket" && !upgrade) {
+					debug("invalid transport upgrade");
+					return fn(Server.errors.BAD_REQUEST, { name: "TRANSPORT_HANDSHAKE_ERROR" });
+				}
+				if (!this.opts.allowRequest) return fn();
+				return this.opts.allowRequest(req, (message, success) => {
+					if (!success) return fn(Server.errors.FORBIDDEN, { message });
+					fn();
 				});
-			} else return e.method === "GET" ? r === "websocket" && !t ? (u("invalid transport upgrade"), n(g.errors.BAD_REQUEST, { name: "TRANSPORT_HANDSHAKE_ERROR" })) : this.opts.allowRequest ? this.opts.allowRequest(e, (e, t) => {
-				if (!t) return n(g.errors.FORBIDDEN, { message: e });
-				n();
-			}) : n() : n(g.errors.BAD_HANDSHAKE_METHOD, { method: e.method });
-			n();
+			}
+			fn();
 		}
-		use(e) {
-			this.middlewares.push(e);
+		/**
+		* Adds a new middleware.
+		*
+		* @example
+		* import helmet from "helmet";
+		*
+		* engine.use(helmet());
+		*
+		* @param fn
+		*/
+		use(fn) {
+			this.middlewares.push(fn);
 		}
-		_applyMiddlewares(e, t, n) {
-			if (this.middlewares.length === 0) return u("no middleware to apply, skipping"), n();
-			let r = (i) => {
-				u("applying middleware n°%d", i + 1), this.middlewares[i](e, t, (e) => {
-					if (e) return n(e);
-					i + 1 < this.middlewares.length ? r(i + 1) : n();
+		/**
+		* Apply the middlewares to the request.
+		*
+		* @param req
+		* @param res
+		* @param callback
+		* @protected
+		*/
+		_applyMiddlewares(req, res, callback) {
+			if (this.middlewares.length === 0) {
+				debug("no middleware to apply, skipping");
+				return callback();
+			}
+			const apply = (i) => {
+				debug("applying middleware n°%d", i + 1);
+				this.middlewares[i](req, res, (err) => {
+					if (err) return callback(err);
+					if (i + 1 < this.middlewares.length) apply(i + 1);
+					else callback();
 				});
 			};
-			r(0);
+			apply(0);
 		}
+		/**
+		* Closes all clients.
+		*/
 		close() {
-			u("closing all open clients");
-			for (let e in this.clients) p(this.clients, e) && this.clients[e].close(!0);
-			return this.cleanup(), this;
+			debug("closing all open clients");
+			for (const sid in this.clients) if (hasOwn(this.clients, sid)) this.clients[sid].close(true);
+			this.cleanup();
+			return this;
 		}
-		generateId(e) {
-			return t.generateId();
+		/**
+		* generate a socket id.
+		* Overwrite this method to generate your custom socket id
+		*
+		* @param {IncomingMessage} req - the request object
+		*/
+		generateId(req) {
+			return base64id.generateId();
 		}
-		async handshake(e, t, n) {
-			let r = t._query.EIO === "4" ? 4 : 3;
-			if (r === 3 && !this.opts.allowEIO3) {
-				u("unsupported protocol version"), this.emit("connection_error", {
-					req: t,
-					code: g.errors.UNSUPPORTED_PROTOCOL_VERSION,
-					message: g.errorMessages[g.errors.UNSUPPORTED_PROTOCOL_VERSION],
-					context: { protocol: r }
-				}), n(g.errors.UNSUPPORTED_PROTOCOL_VERSION);
+		/**
+		* Handshakes a new client.
+		*
+		* @param {String} transportName
+		* @param {Object} req - the request object
+		* @param {Function} closeConnection
+		*
+		* @protected
+		*/
+		async handshake(transportName, req, closeConnection) {
+			const protocol = req._query.EIO === "4" ? 4 : 3;
+			if (protocol === 3 && !this.opts.allowEIO3) {
+				debug("unsupported protocol version");
+				this.emit("connection_error", {
+					req,
+					code: Server.errors.UNSUPPORTED_PROTOCOL_VERSION,
+					message: Server.errorMessages[Server.errors.UNSUPPORTED_PROTOCOL_VERSION],
+					context: { protocol }
+				});
+				closeConnection(Server.errors.UNSUPPORTED_PROTOCOL_VERSION);
 				return;
 			}
-			let a;
+			let id;
 			try {
-				a = await this.generateId(t);
+				id = await this.generateId(req);
 			} catch (e) {
-				u("error while generating an id"), this.emit("connection_error", {
-					req: t,
-					code: g.errors.BAD_REQUEST,
-					message: g.errorMessages[g.errors.BAD_REQUEST],
+				debug("error while generating an id");
+				this.emit("connection_error", {
+					req,
+					code: Server.errors.BAD_REQUEST,
+					message: Server.errorMessages[Server.errors.BAD_REQUEST],
 					context: {
 						name: "ID_GENERATION_ERROR",
 						error: e
 					}
-				}), n(g.errors.BAD_REQUEST);
+				});
+				closeConnection(Server.errors.BAD_REQUEST);
 				return;
 			}
-			u("handshaking client \"%s\"", a);
+			debug("handshaking client \"%s\"", id);
 			try {
-				var s = this.createTransport(e, t);
-				e === "polling" ? (s.maxHttpBufferSize = this.opts.maxHttpBufferSize, s.httpCompression = this.opts.httpCompression) : e === "websocket" && (s.perMessageDeflate = this.opts.perMessageDeflate);
-			} catch (r) {
-				u("error handshaking to transport \"%s\"", e), this.emit("connection_error", {
-					req: t,
-					code: g.errors.BAD_REQUEST,
-					message: g.errorMessages[g.errors.BAD_REQUEST],
+				var transport = this.createTransport(transportName, req);
+				if ("polling" === transportName) {
+					transport.maxHttpBufferSize = this.opts.maxHttpBufferSize;
+					transport.httpCompression = this.opts.httpCompression;
+				} else if ("websocket" === transportName) transport.perMessageDeflate = this.opts.perMessageDeflate;
+			} catch (e) {
+				debug("error handshaking to transport \"%s\"", transportName);
+				this.emit("connection_error", {
+					req,
+					code: Server.errors.BAD_REQUEST,
+					message: Server.errorMessages[Server.errors.BAD_REQUEST],
 					context: {
 						name: "TRANSPORT_HANDSHAKE_ERROR",
-						error: r
+						error: e
 					}
-				}), n(g.errors.BAD_REQUEST);
+				});
+				closeConnection(Server.errors.BAD_REQUEST);
 				return;
 			}
-			let c = new i.Socket(a, this, s, t, r);
-			return s.on("headers", (e, t) => {
-				t._query.sid || (this.opts.cookie && (e["Set-Cookie"] = [(0, o.serialize)(this.opts.cookie.name, a, this.opts.cookie)]), this.emit("initial_headers", e, t)), this.emit("headers", e, t);
-			}), s.onRequest(t), this.clients[a] = c, this.clientsCount++, c.once("close", () => {
-				delete this.clients[a], this.clientsCount--;
-			}), this.emit("connection", c), s;
-		}
-		async onWebTransportSession(e) {
-			if (this.middlewares.length > 0) return u("closing session since WebTransport is not compatible with middlewares"), e.close();
-			let n = setTimeout(() => {
-				u("the client failed to establish a bidirectional stream in the given period"), e.close();
-			}, this.opts.upgradeTimeout), r = await e.incomingBidirectionalStreams.getReader().read();
-			if (r.done) {
-				clearTimeout(n), u("session is closed");
-				return;
-			}
-			let a = r.value, o = (0, l.createPacketDecoderStream)(this.opts.maxHttpBufferSize, "nodebuffer"), s = a.readable.pipeThrough(o).getReader(), d = async () => {
-				try {
-					await s.cancel();
-				} catch (e) {
-					u("error while canceling WebTransport stream reader: %s", e.message);
+			const socket = new socket_1.Socket(id, this, transport, req, protocol);
+			transport.on("headers", (headers, req) => {
+				if (!req._query.sid) {
+					if (this.opts.cookie) headers["Set-Cookie"] = [(0, cookie_1.serialize)(this.opts.cookie.name, id, this.opts.cookie)];
+					this.emit("initial_headers", headers, req);
 				}
-				s.releaseLock(), e.close();
-			}, { value: m, done: h } = await s.read();
-			if (clearTimeout(n), h) {
-				u("stream is closed"), s.releaseLock();
+				this.emit("headers", headers, req);
+			});
+			transport.onRequest(req);
+			this.clients[id] = socket;
+			this.clientsCount++;
+			socket.once("close", () => {
+				delete this.clients[id];
+				this.clientsCount--;
+			});
+			this.emit("connection", socket);
+			return transport;
+		}
+		async onWebTransportSession(session) {
+			if (this.middlewares.length > 0) {
+				debug("closing session since WebTransport is not compatible with middlewares");
+				return session.close();
+			}
+			const timeout = setTimeout(() => {
+				debug("the client failed to establish a bidirectional stream in the given period");
+				session.close();
+			}, this.opts.upgradeTimeout);
+			const result = await session.incomingBidirectionalStreams.getReader().read();
+			if (result.done) {
+				clearTimeout(timeout);
+				debug("session is closed");
 				return;
 			}
-			if (m.type !== "open") return u("invalid WebTransport handshake"), d();
-			if (m.data === void 0) {
-				let n = new c.WebTransport(e, a, s), r = t.generateId();
-				u("handshaking client \"%s\" (WebTransport)", r);
-				let o = new i.Socket(r, this, n, null, 4);
-				this.clients[r] = o, this.clientsCount++, o.once("close", () => {
-					delete this.clients[r], this.clientsCount--;
-				}), this.emit("connection", o);
+			const stream = result.value;
+			const transformStream = (0, engine_io_parser_1.createPacketDecoderStream)(this.opts.maxHttpBufferSize, "nodebuffer");
+			const reader = stream.readable.pipeThrough(transformStream).getReader();
+			const closeSession = async () => {
+				try {
+					await reader.cancel();
+				} catch (e) {
+					debug("error while canceling WebTransport stream reader: %s", e.message);
+				}
+				reader.releaseLock();
+				session.close();
+			};
+			const { value, done } = await reader.read();
+			clearTimeout(timeout);
+			if (done) {
+				debug("stream is closed");
+				reader.releaseLock();
 				return;
 			}
-			let g = f(m.data);
-			if (!g || !p(this.clients, g)) return u("invalid WebTransport handshake"), d();
-			let _ = this.clients[g];
-			if (!_) return u("upgrade attempt for closed client"), d();
-			if (_.upgrading) return u("transport has already been trying to upgrade"), d();
-			if (_.upgraded) return u("transport had already been upgraded"), d();
-			{
-				u("upgrading existing transport");
-				let t = new c.WebTransport(e, a, s);
-				_._maybeUpgrade(t);
+			if (value.type !== "open") {
+				debug("invalid WebTransport handshake");
+				return closeSession();
+			}
+			if (value.data === void 0) {
+				const transport = new webtransport_1.WebTransport(session, stream, reader);
+				const id = base64id.generateId();
+				debug("handshaking client \"%s\" (WebTransport)", id);
+				const socket = new socket_1.Socket(id, this, transport, null, 4);
+				this.clients[id] = socket;
+				this.clientsCount++;
+				socket.once("close", () => {
+					delete this.clients[id];
+					this.clientsCount--;
+				});
+				this.emit("connection", socket);
+				return;
+			}
+			const sid = parseSessionId(value.data);
+			if (!sid || !hasOwn(this.clients, sid)) {
+				debug("invalid WebTransport handshake");
+				return closeSession();
+			}
+			const client = this.clients[sid];
+			if (!client) {
+				debug("upgrade attempt for closed client");
+				return closeSession();
+			} else if (client.upgrading) {
+				debug("transport has already been trying to upgrade");
+				return closeSession();
+			} else if (client.upgraded) {
+				debug("transport had already been upgraded");
+				return closeSession();
+			} else {
+				debug("upgrading existing transport");
+				const transport = new webtransport_1.WebTransport(session, stream, reader);
+				client._maybeUpgrade(transport);
 			}
 		}
 	};
-	e.BaseServer = m, m.errors = {
+	exports.BaseServer = BaseServer;
+	/**
+	* Protocol errors mappings.
+	*/
+	BaseServer.errors = {
 		UNKNOWN_TRANSPORT: 0,
 		UNKNOWN_SID: 1,
 		BAD_HANDSHAKE_METHOD: 2,
 		BAD_REQUEST: 3,
 		FORBIDDEN: 4,
 		UNSUPPORTED_PROTOCOL_VERSION: 5
-	}, m.errorMessages = {
+	};
+	BaseServer.errorMessages = {
 		0: "Transport unknown",
 		1: "Session ID unknown",
 		2: "Bad handshake method",
@@ -10953,152 +15387,278 @@ var o = Object.create, s = Object.defineProperty, c = Object.getOwnPropertyDescr
 		4: "Forbidden",
 		5: "Unsupported protocol version"
 	};
-	var h = class {
-		constructor(e, t) {
-			this.req = e, this.socket = t, e[d] = {};
+	/**
+	* Exposes a subset of the http.ServerResponse interface, in order to be able to apply the middlewares to an upgrade
+	* request.
+	*
+	* @see https://nodejs.org/api/http.html#class-httpserverresponse
+	*/
+	var WebSocketResponse = class {
+		constructor(req, socket) {
+			this.req = req;
+			this.socket = socket;
+			req[kResponseHeaders] = {};
 		}
-		setHeader(e, t) {
-			this.req[d][e] = t;
+		setHeader(name, value) {
+			this.req[kResponseHeaders][name] = value;
 		}
-		getHeader(e) {
-			return this.req[d][e];
+		getHeader(name) {
+			return this.req[kResponseHeaders][name];
 		}
-		removeHeader(e) {
-			delete this.req[d][e];
+		removeHeader(name) {
+			delete this.req[kResponseHeaders][name];
 		}
 		write() {}
 		writeHead() {}
 		end() {
 			this.socket.destroy();
 		}
-	}, g = class e extends m {
+	};
+	/**
+	* An Engine.IO server based on Node.js built-in HTTP server and the `ws` package for WebSocket connections.
+	*/
+	var Server = class Server extends BaseServer {
+		/**
+		* Initialize websocket server
+		*
+		* @protected
+		*/
 		init() {
-			~this.opts.transports.indexOf("websocket") && (this.ws && this.ws.close(), this.ws = new this.opts.wsEngine({
-				noServer: !0,
-				clientTracking: !1,
+			if (!~this.opts.transports.indexOf("websocket")) return;
+			if (this.ws) this.ws.close();
+			this.ws = new this.opts.wsEngine({
+				noServer: true,
+				clientTracking: false,
 				perMessageDeflate: this.opts.perMessageDeflate,
 				maxPayload: this.opts.maxHttpBufferSize
-			}), typeof this.ws.on == "function" && this.ws.on("headers", (e, t) => {
-				let n = t[d] || {};
-				delete t[d], t._query.sid || this.emit("initial_headers", n, t), this.emit("headers", n, t), u("writing headers: %j", n), Object.keys(n).forEach((t) => {
-					e.push(`${t}: ${n[t]}`);
+			});
+			if (typeof this.ws.on === "function") this.ws.on("headers", (headersArray, req) => {
+				const additionalHeaders = req[kResponseHeaders] || {};
+				delete req[kResponseHeaders];
+				if (!req._query.sid) this.emit("initial_headers", additionalHeaders, req);
+				this.emit("headers", additionalHeaders, req);
+				debug("writing headers: %j", additionalHeaders);
+				Object.keys(additionalHeaders).forEach((key) => {
+					headersArray.push(`${key}: ${additionalHeaders[key]}`);
 				});
-			}));
+			});
 		}
 		cleanup() {
-			this.ws && (u("closing webSocketServer"), this.ws.close());
-		}
-		prepare(e) {
-			if (!e._query) {
-				let t = new URL(e.url, "https://socket.io");
-				e._query = Object.fromEntries(t.searchParams.entries());
+			if (this.ws) {
+				debug("closing webSocketServer");
+				this.ws.close();
 			}
 		}
-		createTransport(e, t) {
-			return new n.default[e](t);
+		/**
+		* Prepares a request by processing the query string.
+		*
+		* @private
+		*/
+		prepare(req) {
+			if (!req._query) {
+				const url = new URL(req.url, "https://socket.io");
+				req._query = Object.fromEntries(url.searchParams.entries());
+			}
 		}
-		handleRequest(t, n) {
-			u("handling \"%s\" http request \"%s\"", t.method, t.url);
-			let r = t;
-			this.prepare(r), r.res = n;
-			let i = (t, i) => {
-				if (t !== void 0) {
+		createTransport(transportName, req) {
+			return new transports_1.default[transportName](req);
+		}
+		/**
+		* Handles an Engine.IO HTTP request.
+		*
+		* @param {IncomingMessage} req
+		* @param {ServerResponse} res
+		*/
+		handleRequest(req, res) {
+			debug("handling \"%s\" http request \"%s\"", req.method, req.url);
+			const engineRequest = req;
+			this.prepare(engineRequest);
+			engineRequest.res = res;
+			const callback = (errorCode, errorContext) => {
+				if (errorCode !== void 0) {
 					this.emit("connection_error", {
-						req: r,
-						code: t,
-						message: e.errorMessages[t],
-						context: i
-					}), _(n, t, i);
+						req: engineRequest,
+						code: errorCode,
+						message: Server.errorMessages[errorCode],
+						context: errorContext
+					});
+					abortRequest(res, errorCode, errorContext);
 					return;
 				}
-				r._query.sid ? (u("setting new request for existing client"), this.clients[r._query.sid].transport.onRequest(r)) : this.handshake(r._query.transport, r, (e, t) => _(n, e, t));
+				if (engineRequest._query.sid) {
+					debug("setting new request for existing client");
+					this.clients[engineRequest._query.sid].transport.onRequest(engineRequest);
+				} else {
+					const closeConnection = (errorCode, errorContext) => abortRequest(res, errorCode, errorContext);
+					this.handshake(engineRequest._query.transport, engineRequest, closeConnection);
+				}
 			};
-			this._applyMiddlewares(r, n, (t) => {
-				t ? i(e.errors.BAD_REQUEST, { name: "MIDDLEWARE_FAILURE" }) : this.verify(r, !1, i);
+			this._applyMiddlewares(engineRequest, res, (err) => {
+				if (err) callback(Server.errors.BAD_REQUEST, { name: "MIDDLEWARE_FAILURE" });
+				else this.verify(engineRequest, false, callback);
 			});
 		}
-		handleUpgrade(t, n, r) {
-			let i = t;
-			this.prepare(i);
-			let a = new h(i, n), o = (t, o) => {
-				if (t !== void 0) {
+		/**
+		* Handles an Engine.IO HTTP Upgrade.
+		*/
+		handleUpgrade(req, socket, upgradeHead) {
+			const engineRequest = req;
+			this.prepare(engineRequest);
+			const res = new WebSocketResponse(engineRequest, socket);
+			const callback = (errorCode, errorContext) => {
+				if (errorCode !== void 0) {
 					this.emit("connection_error", {
-						req: i,
-						code: t,
-						message: e.errorMessages[t],
-						context: o
-					}), y(n, t, o);
+						req: engineRequest,
+						code: errorCode,
+						message: Server.errorMessages[errorCode],
+						context: errorContext
+					});
+					abortUpgrade(socket, errorCode, errorContext);
 					return;
 				}
-				let s = Buffer.from(r);
-				r = null, a.writeHead(), this.ws.handleUpgrade(i, n, s, (e) => {
-					this.onWebSocket(i, n, e);
+				const head = Buffer.from(upgradeHead);
+				upgradeHead = null;
+				res.writeHead();
+				this.ws.handleUpgrade(engineRequest, socket, head, (websocket) => {
+					this.onWebSocket(engineRequest, socket, websocket);
 				});
 			};
-			this._applyMiddlewares(i, a, (t) => {
-				t ? o(e.errors.BAD_REQUEST, { name: "MIDDLEWARE_FAILURE" }) : this.verify(i, !0, o);
+			this._applyMiddlewares(engineRequest, res, (err) => {
+				if (err) callback(Server.errors.BAD_REQUEST, { name: "MIDDLEWARE_FAILURE" });
+				else this.verify(engineRequest, true, callback);
 			});
 		}
-		onWebSocket(e, t, r) {
-			if (r.on("error", a), n.default[e._query.transport] !== void 0 && !n.default[e._query.transport].prototype.handlesUpgrades) {
-				u("transport doesnt handle upgraded requests"), r.close();
+		/**
+		* Called upon a ws.io connection.
+		* @param req
+		* @param socket
+		* @param websocket
+		* @private
+		*/
+		onWebSocket(req, socket, websocket) {
+			websocket.on("error", onUpgradeError);
+			if (transports_1.default[req._query.transport] !== void 0 && !transports_1.default[req._query.transport].prototype.handlesUpgrades) {
+				debug("transport doesnt handle upgraded requests");
+				websocket.close();
 				return;
 			}
-			let i = e._query.sid;
-			if (e.websocket = r, i) {
-				let t = this.clients[i];
-				if (!t) u("upgrade attempt for closed client"), r.close();
-				else if (t.upgrading) u("transport has already been trying to upgrade"), r.close();
-				else if (t.upgraded) u("transport had already been upgraded"), r.close();
-				else {
-					u("upgrading existing transport"), r.removeListener("error", a);
-					let n = this.createTransport(e._query.transport, e);
-					n.perMessageDeflate = this.opts.perMessageDeflate, t._maybeUpgrade(n);
+			const id = req._query.sid;
+			req.websocket = websocket;
+			if (id) {
+				const client = this.clients[id];
+				if (!client) {
+					debug("upgrade attempt for closed client");
+					websocket.close();
+				} else if (client.upgrading) {
+					debug("transport has already been trying to upgrade");
+					websocket.close();
+				} else if (client.upgraded) {
+					debug("transport had already been upgraded");
+					websocket.close();
+				} else {
+					debug("upgrading existing transport");
+					websocket.removeListener("error", onUpgradeError);
+					const transport = this.createTransport(req._query.transport, req);
+					transport.perMessageDeflate = this.opts.perMessageDeflate;
+					client._maybeUpgrade(transport);
 				}
-			} else this.handshake(e._query.transport, e, (e, n) => y(t, e, n));
-			function a() {
-				u("websocket error before upgrade");
+			} else {
+				const closeConnection = (errorCode, errorContext) => abortUpgrade(socket, errorCode, errorContext);
+				this.handshake(req._query.transport, req, closeConnection);
+			}
+			function onUpgradeError() {
+				debug("websocket error before upgrade");
 			}
 		}
-		attach(e, t = {}) {
-			let n = this._computePath(t), r = t.destroyUpgradeTimeout || 1e3;
-			function i(e) {
-				return n === e.url.slice(0, n.length);
+		/**
+		* Captures upgrade requests for a http.Server.
+		*
+		* @param {http.Server} server
+		* @param {Object} options
+		*/
+		attach(server, options = {}) {
+			const path = this._computePath(options);
+			const destroyUpgradeTimeout = options.destroyUpgradeTimeout || 1e3;
+			function check(req) {
+				return path === req.url.slice(0, path.length);
 			}
-			let a = e.listeners("request").slice(0);
-			e.removeAllListeners("request"), e.on("close", this.close.bind(this)), e.on("listening", this.init.bind(this)), e.on("request", (t, r) => {
-				if (i(t)) u("intercepting request for path \"%s\"", n), this.handleRequest(t, r);
-				else {
-					let n = 0, i = a.length;
-					for (; n < i; n++) a[n].call(e, t, r);
+			const listeners = server.listeners("request").slice(0);
+			server.removeAllListeners("request");
+			server.on("close", this.close.bind(this));
+			server.on("listening", this.init.bind(this));
+			server.on("request", (req, res) => {
+				if (check(req)) {
+					debug("intercepting request for path \"%s\"", path);
+					this.handleRequest(req, res);
+				} else {
+					let i = 0;
+					const l = listeners.length;
+					for (; i < l; i++) listeners[i].call(server, req, res);
 				}
-			}), ~this.opts.transports.indexOf("websocket") && e.on("upgrade", (e, n, a) => {
-				i(e) ? this.handleUpgrade(e, n, a) : !1 !== t.destroyUpgrade && setTimeout(function() {
-					if (n.writable && n.bytesWritten <= 0) return n.on("error", (e) => {
-						u("error while destroying upgrade: %s", e.message);
-					}), n.end();
-				}, r);
+			});
+			if (~this.opts.transports.indexOf("websocket")) server.on("upgrade", (req, socket, head) => {
+				if (check(req)) this.handleUpgrade(req, socket, head);
+				else if (false !== options.destroyUpgrade) setTimeout(function() {
+					if (socket.writable && socket.bytesWritten <= 0) {
+						socket.on("error", (e) => {
+							debug("error while destroying upgrade: %s", e.message);
+						});
+						return socket.end();
+					}
+				}, destroyUpgradeTimeout);
 			});
 		}
 	};
-	e.Server = g;
-	function _(e, t, n) {
-		let r = t === g.errors.FORBIDDEN ? 403 : 400, i = n && n.message ? n.message : g.errorMessages[t];
-		e.writeHead(r, { "Content-Type": "application/json" }), e.end(JSON.stringify({
-			code: t,
-			message: i
+	exports.Server = Server;
+	/**
+	* Close the HTTP long-polling request
+	*
+	* @param res - the response object
+	* @param errorCode - the error code
+	* @param errorContext - additional error context
+	*
+	* @private
+	*/
+	function abortRequest(res, errorCode, errorContext) {
+		const statusCode = errorCode === Server.errors.FORBIDDEN ? 403 : 400;
+		const message = errorContext && errorContext.message ? errorContext.message : Server.errorMessages[errorCode];
+		res.writeHead(statusCode, { "Content-Type": "application/json" });
+		res.end(JSON.stringify({
+			code: errorCode,
+			message
 		}));
 	}
-	function y(e, t, n = {}) {
-		if (e.on("error", () => {
-			u("ignoring error from closed connection");
-		}), e.writable) {
-			let r = n.message || g.errorMessages[t], i = Buffer.byteLength(r);
-			e.write("HTTP/1.1 400 Bad Request\r\nConnection: close\r\nContent-type: text/html\r\nContent-Length: " + i + "\r\n\r\n" + r);
+	/**
+	* Close the WebSocket connection
+	*
+	* @param {net.Socket} socket
+	* @param {string} errorCode - the error code
+	* @param {object} errorContext - additional error context
+	*/
+	function abortUpgrade(socket, errorCode, errorContext = {}) {
+		socket.on("error", () => {
+			debug("ignoring error from closed connection");
+		});
+		if (socket.writable) {
+			const message = errorContext.message || Server.errorMessages[errorCode];
+			const length = Buffer.byteLength(message);
+			socket.write("HTTP/1.1 400 Bad Request\r\nConnection: close\r\nContent-type: text/html\r\nContent-Length: " + length + "\r\n\r\n" + message);
 		}
-		e.destroy();
+		socket.destroy();
 	}
-	var b = [
+	/**
+	* From https://github.com/nodejs/node/blob/v8.4.0/lib/_http_common.js#L303-L354
+	*
+	* True if val contains an invalid field-vchar
+	*  field-value    = *( field-content / obs-fold )
+	*  field-content  = field-vchar [ 1*( SP / HTAB ) field-vchar ]
+	*  field-vchar    = VCHAR / obs-text
+	*
+	* checkInvalidHeaderChar() is currently designed to be inlinable by v8,
+	* so take care when making changes to the implementation so that the source
+	* code size does not exceed v8's default max_inlined_source_size setting.
+	**/
+	var validHdrChars = [
 		0,
 		0,
 		0,
@@ -11356,502 +15916,988 @@ var o = Object.create, s = Object.defineProperty, c = Object.getOwnPropertyDescr
 		1,
 		1
 	];
-	function x(e) {
-		if (e += "", e.length < 1) return !1;
-		if (!b[e.charCodeAt(0)]) return u("invalid header, index 0, char \"%s\"", e.charCodeAt(0)), !0;
-		if (e.length < 2) return !1;
-		if (!b[e.charCodeAt(1)]) return u("invalid header, index 1, char \"%s\"", e.charCodeAt(1)), !0;
-		if (e.length < 3) return !1;
-		if (!b[e.charCodeAt(2)]) return u("invalid header, index 2, char \"%s\"", e.charCodeAt(2)), !0;
-		if (e.length < 4) return !1;
-		if (!b[e.charCodeAt(3)]) return u("invalid header, index 3, char \"%s\"", e.charCodeAt(3)), !0;
-		for (let t = 4; t < e.length; ++t) if (!b[e.charCodeAt(t)]) return u("invalid header, index \"%i\", char \"%s\"", t, e.charCodeAt(t)), !0;
-		return !1;
-	}
-})), De = /* @__PURE__ */ p(((e) => {
-	Object.defineProperty(e, "__esModule", { value: !0 }), e.Polling = void 0;
-	var t = B(), n = v("zlib"), r = k(), i = (0, z().default)("engine:polling"), a = {
-		gzip: n.createGzip,
-		deflate: n.createDeflate
-	};
-	e.Polling = class extends t.Transport {
-		constructor(e) {
-			super(e), this.closeTimeout = 3e4;
+	function checkInvalidHeaderChar(val) {
+		val += "";
+		if (val.length < 1) return false;
+		if (!validHdrChars[val.charCodeAt(0)]) {
+			debug("invalid header, index 0, char \"%s\"", val.charCodeAt(0));
+			return true;
 		}
+		if (val.length < 2) return false;
+		if (!validHdrChars[val.charCodeAt(1)]) {
+			debug("invalid header, index 1, char \"%s\"", val.charCodeAt(1));
+			return true;
+		}
+		if (val.length < 3) return false;
+		if (!validHdrChars[val.charCodeAt(2)]) {
+			debug("invalid header, index 2, char \"%s\"", val.charCodeAt(2));
+			return true;
+		}
+		if (val.length < 4) return false;
+		if (!validHdrChars[val.charCodeAt(3)]) {
+			debug("invalid header, index 3, char \"%s\"", val.charCodeAt(3));
+			return true;
+		}
+		for (let i = 4; i < val.length; ++i) if (!validHdrChars[val.charCodeAt(i)]) {
+			debug("invalid header, index \"%i\", char \"%s\"", i, val.charCodeAt(i));
+			return true;
+		}
+		return false;
+	}
+}));
+//#endregion
+//#region node_modules/engine.io/build/transports-uws/polling.js
+var require_polling = /* @__PURE__ */ __commonJSMin(((exports) => {
+	Object.defineProperty(exports, "__esModule", { value: true });
+	exports.Polling = void 0;
+	var transport_1 = require_transport();
+	var zlib_1$1 = __require("zlib");
+	var accepts = require_accepts();
+	var debug = (0, require_src().default)("engine:polling");
+	var compressionMethods = {
+		gzip: zlib_1$1.createGzip,
+		deflate: zlib_1$1.createDeflate
+	};
+	var Polling = class extends transport_1.Transport {
+		/**
+		* HTTP polling constructor.
+		*/
+		constructor(req) {
+			super(req);
+			this.closeTimeout = 3e4;
+		}
+		/**
+		* Transport name
+		*/
 		get name() {
 			return "polling";
 		}
-		onRequest(e) {
-			let t = e.res;
-			e.res = null, e.getMethod() === "get" ? this.onPollRequest(e, t) : e.getMethod() === "post" ? this.onDataRequest(e, t) : (t.writeStatus("500 Internal Server Error"), t.end());
+		/**
+		* Overrides onRequest.
+		*
+		* @param req
+		*
+		* @private
+		*/
+		onRequest(req) {
+			const res = req.res;
+			req.res = null;
+			if (req.getMethod() === "get") this.onPollRequest(req, res);
+			else if (req.getMethod() === "post") this.onDataRequest(req, res);
+			else {
+				res.writeStatus("500 Internal Server Error");
+				res.end();
+			}
 		}
-		onPollRequest(e, t) {
+		/**
+		* The client sends a request awaiting for us to send data.
+		*
+		* @private
+		*/
+		onPollRequest(req, res) {
 			if (this.req) {
-				i("request overlap"), this.onError("overlap from client"), t.writeStatus("500 Internal Server Error"), t.end();
+				debug("request overlap");
+				this.onError("overlap from client");
+				res.writeStatus("500 Internal Server Error");
+				res.end();
 				return;
 			}
-			i("setting request"), this.req = e, this.res = t, e.cleanup = () => {
+			debug("setting request");
+			this.req = req;
+			this.res = res;
+			const onClose = () => {
+				this.writable = false;
+				this.onError("poll connection closed prematurely");
+			};
+			const cleanup = () => {
 				this.req = this.res = null;
-			}, t.onAborted(() => {
-				this.writable = !1, this.onError("poll connection closed prematurely");
-			}), this.writable = !0, this.emit("ready"), this.writable && this.shouldClose && (i("triggering empty send to append close packet"), this.send([{ type: "noop" }]));
+			};
+			req.cleanup = cleanup;
+			res.onAborted(onClose);
+			this.writable = true;
+			this.emit("ready");
+			if (this.writable && this.shouldClose) {
+				debug("triggering empty send to append close packet");
+				this.send([{ type: "noop" }]);
+			}
 		}
-		onDataRequest(e, t) {
+		/**
+		* The client sends a request with data.
+		*
+		* @private
+		*/
+		onDataRequest(req, res) {
 			if (this.dataReq) {
-				this.onError("data request overlap from client"), t.writeStatus("500 Internal Server Error"), t.end();
+				this.onError("data request overlap from client");
+				res.writeStatus("500 Internal Server Error");
+				res.end();
 				return;
 			}
-			let n = Number(e.headers["content-length"]);
-			if (!n) {
-				this.onError("content-length header required"), t.writeStatus("411 Length Required").end();
+			const expectedContentLength = Number(req.headers["content-length"]);
+			if (!expectedContentLength) {
+				this.onError("content-length header required");
+				res.writeStatus("411 Length Required").end();
 				return;
 			}
-			if (n > this.maxHttpBufferSize) {
-				this.onError("payload too large"), t.writeStatus("413 Payload Too Large").end();
+			if (expectedContentLength > this.maxHttpBufferSize) {
+				this.onError("payload too large");
+				res.writeStatus("413 Payload Too Large").end();
 				return;
 			}
-			if (e.headers["content-type"] === "application/octet-stream" && this.protocol === 4) return this.onError("invalid content"), t.writeStatus("400 Bad Request").end();
-			this.dataReq = e, this.dataRes = t;
-			let r, i = 0, a = { "Content-Type": "text/html" };
-			this.headers(e, a);
-			for (let e in a) t.writeHeader(e, String(a[e]));
-			let o = (e) => {
-				this.onData(e.toString()), this.onDataRequestCleanup(), t.cork(() => {
-					t.end("ok");
+			if ("application/octet-stream" === req.headers["content-type"] && this.protocol === 4) {
+				this.onError("invalid content");
+				return res.writeStatus("400 Bad Request").end();
+			}
+			this.dataReq = req;
+			this.dataRes = res;
+			let buffer;
+			let offset = 0;
+			const headers = { "Content-Type": "text/html" };
+			this.headers(req, headers);
+			for (let key in headers) res.writeHeader(key, String(headers[key]));
+			const onEnd = (buffer) => {
+				this.onData(buffer.toString());
+				this.onDataRequestCleanup();
+				res.cork(() => {
+					res.end("ok");
 				});
 			};
-			t.onAborted(() => {
-				this.onDataRequestCleanup(), this.onError("data request connection closed prematurely");
-			}), t.onData((e, a) => {
-				let s = i + e.byteLength;
-				if (s > n) {
-					this.onError("content-length mismatch"), t.close();
+			res.onAborted(() => {
+				this.onDataRequestCleanup();
+				this.onError("data request connection closed prematurely");
+			});
+			res.onData((arrayBuffer, isLast) => {
+				const totalLength = offset + arrayBuffer.byteLength;
+				if (totalLength > expectedContentLength) {
+					this.onError("content-length mismatch");
+					res.close();
 					return;
 				}
-				if (!r) {
-					if (a) {
-						o(Buffer.from(e));
+				if (!buffer) {
+					if (isLast) {
+						onEnd(Buffer.from(arrayBuffer));
 						return;
 					}
-					r = Buffer.allocUnsafe(n);
+					buffer = Buffer.allocUnsafe(expectedContentLength);
 				}
-				if (Buffer.from(e).copy(r, i), a) {
-					if (s != n) {
-						this.onError("content-length mismatch"), t.writeStatus("400 Content-Length Mismatch").end(), this.onDataRequestCleanup();
+				Buffer.from(arrayBuffer).copy(buffer, offset);
+				if (isLast) {
+					if (totalLength != expectedContentLength) {
+						this.onError("content-length mismatch");
+						res.writeStatus("400 Content-Length Mismatch").end();
+						this.onDataRequestCleanup();
 						return;
 					}
-					o(r);
+					onEnd(buffer);
 					return;
 				}
-				i = s;
+				offset = totalLength;
 			});
 		}
+		/**
+		* Cleanup request.
+		*
+		* @private
+		*/
 		onDataRequestCleanup() {
 			this.dataReq = this.dataRes = null;
 		}
-		onData(e) {
-			i("received \"%s\"", e);
-			let t = (e) => {
-				if (e.type === "close") return i("got xhr close packet"), this.onClose(), !1;
-				this.onPacket(e);
+		/**
+		* Processes the incoming data payload.
+		*
+		* @param {String} encoded payload
+		* @private
+		*/
+		onData(data) {
+			debug("received \"%s\"", data);
+			const callback = (packet) => {
+				if ("close" === packet.type) {
+					debug("got xhr close packet");
+					this.onClose();
+					return false;
+				}
+				this.onPacket(packet);
 			};
-			this.protocol === 3 ? this.parser.decodePayload(e, t) : this.parser.decodePayload(e).forEach(t);
+			if (this.protocol === 3) this.parser.decodePayload(data, callback);
+			else this.parser.decodePayload(data).forEach(callback);
 		}
+		/**
+		* Overrides onClose.
+		*
+		* @private
+		*/
 		onClose() {
-			this.writable && this.send([{ type: "noop" }]), super.onClose();
+			if (this.writable) this.send([{ type: "noop" }]);
+			super.onClose();
 		}
-		send(e) {
-			this.writable = !1, this.shouldClose &&= (i("appending close packet to payload"), e.push({ type: "close" }), this.shouldClose(), null);
-			let t = (t) => {
-				let n = e.some((e) => e.options && e.options.compress);
-				this.write(t, { compress: n });
+		/**
+		* Writes a packet payload.
+		*
+		* @param {Object} packet
+		* @private
+		*/
+		send(packets) {
+			this.writable = false;
+			if (this.shouldClose) {
+				debug("appending close packet to payload");
+				packets.push({ type: "close" });
+				this.shouldClose();
+				this.shouldClose = null;
+			}
+			const doWrite = (data) => {
+				const compress = packets.some((packet) => {
+					return packet.options && packet.options.compress;
+				});
+				this.write(data, { compress });
 			};
-			this.protocol === 3 ? this.parser.encodePayload(e, this.supportsBinary, t) : this.parser.encodePayload(e, t);
+			if (this.protocol === 3) this.parser.encodePayload(packets, this.supportsBinary, doWrite);
+			else this.parser.encodePayload(packets, doWrite);
 		}
-		write(e, t) {
-			i("writing \"%s\"", e), this.doWrite(e, t, () => {
-				this.req.cleanup(), this.emit("drain");
+		/**
+		* Writes data as response to poll request.
+		*
+		* @param {String} data
+		* @param {Object} options
+		* @private
+		*/
+		write(data, options) {
+			debug("writing \"%s\"", data);
+			this.doWrite(data, options, () => {
+				this.req.cleanup();
+				this.emit("drain");
 			});
 		}
-		doWrite(e, t, n) {
-			let i = typeof e == "string", a = { "Content-Type": i ? "text/plain; charset=UTF-8" : "application/octet-stream" }, o = (e) => {
-				this.headers(this.req, a), this.res.cork(() => {
-					Object.keys(a).forEach((e) => {
-						this.res.writeHeader(e, String(a[e]));
-					}), this.res.end(e);
-				}), n();
+		/**
+		* Performs the write.
+		*
+		* @private
+		*/
+		doWrite(data, options, callback) {
+			const isString = typeof data === "string";
+			const headers = { "Content-Type": isString ? "text/plain; charset=UTF-8" : "application/octet-stream" };
+			const respond = (data) => {
+				this.headers(this.req, headers);
+				this.res.cork(() => {
+					Object.keys(headers).forEach((key) => {
+						this.res.writeHeader(key, String(headers[key]));
+					});
+					this.res.end(data);
+				});
+				callback();
 			};
-			if (!this.httpCompression || !t.compress) {
-				o(e);
+			if (!this.httpCompression || !options.compress) {
+				respond(data);
 				return;
 			}
-			if ((i ? Buffer.byteLength(e) : e.length) < this.httpCompression.threshold) {
-				o(e);
+			if ((isString ? Buffer.byteLength(data) : data.length) < this.httpCompression.threshold) {
+				respond(data);
 				return;
 			}
-			let s = r(this.req).encodings(["gzip", "deflate"]);
-			if (!s) {
-				o(e);
+			const encoding = accepts(this.req).encodings(["gzip", "deflate"]);
+			if (!encoding) {
+				respond(data);
 				return;
 			}
-			this.compress(e, s, (e, t) => {
-				if (e) {
-					this.res.writeStatus("500 Internal Server Error"), this.res.end(), n(e);
+			this.compress(data, encoding, (err, data) => {
+				if (err) {
+					this.res.writeStatus("500 Internal Server Error");
+					this.res.end();
+					callback(err);
 					return;
 				}
-				a["Content-Encoding"] = s, o(t);
+				headers["Content-Encoding"] = encoding;
+				respond(data);
 			});
 		}
-		compress(e, t, n) {
-			i("compressing");
-			let r = [], o = 0;
-			a[t](this.httpCompression).on("error", n).on("data", function(e) {
-				r.push(e), o += e.length;
+		/**
+		* Compresses data.
+		*
+		* @private
+		*/
+		compress(data, encoding, callback) {
+			debug("compressing");
+			const buffers = [];
+			let nread = 0;
+			compressionMethods[encoding](this.httpCompression).on("error", callback).on("data", function(chunk) {
+				buffers.push(chunk);
+				nread += chunk.length;
 			}).on("end", function() {
-				n(null, Buffer.concat(r, o));
-			}).end(e);
+				callback(null, Buffer.concat(buffers, nread));
+			}).end(data);
 		}
-		doClose(e) {
-			i("closing");
-			let t, n = () => {
-				clearTimeout(t), e(), this.onClose();
+		/**
+		* Closes the transport.
+		*
+		* @private
+		*/
+		doClose(fn) {
+			debug("closing");
+			let closeTimeoutTimer;
+			const onClose = () => {
+				clearTimeout(closeTimeoutTimer);
+				fn();
+				this.onClose();
 			};
-			this.writable ? (i("transport writable - closing right away"), this.send([{ type: "close" }]), n()) : this.discarded ? (i("transport discarded - closing right away"), n()) : (i("transport not writable - buffering orderly close"), this.shouldClose = n, t = setTimeout(n, this.closeTimeout));
+			if (this.writable) {
+				debug("transport writable - closing right away");
+				this.send([{ type: "close" }]);
+				onClose();
+			} else if (this.discarded) {
+				debug("transport discarded - closing right away");
+				onClose();
+			} else {
+				debug("transport not writable - buffering orderly close");
+				this.shouldClose = onClose;
+				closeTimeoutTimer = setTimeout(onClose, this.closeTimeout);
+			}
 		}
-		headers(e, t) {
-			t ||= {};
-			let n = e.headers["user-agent"];
-			return n && (~n.indexOf(";MSIE") || ~n.indexOf("Trident/")) && (t["X-XSS-Protection"] = "0"), t["cache-control"] = "no-store", this.emit("headers", t, e), t;
+		/**
+		* Returns headers for a response.
+		*
+		* @param req - request
+		* @param {Object} extra headers
+		* @private
+		*/
+		headers(req, headers) {
+			headers = headers || {};
+			const ua = req.headers["user-agent"];
+			if (ua && (~ua.indexOf(";MSIE") || ~ua.indexOf("Trident/"))) headers["X-XSS-Protection"] = "0";
+			headers["cache-control"] = "no-store";
+			this.emit("headers", headers, req);
+			return headers;
 		}
 	};
-})), Oe = /* @__PURE__ */ p(((e) => {
-	Object.defineProperty(e, "__esModule", { value: !0 }), e.WebSocket = void 0;
-	var t = B(), n = (0, z().default)("engine:ws");
-	e.WebSocket = class extends t.Transport {
-		constructor(e) {
-			super(e), this.writable = !1, this.perMessageDeflate = null;
+	exports.Polling = Polling;
+}));
+//#endregion
+//#region node_modules/engine.io/build/transports-uws/websocket.js
+var require_websocket = /* @__PURE__ */ __commonJSMin(((exports) => {
+	Object.defineProperty(exports, "__esModule", { value: true });
+	exports.WebSocket = void 0;
+	var transport_1 = require_transport();
+	var debug = (0, require_src().default)("engine:ws");
+	var WebSocket = class extends transport_1.Transport {
+		/**
+		* WebSocket transport
+		*
+		* @param req
+		*/
+		constructor(req) {
+			super(req);
+			this.writable = false;
+			this.perMessageDeflate = null;
 		}
+		/**
+		* Transport name
+		*/
 		get name() {
 			return "websocket";
 		}
+		/**
+		* Advertise upgrade support.
+		*/
 		get handlesUpgrades() {
-			return !0;
+			return true;
 		}
-		send(e) {
-			this.writable = !1;
-			for (let t = 0; t < e.length; t++) {
-				let r = e[t], i = t + 1 === e.length, a = (e) => {
-					let t = typeof e != "string", r = this.perMessageDeflate && Buffer.byteLength(e) > this.perMessageDeflate.threshold;
-					n("writing \"%s\"", e), this.socket.send(e, t, r), i && (this.emit("drain"), this.writable = !0, this.emit("ready"));
+		/**
+		* Writes a packet payload.
+		*
+		* @param {Array} packets
+		* @private
+		*/
+		send(packets) {
+			this.writable = false;
+			for (let i = 0; i < packets.length; i++) {
+				const packet = packets[i];
+				const isLast = i + 1 === packets.length;
+				const send = (data) => {
+					const isBinary = typeof data !== "string";
+					const compress = this.perMessageDeflate && Buffer.byteLength(data) > this.perMessageDeflate.threshold;
+					debug("writing \"%s\"", data);
+					this.socket.send(data, isBinary, compress);
+					if (isLast) {
+						this.emit("drain");
+						this.writable = true;
+						this.emit("ready");
+					}
 				};
-				r.options && typeof r.options.wsPreEncoded == "string" ? a(r.options.wsPreEncoded) : this.parser.encodePacket(r, this.supportsBinary, a);
+				if (packet.options && typeof packet.options.wsPreEncoded === "string") send(packet.options.wsPreEncoded);
+				else this.parser.encodePacket(packet, this.supportsBinary, send);
 			}
 		}
-		doClose(e) {
-			n("closing"), e && e(), this.socket.end();
+		/**
+		* Closes the transport.
+		*
+		* @private
+		*/
+		doClose(fn) {
+			debug("closing");
+			fn && fn();
+			this.socket.end();
 		}
 	};
-})), ke = /* @__PURE__ */ p(((e) => {
-	Object.defineProperty(e, "__esModule", { value: !0 });
-	var t = De(), n = Oe();
-	e.default = {
-		polling: t.Polling,
-		websocket: n.WebSocket
+	exports.WebSocket = WebSocket;
+}));
+//#endregion
+//#region node_modules/engine.io/build/transports-uws/index.js
+var require_transports_uws = /* @__PURE__ */ __commonJSMin(((exports) => {
+	Object.defineProperty(exports, "__esModule", { value: true });
+	var polling_1 = require_polling();
+	var websocket_1 = require_websocket();
+	exports.default = {
+		polling: polling_1.Polling,
+		websocket: websocket_1.WebSocket
 	};
-})), Ae = /* @__PURE__ */ p(((e) => {
-	Object.defineProperty(e, "__esModule", { value: !0 }), e.uServer = void 0;
-	var t = z(), n = Ee(), r = ke(), i = (0, t.default)("engine:uws");
-	e.uServer = class extends n.BaseServer {
+}));
+//#endregion
+//#region node_modules/engine.io/build/userver.js
+var require_userver = /* @__PURE__ */ __commonJSMin(((exports) => {
+	Object.defineProperty(exports, "__esModule", { value: true });
+	exports.uServer = void 0;
+	var debug_1 = require_src();
+	var server_1 = require_server();
+	var transports_uws_1 = require_transports_uws();
+	var debug = (0, debug_1.default)("engine:uws");
+	/**
+	* An Engine.IO server based on the `uWebSockets.js` package.
+	*/
+	var uServer = class extends server_1.BaseServer {
 		init() {}
 		cleanup() {}
-		prepare(e, t) {
-			e.method = e.getMethod().toUpperCase(), e.url = e.getUrl();
-			let n = new URLSearchParams(e.getQuery());
-			e._query = Object.fromEntries(n.entries()), e.headers = {}, e.forEach((t, n) => {
-				e.headers[t] = n;
-			}), e.connection = { remoteAddress: Buffer.from(t.getRemoteAddressAsText()).toString() }, t.onAborted(() => {
-				i("response has been aborted");
+		/**
+		* Prepares a request by processing the query string.
+		*
+		* @private
+		*/
+		prepare(req, res) {
+			req.method = req.getMethod().toUpperCase();
+			req.url = req.getUrl();
+			const params = new URLSearchParams(req.getQuery());
+			req._query = Object.fromEntries(params.entries());
+			req.headers = {};
+			req.forEach((key, value) => {
+				req.headers[key] = value;
+			});
+			req.connection = { remoteAddress: Buffer.from(res.getRemoteAddressAsText()).toString() };
+			res.onAborted(() => {
+				debug("response has been aborted");
 			});
 		}
-		createTransport(e, t) {
-			return new r.default[e](t);
+		createTransport(transportName, req) {
+			return new transports_uws_1.default[transportName](req);
 		}
-		attach(e, t = {}) {
-			let n = this._computePath(t);
-			e.any(n, this.handleRequest.bind(this)).ws(n, {
-				compression: t.compression,
-				idleTimeout: t.idleTimeout,
-				maxBackpressure: t.maxBackpressure,
+		/**
+		* Attach the engine to a µWebSockets.js server
+		* @param app
+		* @param options
+		*/
+		attach(app, options = {}) {
+			const path = this._computePath(options);
+			app.any(path, this.handleRequest.bind(this)).ws(path, {
+				compression: options.compression,
+				idleTimeout: options.idleTimeout,
+				maxBackpressure: options.maxBackpressure,
 				maxPayloadLength: this.opts.maxHttpBufferSize,
 				upgrade: this.handleUpgrade.bind(this),
-				open: (e) => {
-					let t = e.getUserData().transport;
-					t.socket = e, t.writable = !0, t.emit("ready");
+				open: (ws) => {
+					const transport = ws.getUserData().transport;
+					transport.socket = ws;
+					transport.writable = true;
+					transport.emit("ready");
 				},
-				message: (e, t, n) => {
-					e.getUserData().transport.onData(n ? t : Buffer.from(t).toString());
+				message: (ws, message, isBinary) => {
+					ws.getUserData().transport.onData(isBinary ? message : Buffer.from(message).toString());
 				},
-				close: (e, t, n) => {
-					e.getUserData().transport.onClose(t, n);
+				close: (ws, code, message) => {
+					ws.getUserData().transport.onClose(code, message);
 				}
 			});
 		}
-		_applyMiddlewares(e, t, n) {
-			if (this.middlewares.length === 0) return n();
-			e.res = new a(t), super._applyMiddlewares(e, e.res, (t) => {
-				e.res.writeHead(), n(t);
+		_applyMiddlewares(req, res, callback) {
+			if (this.middlewares.length === 0) return callback();
+			req.res = new ResponseWrapper(res);
+			super._applyMiddlewares(req, req.res, (err) => {
+				req.res.writeHead();
+				callback(err);
 			});
 		}
-		handleRequest(e, t) {
-			i("handling \"%s\" http request \"%s\"", t.getMethod(), t.getUrl()), this.prepare(t, e), t.res = e;
-			let r = (r, a) => {
-				if (r !== void 0) {
+		handleRequest(res, req) {
+			debug("handling \"%s\" http request \"%s\"", req.getMethod(), req.getUrl());
+			this.prepare(req, res);
+			req.res = res;
+			const callback = (errorCode, errorContext) => {
+				if (errorCode !== void 0) {
 					this.emit("connection_error", {
-						req: t,
-						code: r,
-						message: n.Server.errorMessages[r],
-						context: a
-					}), this.abortRequest(t.res, r, a);
+						req,
+						code: errorCode,
+						message: server_1.Server.errorMessages[errorCode],
+						context: errorContext
+					});
+					this.abortRequest(req.res, errorCode, errorContext);
 					return;
 				}
-				t._query.sid ? (i("setting new request for existing client"), this.clients[t._query.sid].transport.onRequest(t)) : this.handshake(t._query.transport, t, (t, n) => this.abortRequest(e, t, n));
+				if (req._query.sid) {
+					debug("setting new request for existing client");
+					this.clients[req._query.sid].transport.onRequest(req);
+				} else {
+					const closeConnection = (errorCode, errorContext) => this.abortRequest(res, errorCode, errorContext);
+					this.handshake(req._query.transport, req, closeConnection);
+				}
 			};
-			this._applyMiddlewares(t, e, (e) => {
-				e ? r(n.Server.errors.BAD_REQUEST, { name: "MIDDLEWARE_FAILURE" }) : this.verify(t, !1, r);
+			this._applyMiddlewares(req, res, (err) => {
+				if (err) callback(server_1.Server.errors.BAD_REQUEST, { name: "MIDDLEWARE_FAILURE" });
+				else this.verify(req, false, callback);
 			});
 		}
-		handleUpgrade(e, t, r) {
-			i("on upgrade"), this.prepare(t, e), t.res = e;
-			let a = async (a, o) => {
-				if (a !== void 0) {
+		handleUpgrade(res, req, context) {
+			debug("on upgrade");
+			this.prepare(req, res);
+			req.res = res;
+			const callback = async (errorCode, errorContext) => {
+				if (errorCode !== void 0) {
 					this.emit("connection_error", {
-						req: t,
-						code: a,
-						message: n.Server.errorMessages[a],
-						context: o
-					}), this.abortRequest(e, a, o);
+						req,
+						code: errorCode,
+						message: server_1.Server.errorMessages[errorCode],
+						context: errorContext
+					});
+					this.abortRequest(res, errorCode, errorContext);
 					return;
 				}
-				let s = t._query.sid, c;
-				if (s) {
-					let n = this.clients[s];
-					if (!n) return i("upgrade attempt for closed client"), e.close();
-					if (n.upgrading) return i("transport has already been trying to upgrade"), e.close();
-					if (n.upgraded) return i("transport had already been upgraded"), e.close();
-					i("upgrading existing transport"), c = this.createTransport(t._query.transport, t), n._maybeUpgrade(c);
-				} else if (c = await this.handshake(t._query.transport, t, (t, n) => this.abortRequest(e, t, n)), !c) return;
-				let l = {};
-				s || this.emit("initial_headers", l, t), this.emit("headers", l, t), t.res.writeStatus("101 Switching Protocols"), Object.keys(l).forEach((e) => {
-					t.res.writeHeader(e, l[e]);
-				}), e.upgrade({ transport: c }, t.getHeader("sec-websocket-key"), t.getHeader("sec-websocket-protocol"), t.getHeader("sec-websocket-extensions"), r);
+				const id = req._query.sid;
+				let transport;
+				if (id) {
+					const client = this.clients[id];
+					if (!client) {
+						debug("upgrade attempt for closed client");
+						return res.close();
+					} else if (client.upgrading) {
+						debug("transport has already been trying to upgrade");
+						return res.close();
+					} else if (client.upgraded) {
+						debug("transport had already been upgraded");
+						return res.close();
+					} else {
+						debug("upgrading existing transport");
+						transport = this.createTransport(req._query.transport, req);
+						client._maybeUpgrade(transport);
+					}
+				} else {
+					transport = await this.handshake(req._query.transport, req, (errorCode, errorContext) => this.abortRequest(res, errorCode, errorContext));
+					if (!transport) return;
+				}
+				const additionalHeaders = {};
+				if (!id) this.emit("initial_headers", additionalHeaders, req);
+				this.emit("headers", additionalHeaders, req);
+				req.res.writeStatus("101 Switching Protocols");
+				Object.keys(additionalHeaders).forEach((key) => {
+					req.res.writeHeader(key, additionalHeaders[key]);
+				});
+				res.upgrade({ transport }, req.getHeader("sec-websocket-key"), req.getHeader("sec-websocket-protocol"), req.getHeader("sec-websocket-extensions"), context);
 			};
-			this._applyMiddlewares(t, e, (e) => {
-				e ? a(n.Server.errors.BAD_REQUEST, { name: "MIDDLEWARE_FAILURE" }) : this.verify(t, !0, a);
+			this._applyMiddlewares(req, res, (err) => {
+				if (err) callback(server_1.Server.errors.BAD_REQUEST, { name: "MIDDLEWARE_FAILURE" });
+				else this.verify(req, true, callback);
 			});
 		}
-		abortRequest(e, t, r) {
-			let i = t === n.Server.errors.FORBIDDEN ? "403 Forbidden" : "400 Bad Request", a = r && r.message ? r.message : n.Server.errorMessages[t];
-			e.writeStatus(i), e.writeHeader("Content-Type", "application/json"), e.end(JSON.stringify({
-				code: t,
-				message: a
+		abortRequest(res, errorCode, errorContext) {
+			const statusCode = errorCode === server_1.Server.errors.FORBIDDEN ? "403 Forbidden" : "400 Bad Request";
+			const message = errorContext && errorContext.message ? errorContext.message : server_1.Server.errorMessages[errorCode];
+			res.writeStatus(statusCode);
+			res.writeHeader("Content-Type", "application/json");
+			res.end(JSON.stringify({
+				code: errorCode,
+				message
 			}));
 		}
 	};
-	var a = class {
-		constructor(e) {
-			this.res = e, this.statusWritten = !1, this.headers = [], this.isAborted = !1;
+	exports.uServer = uServer;
+	var ResponseWrapper = class {
+		constructor(res) {
+			this.res = res;
+			this.statusWritten = false;
+			this.headers = [];
+			this.isAborted = false;
 		}
-		set statusCode(e) {
-			e && this.writeStatus(e === 200 ? "200 OK" : "204 No Content");
+		set statusCode(status) {
+			if (!status) return;
+			this.writeStatus(status === 200 ? "200 OK" : "204 No Content");
 		}
-		writeHead(e) {
-			this.statusCode = e;
+		writeHead(status) {
+			this.statusCode = status;
 		}
-		setHeader(e, t) {
-			Array.isArray(t) ? t.forEach((t) => {
-				this.writeHeader(e, t);
-			}) : this.writeHeader(e, t);
+		setHeader(key, value) {
+			if (Array.isArray(value)) value.forEach((val) => {
+				this.writeHeader(key, val);
+			});
+			else this.writeHeader(key, value);
 		}
 		removeHeader() {}
 		getHeader() {}
-		writeStatus(e) {
-			if (!this.isAborted) return this.res.writeStatus(e), this.statusWritten = !0, this.writeBufferedHeaders(), this;
+		writeStatus(status) {
+			if (this.isAborted) return;
+			this.res.writeStatus(status);
+			this.statusWritten = true;
+			this.writeBufferedHeaders();
+			return this;
 		}
-		writeHeader(e, t) {
-			this.isAborted || e !== "Content-Length" && (this.statusWritten ? this.res.writeHeader(e, t) : this.headers.push([e, t]));
+		writeHeader(key, value) {
+			if (this.isAborted) return;
+			if (key === "Content-Length") return;
+			if (this.statusWritten) this.res.writeHeader(key, value);
+			else this.headers.push([key, value]);
 		}
 		writeBufferedHeaders() {
-			this.headers.forEach(([e, t]) => {
-				this.res.writeHeader(e, t);
+			this.headers.forEach(([key, value]) => {
+				this.res.writeHeader(key, value);
 			});
 		}
-		end(e) {
-			this.isAborted || this.res.cork(() => {
-				this.statusWritten || this.writeBufferedHeaders(), this.res.end(e);
+		end(data) {
+			if (this.isAborted) return;
+			this.res.cork(() => {
+				if (!this.statusWritten) this.writeBufferedHeaders();
+				this.res.end(data);
 			});
 		}
-		onData(e) {
-			this.isAborted || this.res.onData(e);
+		onData(fn) {
+			if (this.isAborted) return;
+			this.res.onData(fn);
 		}
-		onAborted(e) {
-			this.isAborted || this.res.onAborted(() => {
-				this.isAborted = !0, e();
+		onAborted(fn) {
+			if (this.isAborted) return;
+			this.res.onAborted(() => {
+				this.isAborted = true;
+				fn();
 			});
 		}
-		cork(e) {
-			this.isAborted || this.res.cork(e);
+		cork(fn) {
+			if (this.isAborted) return;
+			this.res.cork(fn);
 		}
 	};
-})), je = /* @__PURE__ */ p(((e) => {
-	Object.defineProperty(e, "__esModule", { value: !0 }), e.protocol = e.Transport = e.Socket = e.uServer = e.parser = e.transports = e.Server = void 0, e.listen = s, e.attach = c;
-	var t = v("http"), n = Ee();
-	Object.defineProperty(e, "Server", {
-		enumerable: !0,
+}));
+//#endregion
+//#region node_modules/engine.io/build/engine.io.js
+var require_engine_io = /* @__PURE__ */ __commonJSMin(((exports) => {
+	Object.defineProperty(exports, "__esModule", { value: true });
+	exports.protocol = exports.Transport = exports.Socket = exports.uServer = exports.parser = exports.transports = exports.Server = void 0;
+	exports.listen = listen;
+	exports.attach = attach;
+	var http_1$1 = __require("http");
+	var server_1 = require_server();
+	Object.defineProperty(exports, "Server", {
+		enumerable: true,
 		get: function() {
-			return n.Server;
-		}
-	}), e.transports = H().default;
-	var r = P();
-	e.parser = r;
-	var i = Ae();
-	Object.defineProperty(e, "uServer", {
-		enumerable: !0,
-		get: function() {
-			return i.uServer;
+			return server_1.Server;
 		}
 	});
-	var a = U();
-	Object.defineProperty(e, "Socket", {
-		enumerable: !0,
+	exports.transports = require_transports().default;
+	var parser = require_cjs$1();
+	exports.parser = parser;
+	var userver_1 = require_userver();
+	Object.defineProperty(exports, "uServer", {
+		enumerable: true,
 		get: function() {
-			return a.Socket;
+			return userver_1.uServer;
 		}
 	});
-	var o = B();
-	Object.defineProperty(e, "Transport", {
-		enumerable: !0,
+	var socket_1 = require_socket$1();
+	Object.defineProperty(exports, "Socket", {
+		enumerable: true,
 		get: function() {
-			return o.Transport;
+			return socket_1.Socket;
 		}
-	}), e.protocol = r.protocol;
-	function s(e, n, r) {
-		typeof n == "function" && (r = n, n = {});
-		let i = (0, t.createServer)(function(e, t) {
-			t.writeHead(501), t.end("Not Implemented");
-		}), a = c(i, n);
-		return a.httpServer = i, i.listen(e, r), a;
+	});
+	var transport_1 = require_transport();
+	Object.defineProperty(exports, "Transport", {
+		enumerable: true,
+		get: function() {
+			return transport_1.Transport;
+		}
+	});
+	exports.protocol = parser.protocol;
+	/**
+	* Creates an http.Server exclusively used for WS upgrades, and starts listening.
+	*
+	* @param port
+	* @param options
+	* @param listenCallback - callback for http.Server.listen()
+	* @return engine.io server
+	*/
+	function listen(port, options, listenCallback) {
+		if ("function" === typeof options) {
+			listenCallback = options;
+			options = {};
+		}
+		const server = (0, http_1$1.createServer)(function(req, res) {
+			res.writeHead(501);
+			res.end("Not Implemented");
+		});
+		const engine = attach(server, options);
+		engine.httpServer = server;
+		server.listen(port, listenCallback);
+		return engine;
 	}
-	function c(e, t) {
-		let r = new n.Server(t);
-		return r.attach(e, t), r;
+	/**
+	* Captures upgrade requests for a http.Server.
+	*
+	* @param server
+	* @param options
+	* @return engine.io server
+	*/
+	function attach(server, options) {
+		const engine = new server_1.Server(options);
+		engine.attach(server, options);
+		return engine;
 	}
-})), Me = /* @__PURE__ */ m({ Emitter: () => Y });
-function Y(e) {
-	if (e) return Ne(e);
+}));
+//#endregion
+//#region node_modules/@socket.io/component-emitter/lib/esm/index.js
+var esm_exports = /* @__PURE__ */ __exportAll({ Emitter: () => Emitter });
+/**
+* Initialize a new `Emitter`.
+*
+* @api public
+*/
+function Emitter(obj) {
+	if (obj) return mixin(obj);
 }
-function Ne(e) {
-	for (var t in Y.prototype) e[t] = Y.prototype[t];
-	return e;
+/**
+* Mixin the emitter properties.
+*
+* @param {Object} obj
+* @return {Object}
+* @api private
+*/
+function mixin(obj) {
+	for (var key in Emitter.prototype) obj[key] = Emitter.prototype[key];
+	return obj;
 }
-var Pe = f((() => {
-	Y.prototype.on = Y.prototype.addEventListener = function(e, t) {
-		return this._callbacks = this._callbacks || {}, (this._callbacks["$" + e] = this._callbacks["$" + e] || []).push(t), this;
-	}, Y.prototype.once = function(e, t) {
-		function n() {
-			this.off(e, n), t.apply(this, arguments);
-		}
-		return n.fn = t, this.on(e, n), this;
-	}, Y.prototype.off = Y.prototype.removeListener = Y.prototype.removeAllListeners = Y.prototype.removeEventListener = function(e, t) {
-		if (this._callbacks = this._callbacks || {}, arguments.length == 0) return this._callbacks = {}, this;
-		var n = this._callbacks["$" + e];
-		if (!n) return this;
-		if (arguments.length == 1) return delete this._callbacks["$" + e], this;
-		for (var r, i = 0; i < n.length; i++) if (r = n[i], r === t || r.fn === t) {
-			n.splice(i, 1);
-			break;
-		}
-		return n.length === 0 && delete this._callbacks["$" + e], this;
-	}, Y.prototype.emit = function(e) {
+var init_esm = __esmMin((() => {
+	/**
+	* Listen on the given `event` with `fn`.
+	*
+	* @param {String} event
+	* @param {Function} fn
+	* @return {Emitter}
+	* @api public
+	*/
+	Emitter.prototype.on = Emitter.prototype.addEventListener = function(event, fn) {
 		this._callbacks = this._callbacks || {};
-		for (var t = Array(arguments.length - 1), n = this._callbacks["$" + e], r = 1; r < arguments.length; r++) t[r - 1] = arguments[r];
-		if (n) {
-			n = n.slice(0);
-			for (var r = 0, i = n.length; r < i; ++r) n[r].apply(this, t);
+		(this._callbacks["$" + event] = this._callbacks["$" + event] || []).push(fn);
+		return this;
+	};
+	/**
+	* Adds an `event` listener that will be invoked a single
+	* time then automatically removed.
+	*
+	* @param {String} event
+	* @param {Function} fn
+	* @return {Emitter}
+	* @api public
+	*/
+	Emitter.prototype.once = function(event, fn) {
+		function on() {
+			this.off(event, on);
+			fn.apply(this, arguments);
+		}
+		on.fn = fn;
+		this.on(event, on);
+		return this;
+	};
+	/**
+	* Remove the given callback for `event` or all
+	* registered callbacks.
+	*
+	* @param {String} event
+	* @param {Function} fn
+	* @return {Emitter}
+	* @api public
+	*/
+	Emitter.prototype.off = Emitter.prototype.removeListener = Emitter.prototype.removeAllListeners = Emitter.prototype.removeEventListener = function(event, fn) {
+		this._callbacks = this._callbacks || {};
+		if (0 == arguments.length) {
+			this._callbacks = {};
+			return this;
+		}
+		var callbacks = this._callbacks["$" + event];
+		if (!callbacks) return this;
+		if (1 == arguments.length) {
+			delete this._callbacks["$" + event];
+			return this;
+		}
+		var cb;
+		for (var i = 0; i < callbacks.length; i++) {
+			cb = callbacks[i];
+			if (cb === fn || cb.fn === fn) {
+				callbacks.splice(i, 1);
+				break;
+			}
+		}
+		if (callbacks.length === 0) delete this._callbacks["$" + event];
+		return this;
+	};
+	/**
+	* Emit `event` with the given args.
+	*
+	* @param {String} event
+	* @param {Mixed} ...
+	* @return {Emitter}
+	*/
+	Emitter.prototype.emit = function(event) {
+		this._callbacks = this._callbacks || {};
+		var args = new Array(arguments.length - 1), callbacks = this._callbacks["$" + event];
+		for (var i = 1; i < arguments.length; i++) args[i - 1] = arguments[i];
+		if (callbacks) {
+			callbacks = callbacks.slice(0);
+			for (var i = 0, len = callbacks.length; i < len; ++i) callbacks[i].apply(this, args);
 		}
 		return this;
-	}, Y.prototype.emitReserved = Y.prototype.emit, Y.prototype.listeners = function(e) {
-		return this._callbacks = this._callbacks || {}, this._callbacks["$" + e] || [];
-	}, Y.prototype.hasListeners = function(e) {
-		return !!this.listeners(e).length;
 	};
-})), Fe = /* @__PURE__ */ p(((e) => {
-	Object.defineProperty(e, "__esModule", { value: !0 }), e.isBinary = o, e.hasBinary = s;
-	var t = typeof ArrayBuffer == "function", n = (e) => typeof ArrayBuffer.isView == "function" ? ArrayBuffer.isView(e) : e.buffer instanceof ArrayBuffer, r = Object.prototype.toString, i = typeof Blob == "function" || typeof Blob < "u" && r.call(Blob) === "[object BlobConstructor]", a = typeof File == "function" || typeof File < "u" && r.call(File) === "[object FileConstructor]";
-	function o(e) {
-		return t && (e instanceof ArrayBuffer || n(e)) || i && e instanceof Blob || a && e instanceof File;
+	Emitter.prototype.emitReserved = Emitter.prototype.emit;
+	/**
+	* Return array of callbacks for `event`.
+	*
+	* @param {String} event
+	* @return {Array}
+	* @api public
+	*/
+	Emitter.prototype.listeners = function(event) {
+		this._callbacks = this._callbacks || {};
+		return this._callbacks["$" + event] || [];
+	};
+	/**
+	* Check if this emitter has `event` handlers.
+	*
+	* @param {String} event
+	* @return {Boolean}
+	* @api public
+	*/
+	Emitter.prototype.hasListeners = function(event) {
+		return !!this.listeners(event).length;
+	};
+}));
+//#endregion
+//#region node_modules/socket.io-parser/build/cjs/is-binary.js
+var require_is_binary = /* @__PURE__ */ __commonJSMin(((exports) => {
+	Object.defineProperty(exports, "__esModule", { value: true });
+	exports.isBinary = isBinary;
+	exports.hasBinary = hasBinary;
+	var withNativeArrayBuffer = typeof ArrayBuffer === "function";
+	var isView = (obj) => {
+		return typeof ArrayBuffer.isView === "function" ? ArrayBuffer.isView(obj) : obj.buffer instanceof ArrayBuffer;
+	};
+	var toString = Object.prototype.toString;
+	var withNativeBlob = typeof Blob === "function" || typeof Blob !== "undefined" && toString.call(Blob) === "[object BlobConstructor]";
+	var withNativeFile = typeof File === "function" || typeof File !== "undefined" && toString.call(File) === "[object FileConstructor]";
+	/**
+	* Returns true if obj is a Buffer, an ArrayBuffer, a Blob or a File.
+	*
+	* @private
+	*/
+	function isBinary(obj) {
+		return withNativeArrayBuffer && (obj instanceof ArrayBuffer || isView(obj)) || withNativeBlob && obj instanceof Blob || withNativeFile && obj instanceof File;
 	}
-	function s(e, t) {
-		if (!e || typeof e != "object") return !1;
-		if (Array.isArray(e)) {
-			for (let t = 0, n = e.length; t < n; t++) if (s(e[t])) return !0;
-			return !1;
+	function hasBinary(obj, toJSON) {
+		if (!obj || typeof obj !== "object") return false;
+		if (Array.isArray(obj)) {
+			for (let i = 0, l = obj.length; i < l; i++) if (hasBinary(obj[i])) return true;
+			return false;
 		}
-		if (o(e)) return !0;
-		if (e.toJSON && typeof e.toJSON == "function" && arguments.length === 1) return s(e.toJSON(), !0);
-		for (let t in e) if (Object.prototype.hasOwnProperty.call(e, t) && s(e[t])) return !0;
-		return !1;
+		if (isBinary(obj)) return true;
+		if (obj.toJSON && typeof obj.toJSON === "function" && arguments.length === 1) return hasBinary(obj.toJSON(), true);
+		for (const key in obj) if (Object.prototype.hasOwnProperty.call(obj, key) && hasBinary(obj[key])) return true;
+		return false;
 	}
-})), Ie = /* @__PURE__ */ p(((e) => {
-	Object.defineProperty(e, "__esModule", { value: !0 }), e.deconstructPacket = n, e.reconstructPacket = i;
-	var t = Fe();
-	function n(e) {
-		let t = [], n = e.data, i = e;
-		return i.data = r(n, t), i.attachments = t.length, {
-			packet: i,
-			buffers: t
+}));
+//#endregion
+//#region node_modules/socket.io-parser/build/cjs/binary.js
+var require_binary = /* @__PURE__ */ __commonJSMin(((exports) => {
+	Object.defineProperty(exports, "__esModule", { value: true });
+	exports.deconstructPacket = deconstructPacket;
+	exports.reconstructPacket = reconstructPacket;
+	var is_binary_js_1 = require_is_binary();
+	/**
+	* Replaces every Buffer | ArrayBuffer | Blob | File in packet with a numbered placeholder.
+	*
+	* @param {Object} packet - socket.io event packet
+	* @return {Object} with deconstructed packet and list of buffers
+	* @public
+	*/
+	function deconstructPacket(packet) {
+		const buffers = [];
+		const packetData = packet.data;
+		const pack = packet;
+		pack.data = _deconstructPacket(packetData, buffers);
+		pack.attachments = buffers.length;
+		return {
+			packet: pack,
+			buffers
 		};
 	}
-	function r(e, n, i) {
-		if (!e) return e;
-		if ((0, t.isBinary)(e)) {
-			let t = {
-				_placeholder: !0,
-				num: n.length
+	function _deconstructPacket(data, buffers, toJSON) {
+		if (!data) return data;
+		if ((0, is_binary_js_1.isBinary)(data)) {
+			const placeholder = {
+				_placeholder: true,
+				num: buffers.length
 			};
-			return n.push(e), t;
+			buffers.push(data);
+			return placeholder;
+		} else if (Array.isArray(data)) {
+			const newData = new Array(data.length);
+			for (let i = 0; i < data.length; i++) newData[i] = _deconstructPacket(data[i], buffers);
+			return newData;
+		} else if (typeof data === "object" && !(data instanceof Date)) {
+			if (data.toJSON && typeof data.toJSON === "function" && !toJSON) return _deconstructPacket(data.toJSON(), buffers, true);
+			const newData = {};
+			for (const key in data) if (Object.prototype.hasOwnProperty.call(data, key)) newData[key] = _deconstructPacket(data[key], buffers);
+			return newData;
 		}
-		if (Array.isArray(e)) {
-			let t = Array(e.length);
-			for (let i = 0; i < e.length; i++) t[i] = r(e[i], n);
-			return t;
-		}
-		if (typeof e == "object" && !(e instanceof Date)) {
-			if (e.toJSON && typeof e.toJSON == "function" && !i) return r(e.toJSON(), n, !0);
-			let t = {};
-			for (let i in e) Object.prototype.hasOwnProperty.call(e, i) && (t[i] = r(e[i], n));
-			return t;
-		}
-		return e;
+		return data;
 	}
-	function i(e, t) {
-		return e.data = a(e.data, t), delete e.attachments, e;
+	/**
+	* Reconstructs a binary packet from its placeholder packet and buffers
+	*
+	* @param {Object} packet - event packet with placeholders
+	* @param {Array} buffers - binary buffers to put in placeholder positions
+	* @return {Object} reconstructed packet
+	* @public
+	*/
+	function reconstructPacket(packet, buffers) {
+		packet.data = _reconstructPacket(packet.data, buffers);
+		delete packet.attachments;
+		return packet;
 	}
-	function a(e, t) {
-		if (!e) return e;
-		if (e && e._placeholder === !0) {
-			if (typeof e.num == "number" && e.num >= 0 && e.num < t.length) return t[e.num];
-			throw Error("illegal attachments");
+	function _reconstructPacket(data, buffers) {
+		if (!data) return data;
+		if (data && data._placeholder === true) {
+			if (typeof data.num === "number" && data.num >= 0 && data.num < buffers.length) return buffers[data.num];
+			else throw new Error("illegal attachments");
+		} else if (Array.isArray(data)) for (let i = 0; i < data.length; i++) data[i] = _reconstructPacket(data[i], buffers);
+		else if (typeof data === "object") {
+			for (const key in data) if (Object.prototype.hasOwnProperty.call(data, key)) data[key] = _reconstructPacket(data[key], buffers);
 		}
-		if (Array.isArray(e)) for (let n = 0; n < e.length; n++) e[n] = a(e[n], t);
-		else if (typeof e == "object") for (let n in e) Object.prototype.hasOwnProperty.call(e, n) && (e[n] = a(e[n], t));
-		return e;
+		return data;
 	}
-})), X = /* @__PURE__ */ p(((e) => {
-	var t = e && e.__importDefault || function(e) {
-		return e && e.__esModule ? e : { default: e };
+}));
+//#endregion
+//#region node_modules/socket.io-parser/build/cjs/index.js
+var require_cjs = /* @__PURE__ */ __commonJSMin(((exports) => {
+	var __importDefault = exports && exports.__importDefault || function(mod) {
+		return mod && mod.__esModule ? mod : { "default": mod };
 	};
-	Object.defineProperty(e, "__esModule", { value: !0 }), e.Decoder = e.Encoder = e.PacketType = e.protocol = void 0, e.isPacketValid = m;
-	var n = (Pe(), _(Me)), r = Ie(), i = Fe(), a = (0, t(z()).default)("socket.io-parser"), o = [
+	Object.defineProperty(exports, "__esModule", { value: true });
+	exports.Decoder = exports.Encoder = exports.PacketType = exports.protocol = void 0;
+	exports.isPacketValid = isPacketValid;
+	var component_emitter_1 = (init_esm(), __toCommonJS(esm_exports));
+	var binary_js_1 = require_binary();
+	var is_binary_js_1 = require_is_binary();
+	var debug = (0, __importDefault(require_src()).default)("socket.io-parser");
+	/**
+	* These strings must not be used as event names, as they have a special meaning.
+	*/
+	var RESERVED_EVENTS = [
 		"connect",
 		"connect_error",
 		"disconnect",
@@ -11859,274 +16905,586 @@ var Pe = f((() => {
 		"newListener",
 		"removeListener"
 	];
-	e.protocol = 5;
-	var s;
-	(function(e) {
-		e[e.CONNECT = 0] = "CONNECT", e[e.DISCONNECT = 1] = "DISCONNECT", e[e.EVENT = 2] = "EVENT", e[e.ACK = 3] = "ACK", e[e.CONNECT_ERROR = 4] = "CONNECT_ERROR", e[e.BINARY_EVENT = 5] = "BINARY_EVENT", e[e.BINARY_ACK = 6] = "BINARY_ACK";
-	})(s || (e.PacketType = s = {})), e.Encoder = class {
-		constructor(e) {
-			this.replacer = e;
+	/**
+	* Protocol version.
+	*
+	* @public
+	*/
+	exports.protocol = 5;
+	var PacketType;
+	(function(PacketType) {
+		PacketType[PacketType["CONNECT"] = 0] = "CONNECT";
+		PacketType[PacketType["DISCONNECT"] = 1] = "DISCONNECT";
+		PacketType[PacketType["EVENT"] = 2] = "EVENT";
+		PacketType[PacketType["ACK"] = 3] = "ACK";
+		PacketType[PacketType["CONNECT_ERROR"] = 4] = "CONNECT_ERROR";
+		PacketType[PacketType["BINARY_EVENT"] = 5] = "BINARY_EVENT";
+		PacketType[PacketType["BINARY_ACK"] = 6] = "BINARY_ACK";
+	})(PacketType || (exports.PacketType = PacketType = {}));
+	/**
+	* A socket.io Encoder instance
+	*/
+	var Encoder = class {
+		/**
+		* Encoder constructor
+		*
+		* @param {function} replacer - custom replacer to pass down to JSON.parse
+		*/
+		constructor(replacer) {
+			this.replacer = replacer;
 		}
-		encode(e) {
-			return a("encoding packet %j", e), (e.type === s.EVENT || e.type === s.ACK) && (0, i.hasBinary)(e) ? this.encodeAsBinary({
-				type: e.type === s.EVENT ? s.BINARY_EVENT : s.BINARY_ACK,
-				nsp: e.nsp,
-				data: e.data,
-				id: e.id
-			}) : [this.encodeAsString(e)];
-		}
-		encodeAsString(e) {
-			let t = "" + e.type;
-			return (e.type === s.BINARY_EVENT || e.type === s.BINARY_ACK) && (t += e.attachments + "-"), e.nsp && e.nsp !== "/" && (t += e.nsp + ","), e.id != null && (t += e.id), e.data != null && (t += JSON.stringify(e.data, this.replacer)), a("encoded %j as %s", e, t), t;
-		}
-		encodeAsBinary(e) {
-			let t = (0, r.deconstructPacket)(e), n = this.encodeAsString(t.packet), i = t.buffers;
-			return i.unshift(n), i;
-		}
-	}, e.Decoder = class e extends n.Emitter {
-		constructor(e) {
-			super(), this.opts = Object.assign({
-				reviver: void 0,
-				maxAttachments: 10
-			}, typeof e == "function" ? { reviver: e } : e);
-		}
-		add(e) {
-			let t;
-			if (typeof e == "string") {
-				if (this.reconstructor) throw Error("got plaintext data when reconstructing a packet");
-				t = this.decodeString(e);
-				let n = t.type === s.BINARY_EVENT;
-				n || t.type === s.BINARY_ACK ? (t.type = n ? s.EVENT : s.ACK, this.reconstructor = new c(t)) : super.emitReserved("decoded", t);
-			} else if ((0, i.isBinary)(e) || e.base64) {
-				if (this.reconstructor) t = this.reconstructor.takeBinaryData(e), t && (this.reconstructor = null, super.emitReserved("decoded", t));
-				else throw Error("got binary data when not reconstructing a packet");
-			} else throw Error("Unknown type: " + e);
-		}
-		decodeString(t) {
-			let n = 0, r = { type: Number(t.charAt(0)) };
-			if (s[r.type] === void 0) throw Error("unknown packet type " + r.type);
-			if (r.type === s.BINARY_EVENT || r.type === s.BINARY_ACK) {
-				let e = n + 1;
-				for (; t.charAt(++n) !== "-" && n != t.length;);
-				let i = t.substring(e, n);
-				if (i != Number(i) || t.charAt(n) !== "-") throw Error("Illegal attachments");
-				let a = Number(i);
-				if (!u(a) || a < 1) throw Error("Illegal attachments");
-				if (a > this.opts.maxAttachments) throw Error("too many attachments");
-				r.attachments = a;
+		/**
+		* Encode a packet as a single string if non-binary, or as a
+		* buffer sequence, depending on packet type.
+		*
+		* @param {Object} obj - packet object
+		*/
+		encode(obj) {
+			debug("encoding packet %j", obj);
+			if (obj.type === PacketType.EVENT || obj.type === PacketType.ACK) {
+				if ((0, is_binary_js_1.hasBinary)(obj)) return this.encodeAsBinary({
+					type: obj.type === PacketType.EVENT ? PacketType.BINARY_EVENT : PacketType.BINARY_ACK,
+					nsp: obj.nsp,
+					data: obj.data,
+					id: obj.id
+				});
 			}
-			if (t.charAt(n + 1) === "/") {
-				let e = n + 1;
-				for (; ++n && t.charAt(n) !== "," && n !== t.length;);
-				r.nsp = t.substring(e, n);
-			} else r.nsp = "/";
-			let i = t.charAt(n + 1);
-			if (i !== "" && Number(i) == i) {
-				let e = n + 1;
-				for (; ++n;) {
-					let e = t.charAt(n);
-					if (e == null || Number(e) != e) {
-						--n;
-						break;
-					}
-					if (n === t.length) break;
-				}
-				r.id = Number(t.substring(e, n + 1));
-			}
-			if (t.charAt(++n)) {
-				let i = this.tryParse(t.substr(n));
-				if (e.isPayloadValid(r.type, i)) r.data = i;
-				else throw Error("invalid payload");
-			}
-			return a("decoded %s as %j", t, r), r;
+			return [this.encodeAsString(obj)];
 		}
-		tryParse(e) {
-			try {
-				return JSON.parse(e, this.opts.reviver);
-			} catch {
-				return !1;
-			}
+		/**
+		* Encode packet as string.
+		*/
+		encodeAsString(obj) {
+			let str = "" + obj.type;
+			if (obj.type === PacketType.BINARY_EVENT || obj.type === PacketType.BINARY_ACK) str += obj.attachments + "-";
+			if (obj.nsp && "/" !== obj.nsp) str += obj.nsp + ",";
+			if (null != obj.id) str += obj.id;
+			if (null != obj.data) str += JSON.stringify(obj.data, this.replacer);
+			debug("encoded %j as %s", obj, str);
+			return str;
 		}
-		static isPayloadValid(e, t) {
-			switch (e) {
-				case s.CONNECT: return f(t);
-				case s.DISCONNECT: return t === void 0;
-				case s.CONNECT_ERROR: return typeof t == "string" || f(t);
-				case s.EVENT:
-				case s.BINARY_EVENT: return Array.isArray(t) && (typeof t[0] == "number" || typeof t[0] == "string" && o.indexOf(t[0]) === -1);
-				case s.ACK:
-				case s.BINARY_ACK: return Array.isArray(t);
-			}
-		}
-		destroy() {
-			this.reconstructor &&= (this.reconstructor.finishedReconstruction(), null);
+		/**
+		* Encode packet as 'buffer sequence' by removing blobs, and
+		* deconstructing packet into object with placeholders and
+		* a list of buffers.
+		*/
+		encodeAsBinary(obj) {
+			const deconstruction = (0, binary_js_1.deconstructPacket)(obj);
+			const pack = this.encodeAsString(deconstruction.packet);
+			const buffers = deconstruction.buffers;
+			buffers.unshift(pack);
+			return buffers;
 		}
 	};
-	var c = class {
-		constructor(e) {
-			this.packet = e, this.buffers = [], this.reconPack = e;
+	exports.Encoder = Encoder;
+	exports.Decoder = class Decoder extends component_emitter_1.Emitter {
+		/**
+		* Decoder constructor
+		*/
+		constructor(opts) {
+			super();
+			this.opts = Object.assign({
+				reviver: void 0,
+				maxAttachments: 10
+			}, typeof opts === "function" ? { reviver: opts } : opts);
 		}
-		takeBinaryData(e) {
-			if (this.buffers.push(e), this.buffers.length === this.reconPack.attachments) {
-				let e = (0, r.reconstructPacket)(this.reconPack, this.buffers);
-				return this.finishedReconstruction(), e;
+		/**
+		* Decodes an encoded packet string into packet JSON.
+		*
+		* @param {String} obj - encoded packet
+		*/
+		add(obj) {
+			let packet;
+			if (typeof obj === "string") {
+				if (this.reconstructor) throw new Error("got plaintext data when reconstructing a packet");
+				packet = this.decodeString(obj);
+				const isBinaryEvent = packet.type === PacketType.BINARY_EVENT;
+				if (isBinaryEvent || packet.type === PacketType.BINARY_ACK) {
+					packet.type = isBinaryEvent ? PacketType.EVENT : PacketType.ACK;
+					this.reconstructor = new BinaryReconstructor(packet);
+				} else super.emitReserved("decoded", packet);
+			} else if ((0, is_binary_js_1.isBinary)(obj) || obj.base64) {
+				if (!this.reconstructor) throw new Error("got binary data when not reconstructing a packet");
+				else {
+					packet = this.reconstructor.takeBinaryData(obj);
+					if (packet) {
+						this.reconstructor = null;
+						super.emitReserved("decoded", packet);
+					}
+				}
+			} else throw new Error("Unknown type: " + obj);
+		}
+		/**
+		* Decode a packet String (JSON data)
+		*
+		* @param {String} str
+		* @return {Object} packet
+		*/
+		decodeString(str) {
+			let i = 0;
+			const p = { type: Number(str.charAt(0)) };
+			if (PacketType[p.type] === void 0) throw new Error("unknown packet type " + p.type);
+			if (p.type === PacketType.BINARY_EVENT || p.type === PacketType.BINARY_ACK) {
+				const start = i + 1;
+				while (str.charAt(++i) !== "-" && i != str.length);
+				const buf = str.substring(start, i);
+				if (buf != Number(buf) || str.charAt(i) !== "-") throw new Error("Illegal attachments");
+				const n = Number(buf);
+				if (!isInteger(n) || n < 1) throw new Error("Illegal attachments");
+				else if (n > this.opts.maxAttachments) throw new Error("too many attachments");
+				p.attachments = n;
+			}
+			if ("/" === str.charAt(i + 1)) {
+				const start = i + 1;
+				while (++i) {
+					if ("," === str.charAt(i)) break;
+					if (i === str.length) break;
+				}
+				p.nsp = str.substring(start, i);
+			} else p.nsp = "/";
+			const next = str.charAt(i + 1);
+			if ("" !== next && Number(next) == next) {
+				const start = i + 1;
+				while (++i) {
+					const c = str.charAt(i);
+					if (null == c || Number(c) != c) {
+						--i;
+						break;
+					}
+					if (i === str.length) break;
+				}
+				p.id = Number(str.substring(start, i + 1));
+			}
+			if (str.charAt(++i)) {
+				const payload = this.tryParse(str.substr(i));
+				if (Decoder.isPayloadValid(p.type, payload)) p.data = payload;
+				else throw new Error("invalid payload");
+			}
+			debug("decoded %s as %j", str, p);
+			return p;
+		}
+		tryParse(str) {
+			try {
+				return JSON.parse(str, this.opts.reviver);
+			} catch (e) {
+				return false;
+			}
+		}
+		static isPayloadValid(type, payload) {
+			switch (type) {
+				case PacketType.CONNECT: return isObject(payload);
+				case PacketType.DISCONNECT: return payload === void 0;
+				case PacketType.CONNECT_ERROR: return typeof payload === "string" || isObject(payload);
+				case PacketType.EVENT:
+				case PacketType.BINARY_EVENT: return Array.isArray(payload) && (typeof payload[0] === "number" || typeof payload[0] === "string" && RESERVED_EVENTS.indexOf(payload[0]) === -1);
+				case PacketType.ACK:
+				case PacketType.BINARY_ACK: return Array.isArray(payload);
+			}
+		}
+		/**
+		* Deallocates a parser's resources
+		*/
+		destroy() {
+			if (this.reconstructor) {
+				this.reconstructor.finishedReconstruction();
+				this.reconstructor = null;
+			}
+		}
+	};
+	/**
+	* A manager of a binary event's 'buffer sequence'. Should
+	* be constructed whenever a packet of type BINARY_EVENT is
+	* decoded.
+	*
+	* @param {Object} packet
+	* @return {BinaryReconstructor} initialized reconstructor
+	*/
+	var BinaryReconstructor = class {
+		constructor(packet) {
+			this.packet = packet;
+			this.buffers = [];
+			this.reconPack = packet;
+		}
+		/**
+		* Method to be called when binary data received from connection
+		* after a BINARY_EVENT packet.
+		*
+		* @param {Buffer | ArrayBuffer} binData - the raw binary data received
+		* @return {null | Object} returns null if more binary data is expected or
+		*   a reconstructed packet object if all buffers have been received.
+		*/
+		takeBinaryData(binData) {
+			this.buffers.push(binData);
+			if (this.buffers.length === this.reconPack.attachments) {
+				const packet = (0, binary_js_1.reconstructPacket)(this.reconPack, this.buffers);
+				this.finishedReconstruction();
+				return packet;
 			}
 			return null;
 		}
+		/**
+		* Cleans up binary packet reconstruction variables.
+		*/
 		finishedReconstruction() {
-			this.reconPack = null, this.buffers = [];
+			this.reconPack = null;
+			this.buffers = [];
 		}
 	};
-	function l(e) {
-		return typeof e == "string";
+	function isNamespaceValid(nsp) {
+		return typeof nsp === "string";
 	}
-	var u = Number.isInteger || function(e) {
-		return typeof e == "number" && isFinite(e) && Math.floor(e) === e;
+	var isInteger = Number.isInteger || function(value) {
+		return typeof value === "number" && isFinite(value) && Math.floor(value) === value;
 	};
-	function d(e) {
-		return e === void 0 || u(e);
+	function isAckIdValid(id) {
+		return id === void 0 || isInteger(id);
 	}
-	function f(e) {
-		return Object.prototype.toString.call(e) === "[object Object]";
+	function isObject(value) {
+		return Object.prototype.toString.call(value) === "[object Object]";
 	}
-	function p(e, t) {
-		switch (e) {
-			case s.CONNECT: return t === void 0 || f(t);
-			case s.DISCONNECT: return t === void 0;
-			case s.EVENT: return Array.isArray(t) && (typeof t[0] == "number" || typeof t[0] == "string" && o.indexOf(t[0]) === -1);
-			case s.ACK: return Array.isArray(t);
-			case s.CONNECT_ERROR: return typeof t == "string" || f(t);
-			default: return !1;
+	function isDataValid(type, payload) {
+		switch (type) {
+			case PacketType.CONNECT: return payload === void 0 || isObject(payload);
+			case PacketType.DISCONNECT: return payload === void 0;
+			case PacketType.EVENT: return Array.isArray(payload) && (typeof payload[0] === "number" || typeof payload[0] === "string" && RESERVED_EVENTS.indexOf(payload[0]) === -1);
+			case PacketType.ACK: return Array.isArray(payload);
+			case PacketType.CONNECT_ERROR: return typeof payload === "string" || isObject(payload);
+			default: return false;
 		}
 	}
-	function m(e) {
-		return l(e.nsp) && d(e.id) && p(e.type, e.data);
+	function isPacketValid(packet) {
+		return isNamespaceValid(packet.nsp) && isAckIdValid(packet.id) && isDataValid(packet.type, packet.data);
 	}
-})), Le = /* @__PURE__ */ p(((e) => {
-	var t = e && e.__importDefault || function(e) {
-		return e && e.__esModule ? e : { default: e };
+}));
+//#endregion
+//#region node_modules/socket.io/dist/client.js
+var require_client = /* @__PURE__ */ __commonJSMin(((exports) => {
+	var __importDefault = exports && exports.__importDefault || function(mod) {
+		return mod && mod.__esModule ? mod : { "default": mod };
 	};
-	Object.defineProperty(e, "__esModule", { value: !0 }), e.Client = void 0;
-	var n = X(), r = (0, t(z()).default)("socket.io:client");
-	e.Client = class {
-		constructor(e, t) {
-			this.sockets = /* @__PURE__ */ new Map(), this.nsps = /* @__PURE__ */ new Map(), this.server = e, this.conn = t, this.encoder = e.encoder, this.decoder = new e._parser.Decoder(), this.id = t.id, this.setup();
+	Object.defineProperty(exports, "__esModule", { value: true });
+	exports.Client = void 0;
+	var socket_io_parser_1 = require_cjs();
+	var debug = (0, __importDefault(require_src()).default)("socket.io:client");
+	var Client = class {
+		/**
+		* Client constructor.
+		*
+		* @param server instance
+		* @param conn
+		* @package
+		*/
+		constructor(server, conn) {
+			this.sockets = /* @__PURE__ */ new Map();
+			this.nsps = /* @__PURE__ */ new Map();
+			this.server = server;
+			this.conn = conn;
+			this.encoder = server.encoder;
+			this.decoder = new server._parser.Decoder();
+			this.id = conn.id;
+			this.setup();
 		}
+		/**
+		* @return the reference to the request that originated the Engine.IO connection
+		*
+		* @public
+		*/
 		get request() {
 			return this.conn.request;
 		}
+		/**
+		* Sets up event listeners.
+		*
+		* @private
+		*/
 		setup() {
-			this.onclose = this.onclose.bind(this), this.ondata = this.ondata.bind(this), this.onerror = this.onerror.bind(this), this.ondecoded = this.ondecoded.bind(this), this.decoder.on("decoded", this.ondecoded), this.conn.on("data", this.ondata), this.conn.on("error", this.onerror), this.conn.on("close", this.onclose), this.connectTimeout = setTimeout(() => {
-				this.nsps.size === 0 ? (r("no namespace joined yet, close the client"), this.close()) : r("the client has already joined a namespace, nothing to do");
+			this.onclose = this.onclose.bind(this);
+			this.ondata = this.ondata.bind(this);
+			this.onerror = this.onerror.bind(this);
+			this.ondecoded = this.ondecoded.bind(this);
+			this.decoder.on("decoded", this.ondecoded);
+			this.conn.on("data", this.ondata);
+			this.conn.on("error", this.onerror);
+			this.conn.on("close", this.onclose);
+			this.connectTimeout = setTimeout(() => {
+				if (this.nsps.size === 0) {
+					debug("no namespace joined yet, close the client");
+					this.close();
+				} else debug("the client has already joined a namespace, nothing to do");
 			}, this.server._connectTimeout);
 		}
-		connect(e, t = {}) {
-			if (this.server._nsps.has(e)) return r("connecting to namespace %s", e), this.doConnect(e, t);
-			this.server._checkNamespace(e, t, (i) => {
-				i ? this.doConnect(e, t) : (r("creation of namespace %s was denied", e), this._packet({
-					type: n.PacketType.CONNECT_ERROR,
-					nsp: e,
-					data: { message: "Invalid namespace" }
-				}));
+		/**
+		* Connects a client to a namespace.
+		*
+		* @param {String} name - the namespace
+		* @param {Object} auth - the auth parameters
+		* @private
+		*/
+		connect(name, auth = {}) {
+			if (this.server._nsps.has(name)) {
+				debug("connecting to namespace %s", name);
+				return this.doConnect(name, auth);
+			}
+			this.server._checkNamespace(name, auth, (dynamicNspName) => {
+				if (dynamicNspName) this.doConnect(name, auth);
+				else {
+					debug("creation of namespace %s was denied", name);
+					this._packet({
+						type: socket_io_parser_1.PacketType.CONNECT_ERROR,
+						nsp: name,
+						data: { message: "Invalid namespace" }
+					});
+				}
 			});
 		}
-		doConnect(e, t) {
-			let n = this.server.of(e);
-			n._add(this, t, (e) => {
-				this.sockets.set(e.id, e), this.nsps.set(n.name, e), this.connectTimeout &&= (clearTimeout(this.connectTimeout), void 0);
+		/**
+		* Connects a client to a namespace.
+		*
+		* @param name - the namespace
+		* @param {Object} auth - the auth parameters
+		*
+		* @private
+		*/
+		doConnect(name, auth) {
+			const nsp = this.server.of(name);
+			nsp._add(this, auth, (socket) => {
+				this.sockets.set(socket.id, socket);
+				this.nsps.set(nsp.name, socket);
+				if (this.connectTimeout) {
+					clearTimeout(this.connectTimeout);
+					this.connectTimeout = void 0;
+				}
 			});
 		}
+		/**
+		* Disconnects from all namespaces and closes transport.
+		*
+		* @private
+		*/
 		_disconnect() {
-			for (let e of this.sockets.values()) e.disconnect();
-			this.sockets.clear(), this.close();
+			for (const socket of this.sockets.values()) socket.disconnect();
+			this.sockets.clear();
+			this.close();
 		}
-		_remove(e) {
-			if (this.sockets.has(e.id)) {
-				let t = this.sockets.get(e.id).nsp.name;
-				this.sockets.delete(e.id), this.nsps.delete(t);
-			} else r("ignoring remove for %s", e.id);
+		/**
+		* Removes a socket. Called by each `Socket`.
+		*
+		* @private
+		*/
+		_remove(socket) {
+			if (this.sockets.has(socket.id)) {
+				const nsp = this.sockets.get(socket.id).nsp.name;
+				this.sockets.delete(socket.id);
+				this.nsps.delete(nsp);
+			} else debug("ignoring remove for %s", socket.id);
 		}
+		/**
+		* Closes the underlying connection.
+		*
+		* @private
+		*/
 		close() {
-			this.conn.readyState === "open" && (r("forcing transport close"), this.conn.close(), this.onclose("forced server close"));
+			if ("open" === this.conn.readyState) {
+				debug("forcing transport close");
+				this.conn.close();
+				this.onclose("forced server close");
+			}
 		}
-		_packet(e, t = {}) {
+		/**
+		* Writes a packet to the transport.
+		*
+		* @param {Object} packet object
+		* @param {Object} opts
+		* @private
+		*/
+		_packet(packet, opts = {}) {
 			if (this.conn.readyState !== "open") {
-				r("ignoring packet write %j", e);
+				debug("ignoring packet write %j", packet);
 				return;
 			}
-			let n = t.preEncoded ? e : this.encoder.encode(e);
-			this.writeToEngine(n, t);
+			const encodedPackets = opts.preEncoded ? packet : this.encoder.encode(packet);
+			this.writeToEngine(encodedPackets, opts);
 		}
-		writeToEngine(e, t) {
-			if (t.volatile && !this.conn.transport.writable) {
-				r("volatile packet is discarded since the transport is not currently writable");
+		writeToEngine(encodedPackets, opts) {
+			if (opts.volatile && !this.conn.transport.writable) {
+				debug("volatile packet is discarded since the transport is not currently writable");
 				return;
 			}
-			let n = Array.isArray(e) ? e : [e];
-			for (let e of n) this.conn.write(e, t);
+			const packets = Array.isArray(encodedPackets) ? encodedPackets : [encodedPackets];
+			for (const encodedPacket of packets) this.conn.write(encodedPacket, opts);
 		}
-		ondata(e) {
+		/**
+		* Called with incoming transport data.
+		*
+		* @private
+		*/
+		ondata(data) {
 			try {
-				this.decoder.add(e);
+				this.decoder.add(data);
 			} catch (e) {
-				r("invalid packet format"), this.onerror(e);
+				debug("invalid packet format");
+				this.onerror(e);
 			}
 		}
-		ondecoded(e) {
-			let { namespace: t, authPayload: i } = this._parseNamespace(e), a = this.nsps.get(t);
-			!a && e.type === n.PacketType.CONNECT ? this.connect(t, i) : a && e.type !== n.PacketType.CONNECT && e.type !== n.PacketType.CONNECT_ERROR ? process.nextTick(function() {
-				a._onpacket(e);
-			}) : (r("invalid state (packet type: %s)", e.type), this.close());
+		/**
+		* Called when parser fully decodes a packet.
+		*
+		* @private
+		*/
+		ondecoded(packet) {
+			const { namespace, authPayload } = this._parseNamespace(packet);
+			const socket = this.nsps.get(namespace);
+			if (!socket && packet.type === socket_io_parser_1.PacketType.CONNECT) this.connect(namespace, authPayload);
+			else if (socket && packet.type !== socket_io_parser_1.PacketType.CONNECT && packet.type !== socket_io_parser_1.PacketType.CONNECT_ERROR) process.nextTick(function() {
+				socket._onpacket(packet);
+			});
+			else {
+				debug("invalid state (packet type: %s)", packet.type);
+				this.close();
+			}
 		}
-		_parseNamespace(e) {
+		_parseNamespace(packet) {
 			if (this.conn.protocol !== 3) return {
-				namespace: e.nsp,
-				authPayload: e.data
+				namespace: packet.nsp,
+				authPayload: packet.data
 			};
-			let t = new URL(e.nsp, "https://socket.io");
+			const url = new URL(packet.nsp, "https://socket.io");
 			return {
-				namespace: t.pathname,
-				authPayload: Object.fromEntries(t.searchParams.entries())
+				namespace: url.pathname,
+				authPayload: Object.fromEntries(url.searchParams.entries())
 			};
 		}
-		onerror(e) {
-			for (let t of this.sockets.values()) t._onerror(e);
+		/**
+		* Handles an error.
+		*
+		* @param {Object} err object
+		* @private
+		*/
+		onerror(err) {
+			for (const socket of this.sockets.values()) socket._onerror(err);
 			this.conn.close();
 		}
-		onclose(e, t) {
-			r("client close with reason %s", e), this.destroy();
-			for (let n of this.sockets.values()) n._onclose(e, t);
-			this.sockets.clear(), this.decoder.destroy();
+		/**
+		* Called upon transport close.
+		*
+		* @param reason
+		* @param description
+		* @private
+		*/
+		onclose(reason, description) {
+			debug("client close with reason %s", reason);
+			this.destroy();
+			for (const socket of this.sockets.values()) socket._onclose(reason, description);
+			this.sockets.clear();
+			this.decoder.destroy();
 		}
+		/**
+		* Cleans up event listeners.
+		* @private
+		*/
 		destroy() {
-			this.conn.removeListener("data", this.ondata), this.conn.removeListener("error", this.onerror), this.conn.removeListener("close", this.onclose), this.decoder.removeListener("decoded", this.ondecoded), this.connectTimeout &&= (clearTimeout(this.connectTimeout), void 0);
+			this.conn.removeListener("data", this.ondata);
+			this.conn.removeListener("error", this.onerror);
+			this.conn.removeListener("close", this.onclose);
+			this.decoder.removeListener("decoded", this.ondecoded);
+			if (this.connectTimeout) {
+				clearTimeout(this.connectTimeout);
+				this.connectTimeout = void 0;
+			}
 		}
 	};
-})), Re = /* @__PURE__ */ p(((e) => {
-	Object.defineProperty(e, "__esModule", { value: !0 }), e.StrictEventEmitter = void 0;
-	var t = v("events");
-	e.StrictEventEmitter = class extends t.EventEmitter {
-		on(e, t) {
-			return super.on(e, t);
+	exports.Client = Client;
+}));
+//#endregion
+//#region node_modules/socket.io/dist/typed-events.js
+var require_typed_events = /* @__PURE__ */ __commonJSMin(((exports) => {
+	Object.defineProperty(exports, "__esModule", { value: true });
+	exports.StrictEventEmitter = void 0;
+	var events_1$2 = __require("events");
+	/**
+	* Strictly typed version of an `EventEmitter`. A `TypedEventEmitter` takes type
+	* parameters for mappings of event names to event data types, and strictly
+	* types method calls to the `EventEmitter` according to these event maps.
+	*
+	* @typeParam ListenEvents - `EventsMap` of user-defined events that can be
+	* listened to with `on` or `once`
+	* @typeParam EmitEvents - `EventsMap` of user-defined events that can be
+	* emitted with `emit`
+	* @typeParam ReservedEvents - `EventsMap` of reserved events, that can be
+	* emitted by socket.io with `emitReserved`, and can be listened to with
+	* `listen`.
+	*/
+	var StrictEventEmitter = class extends events_1$2.EventEmitter {
+		/**
+		* Adds the `listener` function as an event listener for `ev`.
+		*
+		* @param ev Name of the event
+		* @param listener Callback function
+		*/
+		on(ev, listener) {
+			return super.on(ev, listener);
 		}
-		once(e, t) {
-			return super.once(e, t);
+		/**
+		* Adds a one-time `listener` function as an event listener for `ev`.
+		*
+		* @param ev Name of the event
+		* @param listener Callback function
+		*/
+		once(ev, listener) {
+			return super.once(ev, listener);
 		}
-		emit(e, ...t) {
-			return super.emit(e, ...t);
+		/**
+		* Emits an event.
+		*
+		* @param ev Name of the event
+		* @param args Values to send to listeners of this event
+		*/
+		emit(ev, ...args) {
+			return super.emit(ev, ...args);
 		}
-		emitReserved(e, ...t) {
-			return super.emit(e, ...t);
+		/**
+		* Emits a reserved event.
+		*
+		* This method is `protected`, so that only a class extending
+		* `StrictEventEmitter` can emit its own reserved events.
+		*
+		* @param ev Reserved event name
+		* @param args Arguments to emit along with the event
+		*/
+		emitReserved(ev, ...args) {
+			return super.emit(ev, ...args);
 		}
-		emitUntyped(e, ...t) {
-			return super.emit(e, ...t);
+		/**
+		* Emits an event.
+		*
+		* This method is `protected`, so that only a class extending
+		* `StrictEventEmitter` can get around the strict typing. This is useful for
+		* calling `emit.apply`, which can be called as `emitUntyped.apply`.
+		*
+		* @param ev Event name
+		* @param args Arguments to emit along with the event
+		*/
+		emitUntyped(ev, ...args) {
+			return super.emit(ev, ...args);
 		}
-		listeners(e) {
-			return super.listeners(e);
+		/**
+		* Returns the listeners listening to an event.
+		*
+		* @param event Event name
+		* @returns Array of listeners subscribed to `event`
+		*/
+		listeners(event) {
+			return super.listeners(event);
 		}
 	};
-})), ze = /* @__PURE__ */ p(((e) => {
-	Object.defineProperty(e, "__esModule", { value: !0 }), e.RESERVED_EVENTS = void 0, e.RESERVED_EVENTS = /* @__PURE__ */ new Set([
+	exports.StrictEventEmitter = StrictEventEmitter;
+}));
+//#endregion
+//#region node_modules/socket.io/dist/socket-types.js
+var require_socket_types = /* @__PURE__ */ __commonJSMin(((exports) => {
+	Object.defineProperty(exports, "__esModule", { value: true });
+	exports.RESERVED_EVENTS = void 0;
+	exports.RESERVED_EVENTS = /* @__PURE__ */ new Set([
 		"connect",
 		"connect_error",
 		"disconnect",
@@ -12134,133 +17492,427 @@ var Pe = f((() => {
 		"newListener",
 		"removeListener"
 	]);
-})), Be = /* @__PURE__ */ p(((e) => {
-	Object.defineProperty(e, "__esModule", { value: !0 }), e.RemoteSocket = e.BroadcastOperator = void 0;
-	var t = ze(), n = X(), r = class e {
-		constructor(e, t = /* @__PURE__ */ new Set(), n = /* @__PURE__ */ new Set(), r = {}) {
-			this.adapter = e, this.rooms = t, this.exceptRooms = n, this.flags = r;
+}));
+//#endregion
+//#region node_modules/socket.io/dist/broadcast-operator.js
+var require_broadcast_operator = /* @__PURE__ */ __commonJSMin(((exports) => {
+	Object.defineProperty(exports, "__esModule", { value: true });
+	exports.RemoteSocket = exports.BroadcastOperator = void 0;
+	var socket_types_1 = require_socket_types();
+	var socket_io_parser_1 = require_cjs();
+	var BroadcastOperator = class BroadcastOperator {
+		constructor(adapter, rooms = /* @__PURE__ */ new Set(), exceptRooms = /* @__PURE__ */ new Set(), flags = {}) {
+			this.adapter = adapter;
+			this.rooms = rooms;
+			this.exceptRooms = exceptRooms;
+			this.flags = flags;
 		}
-		to(t) {
-			let n = new Set(this.rooms);
-			return Array.isArray(t) ? t.forEach((e) => n.add(e)) : n.add(t), new e(this.adapter, n, this.exceptRooms, this.flags);
+		/**
+		* Targets a room when emitting.
+		*
+		* @example
+		* // the “foo” event will be broadcast to all connected clients in the “room-101” room
+		* io.to("room-101").emit("foo", "bar");
+		*
+		* // with an array of rooms (a client will be notified at most once)
+		* io.to(["room-101", "room-102"]).emit("foo", "bar");
+		*
+		* // with multiple chained calls
+		* io.to("room-101").to("room-102").emit("foo", "bar");
+		*
+		* @param room - a room, or an array of rooms
+		* @return a new {@link BroadcastOperator} instance for chaining
+		*/
+		to(room) {
+			const rooms = new Set(this.rooms);
+			if (Array.isArray(room)) room.forEach((r) => rooms.add(r));
+			else rooms.add(room);
+			return new BroadcastOperator(this.adapter, rooms, this.exceptRooms, this.flags);
 		}
-		in(e) {
-			return this.to(e);
+		/**
+		* Targets a room when emitting. Similar to `to()`, but might feel clearer in some cases:
+		*
+		* @example
+		* // disconnect all clients in the "room-101" room
+		* io.in("room-101").disconnectSockets();
+		*
+		* @param room - a room, or an array of rooms
+		* @return a new {@link BroadcastOperator} instance for chaining
+		*/
+		in(room) {
+			return this.to(room);
 		}
-		except(t) {
-			let n = new Set(this.exceptRooms);
-			return Array.isArray(t) ? t.forEach((e) => n.add(e)) : n.add(t), new e(this.adapter, this.rooms, n, this.flags);
+		/**
+		* Excludes a room when emitting.
+		*
+		* @example
+		* // the "foo" event will be broadcast to all connected clients, except the ones that are in the "room-101" room
+		* io.except("room-101").emit("foo", "bar");
+		*
+		* // with an array of rooms
+		* io.except(["room-101", "room-102"]).emit("foo", "bar");
+		*
+		* // with multiple chained calls
+		* io.except("room-101").except("room-102").emit("foo", "bar");
+		*
+		* @param room - a room, or an array of rooms
+		* @return a new {@link BroadcastOperator} instance for chaining
+		*/
+		except(room) {
+			const exceptRooms = new Set(this.exceptRooms);
+			if (Array.isArray(room)) room.forEach((r) => exceptRooms.add(r));
+			else exceptRooms.add(room);
+			return new BroadcastOperator(this.adapter, this.rooms, exceptRooms, this.flags);
 		}
-		compress(t) {
-			let n = Object.assign({}, this.flags, { compress: t });
-			return new e(this.adapter, this.rooms, this.exceptRooms, n);
+		/**
+		* Sets the compress flag.
+		*
+		* @example
+		* io.compress(false).emit("hello");
+		*
+		* @param compress - if `true`, compresses the sending data
+		* @return a new BroadcastOperator instance
+		*/
+		compress(compress) {
+			const flags = Object.assign({}, this.flags, { compress });
+			return new BroadcastOperator(this.adapter, this.rooms, this.exceptRooms, flags);
 		}
+		/**
+		* Sets a modifier for a subsequent event emission that the event data may be lost if the client is not ready to
+		* receive messages (because of network slowness or other issues, or because they’re connected through long polling
+		* and is in the middle of a request-response cycle).
+		*
+		* @example
+		* io.volatile.emit("hello"); // the clients may or may not receive it
+		*
+		* @return a new BroadcastOperator instance
+		*/
 		get volatile() {
-			let t = Object.assign({}, this.flags, { volatile: !0 });
-			return new e(this.adapter, this.rooms, this.exceptRooms, t);
+			const flags = Object.assign({}, this.flags, { volatile: true });
+			return new BroadcastOperator(this.adapter, this.rooms, this.exceptRooms, flags);
 		}
+		/**
+		* Sets a modifier for a subsequent event emission that the event data will only be broadcast to the current node.
+		*
+		* @example
+		* // the “foo” event will be broadcast to all connected clients on this node
+		* io.local.emit("foo", "bar");
+		*
+		* @return a new {@link BroadcastOperator} instance for chaining
+		*/
 		get local() {
-			let t = Object.assign({}, this.flags, { local: !0 });
-			return new e(this.adapter, this.rooms, this.exceptRooms, t);
+			const flags = Object.assign({}, this.flags, { local: true });
+			return new BroadcastOperator(this.adapter, this.rooms, this.exceptRooms, flags);
 		}
-		timeout(t) {
-			let n = Object.assign({}, this.flags, { timeout: t });
-			return new e(this.adapter, this.rooms, this.exceptRooms, n);
+		/**
+		* Adds a timeout in milliseconds for the next operation
+		*
+		* @example
+		* io.timeout(1000).emit("some-event", (err, responses) => {
+		*   if (err) {
+		*     // some clients did not acknowledge the event in the given delay
+		*   } else {
+		*     console.log(responses); // one response per client
+		*   }
+		* });
+		*
+		* @param timeout
+		*/
+		timeout(timeout) {
+			const flags = Object.assign({}, this.flags, { timeout });
+			return new BroadcastOperator(this.adapter, this.rooms, this.exceptRooms, flags);
 		}
-		emit(e, ...r) {
-			if (t.RESERVED_EVENTS.has(e)) throw Error(`"${String(e)}" is a reserved event name`);
-			let i = [e, ...r], a = {
-				type: n.PacketType.EVENT,
-				data: i
+		/**
+		* Emits to all clients.
+		*
+		* @example
+		* // the “foo” event will be broadcast to all connected clients
+		* io.emit("foo", "bar");
+		*
+		* // the “foo” event will be broadcast to all connected clients in the “room-101” room
+		* io.to("room-101").emit("foo", "bar");
+		*
+		* // with an acknowledgement expected from all connected clients
+		* io.timeout(1000).emit("some-event", (err, responses) => {
+		*   if (err) {
+		*     // some clients did not acknowledge the event in the given delay
+		*   } else {
+		*     console.log(responses); // one response per client
+		*   }
+		* });
+		*
+		* @return Always true
+		*/
+		emit(ev, ...args) {
+			if (socket_types_1.RESERVED_EVENTS.has(ev)) throw new Error(`"${String(ev)}" is a reserved event name`);
+			const data = [ev, ...args];
+			const packet = {
+				type: socket_io_parser_1.PacketType.EVENT,
+				data
 			};
-			if (typeof i[i.length - 1] != "function") return this.adapter.broadcast(a, {
+			if (!(typeof data[data.length - 1] === "function")) {
+				this.adapter.broadcast(packet, {
+					rooms: this.rooms,
+					except: this.exceptRooms,
+					flags: this.flags
+				});
+				return true;
+			}
+			const ack = data.pop();
+			let timedOut = false;
+			let responses = [];
+			const timer = setTimeout(() => {
+				timedOut = true;
+				ack.apply(this, [/* @__PURE__ */ new Error("operation has timed out"), this.flags.expectSingleResponse ? null : responses]);
+			}, this.flags.timeout);
+			let expectedServerCount = -1;
+			let actualServerCount = 0;
+			let expectedClientCount = 0;
+			const checkCompleteness = () => {
+				if (!timedOut && expectedServerCount === actualServerCount && responses.length === expectedClientCount) {
+					clearTimeout(timer);
+					ack.apply(this, [null, this.flags.expectSingleResponse ? responses[0] : responses]);
+				}
+			};
+			this.adapter.broadcastWithAck(packet, {
 				rooms: this.rooms,
 				except: this.exceptRooms,
 				flags: this.flags
-			}), !0;
-			let o = i.pop(), s = !1, c = [], l = setTimeout(() => {
-				s = !0, o.apply(this, [/* @__PURE__ */ Error("operation has timed out"), this.flags.expectSingleResponse ? null : c]);
-			}, this.flags.timeout), u = -1, d = 0, f = 0, p = () => {
-				!s && u === d && c.length === f && (clearTimeout(l), o.apply(this, [null, this.flags.expectSingleResponse ? c[0] : c]));
-			};
-			return this.adapter.broadcastWithAck(a, {
-				rooms: this.rooms,
-				except: this.exceptRooms,
-				flags: this.flags
-			}, (e) => {
-				f += e, d++, p();
-			}, (e) => {
-				c.push(e), p();
-			}), this.adapter.serverCount().then((e) => {
-				u = e, p();
-			}), !0;
+			}, (clientCount) => {
+				expectedClientCount += clientCount;
+				actualServerCount++;
+				checkCompleteness();
+			}, (clientResponse) => {
+				responses.push(clientResponse);
+				checkCompleteness();
+			});
+			this.adapter.serverCount().then((serverCount) => {
+				expectedServerCount = serverCount;
+				checkCompleteness();
+			});
+			return true;
 		}
-		emitWithAck(e, ...t) {
-			return new Promise((n, r) => {
-				t.push((e, t) => e ? (e.responses = t, r(e)) : n(t)), this.emit(e, ...t);
+		/**
+		* Emits an event and waits for an acknowledgement from all clients.
+		*
+		* @example
+		* try {
+		*   const responses = await io.timeout(1000).emitWithAck("some-event");
+		*   console.log(responses); // one response per client
+		* } catch (e) {
+		*   // some clients did not acknowledge the event in the given delay
+		* }
+		*
+		* @return a Promise that will be fulfilled when all clients have acknowledged the event
+		*/
+		emitWithAck(ev, ...args) {
+			return new Promise((resolve, reject) => {
+				args.push((err, responses) => {
+					if (err) {
+						err.responses = responses;
+						return reject(err);
+					} else return resolve(responses);
+				});
+				this.emit(ev, ...args);
 			});
 		}
+		/**
+		* Gets a list of clients.
+		*
+		* @deprecated this method will be removed in the next major release, please use {@link Server#serverSideEmit} or
+		* {@link fetchSockets} instead.
+		*/
 		allSockets() {
-			if (!this.adapter) throw Error("No adapter for this namespace, are you trying to get the list of clients of a dynamic namespace?");
+			if (!this.adapter) throw new Error("No adapter for this namespace, are you trying to get the list of clients of a dynamic namespace?");
 			return this.adapter.sockets(this.rooms);
 		}
+		/**
+		* Returns the matching socket instances. This method works across a cluster of several Socket.IO servers.
+		*
+		* Note: this method also works within a cluster of multiple Socket.IO servers, with a compatible {@link Adapter}.
+		*
+		* @example
+		* // return all Socket instances
+		* const sockets = await io.fetchSockets();
+		*
+		* // return all Socket instances in the "room1" room
+		* const sockets = await io.in("room1").fetchSockets();
+		*
+		* for (const socket of sockets) {
+		*   console.log(socket.id);
+		*   console.log(socket.handshake);
+		*   console.log(socket.rooms);
+		*   console.log(socket.data);
+		*
+		*   socket.emit("hello");
+		*   socket.join("room1");
+		*   socket.leave("room2");
+		*   socket.disconnect();
+		* }
+		*/
 		fetchSockets() {
 			return this.adapter.fetchSockets({
 				rooms: this.rooms,
 				except: this.exceptRooms,
 				flags: this.flags
-			}).then((e) => e.map((e) => e.server ? e : new i(this.adapter, e)));
+			}).then((sockets) => {
+				return sockets.map((socket) => {
+					if (socket.server) return socket;
+					else return new RemoteSocket(this.adapter, socket);
+				});
+			});
 		}
-		socketsJoin(e) {
+		/**
+		* Makes the matching socket instances join the specified rooms.
+		*
+		* Note: this method also works within a cluster of multiple Socket.IO servers, with a compatible {@link Adapter}.
+		*
+		* @example
+		*
+		* // make all socket instances join the "room1" room
+		* io.socketsJoin("room1");
+		*
+		* // make all socket instances in the "room1" room join the "room2" and "room3" rooms
+		* io.in("room1").socketsJoin(["room2", "room3"]);
+		*
+		* @param room - a room, or an array of rooms
+		*/
+		socketsJoin(room) {
 			this.adapter.addSockets({
 				rooms: this.rooms,
 				except: this.exceptRooms,
 				flags: this.flags
-			}, Array.isArray(e) ? e : [e]);
+			}, Array.isArray(room) ? room : [room]);
 		}
-		socketsLeave(e) {
+		/**
+		* Makes the matching socket instances leave the specified rooms.
+		*
+		* Note: this method also works within a cluster of multiple Socket.IO servers, with a compatible {@link Adapter}.
+		*
+		* @example
+		* // make all socket instances leave the "room1" room
+		* io.socketsLeave("room1");
+		*
+		* // make all socket instances in the "room1" room leave the "room2" and "room3" rooms
+		* io.in("room1").socketsLeave(["room2", "room3"]);
+		*
+		* @param room - a room, or an array of rooms
+		*/
+		socketsLeave(room) {
 			this.adapter.delSockets({
 				rooms: this.rooms,
 				except: this.exceptRooms,
 				flags: this.flags
-			}, Array.isArray(e) ? e : [e]);
+			}, Array.isArray(room) ? room : [room]);
 		}
-		disconnectSockets(e = !1) {
+		/**
+		* Makes the matching socket instances disconnect.
+		*
+		* Note: this method also works within a cluster of multiple Socket.IO servers, with a compatible {@link Adapter}.
+		*
+		* @example
+		* // make all socket instances disconnect (the connections might be kept alive for other namespaces)
+		* io.disconnectSockets();
+		*
+		* // make all socket instances in the "room1" room disconnect and close the underlying connections
+		* io.in("room1").disconnectSockets(true);
+		*
+		* @param close - whether to close the underlying connection
+		*/
+		disconnectSockets(close = false) {
 			this.adapter.disconnectSockets({
 				rooms: this.rooms,
 				except: this.exceptRooms,
 				flags: this.flags
-			}, e);
+			}, close);
 		}
 	};
-	e.BroadcastOperator = r;
-	var i = class {
-		constructor(e, t) {
-			this.id = t.id, this.handshake = t.handshake, this.rooms = new Set(t.rooms), this.data = t.data, this.operator = new r(e, /* @__PURE__ */ new Set([this.id]), /* @__PURE__ */ new Set(), { expectSingleResponse: !0 });
+	exports.BroadcastOperator = BroadcastOperator;
+	/**
+	* Expose of subset of the attributes and methods of the Socket class
+	*/
+	var RemoteSocket = class {
+		constructor(adapter, details) {
+			this.id = details.id;
+			this.handshake = details.handshake;
+			this.rooms = new Set(details.rooms);
+			this.data = details.data;
+			this.operator = new BroadcastOperator(adapter, /* @__PURE__ */ new Set([this.id]), /* @__PURE__ */ new Set(), { expectSingleResponse: true });
 		}
-		timeout(e) {
-			return this.operator.timeout(e);
+		/**
+		* Adds a timeout in milliseconds for the next operation.
+		*
+		* @example
+		* const sockets = await io.fetchSockets();
+		*
+		* for (const socket of sockets) {
+		*   if (someCondition) {
+		*     socket.timeout(1000).emit("some-event", (err) => {
+		*       if (err) {
+		*         // the client did not acknowledge the event in the given delay
+		*       }
+		*     });
+		*   }
+		* }
+		*
+		* // note: if possible, using a room instead of looping over all sockets is preferable
+		* io.timeout(1000).to(someConditionRoom).emit("some-event", (err, responses) => {
+		*   // ...
+		* });
+		*
+		* @param timeout
+		*/
+		timeout(timeout) {
+			return this.operator.timeout(timeout);
 		}
-		emit(e, ...t) {
-			return this.operator.emit(e, ...t);
+		emit(ev, ...args) {
+			return this.operator.emit(ev, ...args);
 		}
-		join(e) {
-			return this.operator.socketsJoin(e);
+		/**
+		* Joins a room.
+		*
+		* @param {String|Array} room - room or array of rooms
+		*/
+		join(room) {
+			return this.operator.socketsJoin(room);
 		}
-		leave(e) {
-			return this.operator.socketsLeave(e);
+		/**
+		* Leaves a room.
+		*
+		* @param {String} room
+		*/
+		leave(room) {
+			return this.operator.socketsLeave(room);
 		}
-		disconnect(e = !1) {
-			return this.operator.disconnectSockets(e), this;
+		/**
+		* Disconnects this client.
+		*
+		* @param {Boolean} close - if `true`, closes the underlying connection
+		* @return {Socket} self
+		*/
+		disconnect(close = false) {
+			this.operator.disconnectSockets(close);
+			return this;
 		}
 	};
-	e.RemoteSocket = i;
-})), Ve = /* @__PURE__ */ p(((e) => {
-	var t = e && e.__importDefault || function(e) {
-		return e && e.__esModule ? e : { default: e };
+	exports.RemoteSocket = RemoteSocket;
+}));
+//#endregion
+//#region node_modules/socket.io/dist/socket.js
+var require_socket = /* @__PURE__ */ __commonJSMin(((exports) => {
+	var __importDefault = exports && exports.__importDefault || function(mod) {
+		return mod && mod.__esModule ? mod : { "default": mod };
 	};
-	Object.defineProperty(e, "__esModule", { value: !0 }), e.Socket = void 0;
-	var n = X(), r = t(z()), i = Re(), a = t(A()), o = Be(), s = ze(), c = (0, r.default)("socket.io:socket"), l = /* @__PURE__ */ new Set([
+	Object.defineProperty(exports, "__esModule", { value: true });
+	exports.Socket = void 0;
+	var socket_io_parser_1 = require_cjs();
+	var debug_1 = __importDefault(require_src());
+	var typed_events_1 = require_typed_events();
+	var base64id_1 = __importDefault(require_base64id());
+	var broadcast_operator_1 = require_broadcast_operator();
+	var socket_types_1 = require_socket_types();
+	var debug = (0, debug_1.default)("socket.io:socket");
+	var RECOVERABLE_DISCONNECT_REASONS = /* @__PURE__ */ new Set([
 		"transport error",
 		"transport close",
 		"forced close",
@@ -12268,1161 +17920,2669 @@ var Pe = f((() => {
 		"server shutting down",
 		"forced server close"
 	]);
-	function u() {}
-	e.Socket = class extends i.StrictEventEmitter {
-		constructor(e, t, r, i) {
-			super(), this.nsp = e, this.client = t, this.recovered = !1, this.data = {}, this.connected = !1, this.acks = /* @__PURE__ */ new Map(), this.fns = [], this.flags = {}, this.server = e.server, this.adapter = e.adapter, i ? (this.id = i.sid, this.pid = i.pid, i.rooms.forEach((e) => this.join(e)), this.data = i.data, i.missedPackets.forEach((e) => {
-				this.packet({
-					type: n.PacketType.EVENT,
-					data: e
+	function noop() {}
+	/**
+	* This is the main object for interacting with a client.
+	*
+	* A Socket belongs to a given {@link Namespace} and uses an underlying {@link Client} to communicate.
+	*
+	* Within each {@link Namespace}, you can also define arbitrary channels (called "rooms") that the {@link Socket} can
+	* join and leave. That provides a convenient way to broadcast to a group of socket instances.
+	*
+	* @example
+	* io.on("connection", (socket) => {
+	*   console.log(`socket ${socket.id} connected`);
+	*
+	*   // send an event to the client
+	*   socket.emit("foo", "bar");
+	*
+	*   socket.on("foobar", () => {
+	*     // an event was received from the client
+	*   });
+	*
+	*   // join the room named "room1"
+	*   socket.join("room1");
+	*
+	*   // broadcast to everyone in the room named "room1"
+	*   io.to("room1").emit("hello");
+	*
+	*   // upon disconnection
+	*   socket.on("disconnect", (reason) => {
+	*     console.log(`socket ${socket.id} disconnected due to ${reason}`);
+	*   });
+	* });
+	*/
+	var Socket = class extends typed_events_1.StrictEventEmitter {
+		/**
+		* Interface to a `Client` for a given `Namespace`.
+		*
+		* @param {Namespace} nsp
+		* @param {Client} client
+		* @param {Object} auth
+		* @package
+		*/
+		constructor(nsp, client, auth, previousSession) {
+			super();
+			this.nsp = nsp;
+			this.client = client;
+			/**
+			* Whether the connection state was recovered after a temporary disconnection. In that case, any missed packets will
+			* be transmitted to the client, the data attribute and the rooms will be restored.
+			*/
+			this.recovered = false;
+			/**
+			* Additional information that can be attached to the Socket instance and which will be used in the
+			* {@link Server.fetchSockets()} method.
+			*/
+			this.data = {};
+			/**
+			* Whether the socket is currently connected or not.
+			*
+			* @example
+			* io.use((socket, next) => {
+			*   console.log(socket.connected); // false
+			*   next();
+			* });
+			*
+			* io.on("connection", (socket) => {
+			*   console.log(socket.connected); // true
+			* });
+			*/
+			this.connected = false;
+			this.acks = /* @__PURE__ */ new Map();
+			this.fns = [];
+			this.flags = {};
+			this.server = nsp.server;
+			this.adapter = nsp.adapter;
+			if (previousSession) {
+				this.id = previousSession.sid;
+				this.pid = previousSession.pid;
+				previousSession.rooms.forEach((room) => this.join(room));
+				this.data = previousSession.data;
+				previousSession.missedPackets.forEach((packet) => {
+					this.packet({
+						type: socket_io_parser_1.PacketType.EVENT,
+						data: packet
+					});
 				});
-			}), this.recovered = !0) : (this.id = t.conn.protocol === 3 ? e.name === "/" ? t.id : e.name + "#" + t.id : a.default.generateId(), this.server._opts.connectionStateRecovery && (this.pid = a.default.generateId())), this.handshake = this.buildHandshake(r), this.on("error", u);
+				this.recovered = true;
+			} else {
+				if (client.conn.protocol === 3) this.id = nsp.name !== "/" ? nsp.name + "#" + client.id : client.id;
+				else this.id = base64id_1.default.generateId();
+				if (this.server._opts.connectionStateRecovery) this.pid = base64id_1.default.generateId();
+			}
+			this.handshake = this.buildHandshake(auth);
+			this.on("error", noop);
 		}
-		buildHandshake(e) {
+		/**
+		* Builds the `handshake` BC object
+		*
+		* @private
+		*/
+		buildHandshake(auth) {
+			var _a, _b, _c, _d;
 			return {
-				headers: this.request?.headers || {},
+				headers: ((_a = this.request) === null || _a === void 0 ? void 0 : _a.headers) || {},
 				time: /* @__PURE__ */ new Date() + "",
 				address: this.conn.remoteAddress,
-				xdomain: !!this.request?.headers.origin,
+				xdomain: !!((_b = this.request) === null || _b === void 0 ? void 0 : _b.headers.origin),
 				secure: !this.request || !!this.request.connection.encrypted,
 				issued: +/* @__PURE__ */ new Date(),
-				url: this.request?.url,
-				query: this.request?._query || {},
-				auth: e
+				url: (_c = this.request) === null || _c === void 0 ? void 0 : _c.url,
+				query: ((_d = this.request) === null || _d === void 0 ? void 0 : _d._query) || {},
+				auth
 			};
 		}
-		emit(e, ...t) {
-			if (s.RESERVED_EVENTS.has(e)) throw Error(`"${String(e)}" is a reserved event name`);
-			let r = [e, ...t], i = {
-				type: n.PacketType.EVENT,
-				data: r
+		/**
+		* Emits to this client.
+		*
+		* @example
+		* io.on("connection", (socket) => {
+		*   socket.emit("hello", "world");
+		*
+		*   // all serializable datastructures are supported (no need to call JSON.stringify)
+		*   socket.emit("hello", 1, "2", { 3: ["4"], 5: Buffer.from([6]) });
+		*
+		*   // with an acknowledgement from the client
+		*   socket.emit("hello", "world", (val) => {
+		*     // ...
+		*   });
+		* });
+		*
+		* @return Always returns `true`.
+		*/
+		emit(ev, ...args) {
+			if (socket_types_1.RESERVED_EVENTS.has(ev)) throw new Error(`"${String(ev)}" is a reserved event name`);
+			const data = [ev, ...args];
+			const packet = {
+				type: socket_io_parser_1.PacketType.EVENT,
+				data
 			};
-			if (typeof r[r.length - 1] == "function") {
-				let e = this.nsp._ids++;
-				c("emitting packet with ack id %d", e), this.registerAckCallback(e, r.pop()), i.id = e;
+			if (typeof data[data.length - 1] === "function") {
+				const id = this.nsp._ids++;
+				debug("emitting packet with ack id %d", id);
+				this.registerAckCallback(id, data.pop());
+				packet.id = id;
 			}
-			let a = Object.assign({}, this.flags);
-			return this.flags = {}, this.nsp.server.opts.connectionStateRecovery ? this.adapter.broadcast(i, {
+			const flags = Object.assign({}, this.flags);
+			this.flags = {};
+			if (this.nsp.server.opts.connectionStateRecovery) this.adapter.broadcast(packet, {
 				rooms: /* @__PURE__ */ new Set([this.id]),
 				except: /* @__PURE__ */ new Set(),
-				flags: a
-			}) : (this.notifyOutgoingListeners(i), this.packet(i, a)), !0;
+				flags
+			});
+			else {
+				this.notifyOutgoingListeners(packet);
+				this.packet(packet, flags);
+			}
+			return true;
 		}
-		emitWithAck(e, ...t) {
-			let n = this.flags.timeout !== void 0;
-			return new Promise((r, i) => {
-				t.push((e, t) => n ? e ? i(e) : r(t) : r(e)), this.emit(e, ...t);
+		/**
+		* Emits an event and waits for an acknowledgement
+		*
+		* @example
+		* io.on("connection", async (socket) => {
+		*   // without timeout
+		*   const response = await socket.emitWithAck("hello", "world");
+		*
+		*   // with a specific timeout
+		*   try {
+		*     const response = await socket.timeout(1000).emitWithAck("hello", "world");
+		*   } catch (err) {
+		*     // the client did not acknowledge the event in the given delay
+		*   }
+		* });
+		*
+		* @return a Promise that will be fulfilled when the client acknowledges the event
+		*/
+		emitWithAck(ev, ...args) {
+			const withErr = this.flags.timeout !== void 0;
+			return new Promise((resolve, reject) => {
+				args.push((arg1, arg2) => {
+					if (withErr) return arg1 ? reject(arg1) : resolve(arg2);
+					else return resolve(arg1);
+				});
+				this.emit(ev, ...args);
 			});
 		}
-		registerAckCallback(e, t) {
-			let n = this.flags.timeout;
-			if (n === void 0) {
-				this.acks.set(e, t);
+		/**
+		* @private
+		*/
+		registerAckCallback(id, ack) {
+			const timeout = this.flags.timeout;
+			if (timeout === void 0) {
+				this.acks.set(id, ack);
 				return;
 			}
-			let r = setTimeout(() => {
-				c("event with ack id %d has timed out after %d ms", e, n), this.acks.delete(e), t.call(this, /* @__PURE__ */ Error("operation has timed out"));
-			}, n);
-			this.acks.set(e, (...e) => {
-				clearTimeout(r), t.apply(this, [null, ...e]);
+			const timer = setTimeout(() => {
+				debug("event with ack id %d has timed out after %d ms", id, timeout);
+				this.acks.delete(id);
+				ack.call(this, /* @__PURE__ */ new Error("operation has timed out"));
+			}, timeout);
+			this.acks.set(id, (...args) => {
+				clearTimeout(timer);
+				ack.apply(this, [null, ...args]);
 			});
 		}
-		to(e) {
-			return this.newBroadcastOperator().to(e);
+		/**
+		* Targets a room when broadcasting.
+		*
+		* @example
+		* io.on("connection", (socket) => {
+		*   // the “foo” event will be broadcast to all connected clients in the “room-101” room, except this socket
+		*   socket.to("room-101").emit("foo", "bar");
+		*
+		*   // the code above is equivalent to:
+		*   io.to("room-101").except(socket.id).emit("foo", "bar");
+		*
+		*   // with an array of rooms (a client will be notified at most once)
+		*   socket.to(["room-101", "room-102"]).emit("foo", "bar");
+		*
+		*   // with multiple chained calls
+		*   socket.to("room-101").to("room-102").emit("foo", "bar");
+		* });
+		*
+		* @param room - a room, or an array of rooms
+		* @return a new {@link BroadcastOperator} instance for chaining
+		*/
+		to(room) {
+			return this.newBroadcastOperator().to(room);
 		}
-		in(e) {
-			return this.newBroadcastOperator().in(e);
+		/**
+		* Targets a room when broadcasting. Similar to `to()`, but might feel clearer in some cases:
+		*
+		* @example
+		* io.on("connection", (socket) => {
+		*   // disconnect all clients in the "room-101" room, except this socket
+		*   socket.in("room-101").disconnectSockets();
+		* });
+		*
+		* @param room - a room, or an array of rooms
+		* @return a new {@link BroadcastOperator} instance for chaining
+		*/
+		in(room) {
+			return this.newBroadcastOperator().in(room);
 		}
-		except(e) {
-			return this.newBroadcastOperator().except(e);
+		/**
+		* Excludes a room when broadcasting.
+		*
+		* @example
+		* io.on("connection", (socket) => {
+		*   // the "foo" event will be broadcast to all connected clients, except the ones that are in the "room-101" room
+		*   // and this socket
+		*   socket.except("room-101").emit("foo", "bar");
+		*
+		*   // with an array of rooms
+		*   socket.except(["room-101", "room-102"]).emit("foo", "bar");
+		*
+		*   // with multiple chained calls
+		*   socket.except("room-101").except("room-102").emit("foo", "bar");
+		* });
+		*
+		* @param room - a room, or an array of rooms
+		* @return a new {@link BroadcastOperator} instance for chaining
+		*/
+		except(room) {
+			return this.newBroadcastOperator().except(room);
 		}
-		send(...e) {
-			return this.emit("message", ...e), this;
+		/**
+		* Sends a `message` event.
+		*
+		* This method mimics the WebSocket.send() method.
+		*
+		* @see https://developer.mozilla.org/en-US/docs/Web/API/WebSocket/send
+		*
+		* @example
+		* io.on("connection", (socket) => {
+		*   socket.send("hello");
+		*
+		*   // this is equivalent to
+		*   socket.emit("message", "hello");
+		* });
+		*
+		* @return self
+		*/
+		send(...args) {
+			this.emit("message", ...args);
+			return this;
 		}
-		write(...e) {
-			return this.emit("message", ...e), this;
+		/**
+		* Sends a `message` event. Alias of {@link send}.
+		*
+		* @return self
+		*/
+		write(...args) {
+			this.emit("message", ...args);
+			return this;
 		}
-		packet(e, t = {}) {
-			e.nsp = this.nsp.name, t.compress = !1 !== t.compress, this.client._packet(e, t);
+		/**
+		* Writes a packet.
+		*
+		* @param {Object} packet - packet object
+		* @param {Object} opts - options
+		* @private
+		*/
+		packet(packet, opts = {}) {
+			packet.nsp = this.nsp.name;
+			opts.compress = false !== opts.compress;
+			this.client._packet(packet, opts);
 		}
-		join(e) {
-			return c("join room %s", e), this.adapter.addAll(this.id, new Set(Array.isArray(e) ? e : [e]));
+		/**
+		* Joins a room.
+		*
+		* @example
+		* io.on("connection", (socket) => {
+		*   // join a single room
+		*   socket.join("room1");
+		*
+		*   // join multiple rooms
+		*   socket.join(["room1", "room2"]);
+		* });
+		*
+		* @param {String|Array} rooms - room or array of rooms
+		* @return a Promise or nothing, depending on the adapter
+		*/
+		join(rooms) {
+			debug("join room %s", rooms);
+			return this.adapter.addAll(this.id, new Set(Array.isArray(rooms) ? rooms : [rooms]));
 		}
-		leave(e) {
-			return c("leave room %s", e), this.adapter.del(this.id, e);
+		/**
+		* Leaves a room.
+		*
+		* @example
+		* io.on("connection", (socket) => {
+		*   // leave a single room
+		*   socket.leave("room1");
+		*
+		*   // leave multiple rooms
+		*   socket.leave("room1").leave("room2");
+		* });
+		*
+		* @param {String} room
+		* @return a Promise or nothing, depending on the adapter
+		*/
+		leave(room) {
+			debug("leave room %s", room);
+			return this.adapter.del(this.id, room);
 		}
+		/**
+		* Leave all rooms.
+		*
+		* @private
+		*/
 		leaveAll() {
 			this.adapter.delAll(this.id);
 		}
+		/**
+		* Called by `Namespace` upon successful
+		* middleware execution (ie: authorization).
+		* Socket is added to namespace array before
+		* call to join, so adapters can access it.
+		*
+		* @private
+		*/
 		_onconnect() {
-			c("socket connected - writing packet"), this.connected = !0, this.join(this.id), this.conn.protocol === 3 ? this.packet({ type: n.PacketType.CONNECT }) : this.packet({
-				type: n.PacketType.CONNECT,
+			debug("socket connected - writing packet");
+			this.connected = true;
+			this.join(this.id);
+			if (this.conn.protocol === 3) this.packet({ type: socket_io_parser_1.PacketType.CONNECT });
+			else this.packet({
+				type: socket_io_parser_1.PacketType.CONNECT,
 				data: {
 					sid: this.id,
 					pid: this.pid
 				}
 			});
 		}
-		_onpacket(e) {
-			switch (c("got packet %j", e), e.type) {
-				case n.PacketType.EVENT:
-					this.onevent(e);
+		/**
+		* Called with each packet. Called by `Client`.
+		*
+		* @param {Object} packet
+		* @private
+		*/
+		_onpacket(packet) {
+			debug("got packet %j", packet);
+			switch (packet.type) {
+				case socket_io_parser_1.PacketType.EVENT:
+					this.onevent(packet);
 					break;
-				case n.PacketType.BINARY_EVENT:
-					this.onevent(e);
+				case socket_io_parser_1.PacketType.BINARY_EVENT:
+					this.onevent(packet);
 					break;
-				case n.PacketType.ACK:
-					this.onack(e);
+				case socket_io_parser_1.PacketType.ACK:
+					this.onack(packet);
 					break;
-				case n.PacketType.BINARY_ACK:
-					this.onack(e);
+				case socket_io_parser_1.PacketType.BINARY_ACK:
+					this.onack(packet);
 					break;
-				case n.PacketType.DISCONNECT: this.ondisconnect();
+				case socket_io_parser_1.PacketType.DISCONNECT: this.ondisconnect();
 			}
 		}
-		onevent(e) {
-			let t = e.data || [];
-			if (c("emitting event %j", t), e.id != null && (c("attaching ack callback to event"), t.push(this.ack(e.id))), this._anyListeners && this._anyListeners.length) {
-				let e = this._anyListeners.slice();
-				for (let n of e) n.apply(this, t);
+		/**
+		* Called upon event packet.
+		*
+		* @param {Packet} packet - packet object
+		* @private
+		*/
+		onevent(packet) {
+			const args = packet.data || [];
+			debug("emitting event %j", args);
+			if (null != packet.id) {
+				debug("attaching ack callback to event");
+				args.push(this.ack(packet.id));
 			}
-			this.dispatch(t);
+			if (this._anyListeners && this._anyListeners.length) {
+				const listeners = this._anyListeners.slice();
+				for (const listener of listeners) listener.apply(this, args);
+			}
+			this.dispatch(args);
 		}
-		ack(e) {
-			let t = this, r = !1;
+		/**
+		* Produces an ack callback to emit with an event.
+		*
+		* @param {Number} id - packet id
+		* @private
+		*/
+		ack(id) {
+			const self = this;
+			let sent = false;
 			return function() {
-				if (r) return;
-				let i = Array.prototype.slice.call(arguments);
-				c("sending ack %j", i), t.packet({
-					id: e,
-					type: n.PacketType.ACK,
-					data: i
-				}), r = !0;
+				if (sent) return;
+				const args = Array.prototype.slice.call(arguments);
+				debug("sending ack %j", args);
+				self.packet({
+					id,
+					type: socket_io_parser_1.PacketType.ACK,
+					data: args
+				});
+				sent = true;
 			};
 		}
-		onack(e) {
-			let t = this.acks.get(e.id);
-			typeof t == "function" ? (c("calling ack %s with %j", e.id, e.data), t.apply(this, e.data), this.acks.delete(e.id)) : c("bad ack %s", e.id);
+		/**
+		* Called upon ack packet.
+		*
+		* @private
+		*/
+		onack(packet) {
+			const ack = this.acks.get(packet.id);
+			if ("function" == typeof ack) {
+				debug("calling ack %s with %j", packet.id, packet.data);
+				ack.apply(this, packet.data);
+				this.acks.delete(packet.id);
+			} else debug("bad ack %s", packet.id);
 		}
+		/**
+		* Called upon client disconnect packet.
+		*
+		* @private
+		*/
 		ondisconnect() {
-			c("got disconnect packet"), this._onclose("client namespace disconnect");
+			debug("got disconnect packet");
+			this._onclose("client namespace disconnect");
 		}
-		_onerror(e) {
-			this.emitReserved("error", e);
+		/**
+		* Handles a client error.
+		*
+		* @private
+		*/
+		_onerror(err) {
+			this.emitReserved("error", err);
 		}
-		_onclose(e, t) {
+		/**
+		* Called upon closing. Called by `Client`.
+		*
+		* @param {String} reason
+		* @param description
+		* @throw {Error} optional error object
+		*
+		* @private
+		*/
+		_onclose(reason, description) {
 			if (!this.connected) return this;
-			c("closing socket - reason %s", e), this.emitReserved("disconnecting", e, t), this.server._opts.connectionStateRecovery && l.has(e) && (c("connection state recovery is enabled for sid %s", this.id), this.adapter.persistSession({
-				sid: this.id,
-				pid: this.pid,
-				rooms: [...this.rooms],
-				data: this.data
-			})), this._cleanup(), this.client._remove(this), this.connected = !1, this.emitReserved("disconnect", e, t);
+			debug("closing socket - reason %s", reason);
+			this.emitReserved("disconnecting", reason, description);
+			if (this.server._opts.connectionStateRecovery && RECOVERABLE_DISCONNECT_REASONS.has(reason)) {
+				debug("connection state recovery is enabled for sid %s", this.id);
+				this.adapter.persistSession({
+					sid: this.id,
+					pid: this.pid,
+					rooms: [...this.rooms],
+					data: this.data
+				});
+			}
+			this._cleanup();
+			this.client._remove(this);
+			this.connected = false;
+			this.emitReserved("disconnect", reason, description);
 		}
+		/**
+		* Makes the socket leave all the rooms it was part of and prevents it from joining any other room
+		*
+		* @private
+		*/
 		_cleanup() {
-			this.leaveAll(), this.nsp._remove(this), this.join = u;
+			this.leaveAll();
+			this.nsp._remove(this);
+			this.join = noop;
 		}
-		_error(e) {
+		/**
+		* Produces an `error` packet.
+		*
+		* @param {Object} err - error object
+		*
+		* @private
+		*/
+		_error(err) {
 			this.packet({
-				type: n.PacketType.CONNECT_ERROR,
-				data: e
+				type: socket_io_parser_1.PacketType.CONNECT_ERROR,
+				data: err
 			});
 		}
-		disconnect(e = !1) {
-			return this.connected && (e ? this.client._disconnect() : (this.packet({ type: n.PacketType.DISCONNECT }), this._onclose("server namespace disconnect"))), this;
+		/**
+		* Disconnects this client.
+		*
+		* @example
+		* io.on("connection", (socket) => {
+		*   // disconnect this socket (the connection might be kept alive for other namespaces)
+		*   socket.disconnect();
+		*
+		*   // disconnect this socket and close the underlying connection
+		*   socket.disconnect(true);
+		* })
+		*
+		* @param {Boolean} close - if `true`, closes the underlying connection
+		* @return self
+		*/
+		disconnect(close = false) {
+			if (!this.connected) return this;
+			if (close) this.client._disconnect();
+			else {
+				this.packet({ type: socket_io_parser_1.PacketType.DISCONNECT });
+				this._onclose("server namespace disconnect");
+			}
+			return this;
 		}
-		compress(e) {
-			return this.flags.compress = e, this;
+		/**
+		* Sets the compress flag.
+		*
+		* @example
+		* io.on("connection", (socket) => {
+		*   socket.compress(false).emit("hello");
+		* });
+		*
+		* @param {Boolean} compress - if `true`, compresses the sending data
+		* @return {Socket} self
+		*/
+		compress(compress) {
+			this.flags.compress = compress;
+			return this;
 		}
+		/**
+		* Sets a modifier for a subsequent event emission that the event data may be lost if the client is not ready to
+		* receive messages (because of network slowness or other issues, or because they’re connected through long polling
+		* and is in the middle of a request-response cycle).
+		*
+		* @example
+		* io.on("connection", (socket) => {
+		*   socket.volatile.emit("hello"); // the client may or may not receive it
+		* });
+		*
+		* @return {Socket} self
+		*/
 		get volatile() {
-			return this.flags.volatile = !0, this;
+			this.flags.volatile = true;
+			return this;
 		}
+		/**
+		* Sets a modifier for a subsequent event emission that the event data will only be broadcast to every sockets but the
+		* sender.
+		*
+		* @example
+		* io.on("connection", (socket) => {
+		*   // the “foo” event will be broadcast to all connected clients, except this socket
+		*   socket.broadcast.emit("foo", "bar");
+		* });
+		*
+		* @return a new {@link BroadcastOperator} instance for chaining
+		*/
 		get broadcast() {
 			return this.newBroadcastOperator();
 		}
+		/**
+		* Sets a modifier for a subsequent event emission that the event data will only be broadcast to the current node.
+		*
+		* @example
+		* io.on("connection", (socket) => {
+		*   // the “foo” event will be broadcast to all connected clients on this node, except this socket
+		*   socket.local.emit("foo", "bar");
+		* });
+		*
+		* @return a new {@link BroadcastOperator} instance for chaining
+		*/
 		get local() {
 			return this.newBroadcastOperator().local;
 		}
-		timeout(e) {
-			return this.flags.timeout = e, this;
+		/**
+		* Sets a modifier for a subsequent event emission that the callback will be called with an error when the
+		* given number of milliseconds have elapsed without an acknowledgement from the client:
+		*
+		* @example
+		* io.on("connection", (socket) => {
+		*   socket.timeout(5000).emit("my-event", (err) => {
+		*     if (err) {
+		*       // the client did not acknowledge the event in the given delay
+		*     }
+		*   });
+		* });
+		*
+		* @returns self
+		*/
+		timeout(timeout) {
+			this.flags.timeout = timeout;
+			return this;
 		}
-		dispatch(e) {
-			c("dispatching an event %j", e), this.run(e, (t) => {
+		/**
+		* Dispatch incoming event to socket listeners.
+		*
+		* @param {Array} event - event that will get emitted
+		* @private
+		*/
+		dispatch(event) {
+			debug("dispatching an event %j", event);
+			this.run(event, (err) => {
 				process.nextTick(() => {
-					if (t) return this._onerror(t);
-					this.connected ? super.emitUntyped.apply(this, e) : c("ignore packet received after disconnection");
+					if (err) return this._onerror(err);
+					if (this.connected) super.emitUntyped.apply(this, event);
+					else debug("ignore packet received after disconnection");
 				});
 			});
 		}
-		use(e) {
-			return this.fns.push(e), this;
+		/**
+		* Sets up socket middleware.
+		*
+		* @example
+		* io.on("connection", (socket) => {
+		*   socket.use(([event, ...args], next) => {
+		*     if (isUnauthorized(event)) {
+		*       return next(new Error("unauthorized event"));
+		*     }
+		*     // do not forget to call next
+		*     next();
+		*   });
+		*
+		*   socket.on("error", (err) => {
+		*     if (err && err.message === "unauthorized event") {
+		*       socket.disconnect();
+		*     }
+		*   });
+		* });
+		*
+		* @param {Function} fn - middleware function (event, next)
+		* @return {Socket} self
+		*/
+		use(fn) {
+			this.fns.push(fn);
+			return this;
 		}
-		run(e, t) {
-			if (!this.fns.length) return t();
-			let n = this.fns.slice(0);
-			function r(i) {
-				n[i](e, (e) => {
-					if (e) return t(e);
-					if (!n[i + 1]) return t();
-					r(i + 1);
+		/**
+		* Executes the middleware for an incoming event.
+		*
+		* @param {Array} event - event that will get emitted
+		* @param {Function} fn - last fn call in the middleware
+		* @private
+		*/
+		run(event, fn) {
+			if (!this.fns.length) return fn();
+			const fns = this.fns.slice(0);
+			function run(i) {
+				fns[i](event, (err) => {
+					if (err) return fn(err);
+					if (!fns[i + 1]) return fn();
+					run(i + 1);
 				});
 			}
-			r(0);
+			run(0);
 		}
+		/**
+		* Whether the socket is currently disconnected
+		*/
 		get disconnected() {
 			return !this.connected;
 		}
+		/**
+		* A reference to the request that originated the underlying Engine.IO Socket.
+		*/
 		get request() {
 			return this.client.request;
 		}
+		/**
+		* A reference to the underlying Client transport connection (Engine.IO Socket object).
+		*
+		* @example
+		* io.on("connection", (socket) => {
+		*   console.log(socket.conn.transport.name); // prints "polling" or "websocket"
+		*
+		*   socket.conn.once("upgrade", () => {
+		*     console.log(socket.conn.transport.name); // prints "websocket"
+		*   });
+		* });
+		*/
 		get conn() {
 			return this.client.conn;
 		}
+		/**
+		* Returns the rooms the socket is currently in.
+		*
+		* @example
+		* io.on("connection", (socket) => {
+		*   console.log(socket.rooms); // Set { <socket.id> }
+		*
+		*   socket.join("room1");
+		*
+		*   console.log(socket.rooms); // Set { <socket.id>, "room1" }
+		* });
+		*/
 		get rooms() {
 			return this.adapter.socketRooms(this.id) || /* @__PURE__ */ new Set();
 		}
-		onAny(e) {
-			return this._anyListeners = this._anyListeners || [], this._anyListeners.push(e), this;
+		/**
+		* Adds a listener that will be fired when any event is received. The event name is passed as the first argument to
+		* the callback.
+		*
+		* @example
+		* io.on("connection", (socket) => {
+		*   socket.onAny((event, ...args) => {
+		*     console.log(`got event ${event}`);
+		*   });
+		* });
+		*
+		* @param listener
+		*/
+		onAny(listener) {
+			this._anyListeners = this._anyListeners || [];
+			this._anyListeners.push(listener);
+			return this;
 		}
-		prependAny(e) {
-			return this._anyListeners = this._anyListeners || [], this._anyListeners.unshift(e), this;
+		/**
+		* Adds a listener that will be fired when any event is received. The event name is passed as the first argument to
+		* the callback. The listener is added to the beginning of the listeners array.
+		*
+		* @param listener
+		*/
+		prependAny(listener) {
+			this._anyListeners = this._anyListeners || [];
+			this._anyListeners.unshift(listener);
+			return this;
 		}
-		offAny(e) {
+		/**
+		* Removes the listener that will be fired when any event is received.
+		*
+		* @example
+		* io.on("connection", (socket) => {
+		*   const catchAllListener = (event, ...args) => {
+		*     console.log(`got event ${event}`);
+		*   }
+		*
+		*   socket.onAny(catchAllListener);
+		*
+		*   // remove a specific listener
+		*   socket.offAny(catchAllListener);
+		*
+		*   // or remove all listeners
+		*   socket.offAny();
+		* });
+		*
+		* @param listener
+		*/
+		offAny(listener) {
 			if (!this._anyListeners) return this;
-			if (e) {
-				let t = this._anyListeners;
-				for (let n = 0; n < t.length; n++) if (e === t[n]) return t.splice(n, 1), this;
+			if (listener) {
+				const listeners = this._anyListeners;
+				for (let i = 0; i < listeners.length; i++) if (listener === listeners[i]) {
+					listeners.splice(i, 1);
+					return this;
+				}
 			} else this._anyListeners = [];
 			return this;
 		}
+		/**
+		* Returns an array of listeners that are listening for any event that is specified. This array can be manipulated,
+		* e.g. to remove listeners.
+		*/
 		listenersAny() {
 			return this._anyListeners || [];
 		}
-		onAnyOutgoing(e) {
-			return this._anyOutgoingListeners = this._anyOutgoingListeners || [], this._anyOutgoingListeners.push(e), this;
+		/**
+		* Adds a listener that will be fired when any event is sent. The event name is passed as the first argument to
+		* the callback.
+		*
+		* Note: acknowledgements sent to the client are not included.
+		*
+		* @example
+		* io.on("connection", (socket) => {
+		*   socket.onAnyOutgoing((event, ...args) => {
+		*     console.log(`sent event ${event}`);
+		*   });
+		* });
+		*
+		* @param listener
+		*/
+		onAnyOutgoing(listener) {
+			this._anyOutgoingListeners = this._anyOutgoingListeners || [];
+			this._anyOutgoingListeners.push(listener);
+			return this;
 		}
-		prependAnyOutgoing(e) {
-			return this._anyOutgoingListeners = this._anyOutgoingListeners || [], this._anyOutgoingListeners.unshift(e), this;
+		/**
+		* Adds a listener that will be fired when any event is emitted. The event name is passed as the first argument to the
+		* callback. The listener is added to the beginning of the listeners array.
+		*
+		* @example
+		* io.on("connection", (socket) => {
+		*   socket.prependAnyOutgoing((event, ...args) => {
+		*     console.log(`sent event ${event}`);
+		*   });
+		* });
+		*
+		* @param listener
+		*/
+		prependAnyOutgoing(listener) {
+			this._anyOutgoingListeners = this._anyOutgoingListeners || [];
+			this._anyOutgoingListeners.unshift(listener);
+			return this;
 		}
-		offAnyOutgoing(e) {
+		/**
+		* Removes the listener that will be fired when any event is sent.
+		*
+		* @example
+		* io.on("connection", (socket) => {
+		*   const catchAllListener = (event, ...args) => {
+		*     console.log(`sent event ${event}`);
+		*   }
+		*
+		*   socket.onAnyOutgoing(catchAllListener);
+		*
+		*   // remove a specific listener
+		*   socket.offAnyOutgoing(catchAllListener);
+		*
+		*   // or remove all listeners
+		*   socket.offAnyOutgoing();
+		* });
+		*
+		* @param listener - the catch-all listener
+		*/
+		offAnyOutgoing(listener) {
 			if (!this._anyOutgoingListeners) return this;
-			if (e) {
-				let t = this._anyOutgoingListeners;
-				for (let n = 0; n < t.length; n++) if (e === t[n]) return t.splice(n, 1), this;
+			if (listener) {
+				const listeners = this._anyOutgoingListeners;
+				for (let i = 0; i < listeners.length; i++) if (listener === listeners[i]) {
+					listeners.splice(i, 1);
+					return this;
+				}
 			} else this._anyOutgoingListeners = [];
 			return this;
 		}
+		/**
+		* Returns an array of listeners that are listening for any event that is specified. This array can be manipulated,
+		* e.g. to remove listeners.
+		*/
 		listenersAnyOutgoing() {
 			return this._anyOutgoingListeners || [];
 		}
-		notifyOutgoingListeners(e) {
+		/**
+		* Notify the listeners for each packet sent (emit or broadcast)
+		*
+		* @param packet
+		*
+		* @private
+		*/
+		notifyOutgoingListeners(packet) {
 			if (this._anyOutgoingListeners && this._anyOutgoingListeners.length) {
-				let t = this._anyOutgoingListeners.slice();
-				for (let n of t) n.apply(this, e.data);
+				const listeners = this._anyOutgoingListeners.slice();
+				for (const listener of listeners) listener.apply(this, packet.data);
 			}
 		}
 		newBroadcastOperator() {
-			let e = Object.assign({}, this.flags);
-			return this.flags = {}, new o.BroadcastOperator(this.adapter, /* @__PURE__ */ new Set(), /* @__PURE__ */ new Set([this.id]), e);
+			const flags = Object.assign({}, this.flags);
+			this.flags = {};
+			return new broadcast_operator_1.BroadcastOperator(this.adapter, /* @__PURE__ */ new Set(), /* @__PURE__ */ new Set([this.id]), flags);
 		}
 	};
-})), He = /* @__PURE__ */ p(((e) => {
-	var t = e && e.__importDefault || function(e) {
-		return e && e.__esModule ? e : { default: e };
+	exports.Socket = Socket;
+}));
+//#endregion
+//#region node_modules/socket.io/dist/namespace.js
+var require_namespace = /* @__PURE__ */ __commonJSMin(((exports) => {
+	var __importDefault = exports && exports.__importDefault || function(mod) {
+		return mod && mod.__esModule ? mod : { "default": mod };
 	};
-	Object.defineProperty(e, "__esModule", { value: !0 }), e.Namespace = e.RESERVED_EVENTS = void 0;
-	var n = Ve(), r = Re(), i = t(z()), a = Be(), o = (0, i.default)("socket.io:namespace");
-	e.RESERVED_EVENTS = /* @__PURE__ */ new Set([
+	Object.defineProperty(exports, "__esModule", { value: true });
+	exports.Namespace = exports.RESERVED_EVENTS = void 0;
+	var socket_1 = require_socket();
+	var typed_events_1 = require_typed_events();
+	var debug_1 = __importDefault(require_src());
+	var broadcast_operator_1 = require_broadcast_operator();
+	var debug = (0, debug_1.default)("socket.io:namespace");
+	exports.RESERVED_EVENTS = /* @__PURE__ */ new Set([
 		"connect",
 		"connection",
 		"new_namespace"
-	]), e.Namespace = class extends r.StrictEventEmitter {
-		constructor(e, t) {
-			super(), this.sockets = /* @__PURE__ */ new Map(), this._preConnectSockets = /* @__PURE__ */ new Map(), this._fns = [], this._ids = 0, this.server = e, this.name = t, this._initAdapter();
+	]);
+	/**
+	* A Namespace is a communication channel that allows you to split the logic of your application over a single shared
+	* connection.
+	*
+	* Each namespace has its own:
+	*
+	* - event handlers
+	*
+	* ```
+	* io.of("/orders").on("connection", (socket) => {
+	*   socket.on("order:list", () => {});
+	*   socket.on("order:create", () => {});
+	* });
+	*
+	* io.of("/users").on("connection", (socket) => {
+	*   socket.on("user:list", () => {});
+	* });
+	* ```
+	*
+	* - rooms
+	*
+	* ```
+	* const orderNamespace = io.of("/orders");
+	*
+	* orderNamespace.on("connection", (socket) => {
+	*   socket.join("room1");
+	*   orderNamespace.to("room1").emit("hello");
+	* });
+	*
+	* const userNamespace = io.of("/users");
+	*
+	* userNamespace.on("connection", (socket) => {
+	*   socket.join("room1"); // distinct from the room in the "orders" namespace
+	*   userNamespace.to("room1").emit("holà");
+	* });
+	* ```
+	*
+	* - middlewares
+	*
+	* ```
+	* const orderNamespace = io.of("/orders");
+	*
+	* orderNamespace.use((socket, next) => {
+	*   // ensure the socket has access to the "orders" namespace
+	* });
+	*
+	* const userNamespace = io.of("/users");
+	*
+	* userNamespace.use((socket, next) => {
+	*   // ensure the socket has access to the "users" namespace
+	* });
+	* ```
+	*/
+	var Namespace = class extends typed_events_1.StrictEventEmitter {
+		/**
+		* Namespace constructor.
+		*
+		* @param server instance
+		* @param name
+		*/
+		constructor(server, name) {
+			super();
+			/**
+			* A map of currently connected sockets.
+			*/
+			this.sockets = /* @__PURE__ */ new Map();
+			/**
+			* A map of currently connecting sockets.
+			*/
+			this._preConnectSockets = /* @__PURE__ */ new Map();
+			this._fns = [];
+			/** @private */
+			this._ids = 0;
+			this.server = server;
+			this.name = name;
+			this._initAdapter();
 		}
+		/**
+		* Initializes the `Adapter` for this nsp.
+		* Run upon changing adapter by `Server#adapter`
+		* in addition to the constructor.
+		*
+		* @private
+		*/
 		_initAdapter() {
-			this.adapter = new (this.server.adapter())(this), Promise.resolve(this.adapter.init()).catch((e) => {
-				o("error while initializing adapter: %s", e);
+			this.adapter = new (this.server.adapter())(this);
+			Promise.resolve(this.adapter.init()).catch((err) => {
+				debug("error while initializing adapter: %s", err);
 			});
 		}
-		use(e) {
-			return this._fns.push(e), this;
+		/**
+		* Registers a middleware, which is a function that gets executed for every incoming {@link Socket}.
+		*
+		* @example
+		* const myNamespace = io.of("/my-namespace");
+		*
+		* myNamespace.use((socket, next) => {
+		*   // ...
+		*   next();
+		* });
+		*
+		* @param fn - the middleware function
+		*/
+		use(fn) {
+			this._fns.push(fn);
+			return this;
 		}
-		run(e, t) {
-			if (!this._fns.length) return t();
-			let n = this._fns.slice(0);
-			function r(i) {
-				n[i](e, (e) => {
-					if (e) return t(e);
-					if (!n[i + 1]) return t();
-					r(i + 1);
+		/**
+		* Executes the middleware for an incoming client.
+		*
+		* @param socket - the socket that will get added
+		* @param fn - last fn call in the middleware
+		* @private
+		*/
+		run(socket, fn) {
+			if (!this._fns.length) return fn();
+			const fns = this._fns.slice(0);
+			function run(i) {
+				fns[i](socket, (err) => {
+					if (err) return fn(err);
+					if (!fns[i + 1]) return fn();
+					run(i + 1);
 				});
 			}
-			r(0);
+			run(0);
 		}
-		to(e) {
-			return new a.BroadcastOperator(this.adapter).to(e);
+		/**
+		* Targets a room when emitting.
+		*
+		* @example
+		* const myNamespace = io.of("/my-namespace");
+		*
+		* // the “foo” event will be broadcast to all connected clients in the “room-101” room
+		* myNamespace.to("room-101").emit("foo", "bar");
+		*
+		* // with an array of rooms (a client will be notified at most once)
+		* myNamespace.to(["room-101", "room-102"]).emit("foo", "bar");
+		*
+		* // with multiple chained calls
+		* myNamespace.to("room-101").to("room-102").emit("foo", "bar");
+		*
+		* @param room - a room, or an array of rooms
+		* @return a new {@link BroadcastOperator} instance for chaining
+		*/
+		to(room) {
+			return new broadcast_operator_1.BroadcastOperator(this.adapter).to(room);
 		}
-		in(e) {
-			return new a.BroadcastOperator(this.adapter).in(e);
+		/**
+		* Targets a room when emitting. Similar to `to()`, but might feel clearer in some cases:
+		*
+		* @example
+		* const myNamespace = io.of("/my-namespace");
+		*
+		* // disconnect all clients in the "room-101" room
+		* myNamespace.in("room-101").disconnectSockets();
+		*
+		* @param room - a room, or an array of rooms
+		* @return a new {@link BroadcastOperator} instance for chaining
+		*/
+		in(room) {
+			return new broadcast_operator_1.BroadcastOperator(this.adapter).in(room);
 		}
-		except(e) {
-			return new a.BroadcastOperator(this.adapter).except(e);
+		/**
+		* Excludes a room when emitting.
+		*
+		* @example
+		* const myNamespace = io.of("/my-namespace");
+		*
+		* // the "foo" event will be broadcast to all connected clients, except the ones that are in the "room-101" room
+		* myNamespace.except("room-101").emit("foo", "bar");
+		*
+		* // with an array of rooms
+		* myNamespace.except(["room-101", "room-102"]).emit("foo", "bar");
+		*
+		* // with multiple chained calls
+		* myNamespace.except("room-101").except("room-102").emit("foo", "bar");
+		*
+		* @param room - a room, or an array of rooms
+		* @return a new {@link BroadcastOperator} instance for chaining
+		*/
+		except(room) {
+			return new broadcast_operator_1.BroadcastOperator(this.adapter).except(room);
 		}
-		async _add(e, t, n) {
-			o("adding socket to nsp %s", this.name);
-			let r = await this._createSocket(e, t);
-			if (this._preConnectSockets.set(r.id, r), this.server.opts.connectionStateRecovery?.skipMiddlewares && r.recovered && e.conn.readyState === "open") return this._doConnect(r, n);
-			this.run(r, (t) => {
+		/**
+		* Adds a new client.
+		*
+		* @return {Socket}
+		* @private
+		*/
+		async _add(client, auth, fn) {
+			var _a;
+			debug("adding socket to nsp %s", this.name);
+			const socket = await this._createSocket(client, auth);
+			this._preConnectSockets.set(socket.id, socket);
+			if (((_a = this.server.opts.connectionStateRecovery) === null || _a === void 0 ? void 0 : _a.skipMiddlewares) && socket.recovered && client.conn.readyState === "open") return this._doConnect(socket, fn);
+			this.run(socket, (err) => {
 				process.nextTick(() => {
-					if (e.conn.readyState !== "open") {
-						o("next called after client was closed - ignoring socket"), r._cleanup();
+					if ("open" !== client.conn.readyState) {
+						debug("next called after client was closed - ignoring socket");
+						socket._cleanup();
 						return;
 					}
-					if (t) return o("middleware error, sending CONNECT_ERROR packet to the client"), r._cleanup(), e.conn.protocol === 3 ? r._error(t.data || t.message) : r._error({
-						message: t.message,
-						data: t.data
-					});
-					this._doConnect(r, n);
+					if (err) {
+						debug("middleware error, sending CONNECT_ERROR packet to the client");
+						socket._cleanup();
+						if (client.conn.protocol === 3) return socket._error(err.data || err.message);
+						else return socket._error({
+							message: err.message,
+							data: err.data
+						});
+					}
+					this._doConnect(socket, fn);
 				});
 			});
 		}
-		async _createSocket(e, t) {
-			let r = t.pid, i = t.offset;
-			if (this.server.opts.connectionStateRecovery && typeof r == "string" && typeof i == "string") {
-				let a;
+		async _createSocket(client, auth) {
+			const sessionId = auth.pid;
+			const offset = auth.offset;
+			if (this.server.opts.connectionStateRecovery && typeof sessionId === "string" && typeof offset === "string") {
+				let session;
 				try {
-					a = await this.adapter.restoreSession(r, i);
+					session = await this.adapter.restoreSession(sessionId, offset);
 				} catch (e) {
-					o("error while restoring session: %s", e);
+					debug("error while restoring session: %s", e);
 				}
-				if (a) return o("connection state recovered for sid %s", a.sid), new n.Socket(this, e, t, a);
+				if (session) {
+					debug("connection state recovered for sid %s", session.sid);
+					return new socket_1.Socket(this, client, auth, session);
+				}
 			}
-			return new n.Socket(this, e, t);
+			return new socket_1.Socket(this, client, auth);
 		}
-		_doConnect(e, t) {
-			this._preConnectSockets.delete(e.id), this.sockets.set(e.id, e), e._onconnect(), t && t(e), this.emitReserved("connect", e), this.emitReserved("connection", e);
+		_doConnect(socket, fn) {
+			this._preConnectSockets.delete(socket.id);
+			this.sockets.set(socket.id, socket);
+			socket._onconnect();
+			if (fn) fn(socket);
+			this.emitReserved("connect", socket);
+			this.emitReserved("connection", socket);
 		}
-		_remove(e) {
-			this.sockets.delete(e.id) || this._preConnectSockets.delete(e.id);
+		/**
+		* Removes a client. Called by each `Socket`.
+		*
+		* @private
+		*/
+		_remove(socket) {
+			this.sockets.delete(socket.id) || this._preConnectSockets.delete(socket.id);
 		}
-		emit(e, ...t) {
-			return new a.BroadcastOperator(this.adapter).emit(e, ...t);
+		/**
+		* Emits to all connected clients.
+		*
+		* @example
+		* const myNamespace = io.of("/my-namespace");
+		*
+		* myNamespace.emit("hello", "world");
+		*
+		* // all serializable datastructures are supported (no need to call JSON.stringify)
+		* myNamespace.emit("hello", 1, "2", { 3: ["4"], 5: Uint8Array.from([6]) });
+		*
+		* // with an acknowledgement from the clients
+		* myNamespace.timeout(1000).emit("some-event", (err, responses) => {
+		*   if (err) {
+		*     // some clients did not acknowledge the event in the given delay
+		*   } else {
+		*     console.log(responses); // one response per client
+		*   }
+		* });
+		*
+		* @return Always true
+		*/
+		emit(ev, ...args) {
+			return new broadcast_operator_1.BroadcastOperator(this.adapter).emit(ev, ...args);
 		}
-		send(...e) {
-			return this.emit("message", ...e), this;
+		/**
+		* Sends a `message` event to all clients.
+		*
+		* This method mimics the WebSocket.send() method.
+		*
+		* @see https://developer.mozilla.org/en-US/docs/Web/API/WebSocket/send
+		*
+		* @example
+		* const myNamespace = io.of("/my-namespace");
+		*
+		* myNamespace.send("hello");
+		*
+		* // this is equivalent to
+		* myNamespace.emit("message", "hello");
+		*
+		* @return self
+		*/
+		send(...args) {
+			this.emit("message", ...args);
+			return this;
 		}
-		write(...e) {
-			return this.emit("message", ...e), this;
+		/**
+		* Sends a `message` event to all clients. Sends a `message` event. Alias of {@link send}.
+		*
+		* @return self
+		*/
+		write(...args) {
+			this.emit("message", ...args);
+			return this;
 		}
-		serverSideEmit(t, ...n) {
-			if (e.RESERVED_EVENTS.has(t)) throw Error(`"${String(t)}" is a reserved event name`);
-			return n.unshift(t), this.adapter.serverSideEmit(n), !0;
+		/**
+		* Sends a message to the other Socket.IO servers of the cluster.
+		*
+		* @example
+		* const myNamespace = io.of("/my-namespace");
+		*
+		* myNamespace.serverSideEmit("hello", "world");
+		*
+		* myNamespace.on("hello", (arg1) => {
+		*   console.log(arg1); // prints "world"
+		* });
+		*
+		* // acknowledgements (without binary content) are supported too:
+		* myNamespace.serverSideEmit("ping", (err, responses) => {
+		*  if (err) {
+		*     // some servers did not acknowledge the event in the given delay
+		*   } else {
+		*     console.log(responses); // one response per server (except the current one)
+		*   }
+		* });
+		*
+		* myNamespace.on("ping", (cb) => {
+		*   cb("pong");
+		* });
+		*
+		* @param ev - the event name
+		* @param args - an array of arguments, which may include an acknowledgement callback at the end
+		*/
+		serverSideEmit(ev, ...args) {
+			if (exports.RESERVED_EVENTS.has(ev)) throw new Error(`"${String(ev)}" is a reserved event name`);
+			args.unshift(ev);
+			this.adapter.serverSideEmit(args);
+			return true;
 		}
-		serverSideEmitWithAck(e, ...t) {
-			return new Promise((n, r) => {
-				t.push((e, t) => e ? (e.responses = t, r(e)) : n(t)), this.serverSideEmit(e, ...t);
+		/**
+		* Sends a message and expect an acknowledgement from the other Socket.IO servers of the cluster.
+		*
+		* @example
+		* const myNamespace = io.of("/my-namespace");
+		*
+		* try {
+		*   const responses = await myNamespace.serverSideEmitWithAck("ping");
+		*   console.log(responses); // one response per server (except the current one)
+		* } catch (e) {
+		*   // some servers did not acknowledge the event in the given delay
+		* }
+		*
+		* @param ev - the event name
+		* @param args - an array of arguments
+		*
+		* @return a Promise that will be fulfilled when all servers have acknowledged the event
+		*/
+		serverSideEmitWithAck(ev, ...args) {
+			return new Promise((resolve, reject) => {
+				args.push((err, responses) => {
+					if (err) {
+						err.responses = responses;
+						return reject(err);
+					} else return resolve(responses);
+				});
+				this.serverSideEmit(ev, ...args);
 			});
 		}
-		_onServerSideEmit(e) {
-			super.emitUntyped.apply(this, e);
+		/**
+		* Called when a packet is received from another Socket.IO server
+		*
+		* @param args - an array of arguments, which may include an acknowledgement callback at the end
+		*
+		* @private
+		*/
+		_onServerSideEmit(args) {
+			super.emitUntyped.apply(this, args);
 		}
+		/**
+		* Gets a list of clients.
+		*
+		* @deprecated this method will be removed in the next major release, please use {@link Namespace#serverSideEmit} or
+		* {@link Namespace#fetchSockets} instead.
+		*/
 		allSockets() {
-			return new a.BroadcastOperator(this.adapter).allSockets();
+			return new broadcast_operator_1.BroadcastOperator(this.adapter).allSockets();
 		}
-		compress(e) {
-			return new a.BroadcastOperator(this.adapter).compress(e);
+		/**
+		* Sets the compress flag.
+		*
+		* @example
+		* const myNamespace = io.of("/my-namespace");
+		*
+		* myNamespace.compress(false).emit("hello");
+		*
+		* @param compress - if `true`, compresses the sending data
+		* @return self
+		*/
+		compress(compress) {
+			return new broadcast_operator_1.BroadcastOperator(this.adapter).compress(compress);
 		}
+		/**
+		* Sets a modifier for a subsequent event emission that the event data may be lost if the client is not ready to
+		* receive messages (because of network slowness or other issues, or because they’re connected through long polling
+		* and is in the middle of a request-response cycle).
+		*
+		* @example
+		* const myNamespace = io.of("/my-namespace");
+		*
+		* myNamespace.volatile.emit("hello"); // the clients may or may not receive it
+		*
+		* @return self
+		*/
 		get volatile() {
-			return new a.BroadcastOperator(this.adapter).volatile;
+			return new broadcast_operator_1.BroadcastOperator(this.adapter).volatile;
 		}
+		/**
+		* Sets a modifier for a subsequent event emission that the event data will only be broadcast to the current node.
+		*
+		* @example
+		* const myNamespace = io.of("/my-namespace");
+		*
+		* // the “foo” event will be broadcast to all connected clients on this node
+		* myNamespace.local.emit("foo", "bar");
+		*
+		* @return a new {@link BroadcastOperator} instance for chaining
+		*/
 		get local() {
-			return new a.BroadcastOperator(this.adapter).local;
+			return new broadcast_operator_1.BroadcastOperator(this.adapter).local;
 		}
-		timeout(e) {
-			return new a.BroadcastOperator(this.adapter).timeout(e);
+		/**
+		* Adds a timeout in milliseconds for the next operation.
+		*
+		* @example
+		* const myNamespace = io.of("/my-namespace");
+		*
+		* myNamespace.timeout(1000).emit("some-event", (err, responses) => {
+		*   if (err) {
+		*     // some clients did not acknowledge the event in the given delay
+		*   } else {
+		*     console.log(responses); // one response per client
+		*   }
+		* });
+		*
+		* @param timeout
+		*/
+		timeout(timeout) {
+			return new broadcast_operator_1.BroadcastOperator(this.adapter).timeout(timeout);
 		}
+		/**
+		* Returns the matching socket instances.
+		*
+		* Note: this method also works within a cluster of multiple Socket.IO servers, with a compatible {@link Adapter}.
+		*
+		* @example
+		* const myNamespace = io.of("/my-namespace");
+		*
+		* // return all Socket instances
+		* const sockets = await myNamespace.fetchSockets();
+		*
+		* // return all Socket instances in the "room1" room
+		* const sockets = await myNamespace.in("room1").fetchSockets();
+		*
+		* for (const socket of sockets) {
+		*   console.log(socket.id);
+		*   console.log(socket.handshake);
+		*   console.log(socket.rooms);
+		*   console.log(socket.data);
+		*
+		*   socket.emit("hello");
+		*   socket.join("room1");
+		*   socket.leave("room2");
+		*   socket.disconnect();
+		* }
+		*/
 		fetchSockets() {
-			return new a.BroadcastOperator(this.adapter).fetchSockets();
+			return new broadcast_operator_1.BroadcastOperator(this.adapter).fetchSockets();
 		}
-		socketsJoin(e) {
-			return new a.BroadcastOperator(this.adapter).socketsJoin(e);
+		/**
+		* Makes the matching socket instances join the specified rooms.
+		*
+		* Note: this method also works within a cluster of multiple Socket.IO servers, with a compatible {@link Adapter}.
+		*
+		* @example
+		* const myNamespace = io.of("/my-namespace");
+		*
+		* // make all socket instances join the "room1" room
+		* myNamespace.socketsJoin("room1");
+		*
+		* // make all socket instances in the "room1" room join the "room2" and "room3" rooms
+		* myNamespace.in("room1").socketsJoin(["room2", "room3"]);
+		*
+		* @param room - a room, or an array of rooms
+		*/
+		socketsJoin(room) {
+			return new broadcast_operator_1.BroadcastOperator(this.adapter).socketsJoin(room);
 		}
-		socketsLeave(e) {
-			return new a.BroadcastOperator(this.adapter).socketsLeave(e);
+		/**
+		* Makes the matching socket instances leave the specified rooms.
+		*
+		* Note: this method also works within a cluster of multiple Socket.IO servers, with a compatible {@link Adapter}.
+		*
+		* @example
+		* const myNamespace = io.of("/my-namespace");
+		*
+		* // make all socket instances leave the "room1" room
+		* myNamespace.socketsLeave("room1");
+		*
+		* // make all socket instances in the "room1" room leave the "room2" and "room3" rooms
+		* myNamespace.in("room1").socketsLeave(["room2", "room3"]);
+		*
+		* @param room - a room, or an array of rooms
+		*/
+		socketsLeave(room) {
+			return new broadcast_operator_1.BroadcastOperator(this.adapter).socketsLeave(room);
 		}
-		disconnectSockets(e = !1) {
-			return new a.BroadcastOperator(this.adapter).disconnectSockets(e);
+		/**
+		* Makes the matching socket instances disconnect.
+		*
+		* Note: this method also works within a cluster of multiple Socket.IO servers, with a compatible {@link Adapter}.
+		*
+		* @example
+		* const myNamespace = io.of("/my-namespace");
+		*
+		* // make all socket instances disconnect (the connections might be kept alive for other namespaces)
+		* myNamespace.disconnectSockets();
+		*
+		* // make all socket instances in the "room1" room disconnect and close the underlying connections
+		* myNamespace.in("room1").disconnectSockets(true);
+		*
+		* @param close - whether to close the underlying connection
+		*/
+		disconnectSockets(close = false) {
+			return new broadcast_operator_1.BroadcastOperator(this.adapter).disconnectSockets(close);
 		}
 	};
-})), Ue = /* @__PURE__ */ p(((e) => {
-	Object.defineProperty(e, "__esModule", { value: !0 }), e.encode = s, e.decode = c, e.yeast = l;
-	var t = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_".split(""), n = 64, r = {}, i = 0, a = 0, o;
-	function s(e) {
-		let r = "";
-		do
-			r = t[e % n] + r, e = Math.floor(e / n);
-		while (e > 0);
-		return r;
+	exports.Namespace = Namespace;
+}));
+//#endregion
+//#region node_modules/socket.io-adapter/dist/contrib/yeast.js
+var require_yeast = /* @__PURE__ */ __commonJSMin(((exports) => {
+	Object.defineProperty(exports, "__esModule", { value: true });
+	exports.encode = encode;
+	exports.decode = decode;
+	exports.yeast = yeast;
+	var alphabet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_".split("");
+	var length = 64;
+	var map = {};
+	var seed = 0;
+	var i = 0;
+	var prev;
+	/**
+	* Return a string representing the specified number.
+	*
+	* @param {Number} num The number to convert.
+	* @returns {String} The string representation of the number.
+	* @api public
+	*/
+	function encode(num) {
+		let encoded = "";
+		do {
+			encoded = alphabet[num % length] + encoded;
+			num = Math.floor(num / length);
+		} while (num > 0);
+		return encoded;
 	}
-	function c(e) {
-		let t = 0;
-		for (a = 0; a < e.length; a++) t = t * n + r[e.charAt(a)];
-		return t;
+	/**
+	* Return the integer value specified by the given string.
+	*
+	* @param {String} str The string to convert.
+	* @returns {Number} The integer value represented by the string.
+	* @api public
+	*/
+	function decode(str) {
+		let decoded = 0;
+		for (i = 0; i < str.length; i++) decoded = decoded * length + map[str.charAt(i)];
+		return decoded;
 	}
-	function l() {
-		let e = s(+/* @__PURE__ */ new Date());
-		return e === o ? e + "." + s(i++) : (i = 0, o = e);
+	/**
+	* Yeast: A tiny growing id generator.
+	*
+	* @returns {String} A unique id.
+	* @api public
+	*/
+	function yeast() {
+		const now = encode(+/* @__PURE__ */ new Date());
+		if (now !== prev) return seed = 0, prev = now;
+		return now + "." + encode(seed++);
 	}
-	for (; a < n; a++) r[t[a]] = a;
-})), We = /* @__PURE__ */ p(((e) => {
-	Object.defineProperty(e, "__esModule", { value: !0 }), e.SessionAwareAdapter = e.Adapter = void 0;
-	var t = v("events"), n = Ue(), r = Se(), i = typeof r?.Sender?.frame == "function", a = class extends t.EventEmitter {
-		constructor(e) {
-			super(), this.nsp = e, this.rooms = /* @__PURE__ */ new Map(), this.sids = /* @__PURE__ */ new Map(), this.encoder = e.server.encoder;
+	for (; i < length; i++) map[alphabet[i]] = i;
+}));
+//#endregion
+//#region node_modules/socket.io-adapter/dist/in-memory-adapter.js
+var require_in_memory_adapter = /* @__PURE__ */ __commonJSMin(((exports) => {
+	var _a;
+	Object.defineProperty(exports, "__esModule", { value: true });
+	exports.SessionAwareAdapter = exports.Adapter = void 0;
+	var events_1$1 = __require("events");
+	var yeast_1 = require_yeast();
+	var WebSocket = require_ws();
+	var canPreComputeFrame = typeof ((_a = WebSocket === null || WebSocket === void 0 ? void 0 : WebSocket.Sender) === null || _a === void 0 ? void 0 : _a.frame) === "function";
+	var Adapter = class extends events_1$1.EventEmitter {
+		/**
+		* In-memory adapter constructor.
+		*
+		* @param nsp
+		*/
+		constructor(nsp) {
+			super();
+			this.nsp = nsp;
+			this.rooms = /* @__PURE__ */ new Map();
+			this.sids = /* @__PURE__ */ new Map();
+			this.encoder = nsp.server.encoder;
 		}
+		/**
+		* To be overridden
+		*/
 		init() {}
+		/**
+		* To be overridden
+		*/
 		close() {}
+		/**
+		* Returns the number of Socket.IO servers in the cluster
+		*
+		* @public
+		*/
 		serverCount() {
 			return Promise.resolve(1);
 		}
-		addAll(e, t) {
-			this.sids.has(e) || this.sids.set(e, /* @__PURE__ */ new Set());
-			for (let n of t) this.sids.get(e).add(n), this.rooms.has(n) || (this.rooms.set(n, /* @__PURE__ */ new Set()), this.emit("create-room", n)), this.rooms.get(n).has(e) || (this.rooms.get(n).add(e), this.emit("join-room", n, e));
-		}
-		del(e, t) {
-			this.sids.has(e) && this.sids.get(e).delete(t), this._del(t, e);
-		}
-		_del(e, t) {
-			let n = this.rooms.get(e);
-			n != null && (n.delete(t) && this.emit("leave-room", e, t), n.size === 0 && this.rooms.delete(e) && this.emit("delete-room", e));
-		}
-		delAll(e) {
-			if (this.sids.has(e)) {
-				for (let t of this.sids.get(e)) this._del(t, e);
-				this.sids.delete(e);
+		/**
+		* Adds a socket to a list of room.
+		*
+		* @param {SocketId}  id      the socket id
+		* @param {Set<Room>} rooms   a set of rooms
+		* @public
+		*/
+		addAll(id, rooms) {
+			if (!this.sids.has(id)) this.sids.set(id, /* @__PURE__ */ new Set());
+			for (const room of rooms) {
+				this.sids.get(id).add(room);
+				if (!this.rooms.has(room)) {
+					this.rooms.set(room, /* @__PURE__ */ new Set());
+					this.emit("create-room", room);
+				}
+				if (!this.rooms.get(room).has(id)) {
+					this.rooms.get(room).add(id);
+					this.emit("join-room", room, id);
+				}
 			}
 		}
-		broadcast(e, t) {
-			let n = t.flags || {}, r = {
-				preEncoded: !0,
-				volatile: n.volatile,
-				compress: n.compress
+		/**
+		* Removes a socket from a room.
+		*
+		* @param {SocketId} id     the socket id
+		* @param {Room}     room   the room name
+		*/
+		del(id, room) {
+			if (this.sids.has(id)) this.sids.get(id).delete(room);
+			this._del(room, id);
+		}
+		_del(room, id) {
+			const _room = this.rooms.get(room);
+			if (_room != null) {
+				if (_room.delete(id)) this.emit("leave-room", room, id);
+				if (_room.size === 0 && this.rooms.delete(room)) this.emit("delete-room", room);
+			}
+		}
+		/**
+		* Removes a socket from all rooms it's joined.
+		*
+		* @param {SocketId} id   the socket id
+		*/
+		delAll(id) {
+			if (!this.sids.has(id)) return;
+			for (const room of this.sids.get(id)) this._del(room, id);
+			this.sids.delete(id);
+		}
+		/**
+		* Broadcasts a packet.
+		*
+		* Options:
+		*  - `flags` {Object} flags for this packet
+		*  - `except` {Array} sids that should be excluded
+		*  - `rooms` {Array} list of rooms to broadcast to
+		*
+		* @param {Object} packet   the packet object
+		* @param {Object} opts     the options
+		* @public
+		*/
+		broadcast(packet, opts) {
+			const flags = opts.flags || {};
+			const packetOpts = {
+				preEncoded: true,
+				volatile: flags.volatile,
+				compress: flags.compress
 			};
-			e.nsp = this.nsp.name;
-			let i = this._encode(e, r);
-			this.apply(t, (t) => {
-				typeof t.notifyOutgoingListeners == "function" && t.notifyOutgoingListeners(e), t.client.writeToEngine(i, r);
+			packet.nsp = this.nsp.name;
+			const encodedPackets = this._encode(packet, packetOpts);
+			this.apply(opts, (socket) => {
+				if (typeof socket.notifyOutgoingListeners === "function") socket.notifyOutgoingListeners(packet);
+				socket.client.writeToEngine(encodedPackets, packetOpts);
 			});
 		}
-		broadcastWithAck(e, t, n, r) {
-			let i = t.flags || {}, a = {
-				preEncoded: !0,
-				volatile: i.volatile,
-				compress: i.compress
+		/**
+		* Broadcasts a packet and expects multiple acknowledgements.
+		*
+		* Options:
+		*  - `flags` {Object} flags for this packet
+		*  - `except` {Array} sids that should be excluded
+		*  - `rooms` {Array} list of rooms to broadcast to
+		*
+		* @param {Object} packet   the packet object
+		* @param {Object} opts     the options
+		* @param clientCountCallback - the number of clients that received the packet
+		* @param ack                 - the callback that will be called for each client response
+		*
+		* @public
+		*/
+		broadcastWithAck(packet, opts, clientCountCallback, ack) {
+			const flags = opts.flags || {};
+			const packetOpts = {
+				preEncoded: true,
+				volatile: flags.volatile,
+				compress: flags.compress
 			};
-			e.nsp = this.nsp.name, e.id = this.nsp._ids++;
-			let o = this._encode(e, a), s = 0;
-			this.apply(t, (t) => {
-				s++, t.acks.set(e.id, r), typeof t.notifyOutgoingListeners == "function" && t.notifyOutgoingListeners(e), t.client.writeToEngine(o, a);
-			}), n(s);
+			packet.nsp = this.nsp.name;
+			packet.id = this.nsp._ids++;
+			const encodedPackets = this._encode(packet, packetOpts);
+			let clientCount = 0;
+			this.apply(opts, (socket) => {
+				clientCount++;
+				socket.acks.set(packet.id, ack);
+				if (typeof socket.notifyOutgoingListeners === "function") socket.notifyOutgoingListeners(packet);
+				socket.client.writeToEngine(encodedPackets, packetOpts);
+			});
+			clientCountCallback(clientCount);
 		}
-		_encode(e, t) {
-			let n = this.encoder.encode(e);
-			if (i && n.length === 1 && typeof n[0] == "string") {
-				let e = Buffer.from("4" + n[0]);
-				t.wsPreEncodedFrame = r.Sender.frame(e, {
-					readOnly: !1,
-					mask: !1,
-					rsv1: !1,
+		_encode(packet, packetOpts) {
+			const encodedPackets = this.encoder.encode(packet);
+			if (canPreComputeFrame && encodedPackets.length === 1 && typeof encodedPackets[0] === "string") {
+				const data = Buffer.from("4" + encodedPackets[0]);
+				packetOpts.wsPreEncodedFrame = WebSocket.Sender.frame(data, {
+					readOnly: false,
+					mask: false,
+					rsv1: false,
 					opcode: 1,
-					fin: !0
+					fin: true
 				});
 			}
-			return n;
+			return encodedPackets;
 		}
-		sockets(e) {
-			let t = /* @__PURE__ */ new Set();
-			return this.apply({ rooms: e }, (e) => {
-				t.add(e.id);
-			}), Promise.resolve(t);
+		/**
+		* Gets a list of sockets by sid.
+		*
+		* @param {Set<Room>} rooms   the explicit set of rooms to check.
+		*/
+		sockets(rooms) {
+			const sids = /* @__PURE__ */ new Set();
+			this.apply({ rooms }, (socket) => {
+				sids.add(socket.id);
+			});
+			return Promise.resolve(sids);
 		}
-		socketRooms(e) {
-			return this.sids.get(e);
+		/**
+		* Gets the list of rooms a given socket has joined.
+		*
+		* @param {SocketId} id   the socket id
+		*/
+		socketRooms(id) {
+			return this.sids.get(id);
 		}
-		fetchSockets(e) {
-			let t = [];
-			return this.apply(e, (e) => {
-				t.push(e);
-			}), Promise.resolve(t);
+		/**
+		* Returns the matching socket instances
+		*
+		* @param opts - the filters to apply
+		*/
+		fetchSockets(opts) {
+			const sockets = [];
+			this.apply(opts, (socket) => {
+				sockets.push(socket);
+			});
+			return Promise.resolve(sockets);
 		}
-		addSockets(e, t) {
-			this.apply(e, (e) => {
-				e.join(t);
+		/**
+		* Makes the matching socket instances join the specified rooms
+		*
+		* @param opts - the filters to apply
+		* @param rooms - the rooms to join
+		*/
+		addSockets(opts, rooms) {
+			this.apply(opts, (socket) => {
+				socket.join(rooms);
 			});
 		}
-		delSockets(e, t) {
-			this.apply(e, (e) => {
-				t.forEach((t) => e.leave(t));
+		/**
+		* Makes the matching socket instances leave the specified rooms
+		*
+		* @param opts - the filters to apply
+		* @param rooms - the rooms to leave
+		*/
+		delSockets(opts, rooms) {
+			this.apply(opts, (socket) => {
+				rooms.forEach((room) => socket.leave(room));
 			});
 		}
-		disconnectSockets(e, t) {
-			this.apply(e, (e) => {
-				e.disconnect(t);
+		/**
+		* Makes the matching socket instances disconnect
+		*
+		* @param opts - the filters to apply
+		* @param close - whether to close the underlying connection
+		*/
+		disconnectSockets(opts, close) {
+			this.apply(opts, (socket) => {
+				socket.disconnect(close);
 			});
 		}
-		apply(e, t) {
-			let n = e.rooms, r = this.computeExceptSids(e.except);
-			if (n.size) {
-				let e = /* @__PURE__ */ new Set();
-				for (let i of n) if (this.rooms.has(i)) for (let n of this.rooms.get(i)) {
-					if (e.has(n) || r.has(n)) continue;
-					let i = this.nsp.sockets.get(n);
-					i && (t(i), e.add(n));
+		apply(opts, callback) {
+			const rooms = opts.rooms;
+			const except = this.computeExceptSids(opts.except);
+			if (rooms.size) {
+				const ids = /* @__PURE__ */ new Set();
+				for (const room of rooms) {
+					if (!this.rooms.has(room)) continue;
+					for (const id of this.rooms.get(room)) {
+						if (ids.has(id) || except.has(id)) continue;
+						const socket = this.nsp.sockets.get(id);
+						if (socket) {
+							callback(socket);
+							ids.add(id);
+						}
+					}
 				}
-			} else for (let [e] of this.sids) {
-				if (r.has(e)) continue;
-				let n = this.nsp.sockets.get(e);
-				n && t(n);
+			} else for (const [id] of this.sids) {
+				if (except.has(id)) continue;
+				const socket = this.nsp.sockets.get(id);
+				if (socket) callback(socket);
 			}
 		}
-		computeExceptSids(e) {
-			let t = /* @__PURE__ */ new Set();
-			if (e && e.size > 0) for (let n of e) this.rooms.has(n) && this.rooms.get(n).forEach((e) => t.add(e));
-			return t;
+		computeExceptSids(exceptRooms) {
+			const exceptSids = /* @__PURE__ */ new Set();
+			if (exceptRooms && exceptRooms.size > 0) {
+				for (const room of exceptRooms) if (this.rooms.has(room)) this.rooms.get(room).forEach((sid) => exceptSids.add(sid));
+			}
+			return exceptSids;
 		}
-		serverSideEmit(e) {
+		/**
+		* Send a packet to the other Socket.IO servers in the cluster
+		* @param packet - an array of arguments, which may include an acknowledgement callback at the end
+		*/
+		serverSideEmit(packet) {
 			console.warn("this adapter does not support the serverSideEmit() functionality");
 		}
-		persistSession(e) {}
-		restoreSession(e, t) {
+		/**
+		* Save the client session in order to restore it upon reconnection.
+		*/
+		persistSession(session) {}
+		/**
+		* Restore the session and find the packets that were missed by the client.
+		* @param pid
+		* @param offset
+		*/
+		restoreSession(pid, offset) {
 			return null;
 		}
 	};
-	e.Adapter = a, e.SessionAwareAdapter = class extends a {
-		constructor(e) {
-			super(e), this.nsp = e, this.sessions = /* @__PURE__ */ new Map(), this.packets = [], this.maxDisconnectionDuration = e.server.opts.connectionStateRecovery.maxDisconnectionDuration, setInterval(() => {
-				let e = Date.now() - this.maxDisconnectionDuration;
-				this.sessions.forEach((t, n) => {
-					t.disconnectedAt < e && this.sessions.delete(n);
+	exports.Adapter = Adapter;
+	var SessionAwareAdapter = class extends Adapter {
+		constructor(nsp) {
+			super(nsp);
+			this.nsp = nsp;
+			this.sessions = /* @__PURE__ */ new Map();
+			this.packets = [];
+			this.maxDisconnectionDuration = nsp.server.opts.connectionStateRecovery.maxDisconnectionDuration;
+			setInterval(() => {
+				const threshold = Date.now() - this.maxDisconnectionDuration;
+				this.sessions.forEach((session, sessionId) => {
+					if (session.disconnectedAt < threshold) this.sessions.delete(sessionId);
 				});
-				for (let t = this.packets.length - 1; t >= 0; t--) if (this.packets[t].emittedAt < e) {
-					this.packets.splice(0, t + 1);
+				for (let i = this.packets.length - 1; i >= 0; i--) if (this.packets[i].emittedAt < threshold) {
+					this.packets.splice(0, i + 1);
 					break;
 				}
 			}, 6e4).unref();
 		}
-		persistSession(e) {
-			e.disconnectedAt = Date.now(), this.sessions.set(e.pid, e);
+		persistSession(session) {
+			session.disconnectedAt = Date.now();
+			this.sessions.set(session.pid, session);
 		}
-		restoreSession(e, t) {
-			let n = this.sessions.get(e);
-			if (!n) return null;
-			if (n.disconnectedAt + this.maxDisconnectionDuration < Date.now()) return this.sessions.delete(e), null;
-			let r = this.packets.findIndex((e) => e.id === t);
-			if (r === -1) return null;
-			let i = [];
-			for (let e = r + 1; e < this.packets.length; e++) {
-				let t = this.packets[e];
-				o(n.rooms, t.opts) && i.push(t.data);
+		restoreSession(pid, offset) {
+			const session = this.sessions.get(pid);
+			if (!session) return null;
+			if (session.disconnectedAt + this.maxDisconnectionDuration < Date.now()) {
+				this.sessions.delete(pid);
+				return null;
 			}
-			return Promise.resolve(Object.assign(Object.assign({}, n), { missedPackets: i }));
+			const index = this.packets.findIndex((packet) => packet.id === offset);
+			if (index === -1) return null;
+			const missedPackets = [];
+			for (let i = index + 1; i < this.packets.length; i++) {
+				const packet = this.packets[i];
+				if (shouldIncludePacket(session.rooms, packet.opts)) missedPackets.push(packet.data);
+			}
+			return Promise.resolve(Object.assign(Object.assign({}, session), { missedPackets }));
 		}
-		broadcast(e, t) {
-			let r = e.type === 2, i = e.id === void 0, a = t.flags?.volatile === void 0;
-			if (r && i && a) {
-				let r = (0, n.yeast)();
-				e.data.push(r), this.packets.push({
-					id: r,
-					opts: t,
-					data: e.data,
+		broadcast(packet, opts) {
+			var _a;
+			const isEventPacket = packet.type === 2;
+			const withoutAcknowledgement = packet.id === void 0;
+			const notVolatile = ((_a = opts.flags) === null || _a === void 0 ? void 0 : _a.volatile) === void 0;
+			if (isEventPacket && withoutAcknowledgement && notVolatile) {
+				const id = (0, yeast_1.yeast)();
+				packet.data.push(id);
+				this.packets.push({
+					id,
+					opts,
+					data: packet.data,
 					emittedAt: Date.now()
 				});
 			}
-			super.broadcast(e, t);
+			super.broadcast(packet, opts);
 		}
 	};
-	function o(e, t) {
-		let n = t.rooms.size === 0 || e.some((e) => t.rooms.has(e)), r = e.every((e) => !t.except.has(e));
-		return n && r;
+	exports.SessionAwareAdapter = SessionAwareAdapter;
+	function shouldIncludePacket(sessionRooms, opts) {
+		const included = opts.rooms.size === 0 || sessionRooms.some((room) => opts.rooms.has(room));
+		const notExcluded = sessionRooms.every((room) => !opts.except.has(room));
+		return included && notExcluded;
 	}
-})), Ge = /* @__PURE__ */ p(((e) => {
-	var t = e && e.__rest || function(e, t) {
-		var n = {};
-		for (var r in e) Object.prototype.hasOwnProperty.call(e, r) && t.indexOf(r) < 0 && (n[r] = e[r]);
-		if (e != null && typeof Object.getOwnPropertySymbols == "function") for (var i = 0, r = Object.getOwnPropertySymbols(e); i < r.length; i++) t.indexOf(r[i]) < 0 && Object.prototype.propertyIsEnumerable.call(e, r[i]) && (n[r[i]] = e[r[i]]);
-		return n;
-	};
-	Object.defineProperty(e, "__esModule", { value: !0 }), e.ClusterAdapterWithHeartbeat = e.ClusterAdapter = e.MessageType = void 0;
-	var n = We(), r = z(), i = v("crypto"), a = (0, r.debug)("socket.io-adapter"), o = "emitter", s = 5e3;
-	function c() {
-		return (0, i.randomBytes)(8).toString("hex");
-	}
-	var l;
-	(function(e) {
-		e[e.INITIAL_HEARTBEAT = 1] = "INITIAL_HEARTBEAT", e[e.HEARTBEAT = 2] = "HEARTBEAT", e[e.BROADCAST = 3] = "BROADCAST", e[e.SOCKETS_JOIN = 4] = "SOCKETS_JOIN", e[e.SOCKETS_LEAVE = 5] = "SOCKETS_LEAVE", e[e.DISCONNECT_SOCKETS = 6] = "DISCONNECT_SOCKETS", e[e.FETCH_SOCKETS = 7] = "FETCH_SOCKETS", e[e.FETCH_SOCKETS_RESPONSE = 8] = "FETCH_SOCKETS_RESPONSE", e[e.SERVER_SIDE_EMIT = 9] = "SERVER_SIDE_EMIT", e[e.SERVER_SIDE_EMIT_RESPONSE = 10] = "SERVER_SIDE_EMIT_RESPONSE", e[e.BROADCAST_CLIENT_COUNT = 11] = "BROADCAST_CLIENT_COUNT", e[e.BROADCAST_ACK = 12] = "BROADCAST_ACK", e[e.ADAPTER_CLOSE = 13] = "ADAPTER_CLOSE";
-	})(l || (e.MessageType = l = {}));
-	function u(e) {
-		return {
-			rooms: [...e.rooms],
-			except: [...e.except],
-			flags: e.flags
-		};
-	}
-	function d(e) {
-		return {
-			rooms: new Set(e.rooms),
-			except: new Set(e.except),
-			flags: e.flags
-		};
-	}
-	var f = class extends n.Adapter {
-		constructor(e) {
-			super(e), this.requests = /* @__PURE__ */ new Map(), this.ackRequests = /* @__PURE__ */ new Map(), this.uid = c();
+}));
+//#endregion
+//#region node_modules/socket.io-adapter/dist/cluster-adapter.js
+var require_cluster_adapter = /* @__PURE__ */ __commonJSMin(((exports) => {
+	var __rest = exports && exports.__rest || function(s, e) {
+		var t = {};
+		for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
+		if (s != null && typeof Object.getOwnPropertySymbols === "function") {
+			for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
 		}
-		onMessage(e, n) {
-			if (e.uid === this.uid) return a("[%s] ignore message from self", this.uid);
-			if (e.nsp !== this.nsp.name) return a("[%s] ignore message from another namespace (%s)", this.uid, e.nsp);
-			switch (a("[%s] new event of type %d from %s", this.uid, e.type, e.uid), e.type) {
-				case l.BROADCAST:
-					if (e.data.requestId !== void 0) super.broadcastWithAck(e.data.packet, d(e.data.opts), (t) => {
-						a("[%s] waiting for %d client acknowledgements", this.uid, t), this.publishResponse(e.uid, {
-							type: l.BROADCAST_CLIENT_COUNT,
+		return t;
+	};
+	Object.defineProperty(exports, "__esModule", { value: true });
+	exports.ClusterAdapterWithHeartbeat = exports.ClusterAdapter = exports.MessageType = void 0;
+	var in_memory_adapter_1 = require_in_memory_adapter();
+	var debug_1 = require_src();
+	var crypto_1 = __require("crypto");
+	var debug = (0, debug_1.debug)("socket.io-adapter");
+	var EMITTER_UID = "emitter";
+	var DEFAULT_TIMEOUT = 5e3;
+	function randomId() {
+		return (0, crypto_1.randomBytes)(8).toString("hex");
+	}
+	var MessageType;
+	(function(MessageType) {
+		MessageType[MessageType["INITIAL_HEARTBEAT"] = 1] = "INITIAL_HEARTBEAT";
+		MessageType[MessageType["HEARTBEAT"] = 2] = "HEARTBEAT";
+		MessageType[MessageType["BROADCAST"] = 3] = "BROADCAST";
+		MessageType[MessageType["SOCKETS_JOIN"] = 4] = "SOCKETS_JOIN";
+		MessageType[MessageType["SOCKETS_LEAVE"] = 5] = "SOCKETS_LEAVE";
+		MessageType[MessageType["DISCONNECT_SOCKETS"] = 6] = "DISCONNECT_SOCKETS";
+		MessageType[MessageType["FETCH_SOCKETS"] = 7] = "FETCH_SOCKETS";
+		MessageType[MessageType["FETCH_SOCKETS_RESPONSE"] = 8] = "FETCH_SOCKETS_RESPONSE";
+		MessageType[MessageType["SERVER_SIDE_EMIT"] = 9] = "SERVER_SIDE_EMIT";
+		MessageType[MessageType["SERVER_SIDE_EMIT_RESPONSE"] = 10] = "SERVER_SIDE_EMIT_RESPONSE";
+		MessageType[MessageType["BROADCAST_CLIENT_COUNT"] = 11] = "BROADCAST_CLIENT_COUNT";
+		MessageType[MessageType["BROADCAST_ACK"] = 12] = "BROADCAST_ACK";
+		MessageType[MessageType["ADAPTER_CLOSE"] = 13] = "ADAPTER_CLOSE";
+	})(MessageType || (exports.MessageType = MessageType = {}));
+	function encodeOptions(opts) {
+		return {
+			rooms: [...opts.rooms],
+			except: [...opts.except],
+			flags: opts.flags
+		};
+	}
+	function decodeOptions(opts) {
+		return {
+			rooms: new Set(opts.rooms),
+			except: new Set(opts.except),
+			flags: opts.flags
+		};
+	}
+	/**
+	* A cluster-ready adapter. Any extending class must:
+	*
+	* - implement {@link ClusterAdapter#doPublish} and {@link ClusterAdapter#doPublishResponse}
+	* - call {@link ClusterAdapter#onMessage} and {@link ClusterAdapter#onResponse}
+	*/
+	var ClusterAdapter = class extends in_memory_adapter_1.Adapter {
+		constructor(nsp) {
+			super(nsp);
+			this.requests = /* @__PURE__ */ new Map();
+			this.ackRequests = /* @__PURE__ */ new Map();
+			this.uid = randomId();
+		}
+		/**
+		* Called when receiving a message from another member of the cluster.
+		*
+		* @param message
+		* @param offset
+		* @protected
+		*/
+		onMessage(message, offset) {
+			if (message.uid === this.uid) return debug("[%s] ignore message from self", this.uid);
+			if (message.nsp !== this.nsp.name) return debug("[%s] ignore message from another namespace (%s)", this.uid, message.nsp);
+			debug("[%s] new event of type %d from %s", this.uid, message.type, message.uid);
+			switch (message.type) {
+				case MessageType.BROADCAST:
+					if (message.data.requestId !== void 0) super.broadcastWithAck(message.data.packet, decodeOptions(message.data.opts), (clientCount) => {
+						debug("[%s] waiting for %d client acknowledgements", this.uid, clientCount);
+						this.publishResponse(message.uid, {
+							type: MessageType.BROADCAST_CLIENT_COUNT,
 							data: {
-								requestId: e.data.requestId,
-								clientCount: t
+								requestId: message.data.requestId,
+								clientCount
 							}
 						});
-					}, (t) => {
-						a("[%s] received acknowledgement with value %j", this.uid, t), this.publishResponse(e.uid, {
-							type: l.BROADCAST_ACK,
+					}, (arg) => {
+						debug("[%s] received acknowledgement with value %j", this.uid, arg);
+						this.publishResponse(message.uid, {
+							type: MessageType.BROADCAST_ACK,
 							data: {
-								requestId: e.data.requestId,
-								packet: t
+								requestId: message.data.requestId,
+								packet: arg
 							}
 						});
 					});
 					else {
-						let t = e.data.packet, r = d(e.data.opts);
-						this.addOffsetIfNecessary(t, r, n), super.broadcast(t, r);
+						const packet = message.data.packet;
+						const opts = decodeOptions(message.data.opts);
+						this.addOffsetIfNecessary(packet, opts, offset);
+						super.broadcast(packet, opts);
 					}
 					break;
-				case l.SOCKETS_JOIN:
-					super.addSockets(d(e.data.opts), e.data.rooms);
+				case MessageType.SOCKETS_JOIN:
+					super.addSockets(decodeOptions(message.data.opts), message.data.rooms);
 					break;
-				case l.SOCKETS_LEAVE:
-					super.delSockets(d(e.data.opts), e.data.rooms);
+				case MessageType.SOCKETS_LEAVE:
+					super.delSockets(decodeOptions(message.data.opts), message.data.rooms);
 					break;
-				case l.DISCONNECT_SOCKETS:
-					super.disconnectSockets(d(e.data.opts), e.data.close);
+				case MessageType.DISCONNECT_SOCKETS:
+					super.disconnectSockets(decodeOptions(message.data.opts), message.data.close);
 					break;
-				case l.FETCH_SOCKETS:
-					a("[%s] calling fetchSockets with opts %j", this.uid, e.data.opts), super.fetchSockets(d(e.data.opts)).then((n) => {
-						this.publishResponse(e.uid, {
-							type: l.FETCH_SOCKETS_RESPONSE,
+				case MessageType.FETCH_SOCKETS:
+					debug("[%s] calling fetchSockets with opts %j", this.uid, message.data.opts);
+					super.fetchSockets(decodeOptions(message.data.opts)).then((localSockets) => {
+						this.publishResponse(message.uid, {
+							type: MessageType.FETCH_SOCKETS_RESPONSE,
 							data: {
-								requestId: e.data.requestId,
-								sockets: n.map((e) => {
-									let n = e.handshake, { sessionStore: r } = n, i = t(n, ["sessionStore"]);
+								requestId: message.data.requestId,
+								sockets: localSockets.map((socket) => {
+									const _a = socket.handshake, { sessionStore } = _a, handshake = __rest(_a, ["sessionStore"]);
 									return {
-										id: e.id,
-										handshake: i,
-										rooms: [...e.rooms],
-										data: e.data
+										id: socket.id,
+										handshake,
+										rooms: [...socket.rooms],
+										data: socket.data
 									};
 								})
 							}
 						});
 					});
 					break;
-				case l.SERVER_SIDE_EMIT: {
-					let t = e.data.packet;
-					if (e.data.requestId === void 0) {
-						this.nsp._onServerSideEmit(t);
+				case MessageType.SERVER_SIDE_EMIT: {
+					const packet = message.data.packet;
+					if (!(message.data.requestId !== void 0)) {
+						this.nsp._onServerSideEmit(packet);
 						return;
 					}
-					let n = !1, r = (t) => {
-						n || (n = !0, a("[%s] calling acknowledgement with %j", this.uid, t), this.publishResponse(e.uid, {
-							type: l.SERVER_SIDE_EMIT_RESPONSE,
+					let called = false;
+					const callback = (arg) => {
+						if (called) return;
+						called = true;
+						debug("[%s] calling acknowledgement with %j", this.uid, arg);
+						this.publishResponse(message.uid, {
+							type: MessageType.SERVER_SIDE_EMIT_RESPONSE,
 							data: {
-								requestId: e.data.requestId,
-								packet: t
+								requestId: message.data.requestId,
+								packet: arg
 							}
-						}));
+						});
 					};
-					this.nsp._onServerSideEmit([...t, r]);
+					this.nsp._onServerSideEmit([...packet, callback]);
 					break;
 				}
-				case l.BROADCAST_CLIENT_COUNT:
-				case l.BROADCAST_ACK:
-				case l.FETCH_SOCKETS_RESPONSE:
-				case l.SERVER_SIDE_EMIT_RESPONSE:
-					this.onResponse(e);
+				case MessageType.BROADCAST_CLIENT_COUNT:
+				case MessageType.BROADCAST_ACK:
+				case MessageType.FETCH_SOCKETS_RESPONSE:
+				case MessageType.SERVER_SIDE_EMIT_RESPONSE:
+					this.onResponse(message);
 					break;
-				default: a("[%s] unknown message type: %s", this.uid, e.type);
+				default: debug("[%s] unknown message type: %s", this.uid, message.type);
 			}
 		}
-		onResponse(e) {
-			var t, n;
-			let r = e.data.requestId;
-			switch (a("[%s] received response %s to request %s", this.uid, e.type, r), e.type) {
-				case l.BROADCAST_CLIENT_COUNT:
-					(t = this.ackRequests.get(r)) == null || t.clientCountCallback(e.data.clientCount);
+		/**
+		* Called when receiving a response from another member of the cluster.
+		*
+		* @param response
+		* @protected
+		*/
+		onResponse(response) {
+			var _a, _b;
+			const requestId = response.data.requestId;
+			debug("[%s] received response %s to request %s", this.uid, response.type, requestId);
+			switch (response.type) {
+				case MessageType.BROADCAST_CLIENT_COUNT:
+					(_a = this.ackRequests.get(requestId)) === null || _a === void 0 || _a.clientCountCallback(response.data.clientCount);
 					break;
-				case l.BROADCAST_ACK:
-					(n = this.ackRequests.get(r)) == null || n.ack(e.data.packet);
+				case MessageType.BROADCAST_ACK:
+					(_b = this.ackRequests.get(requestId)) === null || _b === void 0 || _b.ack(response.data.packet);
 					break;
-				case l.FETCH_SOCKETS_RESPONSE: {
-					let t = this.requests.get(r);
-					if (!t) return;
-					t.current++, e.data.sockets.forEach((e) => t.responses.push(e)), t.current === t.expected && (clearTimeout(t.timeout), t.resolve(t.responses), this.requests.delete(r));
+				case MessageType.FETCH_SOCKETS_RESPONSE: {
+					const request = this.requests.get(requestId);
+					if (!request) return;
+					request.current++;
+					response.data.sockets.forEach((socket) => request.responses.push(socket));
+					if (request.current === request.expected) {
+						clearTimeout(request.timeout);
+						request.resolve(request.responses);
+						this.requests.delete(requestId);
+					}
 					break;
 				}
-				case l.SERVER_SIDE_EMIT_RESPONSE: {
-					let t = this.requests.get(r);
-					if (!t) return;
-					t.current++, t.responses.push(e.data.packet), t.current === t.expected && (clearTimeout(t.timeout), t.resolve(null, t.responses), this.requests.delete(r));
+				case MessageType.SERVER_SIDE_EMIT_RESPONSE: {
+					const request = this.requests.get(requestId);
+					if (!request) return;
+					request.current++;
+					request.responses.push(response.data.packet);
+					if (request.current === request.expected) {
+						clearTimeout(request.timeout);
+						request.resolve(null, request.responses);
+						this.requests.delete(requestId);
+					}
 					break;
 				}
-				default: a("[%s] unknown response type: %s", this.uid, e.type);
+				default: debug("[%s] unknown response type: %s", this.uid, response.type);
 			}
 		}
-		async broadcast(e, t) {
-			if (!t.flags?.local) try {
-				let n = await this.publishAndReturnOffset({
-					type: l.BROADCAST,
+		async broadcast(packet, opts) {
+			var _a;
+			if (!((_a = opts.flags) === null || _a === void 0 ? void 0 : _a.local)) try {
+				const offset = await this.publishAndReturnOffset({
+					type: MessageType.BROADCAST,
 					data: {
-						packet: e,
-						opts: u(t)
+						packet,
+						opts: encodeOptions(opts)
 					}
 				});
-				this.addOffsetIfNecessary(e, t, n);
+				this.addOffsetIfNecessary(packet, opts, offset);
 			} catch (e) {
-				a("[%s] error while broadcasting message: %s", this.uid, e.message);
+				debug("[%s] error while broadcasting message: %s", this.uid, e.message);
 			}
-			super.broadcast(e, t);
+			super.broadcast(packet, opts);
 		}
-		addOffsetIfNecessary(e, t, n) {
+		/**
+		* Adds an offset at the end of the data array in order to allow the client to receive any missed packets when it
+		* reconnects after a temporary disconnection.
+		*
+		* @param packet
+		* @param opts
+		* @param offset
+		* @private
+		*/
+		addOffsetIfNecessary(packet, opts, offset) {
+			var _a;
 			if (!this.nsp.server.opts.connectionStateRecovery) return;
-			let r = e.type === 2, i = e.id === void 0, a = t.flags?.volatile === void 0;
-			r && i && a && e.data.push(n);
+			const isEventPacket = packet.type === 2;
+			const withoutAcknowledgement = packet.id === void 0;
+			const notVolatile = ((_a = opts.flags) === null || _a === void 0 ? void 0 : _a.volatile) === void 0;
+			if (isEventPacket && withoutAcknowledgement && notVolatile) packet.data.push(offset);
 		}
-		broadcastWithAck(e, t, n, r) {
-			if (!t?.flags?.local) {
-				let i = c();
-				this.ackRequests.set(i, {
-					clientCountCallback: n,
-					ack: r
-				}), this.publish({
-					type: l.BROADCAST,
+		broadcastWithAck(packet, opts, clientCountCallback, ack) {
+			var _a;
+			if (!((_a = opts === null || opts === void 0 ? void 0 : opts.flags) === null || _a === void 0 ? void 0 : _a.local)) {
+				const requestId = randomId();
+				this.ackRequests.set(requestId, {
+					clientCountCallback,
+					ack
+				});
+				this.publish({
+					type: MessageType.BROADCAST,
 					data: {
-						packet: e,
-						requestId: i,
-						opts: u(t)
+						packet,
+						requestId,
+						opts: encodeOptions(opts)
 					}
-				}), setTimeout(() => {
-					this.ackRequests.delete(i);
-				}, t.flags.timeout);
+				});
+				setTimeout(() => {
+					this.ackRequests.delete(requestId);
+				}, opts.flags.timeout);
 			}
-			super.broadcastWithAck(e, t, n, r);
+			super.broadcastWithAck(packet, opts, clientCountCallback, ack);
 		}
-		async addSockets(e, t) {
-			if (!e.flags?.local) try {
+		async addSockets(opts, rooms) {
+			var _a;
+			if (!((_a = opts.flags) === null || _a === void 0 ? void 0 : _a.local)) try {
 				await this.publishAndReturnOffset({
-					type: l.SOCKETS_JOIN,
+					type: MessageType.SOCKETS_JOIN,
 					data: {
-						opts: u(e),
-						rooms: t
+						opts: encodeOptions(opts),
+						rooms
 					}
 				});
 			} catch (e) {
-				a("[%s] error while publishing message: %s", this.uid, e.message);
+				debug("[%s] error while publishing message: %s", this.uid, e.message);
 			}
-			super.addSockets(e, t);
+			super.addSockets(opts, rooms);
 		}
-		async delSockets(e, t) {
-			if (!e.flags?.local) try {
+		async delSockets(opts, rooms) {
+			var _a;
+			if (!((_a = opts.flags) === null || _a === void 0 ? void 0 : _a.local)) try {
 				await this.publishAndReturnOffset({
-					type: l.SOCKETS_LEAVE,
+					type: MessageType.SOCKETS_LEAVE,
 					data: {
-						opts: u(e),
-						rooms: t
+						opts: encodeOptions(opts),
+						rooms
 					}
 				});
 			} catch (e) {
-				a("[%s] error while publishing message: %s", this.uid, e.message);
+				debug("[%s] error while publishing message: %s", this.uid, e.message);
 			}
-			super.delSockets(e, t);
+			super.delSockets(opts, rooms);
 		}
-		async disconnectSockets(e, t) {
-			if (!e.flags?.local) try {
+		async disconnectSockets(opts, close) {
+			var _a;
+			if (!((_a = opts.flags) === null || _a === void 0 ? void 0 : _a.local)) try {
 				await this.publishAndReturnOffset({
-					type: l.DISCONNECT_SOCKETS,
+					type: MessageType.DISCONNECT_SOCKETS,
 					data: {
-						opts: u(e),
-						close: t
+						opts: encodeOptions(opts),
+						close
 					}
 				});
 			} catch (e) {
-				a("[%s] error while publishing message: %s", this.uid, e.message);
+				debug("[%s] error while publishing message: %s", this.uid, e.message);
 			}
-			super.disconnectSockets(e, t);
+			super.disconnectSockets(opts, close);
 		}
-		async fetchSockets(e) {
-			let [t, n] = await Promise.all([super.fetchSockets(e), this.serverCount()]), r = n - 1;
-			if (e.flags?.local || r <= 0) return t;
-			let i = c();
-			return new Promise((n, a) => {
-				let o = setTimeout(() => {
-					let e = this.requests.get(i);
-					e && (a(/* @__PURE__ */ Error(`timeout reached: only ${e.current} responses received out of ${e.expected}`)), this.requests.delete(i));
-				}, e.flags.timeout || s), c = {
-					type: l.FETCH_SOCKETS,
-					resolve: n,
-					timeout: o,
+		async fetchSockets(opts) {
+			var _a;
+			const [localSockets, serverCount] = await Promise.all([super.fetchSockets(opts), this.serverCount()]);
+			const expectedResponseCount = serverCount - 1;
+			if (((_a = opts.flags) === null || _a === void 0 ? void 0 : _a.local) || expectedResponseCount <= 0) return localSockets;
+			const requestId = randomId();
+			return new Promise((resolve, reject) => {
+				const timeout = setTimeout(() => {
+					const storedRequest = this.requests.get(requestId);
+					if (storedRequest) {
+						reject(/* @__PURE__ */ new Error(`timeout reached: only ${storedRequest.current} responses received out of ${storedRequest.expected}`));
+						this.requests.delete(requestId);
+					}
+				}, opts.flags.timeout || DEFAULT_TIMEOUT);
+				const storedRequest = {
+					type: MessageType.FETCH_SOCKETS,
+					resolve,
+					timeout,
 					current: 0,
-					expected: r,
-					responses: t
+					expected: expectedResponseCount,
+					responses: localSockets
 				};
-				this.requests.set(i, c), this.publish({
-					type: l.FETCH_SOCKETS,
+				this.requests.set(requestId, storedRequest);
+				this.publish({
+					type: MessageType.FETCH_SOCKETS,
 					data: {
-						opts: u(e),
-						requestId: i
+						opts: encodeOptions(opts),
+						requestId
 					}
 				});
 			});
 		}
-		async serverSideEmit(e) {
-			if (typeof e[e.length - 1] != "function") return this.publish({
-				type: l.SERVER_SIDE_EMIT,
-				data: { packet: e }
+		async serverSideEmit(packet) {
+			if (!(typeof packet[packet.length - 1] === "function")) return this.publish({
+				type: MessageType.SERVER_SIDE_EMIT,
+				data: { packet }
 			});
-			let t = e.pop(), n = await this.serverCount() - 1;
-			if (a("[%s] waiting for %d responses to \"serverSideEmit\" request", this.uid, n), n <= 0) return t(null, []);
-			let r = c(), i = setTimeout(() => {
-				let e = this.requests.get(r);
-				e && (t(/* @__PURE__ */ Error(`timeout reached: only ${e.current} responses received out of ${e.expected}`), e.responses), this.requests.delete(r));
-			}, s), o = {
-				type: l.SERVER_SIDE_EMIT,
-				resolve: t,
-				timeout: i,
+			const ack = packet.pop();
+			const expectedResponseCount = await this.serverCount() - 1;
+			debug("[%s] waiting for %d responses to \"serverSideEmit\" request", this.uid, expectedResponseCount);
+			if (expectedResponseCount <= 0) return ack(null, []);
+			const requestId = randomId();
+			const timeout = setTimeout(() => {
+				const storedRequest = this.requests.get(requestId);
+				if (storedRequest) {
+					ack(/* @__PURE__ */ new Error(`timeout reached: only ${storedRequest.current} responses received out of ${storedRequest.expected}`), storedRequest.responses);
+					this.requests.delete(requestId);
+				}
+			}, DEFAULT_TIMEOUT);
+			const storedRequest = {
+				type: MessageType.SERVER_SIDE_EMIT,
+				resolve: ack,
+				timeout,
 				current: 0,
-				expected: n,
+				expected: expectedResponseCount,
 				responses: []
 			};
-			this.requests.set(r, o), this.publish({
-				type: l.SERVER_SIDE_EMIT,
+			this.requests.set(requestId, storedRequest);
+			this.publish({
+				type: MessageType.SERVER_SIDE_EMIT,
 				data: {
-					requestId: r,
-					packet: e
+					requestId,
+					packet
 				}
 			});
 		}
-		publish(e) {
-			a("[%s] sending message %s", this.uid, e.type), this.publishAndReturnOffset(e).catch((e) => {
-				a("[%s] error while publishing message: %s", this.uid, e);
+		publish(message) {
+			debug("[%s] sending message %s", this.uid, message.type);
+			this.publishAndReturnOffset(message).catch((err) => {
+				debug("[%s] error while publishing message: %s", this.uid, err);
 			});
 		}
-		publishAndReturnOffset(e) {
-			return e.uid = this.uid, e.nsp = this.nsp.name, this.doPublish(e);
+		publishAndReturnOffset(message) {
+			message.uid = this.uid;
+			message.nsp = this.nsp.name;
+			return this.doPublish(message);
 		}
-		publishResponse(e, t) {
-			t.uid = this.uid, t.nsp = this.nsp.name, a("[%s] sending response %s to %s", this.uid, t.type, e), this.doPublishResponse(e, t).catch((e) => {
-				a("[%s] error while publishing response: %s", this.uid, e);
+		publishResponse(requesterUid, response) {
+			response.uid = this.uid;
+			response.nsp = this.nsp.name;
+			debug("[%s] sending response %s to %s", this.uid, response.type, requesterUid);
+			this.doPublishResponse(requesterUid, response).catch((err) => {
+				debug("[%s] error while publishing response: %s", this.uid, err);
 			});
 		}
 	};
-	e.ClusterAdapter = f, e.ClusterAdapterWithHeartbeat = class extends f {
-		constructor(e, t) {
-			super(e), this.nodesMap = /* @__PURE__ */ new Map(), this.customRequests = /* @__PURE__ */ new Map(), this._opts = Object.assign({
+	exports.ClusterAdapter = ClusterAdapter;
+	var ClusterAdapterWithHeartbeat = class extends ClusterAdapter {
+		constructor(nsp, opts) {
+			super(nsp);
+			this.nodesMap = /* @__PURE__ */ new Map();
+			this.customRequests = /* @__PURE__ */ new Map();
+			this._opts = Object.assign({
 				heartbeatInterval: 5e3,
 				heartbeatTimeout: 1e4
-			}, t), this.cleanupTimer = setInterval(() => {
-				let e = Date.now();
-				this.nodesMap.forEach((t, n) => {
-					e - t > this._opts.heartbeatTimeout && (a("[%s] node %s seems down", this.uid, n), this.removeNode(n));
+			}, opts);
+			this.cleanupTimer = setInterval(() => {
+				const now = Date.now();
+				this.nodesMap.forEach((lastSeen, uid) => {
+					if (now - lastSeen > this._opts.heartbeatTimeout) {
+						debug("[%s] node %s seems down", this.uid, uid);
+						this.removeNode(uid);
+					}
 				});
 			}, 1e3);
 		}
 		init() {
-			this.publish({ type: l.INITIAL_HEARTBEAT });
+			this.publish({ type: MessageType.INITIAL_HEARTBEAT });
 		}
 		scheduleHeartbeat() {
-			this.heartbeatTimer ? this.heartbeatTimer.refresh() : this.heartbeatTimer = setTimeout(() => {
-				this.publish({ type: l.HEARTBEAT });
+			if (this.heartbeatTimer) this.heartbeatTimer.refresh();
+			else this.heartbeatTimer = setTimeout(() => {
+				this.publish({ type: MessageType.HEARTBEAT });
 			}, this._opts.heartbeatInterval);
 		}
 		close() {
-			this.publish({ type: l.ADAPTER_CLOSE }), clearTimeout(this.heartbeatTimer), this.cleanupTimer && clearInterval(this.cleanupTimer);
+			this.publish({ type: MessageType.ADAPTER_CLOSE });
+			clearTimeout(this.heartbeatTimer);
+			if (this.cleanupTimer) clearInterval(this.cleanupTimer);
 		}
-		onMessage(e, t) {
-			if (e.uid === this.uid) return a("[%s] ignore message from self", this.uid);
-			switch (e.uid && e.uid !== o && this.nodesMap.set(e.uid, Date.now()), e.type) {
-				case l.INITIAL_HEARTBEAT:
-					this.publish({ type: l.HEARTBEAT });
+		onMessage(message, offset) {
+			if (message.uid === this.uid) return debug("[%s] ignore message from self", this.uid);
+			if (message.uid && message.uid !== EMITTER_UID) this.nodesMap.set(message.uid, Date.now());
+			switch (message.type) {
+				case MessageType.INITIAL_HEARTBEAT:
+					this.publish({ type: MessageType.HEARTBEAT });
 					break;
-				case l.HEARTBEAT: break;
-				case l.ADAPTER_CLOSE:
-					this.removeNode(e.uid);
+				case MessageType.HEARTBEAT: break;
+				case MessageType.ADAPTER_CLOSE:
+					this.removeNode(message.uid);
 					break;
-				default: super.onMessage(e, t);
+				default: super.onMessage(message, offset);
 			}
 		}
 		serverCount() {
 			return Promise.resolve(1 + this.nodesMap.size);
 		}
-		publish(e) {
-			return this.scheduleHeartbeat(), super.publish(e);
+		publish(message) {
+			this.scheduleHeartbeat();
+			return super.publish(message);
 		}
-		async serverSideEmit(e) {
-			if (typeof e[e.length - 1] != "function") return this.publish({
-				type: l.SERVER_SIDE_EMIT,
-				data: { packet: e }
+		async serverSideEmit(packet) {
+			if (!(typeof packet[packet.length - 1] === "function")) return this.publish({
+				type: MessageType.SERVER_SIDE_EMIT,
+				data: { packet }
 			});
-			let t = e.pop(), n = this.nodesMap.size;
-			if (a("[%s] waiting for %d responses to \"serverSideEmit\" request", this.uid, n), n <= 0) return t(null, []);
-			let r = c(), i = setTimeout(() => {
-				let e = this.customRequests.get(r);
-				e && (t(/* @__PURE__ */ Error(`timeout reached: missing ${e.missingUids.size} responses`), e.responses), this.customRequests.delete(r));
-			}, s), o = {
-				type: l.SERVER_SIDE_EMIT,
-				resolve: t,
-				timeout: i,
+			const ack = packet.pop();
+			const expectedResponseCount = this.nodesMap.size;
+			debug("[%s] waiting for %d responses to \"serverSideEmit\" request", this.uid, expectedResponseCount);
+			if (expectedResponseCount <= 0) return ack(null, []);
+			const requestId = randomId();
+			const timeout = setTimeout(() => {
+				const storedRequest = this.customRequests.get(requestId);
+				if (storedRequest) {
+					ack(/* @__PURE__ */ new Error(`timeout reached: missing ${storedRequest.missingUids.size} responses`), storedRequest.responses);
+					this.customRequests.delete(requestId);
+				}
+			}, DEFAULT_TIMEOUT);
+			const storedRequest = {
+				type: MessageType.SERVER_SIDE_EMIT,
+				resolve: ack,
+				timeout,
 				missingUids: /* @__PURE__ */ new Set([...this.nodesMap.keys()]),
 				responses: []
 			};
-			this.customRequests.set(r, o), this.publish({
-				type: l.SERVER_SIDE_EMIT,
+			this.customRequests.set(requestId, storedRequest);
+			this.publish({
+				type: MessageType.SERVER_SIDE_EMIT,
 				data: {
-					requestId: r,
-					packet: e
+					requestId,
+					packet
 				}
 			});
 		}
-		async fetchSockets(e) {
-			let [t, n] = await Promise.all([super.fetchSockets({
-				rooms: e.rooms,
-				except: e.except,
-				flags: { local: !0 }
-			}), this.serverCount()]), r = n - 1;
-			if (e.flags?.local || r <= 0) return t;
-			let i = c();
-			return new Promise((n, r) => {
-				let a = setTimeout(() => {
-					let e = this.customRequests.get(i);
-					e && (r(/* @__PURE__ */ Error(`timeout reached: missing ${e.missingUids.size} responses`)), this.customRequests.delete(i));
-				}, e.flags.timeout || s), o = {
-					type: l.FETCH_SOCKETS,
-					resolve: n,
-					timeout: a,
+		async fetchSockets(opts) {
+			var _a;
+			const [localSockets, serverCount] = await Promise.all([super.fetchSockets({
+				rooms: opts.rooms,
+				except: opts.except,
+				flags: { local: true }
+			}), this.serverCount()]);
+			const expectedResponseCount = serverCount - 1;
+			if (((_a = opts.flags) === null || _a === void 0 ? void 0 : _a.local) || expectedResponseCount <= 0) return localSockets;
+			const requestId = randomId();
+			return new Promise((resolve, reject) => {
+				const timeout = setTimeout(() => {
+					const storedRequest = this.customRequests.get(requestId);
+					if (storedRequest) {
+						reject(/* @__PURE__ */ new Error(`timeout reached: missing ${storedRequest.missingUids.size} responses`));
+						this.customRequests.delete(requestId);
+					}
+				}, opts.flags.timeout || DEFAULT_TIMEOUT);
+				const storedRequest = {
+					type: MessageType.FETCH_SOCKETS,
+					resolve,
+					timeout,
 					missingUids: /* @__PURE__ */ new Set([...this.nodesMap.keys()]),
-					responses: t
+					responses: localSockets
 				};
-				this.customRequests.set(i, o), this.publish({
-					type: l.FETCH_SOCKETS,
+				this.customRequests.set(requestId, storedRequest);
+				this.publish({
+					type: MessageType.FETCH_SOCKETS,
 					data: {
-						opts: u(e),
-						requestId: i
+						opts: encodeOptions(opts),
+						requestId
 					}
 				});
 			});
 		}
-		onResponse(e) {
-			let t = e.data.requestId;
-			switch (a("[%s] received response %s to request %s", this.uid, e.type, t), e.type) {
-				case l.FETCH_SOCKETS_RESPONSE: {
-					let n = this.customRequests.get(t);
-					if (!n) return;
-					e.data.sockets.forEach((e) => n.responses.push(e)), n.missingUids.delete(e.uid), n.missingUids.size === 0 && (clearTimeout(n.timeout), n.resolve(n.responses), this.customRequests.delete(t));
+		onResponse(response) {
+			const requestId = response.data.requestId;
+			debug("[%s] received response %s to request %s", this.uid, response.type, requestId);
+			switch (response.type) {
+				case MessageType.FETCH_SOCKETS_RESPONSE: {
+					const request = this.customRequests.get(requestId);
+					if (!request) return;
+					response.data.sockets.forEach((socket) => request.responses.push(socket));
+					request.missingUids.delete(response.uid);
+					if (request.missingUids.size === 0) {
+						clearTimeout(request.timeout);
+						request.resolve(request.responses);
+						this.customRequests.delete(requestId);
+					}
 					break;
 				}
-				case l.SERVER_SIDE_EMIT_RESPONSE: {
-					let n = this.customRequests.get(t);
-					if (!n) return;
-					n.responses.push(e.data.packet), n.missingUids.delete(e.uid), n.missingUids.size === 0 && (clearTimeout(n.timeout), n.resolve(null, n.responses), this.customRequests.delete(t));
+				case MessageType.SERVER_SIDE_EMIT_RESPONSE: {
+					const request = this.customRequests.get(requestId);
+					if (!request) return;
+					request.responses.push(response.data.packet);
+					request.missingUids.delete(response.uid);
+					if (request.missingUids.size === 0) {
+						clearTimeout(request.timeout);
+						request.resolve(null, request.responses);
+						this.customRequests.delete(requestId);
+					}
 					break;
 				}
-				default: super.onResponse(e);
+				default: super.onResponse(response);
 			}
 		}
-		removeNode(e) {
-			this.customRequests.forEach((t, n) => {
-				t.missingUids.delete(e), t.missingUids.size === 0 && (clearTimeout(t.timeout), t.type === l.FETCH_SOCKETS ? t.resolve(t.responses) : t.type === l.SERVER_SIDE_EMIT && t.resolve(null, t.responses), this.customRequests.delete(n));
-			}), this.nodesMap.delete(e);
+		removeNode(uid) {
+			this.customRequests.forEach((request, requestId) => {
+				request.missingUids.delete(uid);
+				if (request.missingUids.size === 0) {
+					clearTimeout(request.timeout);
+					if (request.type === MessageType.FETCH_SOCKETS) request.resolve(request.responses);
+					else if (request.type === MessageType.SERVER_SIDE_EMIT) request.resolve(null, request.responses);
+					this.customRequests.delete(requestId);
+				}
+			});
+			this.nodesMap.delete(uid);
 		}
 	};
-})), Ke = /* @__PURE__ */ p(((e) => {
-	Object.defineProperty(e, "__esModule", { value: !0 }), e.MessageType = e.ClusterAdapterWithHeartbeat = e.ClusterAdapter = e.SessionAwareAdapter = e.Adapter = void 0;
-	var t = We();
-	Object.defineProperty(e, "Adapter", {
-		enumerable: !0,
+	exports.ClusterAdapterWithHeartbeat = ClusterAdapterWithHeartbeat;
+}));
+//#endregion
+//#region node_modules/socket.io-adapter/dist/index.js
+var require_dist$1 = /* @__PURE__ */ __commonJSMin(((exports) => {
+	Object.defineProperty(exports, "__esModule", { value: true });
+	exports.MessageType = exports.ClusterAdapterWithHeartbeat = exports.ClusterAdapter = exports.SessionAwareAdapter = exports.Adapter = void 0;
+	var in_memory_adapter_1 = require_in_memory_adapter();
+	Object.defineProperty(exports, "Adapter", {
+		enumerable: true,
 		get: function() {
-			return t.Adapter;
-		}
-	}), Object.defineProperty(e, "SessionAwareAdapter", {
-		enumerable: !0,
-		get: function() {
-			return t.SessionAwareAdapter;
-		}
-	});
-	var n = Ge();
-	Object.defineProperty(e, "ClusterAdapter", {
-		enumerable: !0,
-		get: function() {
-			return n.ClusterAdapter;
-		}
-	}), Object.defineProperty(e, "ClusterAdapterWithHeartbeat", {
-		enumerable: !0,
-		get: function() {
-			return n.ClusterAdapterWithHeartbeat;
-		}
-	}), Object.defineProperty(e, "MessageType", {
-		enumerable: !0,
-		get: function() {
-			return n.MessageType;
+			return in_memory_adapter_1.Adapter;
 		}
 	});
-})), qe = /* @__PURE__ */ p(((e) => {
-	var t = e && e.__importDefault || function(e) {
-		return e && e.__esModule ? e : { default: e };
+	Object.defineProperty(exports, "SessionAwareAdapter", {
+		enumerable: true,
+		get: function() {
+			return in_memory_adapter_1.SessionAwareAdapter;
+		}
+	});
+	var cluster_adapter_1 = require_cluster_adapter();
+	Object.defineProperty(exports, "ClusterAdapter", {
+		enumerable: true,
+		get: function() {
+			return cluster_adapter_1.ClusterAdapter;
+		}
+	});
+	Object.defineProperty(exports, "ClusterAdapterWithHeartbeat", {
+		enumerable: true,
+		get: function() {
+			return cluster_adapter_1.ClusterAdapterWithHeartbeat;
+		}
+	});
+	Object.defineProperty(exports, "MessageType", {
+		enumerable: true,
+		get: function() {
+			return cluster_adapter_1.MessageType;
+		}
+	});
+}));
+//#endregion
+//#region node_modules/socket.io/dist/parent-namespace.js
+var require_parent_namespace = /* @__PURE__ */ __commonJSMin(((exports) => {
+	var __importDefault = exports && exports.__importDefault || function(mod) {
+		return mod && mod.__esModule ? mod : { "default": mod };
 	};
-	Object.defineProperty(e, "__esModule", { value: !0 }), e.ParentNamespace = void 0;
-	var n = He(), r = Ke(), i = (0, t(z()).default)("socket.io:parent-namespace"), a = class e extends n.Namespace {
-		constructor(t) {
-			super(t, "/_" + e.count++), this.children = /* @__PURE__ */ new Set();
+	Object.defineProperty(exports, "__esModule", { value: true });
+	exports.ParentNamespace = void 0;
+	var namespace_1 = require_namespace();
+	var socket_io_adapter_1 = require_dist$1();
+	var debug = (0, __importDefault(require_src()).default)("socket.io:parent-namespace");
+	/**
+	* A parent namespace is a special {@link Namespace} that holds a list of child namespaces which were created either
+	* with a regular expression or with a function.
+	*
+	* @example
+	* const parentNamespace = io.of(/\/dynamic-\d+/);
+	*
+	* parentNamespace.on("connection", (socket) => {
+	*   const childNamespace = socket.nsp;
+	* }
+	*
+	* // will reach all the clients that are in one of the child namespaces, like "/dynamic-101"
+	* parentNamespace.emit("hello", "world");
+	*
+	*/
+	var ParentNamespace = class ParentNamespace extends namespace_1.Namespace {
+		constructor(server) {
+			super(server, "/_" + ParentNamespace.count++);
+			this.children = /* @__PURE__ */ new Set();
 		}
+		/**
+		* @private
+		*/
 		_initAdapter() {
-			this.adapter = new o(this);
+			this.adapter = new ParentBroadcastAdapter(this);
 		}
-		emit(e, ...t) {
-			return this.children.forEach((n) => {
-				n.emit(e, ...t);
-			}), !0;
+		emit(ev, ...args) {
+			this.children.forEach((nsp) => {
+				nsp.emit(ev, ...args);
+			});
+			return true;
 		}
-		createChild(e) {
-			i("creating child namespace %s", e);
-			let t = new n.Namespace(this.server, e);
-			if (this._fns.forEach((e) => t.use(e)), this.listeners("connect").forEach((e) => t.on("connect", e)), this.listeners("connection").forEach((e) => t.on("connection", e)), this.children.add(t), this.server._opts.cleanupEmptyChildNamespaces) {
-				let n = t._remove;
-				t._remove = (r) => {
-					n.call(t, r), t.sockets.size === 0 && (i("closing child namespace %s", e), t.adapter.close(), this.server._nsps.delete(t.name), this.children.delete(t));
+		createChild(name) {
+			debug("creating child namespace %s", name);
+			const namespace = new namespace_1.Namespace(this.server, name);
+			this["_fns"].forEach((fn) => namespace.use(fn));
+			this.listeners("connect").forEach((listener) => namespace.on("connect", listener));
+			this.listeners("connection").forEach((listener) => namespace.on("connection", listener));
+			this.children.add(namespace);
+			if (this.server._opts.cleanupEmptyChildNamespaces) {
+				const remove = namespace._remove;
+				namespace._remove = (socket) => {
+					remove.call(namespace, socket);
+					if (namespace.sockets.size === 0) {
+						debug("closing child namespace %s", name);
+						namespace.adapter.close();
+						this.server._nsps.delete(namespace.name);
+						this.children.delete(namespace);
+					}
 				};
 			}
-			return this.server._nsps.set(e, t), this.server.sockets.emitReserved("new_namespace", t), t;
+			this.server._nsps.set(name, namespace);
+			this.server.sockets.emitReserved("new_namespace", namespace);
+			return namespace;
 		}
 		fetchSockets() {
-			throw Error("fetchSockets() is not supported on parent namespaces");
+			throw new Error("fetchSockets() is not supported on parent namespaces");
 		}
 	};
-	e.ParentNamespace = a, a.count = 0;
-	var o = class extends r.Adapter {
-		broadcast(e, t) {
-			this.nsp.children.forEach((n) => {
-				n.adapter.broadcast(e, t);
+	exports.ParentNamespace = ParentNamespace;
+	ParentNamespace.count = 0;
+	/**
+	* A dummy adapter that only supports broadcasting to child (concrete) namespaces.
+	* @private file
+	*/
+	var ParentBroadcastAdapter = class extends socket_io_adapter_1.Adapter {
+		broadcast(packet, opts) {
+			this.nsp.children.forEach((nsp) => {
+				nsp.adapter.broadcast(packet, opts);
 			});
 		}
 	};
-})), Je = /* @__PURE__ */ p(((e) => {
-	var t = e && e.__importDefault || function(e) {
-		return e && e.__esModule ? e : { default: e };
+}));
+//#endregion
+//#region node_modules/socket.io/dist/uws.js
+var require_uws = /* @__PURE__ */ __commonJSMin(((exports) => {
+	var __importDefault = exports && exports.__importDefault || function(mod) {
+		return mod && mod.__esModule ? mod : { "default": mod };
 	};
-	Object.defineProperty(e, "__esModule", { value: !0 }), e.patchAdapter = l, e.restoreAdapter = d, e.serveFile = p;
-	var n = Ke(), r = v("fs"), i = (0, t(z()).default)("socket.io:adapter-uws"), a = "", { addAll: o, del: s, broadcast: c } = n.Adapter.prototype;
-	function l(e) {
-		n.Adapter.prototype.addAll = function(e, t) {
-			let n = !this.sids.has(e);
-			o.call(this, e, t);
-			let r = this.nsp.sockets.get(e) || this.nsp._preConnectSockets.get(e);
-			if (r) {
-				if (r.conn.transport.name === "websocket") {
-					u(this.nsp.name, r, n, t);
-					return;
-				}
-				n && r.conn.on("upgrade", () => {
-					let t = this.sids.get(e);
-					t && u(this.nsp.name, r, n, t);
-				});
-			}
-		}, n.Adapter.prototype.del = function(e, t) {
-			s.call(this, e, t);
-			let n = this.nsp.sockets.get(e) || this.nsp._preConnectSockets.get(e);
-			if (n && n.conn.transport.name === "websocket") {
-				let e = n.conn.id, r = n.conn.transport.socket, o = `${this.nsp.name}${a}${t}`;
-				i("unsubscribe connection %s from topic %s", e, o), r.unsubscribe(o);
-			}
-		}, n.Adapter.prototype.broadcast = function(t, n) {
-			if (!(n.rooms.size <= 1 && n.except.size === 0)) {
-				c.call(this, t, n);
+	Object.defineProperty(exports, "__esModule", { value: true });
+	exports.patchAdapter = patchAdapter;
+	exports.restoreAdapter = restoreAdapter;
+	exports.serveFile = serveFile;
+	var socket_io_adapter_1 = require_dist$1();
+	var fs_1$1 = __require("fs");
+	var debug = (0, __importDefault(require_src()).default)("socket.io:adapter-uws");
+	var SEPARATOR = "";
+	var { addAll, del, broadcast } = socket_io_adapter_1.Adapter.prototype;
+	function patchAdapter(app) {
+		socket_io_adapter_1.Adapter.prototype.addAll = function(id, rooms) {
+			const isNew = !this.sids.has(id);
+			addAll.call(this, id, rooms);
+			const socket = this.nsp.sockets.get(id) || this.nsp._preConnectSockets.get(id);
+			if (!socket) return;
+			if (socket.conn.transport.name === "websocket") {
+				subscribe(this.nsp.name, socket, isNew, rooms);
 				return;
 			}
-			let r = n.flags || {}, o = {
-				preEncoded: !0,
-				volatile: r.volatile,
-				compress: r.compress
+			if (isNew) socket.conn.on("upgrade", () => {
+				const rooms = this.sids.get(id);
+				if (rooms) subscribe(this.nsp.name, socket, isNew, rooms);
+			});
+		};
+		socket_io_adapter_1.Adapter.prototype.del = function(id, room) {
+			del.call(this, id, room);
+			const socket = this.nsp.sockets.get(id) || this.nsp._preConnectSockets.get(id);
+			if (socket && socket.conn.transport.name === "websocket") {
+				const sessionId = socket.conn.id;
+				const websocket = socket.conn.transport.socket;
+				const topic = `${this.nsp.name}${SEPARATOR}${room}`;
+				debug("unsubscribe connection %s from topic %s", sessionId, topic);
+				websocket.unsubscribe(topic);
+			}
+		};
+		socket_io_adapter_1.Adapter.prototype.broadcast = function(packet, opts) {
+			if (!(opts.rooms.size <= 1 && opts.except.size === 0)) {
+				broadcast.call(this, packet, opts);
+				return;
+			}
+			const flags = opts.flags || {};
+			const basePacketOpts = {
+				preEncoded: true,
+				volatile: flags.volatile,
+				compress: flags.compress
 			};
-			t.nsp = this.nsp.name;
-			let s = this.encoder.encode(t), l = n.rooms.size === 0 ? this.nsp.name : `${this.nsp.name}${a}${n.rooms.keys().next().value}`;
-			i("fast publish to %s", l), s.forEach((t) => {
-				let n = typeof t != "string";
-				e.publish(l, n ? t : "4" + t, n);
-			}), this.apply(n, (e) => {
-				e.conn.transport.name !== "websocket" && e.client.writeToEngine(s, o);
+			packet.nsp = this.nsp.name;
+			const encodedPackets = this.encoder.encode(packet);
+			const topic = opts.rooms.size === 0 ? this.nsp.name : `${this.nsp.name}${SEPARATOR}${opts.rooms.keys().next().value}`;
+			debug("fast publish to %s", topic);
+			encodedPackets.forEach((encodedPacket) => {
+				const isBinary = typeof encodedPacket !== "string";
+				app.publish(topic, isBinary ? encodedPacket : "4" + encodedPacket, isBinary);
+			});
+			this.apply(opts, (socket) => {
+				if (socket.conn.transport.name !== "websocket") socket.client.writeToEngine(encodedPackets, basePacketOpts);
 			});
 		};
 	}
-	function u(e, t, n, r) {
-		let o = t.conn.id, s = t.conn.transport.socket;
-		n && (i("subscribe connection %s to topic %s", o, e), s.subscribe(e)), r.forEach((t) => {
-			let n = `${e}${a}${t}`;
-			i("subscribe connection %s to topic %s", o, n), s.subscribe(n);
+	function subscribe(namespaceName, socket, isNew, rooms) {
+		const sessionId = socket.conn.id;
+		const websocket = socket.conn.transport.socket;
+		if (isNew) {
+			debug("subscribe connection %s to topic %s", sessionId, namespaceName);
+			websocket.subscribe(namespaceName);
+		}
+		rooms.forEach((room) => {
+			const topic = `${namespaceName}${SEPARATOR}${room}`;
+			debug("subscribe connection %s to topic %s", sessionId, topic);
+			websocket.subscribe(topic);
 		});
 	}
-	function d() {
-		n.Adapter.prototype.addAll = o, n.Adapter.prototype.del = s, n.Adapter.prototype.broadcast = c;
+	function restoreAdapter() {
+		socket_io_adapter_1.Adapter.prototype.addAll = addAll;
+		socket_io_adapter_1.Adapter.prototype.del = del;
+		socket_io_adapter_1.Adapter.prototype.broadcast = broadcast;
 	}
-	var f = (e) => {
-		let { buffer: t, byteOffset: n, byteLength: r } = e;
-		return t.slice(n, n + r);
+	var toArrayBuffer = (buffer) => {
+		const { buffer: arrayBuffer, byteOffset, byteLength } = buffer;
+		return arrayBuffer.slice(byteOffset, byteOffset + byteLength);
 	};
-	function p(e, t) {
-		let { size: n } = (0, r.statSync)(t), i = (0, r.createReadStream)(t), a = () => !i.destroyed && i.destroy();
-		e.onAborted(a), i.on("data", (t) => {
-			let r = f(t);
-			e.cork(() => {
-				let t = e.getWriteOffset(), [a, o] = e.tryEnd(r, n);
-				!o && !a && (i.pause(), e.onWritable((a) => {
-					let [o, s] = e.tryEnd(r.slice(a - t), n);
-					return !s && o && i.resume(), o;
-				}));
+	function serveFile(res, filepath) {
+		const { size } = (0, fs_1$1.statSync)(filepath);
+		const readStream = (0, fs_1$1.createReadStream)(filepath);
+		const destroyReadStream = () => !readStream.destroyed && readStream.destroy();
+		const onError = (error) => {
+			destroyReadStream();
+			throw error;
+		};
+		const onDataChunk = (chunk) => {
+			const arrayBufferChunk = toArrayBuffer(chunk);
+			res.cork(() => {
+				const lastOffset = res.getWriteOffset();
+				const [ok, done] = res.tryEnd(arrayBufferChunk, size);
+				if (!done && !ok) {
+					readStream.pause();
+					res.onWritable((offset) => {
+						const [ok, done] = res.tryEnd(arrayBufferChunk.slice(offset - lastOffset), size);
+						if (!done && ok) readStream.resume();
+						return ok;
+					});
+				}
 			});
-		}).on("error", (e) => {
-			throw a(), e;
-		}).on("end", a);
+		};
+		res.onAborted(destroyReadStream);
+		readStream.on("data", onDataChunk).on("error", onError).on("end", destroyReadStream);
 	}
-})), Ye = /* @__PURE__ */ m({
-	bugs: () => ct,
-	contributors: () => ut,
-	default: () => pt,
-	dependencies: () => lt,
-	description: () => Qe,
-	directories: () => tt,
-	engines: () => dt,
-	exports: () => it,
-	files: () => et,
-	homepage: () => ot,
-	keywords: () => $e,
+}));
+//#endregion
+//#region node_modules/socket.io/package.json
+var package_exports = /* @__PURE__ */ __exportAll({
+	bugs: () => bugs,
+	contributors: () => contributors,
+	default: () => package_default,
+	dependencies: () => dependencies,
+	description: () => description,
+	directories: () => directories,
+	engines: () => engines,
+	exports: () => exports$1,
+	files: () => files,
+	homepage: () => homepage,
+	keywords: () => keywords,
 	license: () => "MIT",
-	main: () => rt,
-	name: () => Xe,
-	repository: () => st,
-	scripts: () => Z,
-	tsd: () => ft,
-	type: () => nt,
-	types: () => at,
-	version: () => Ze
-}), Xe, Ze, Qe, $e, et, tt, nt, rt, it, at, ot, st, ct, Z, lt, ut, dt, ft, pt, mt = f((() => {
-	Xe = "socket.io", Ze = "4.8.3", Qe = "node.js realtime framework server", $e = [
+	main: () => main,
+	name: () => name,
+	repository: () => repository,
+	scripts: () => scripts,
+	tsd: () => tsd,
+	type: () => type,
+	types: () => types,
+	version: () => version
+}), name, version, description, keywords, files, directories, type, main, exports$1, types, homepage, repository, bugs, scripts, dependencies, contributors, engines, tsd, package_default;
+var init_package = __esmMin((() => {
+	name = "socket.io";
+	version = "4.8.3";
+	description = "node.js realtime framework server";
+	keywords = [
 		"realtime",
 		"framework",
 		"websocket",
@@ -13430,403 +20590,968 @@ var Pe = f((() => {
 		"events",
 		"socket",
 		"io"
-	], et = [
+	];
+	files = [
 		"dist/",
 		"client-dist/",
 		"wrapper.mjs",
 		"!**/*.tsbuildinfo"
-	], tt = {
-		doc: "docs/",
-		example: "example/",
-		lib: "lib/",
-		test: "test/"
-	}, nt = "commonjs", rt = "./dist/index.js", it = {
+	];
+	directories = {
+		"doc": "docs/",
+		"example": "example/",
+		"lib": "lib/",
+		"test": "test/"
+	};
+	type = "commonjs";
+	main = "./dist/index.js";
+	exports$1 = {
 		".": {
-			types: "./dist/index.d.ts",
-			import: "./wrapper.mjs",
-			require: "./dist/index.js"
+			"types": "./dist/index.d.ts",
+			"import": "./wrapper.mjs",
+			"require": "./dist/index.js"
 		},
 		"./package.json": "./package.json"
-	}, at = "./dist/index.d.ts", ot = "https://github.com/socketio/socket.io/tree/main/packages/socket.io#readme", st = {
-		type: "git",
-		url: "git+https://github.com/socketio/socket.io.git"
-	}, ct = { url: "https://github.com/socketio/socket.io/issues" }, Z = {
-		compile: "rimraf ./dist && tsc",
-		test: "npm run format:check && npm run compile && npm run test:types && npm run test:unit",
+	};
+	types = "./dist/index.d.ts";
+	homepage = "https://github.com/socketio/socket.io/tree/main/packages/socket.io#readme";
+	repository = {
+		"type": "git",
+		"url": "git+https://github.com/socketio/socket.io.git"
+	};
+	bugs = { "url": "https://github.com/socketio/socket.io/issues" };
+	scripts = {
+		"compile": "rimraf ./dist && tsc",
+		"test": "npm run format:check && npm run compile && npm run test:types && npm run test:unit",
 		"test:types": "tsd",
 		"test:unit": "nyc mocha --import=tsx --reporter spec --slow 200 --bail --timeout 10000 test/index.ts",
 		"format:check": "prettier --check \"lib/**/*.ts\" \"test/**/*.ts\"",
 		"format:fix": "prettier --write \"lib/**/*.ts\" \"test/**/*.ts\"",
-		prepack: "npm run compile"
-	}, lt = {
-		accepts: "~1.3.4",
-		base64id: "~2.0.0",
-		cors: "~2.8.5",
-		debug: "~4.4.1",
+		"prepack": "npm run compile"
+	};
+	dependencies = {
+		"accepts": "~1.3.4",
+		"base64id": "~2.0.0",
+		"cors": "~2.8.5",
+		"debug": "~4.4.1",
 		"engine.io": "~6.6.0",
 		"socket.io-adapter": "~2.5.2",
 		"socket.io-parser": "~4.2.4"
-	}, ut = [
+	};
+	contributors = [
 		{
-			name: "Guillermo Rauch",
-			email: "rauchg@gmail.com"
+			"name": "Guillermo Rauch",
+			"email": "rauchg@gmail.com"
 		},
 		{
-			name: "Arnout Kazemier",
-			email: "info@3rd-eden.com"
+			"name": "Arnout Kazemier",
+			"email": "info@3rd-eden.com"
 		},
 		{
-			name: "Vladimir Dronnikov",
-			email: "dronnikov@gmail.com"
+			"name": "Vladimir Dronnikov",
+			"email": "dronnikov@gmail.com"
 		},
 		{
-			name: "Einar Otto Stangvik",
-			email: "einaros@gmail.com"
+			"name": "Einar Otto Stangvik",
+			"email": "einaros@gmail.com"
 		}
-	], dt = { node: ">=10.2.0" }, ft = { directory: "test" }, pt = {
-		name: Xe,
-		version: Ze,
-		description: Qe,
-		keywords: $e,
-		files: et,
-		directories: tt,
-		type: nt,
-		main: rt,
-		exports: it,
-		types: at,
+	];
+	engines = { "node": ">=10.2.0" };
+	tsd = { "directory": "test" };
+	package_default = {
+		name,
+		version,
+		description,
+		keywords,
+		files,
+		directories,
+		type,
+		main,
+		exports: exports$1,
+		types,
 		license: "MIT",
-		homepage: ot,
-		repository: st,
-		bugs: ct,
-		scripts: Z,
-		dependencies: lt,
-		contributors: ut,
-		engines: dt,
-		tsd: ft
+		homepage,
+		repository,
+		bugs,
+		scripts,
+		dependencies,
+		contributors,
+		engines,
+		tsd
 	};
-})), { Server: ht, Namespace: gt, Socket: _t } = (/* @__PURE__ */ g((/* @__PURE__ */ p(((e, t) => {
-	var n = e && e.__createBinding || (Object.create ? (function(e, t, n, r) {
-		r === void 0 && (r = n);
-		var i = Object.getOwnPropertyDescriptor(t, n);
-		(!i || ("get" in i ? !t.__esModule : i.writable || i.configurable)) && (i = {
-			enumerable: !0,
+}));
+var { Server, Namespace, Socket } = (/* @__PURE__ */ __toESM((/* @__PURE__ */ __commonJSMin(((exports, module) => {
+	var __createBinding = exports && exports.__createBinding || (Object.create ? (function(o, m, k, k2) {
+		if (k2 === void 0) k2 = k;
+		var desc = Object.getOwnPropertyDescriptor(m, k);
+		if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) desc = {
+			enumerable: true,
 			get: function() {
-				return t[n];
+				return m[k];
 			}
-		}), Object.defineProperty(e, r, i);
-	}) : (function(e, t, n, r) {
-		r === void 0 && (r = n), e[r] = t[n];
-	})), r = e && e.__setModuleDefault || (Object.create ? (function(e, t) {
-		Object.defineProperty(e, "default", {
-			enumerable: !0,
-			value: t
+		};
+		Object.defineProperty(o, k2, desc);
+	}) : (function(o, m, k, k2) {
+		if (k2 === void 0) k2 = k;
+		o[k2] = m[k];
+	}));
+	var __setModuleDefault = exports && exports.__setModuleDefault || (Object.create ? (function(o, v) {
+		Object.defineProperty(o, "default", {
+			enumerable: true,
+			value: v
 		});
-	}) : function(e, t) {
-		e.default = t;
-	}), i = e && e.__importStar || function(e) {
-		if (e && e.__esModule) return e;
-		var t = {};
-		if (e != null) for (var i in e) i !== "default" && Object.prototype.hasOwnProperty.call(e, i) && n(t, e, i);
-		return r(t, e), t;
-	}, a = e && e.__importDefault || function(e) {
-		return e && e.__esModule ? e : { default: e };
+	}) : function(o, v) {
+		o["default"] = v;
+	});
+	var __importStar = exports && exports.__importStar || function(mod) {
+		if (mod && mod.__esModule) return mod;
+		var result = {};
+		if (mod != null) {
+			for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+		}
+		__setModuleDefault(result, mod);
+		return result;
 	};
-	Object.defineProperty(e, "__esModule", { value: !0 }), e.Namespace = e.Socket = e.Server = void 0;
-	var o = a(v("http")), s = v("fs"), c = v("zlib"), l = k(), u = v("stream"), d = v("path"), f = je(), p = Le(), m = v("events"), h = He();
-	Object.defineProperty(e, "Namespace", {
-		enumerable: !0,
+	var __importDefault = exports && exports.__importDefault || function(mod) {
+		return mod && mod.__esModule ? mod : { "default": mod };
+	};
+	Object.defineProperty(exports, "__esModule", { value: true });
+	exports.Namespace = exports.Socket = exports.Server = void 0;
+	var http_1 = __importDefault(__require("http"));
+	var fs_1 = __require("fs");
+	var zlib_1 = __require("zlib");
+	var accepts = require_accepts();
+	var stream_1 = __require("stream");
+	var path$1 = __require("path");
+	var engine_io_1 = require_engine_io();
+	var client_1 = require_client();
+	var events_1 = __require("events");
+	var namespace_1 = require_namespace();
+	Object.defineProperty(exports, "Namespace", {
+		enumerable: true,
 		get: function() {
-			return h.Namespace;
+			return namespace_1.Namespace;
 		}
 	});
-	var g = qe(), y = Ke(), b = i(X()), x = a(z()), S = Ve();
-	Object.defineProperty(e, "Socket", {
-		enumerable: !0,
+	var parent_namespace_1 = require_parent_namespace();
+	var socket_io_adapter_1 = require_dist$1();
+	var parser = __importStar(require_cjs());
+	var debug_1 = __importDefault(require_src());
+	var socket_1 = require_socket();
+	Object.defineProperty(exports, "Socket", {
+		enumerable: true,
 		get: function() {
-			return S.Socket;
+			return socket_1.Socket;
 		}
 	});
-	var C = Re(), w = Je(), T = a(Te()), E = (0, x.default)("socket.io:server"), D = (mt(), _(Ye).default).version, O = /\.map/, A = class e extends C.StrictEventEmitter {
-		constructor(e, t = {}) {
-			super(), this._nsps = /* @__PURE__ */ new Map(), this.parentNsps = /* @__PURE__ */ new Map(), this.parentNamespacesFromRegExp = /* @__PURE__ */ new Map(), typeof e == "object" && e instanceof Object && !e.listen && (t = e, e = void 0), this.path(t.path || "/socket.io"), this.connectTimeout(t.connectTimeout || 45e3), this.serveClient(!1 !== t.serveClient), this._parser = t.parser || b, this.encoder = new this._parser.Encoder(), this.opts = t, t.connectionStateRecovery ? (t.connectionStateRecovery = Object.assign({
-				maxDisconnectionDuration: 12e4,
-				skipMiddlewares: !0
-			}, t.connectionStateRecovery), this.adapter(t.adapter || y.SessionAwareAdapter)) : this.adapter(t.adapter || y.Adapter), t.cleanupEmptyChildNamespaces = !!t.cleanupEmptyChildNamespaces, this.sockets = this.of("/"), (e || typeof e == "number") && this.attach(e), this.opts.cors && (this._corsMiddleware = (0, T.default)(this.opts.cors));
+	var typed_events_1 = require_typed_events();
+	var uws_1 = require_uws();
+	var cors_1 = __importDefault(require_lib());
+	var debug = (0, debug_1.default)("socket.io:server");
+	var clientVersion = (init_package(), __toCommonJS(package_exports).default).version;
+	var dotMapRegex = /\.map/;
+	/**
+	* Represents a Socket.IO server.
+	*
+	* @example
+	* import { Server } from "socket.io";
+	*
+	* const io = new Server();
+	*
+	* io.on("connection", (socket) => {
+	*   console.log(`socket ${socket.id} connected`);
+	*
+	*   // send an event to the client
+	*   socket.emit("foo", "bar");
+	*
+	*   socket.on("foobar", () => {
+	*     // an event was received from the client
+	*   });
+	*
+	*   // upon disconnection
+	*   socket.on("disconnect", (reason) => {
+	*     console.log(`socket ${socket.id} disconnected due to ${reason}`);
+	*   });
+	* });
+	*
+	* io.listen(3000);
+	*/
+	var Server = class Server extends typed_events_1.StrictEventEmitter {
+		constructor(srv, opts = {}) {
+			super();
+			/**
+			* @private
+			*/
+			this._nsps = /* @__PURE__ */ new Map();
+			this.parentNsps = /* @__PURE__ */ new Map();
+			/**
+			* A subset of the {@link parentNsps} map, only containing {@link ParentNamespace} which are based on a regular
+			* expression.
+			*
+			* @private
+			*/
+			this.parentNamespacesFromRegExp = /* @__PURE__ */ new Map();
+			if ("object" === typeof srv && srv instanceof Object && !srv.listen) {
+				opts = srv;
+				srv = void 0;
+			}
+			this.path(opts.path || "/socket.io");
+			this.connectTimeout(opts.connectTimeout || 45e3);
+			this.serveClient(false !== opts.serveClient);
+			this._parser = opts.parser || parser;
+			this.encoder = new this._parser.Encoder();
+			this.opts = opts;
+			if (opts.connectionStateRecovery) {
+				opts.connectionStateRecovery = Object.assign({
+					maxDisconnectionDuration: 12e4,
+					skipMiddlewares: true
+				}, opts.connectionStateRecovery);
+				this.adapter(opts.adapter || socket_io_adapter_1.SessionAwareAdapter);
+			} else this.adapter(opts.adapter || socket_io_adapter_1.Adapter);
+			opts.cleanupEmptyChildNamespaces = !!opts.cleanupEmptyChildNamespaces;
+			this.sockets = this.of("/");
+			if (srv || typeof srv == "number") this.attach(srv);
+			if (this.opts.cors) this._corsMiddleware = (0, cors_1.default)(this.opts.cors);
 		}
 		get _opts() {
 			return this.opts;
 		}
-		serveClient(e) {
-			return arguments.length ? (this._serveClient = e, this) : this._serveClient;
-		}
-		_checkNamespace(e, t, n) {
-			if (this.parentNsps.size === 0) return n(!1);
-			let r = this.parentNsps.keys(), i = () => {
-				let a = r.next();
-				if (a.done) return n(!1);
-				a.value(e, t, (t, r) => {
-					if (t || !r) return i();
-					if (this._nsps.has(e)) return E("dynamic namespace %s already exists", e), n(this._nsps.get(e));
-					let o = this.parentNsps.get(a.value).createChild(e);
-					E("dynamic namespace %s was created", e), n(o);
-				});
-			};
-			i();
-		}
-		path(e) {
-			if (!arguments.length) return this._path;
-			this._path = e.replace(/\/$/, "");
-			let t = this._path.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&");
-			return this.clientPathRegex = RegExp("^" + t + "/socket\\.io(\\.msgpack|\\.esm)?(\\.min)?\\.js(\\.map)?(?:\\?|$)"), this;
-		}
-		connectTimeout(e) {
-			return e === void 0 ? this._connectTimeout : (this._connectTimeout = e, this);
-		}
-		adapter(e) {
-			if (!arguments.length) return this._adapter;
-			this._adapter = e;
-			for (let e of this._nsps.values()) e._initAdapter();
+		serveClient(v) {
+			if (!arguments.length) return this._serveClient;
+			this._serveClient = v;
 			return this;
 		}
-		listen(e, t = {}) {
-			return this.attach(e, t);
+		/**
+		* Executes the middleware for an incoming namespace not already created on the server.
+		*
+		* @param name - name of incoming namespace
+		* @param auth - the auth parameters
+		* @param fn - callback
+		*
+		* @private
+		*/
+		_checkNamespace(name, auth, fn) {
+			if (this.parentNsps.size === 0) return fn(false);
+			const keysIterator = this.parentNsps.keys();
+			const run = () => {
+				const nextFn = keysIterator.next();
+				if (nextFn.done) return fn(false);
+				nextFn.value(name, auth, (err, allow) => {
+					if (err || !allow) return run();
+					if (this._nsps.has(name)) {
+						debug("dynamic namespace %s already exists", name);
+						return fn(this._nsps.get(name));
+					}
+					const namespace = this.parentNsps.get(nextFn.value).createChild(name);
+					debug("dynamic namespace %s was created", name);
+					fn(namespace);
+				});
+			};
+			run();
 		}
-		attach(e, t = {}) {
-			if (typeof e == "function") throw Error("You are trying to attach socket.io to an express request handler function. Please pass a http.Server instance.");
-			if (Number(e) == e && (e = Number(e)), typeof e == "number") {
-				E("creating http server and binding to %d", e);
-				let t = e;
-				e = o.default.createServer((e, t) => {
-					t.writeHead(404), t.end();
-				}), e.listen(t);
+		path(v) {
+			if (!arguments.length) return this._path;
+			this._path = v.replace(/\/$/, "");
+			const escapedPath = this._path.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&");
+			this.clientPathRegex = new RegExp("^" + escapedPath + "/socket\\.io(\\.msgpack|\\.esm)?(\\.min)?\\.js(\\.map)?(?:\\?|$)");
+			return this;
+		}
+		connectTimeout(v) {
+			if (v === void 0) return this._connectTimeout;
+			this._connectTimeout = v;
+			return this;
+		}
+		adapter(v) {
+			if (!arguments.length) return this._adapter;
+			this._adapter = v;
+			for (const nsp of this._nsps.values()) nsp._initAdapter();
+			return this;
+		}
+		/**
+		* Attaches socket.io to a server or port.
+		*
+		* @param srv - server or port
+		* @param opts - options passed to engine.io
+		* @return self
+		*/
+		listen(srv, opts = {}) {
+			return this.attach(srv, opts);
+		}
+		/**
+		* Attaches socket.io to a server or port.
+		*
+		* @param srv - server or port
+		* @param opts - options passed to engine.io
+		* @return self
+		*/
+		attach(srv, opts = {}) {
+			if ("function" == typeof srv) throw new Error("You are trying to attach socket.io to an express request handler function. Please pass a http.Server instance.");
+			if (Number(srv) == srv) srv = Number(srv);
+			if ("number" == typeof srv) {
+				debug("creating http server and binding to %d", srv);
+				const port = srv;
+				srv = http_1.default.createServer((req, res) => {
+					res.writeHead(404);
+					res.end();
+				});
+				srv.listen(port);
 			}
-			return Object.assign(t, this.opts), t.path = t.path || this._path, this.initEngine(e, t), this;
+			Object.assign(opts, this.opts);
+			opts.path = opts.path || this._path;
+			this.initEngine(srv, opts);
+			return this;
 		}
-		attachApp(e, t = {}) {
-			Object.assign(t, this.opts), t.path = t.path || this._path, E("creating uWebSockets.js-based engine with opts %j", t);
-			let n = new f.uServer(t);
-			n.attach(e, t), this.bind(n), this._serveClient && e.get(`${this._path}/*`, (e, t) => {
-				if (!this.clientPathRegex.test(t.getUrl())) {
-					t.setYield(!0);
+		/**
+		* Attaches socket.io to a uWebSockets.js app.
+		* @param app
+		* @param opts
+		*/
+		attachApp(app, opts = {}) {
+			Object.assign(opts, this.opts);
+			opts.path = opts.path || this._path;
+			debug("creating uWebSockets.js-based engine with opts %j", opts);
+			const engine = new engine_io_1.uServer(opts);
+			engine.attach(app, opts);
+			this.bind(engine);
+			if (this._serveClient) app.get(`${this._path}/*`, (res, req) => {
+				if (!this.clientPathRegex.test(req.getUrl())) {
+					req.setYield(true);
 					return;
 				}
-				let n = t.getUrl().replace(this._path, "").replace(/\?.*$/, "").replace(/^\//, ""), r = O.test(n), i = r ? "map" : "source", a = "\"" + D + "\"", o = "W/" + a, s = t.getHeader("if-none-match");
-				if (s && (a === s || o === s)) {
-					E("serve client %s 304", i), e.writeStatus("304 Not Modified"), e.end();
-					return;
+				const filename = req.getUrl().replace(this._path, "").replace(/\?.*$/, "").replace(/^\//, "");
+				const isMap = dotMapRegex.test(filename);
+				const type = isMap ? "map" : "source";
+				const expectedEtag = "\"" + clientVersion + "\"";
+				const weakEtag = "W/" + expectedEtag;
+				const etag = req.getHeader("if-none-match");
+				if (etag) {
+					if (expectedEtag === etag || weakEtag === etag) {
+						debug("serve client %s 304", type);
+						res.writeStatus("304 Not Modified");
+						res.end();
+						return;
+					}
 				}
-				E("serve client %s", i), e.writeHeader("cache-control", "public, max-age=0"), e.writeHeader("content-type", "application/" + (r ? "json" : "javascript") + "; charset=utf-8"), e.writeHeader("etag", a);
-				let c = d.join(__dirname, "../client-dist/", n);
-				(0, w.serveFile)(e, c);
-			}), (0, w.patchAdapter)(e);
+				debug("serve client %s", type);
+				res.writeHeader("cache-control", "public, max-age=0");
+				res.writeHeader("content-type", "application/" + (isMap ? "json" : "javascript") + "; charset=utf-8");
+				res.writeHeader("etag", expectedEtag);
+				const filepath = path$1.join(__dirname, "../client-dist/", filename);
+				(0, uws_1.serveFile)(res, filepath);
+			});
+			(0, uws_1.patchAdapter)(app);
 		}
-		initEngine(e, t) {
-			E("creating engine.io instance with opts %j", t), this.eio = (0, f.attach)(e, t), this._serveClient && this.attachServe(e), this.httpServer = e, this.bind(this.eio);
+		/**
+		* Initialize engine
+		*
+		* @param srv - the server to attach to
+		* @param opts - options passed to engine.io
+		* @private
+		*/
+		initEngine(srv, opts) {
+			debug("creating engine.io instance with opts %j", opts);
+			this.eio = (0, engine_io_1.attach)(srv, opts);
+			if (this._serveClient) this.attachServe(srv);
+			this.httpServer = srv;
+			this.bind(this.eio);
 		}
-		attachServe(e) {
-			E("attaching client serving req handler");
-			let t = e.listeners("request").slice(0);
-			e.removeAllListeners("request"), e.on("request", (n, r) => {
-				if (this.clientPathRegex.test(n.url)) this._corsMiddleware ? this._corsMiddleware(n, r, () => {
-					this.serve(n, r);
-				}) : this.serve(n, r);
-				else for (let i = 0; i < t.length; i++) t[i].call(e, n, r);
+		/**
+		* Attaches the static file serving.
+		*
+		* @param srv http server
+		* @private
+		*/
+		attachServe(srv) {
+			debug("attaching client serving req handler");
+			const evs = srv.listeners("request").slice(0);
+			srv.removeAllListeners("request");
+			srv.on("request", (req, res) => {
+				if (this.clientPathRegex.test(req.url)) {
+					if (this._corsMiddleware) this._corsMiddleware(req, res, () => {
+						this.serve(req, res);
+					});
+					else this.serve(req, res);
+				} else for (let i = 0; i < evs.length; i++) evs[i].call(srv, req, res);
 			});
 		}
-		serve(t, n) {
-			let r = t.url.replace(this._path, "").replace(/\?.*$/, ""), i = O.test(r), a = i ? "map" : "source", o = "\"" + D + "\"", s = "W/" + o, c = t.headers["if-none-match"];
-			if (c && (o === c || s === c)) {
-				E("serve client %s 304", a), n.writeHead(304), n.end();
-				return;
+		/**
+		* Handles a request serving of client source and map
+		*
+		* @param req
+		* @param res
+		* @private
+		*/
+		serve(req, res) {
+			const filename = req.url.replace(this._path, "").replace(/\?.*$/, "");
+			const isMap = dotMapRegex.test(filename);
+			const type = isMap ? "map" : "source";
+			const expectedEtag = "\"" + clientVersion + "\"";
+			const weakEtag = "W/" + expectedEtag;
+			const etag = req.headers["if-none-match"];
+			if (etag) {
+				if (expectedEtag === etag || weakEtag === etag) {
+					debug("serve client %s 304", type);
+					res.writeHead(304);
+					res.end();
+					return;
+				}
 			}
-			E("serve client %s", a), n.setHeader("Cache-Control", "public, max-age=0"), n.setHeader("Content-Type", "application/" + (i ? "json" : "javascript") + "; charset=utf-8"), n.setHeader("ETag", o), e.sendFile(r, t, n);
+			debug("serve client %s", type);
+			res.setHeader("Cache-Control", "public, max-age=0");
+			res.setHeader("Content-Type", "application/" + (isMap ? "json" : "javascript") + "; charset=utf-8");
+			res.setHeader("ETag", expectedEtag);
+			Server.sendFile(filename, req, res);
 		}
-		static sendFile(e, t, n) {
-			let r = (0, s.createReadStream)(d.join(__dirname, "../client-dist/", e)), i = l(t).encodings([
+		/**
+		* @param filename
+		* @param req
+		* @param res
+		* @private
+		*/
+		static sendFile(filename, req, res) {
+			const readStream = (0, fs_1.createReadStream)(path$1.join(__dirname, "../client-dist/", filename));
+			const encoding = accepts(req).encodings([
 				"br",
 				"gzip",
 				"deflate"
-			]), a = (e) => {
-				e && n.end();
+			]);
+			const onError = (err) => {
+				if (err) res.end();
 			};
-			switch (i) {
+			switch (encoding) {
 				case "br":
-					n.writeHead(200, { "content-encoding": "br" }), (0, u.pipeline)(r, (0, c.createBrotliCompress)(), n, a);
+					res.writeHead(200, { "content-encoding": "br" });
+					(0, stream_1.pipeline)(readStream, (0, zlib_1.createBrotliCompress)(), res, onError);
 					break;
 				case "gzip":
-					n.writeHead(200, { "content-encoding": "gzip" }), (0, u.pipeline)(r, (0, c.createGzip)(), n, a);
+					res.writeHead(200, { "content-encoding": "gzip" });
+					(0, stream_1.pipeline)(readStream, (0, zlib_1.createGzip)(), res, onError);
 					break;
 				case "deflate":
-					n.writeHead(200, { "content-encoding": "deflate" }), (0, u.pipeline)(r, (0, c.createDeflate)(), n, a);
+					res.writeHead(200, { "content-encoding": "deflate" });
+					(0, stream_1.pipeline)(readStream, (0, zlib_1.createDeflate)(), res, onError);
 					break;
-				default: n.writeHead(200), (0, u.pipeline)(r, n, a);
+				default:
+					res.writeHead(200);
+					(0, stream_1.pipeline)(readStream, res, onError);
 			}
 		}
-		bind(e) {
-			return this.engine = e, this.engine.on("connection", this.onconnection.bind(this)), this;
+		/**
+		* Binds socket.io to an engine.io instance.
+		*
+		* @param engine engine.io (or compatible) server
+		* @return self
+		*/
+		bind(engine) {
+			this.engine = engine;
+			this.engine.on("connection", this.onconnection.bind(this));
+			return this;
 		}
-		onconnection(e) {
-			E("incoming connection with id %s", e.id);
-			let t = new p.Client(this, e);
-			return e.protocol === 3 && t.connect("/"), this;
+		/**
+		* Called with each incoming transport connection.
+		*
+		* @param {engine.Socket} conn
+		* @return self
+		* @private
+		*/
+		onconnection(conn) {
+			debug("incoming connection with id %s", conn.id);
+			const client = new client_1.Client(this, conn);
+			if (conn.protocol === 3) client.connect("/");
+			return this;
 		}
-		of(e, t) {
-			if (typeof e == "function" || e instanceof RegExp) {
-				let n = new g.ParentNamespace(this);
-				return E("initializing parent namespace %s", n.name), typeof e == "function" ? this.parentNsps.set(e, n) : (this.parentNsps.set((t, n, r) => r(null, e.test(t)), n), this.parentNamespacesFromRegExp.set(e, n)), t && n.on("connect", t), n;
+		/**
+		* Looks up a namespace.
+		*
+		* @example
+		* // with a simple string
+		* const myNamespace = io.of("/my-namespace");
+		*
+		* // with a regex
+		* const dynamicNsp = io.of(/^\/dynamic-\d+$/).on("connection", (socket) => {
+		*   const namespace = socket.nsp; // newNamespace.name === "/dynamic-101"
+		*
+		*   // broadcast to all clients in the given sub-namespace
+		*   namespace.emit("hello");
+		* });
+		*
+		* @param name - nsp name
+		* @param fn optional, nsp `connection` ev handler
+		*/
+		of(name, fn) {
+			if (typeof name === "function" || name instanceof RegExp) {
+				const parentNsp = new parent_namespace_1.ParentNamespace(this);
+				debug("initializing parent namespace %s", parentNsp.name);
+				if (typeof name === "function") this.parentNsps.set(name, parentNsp);
+				else {
+					this.parentNsps.set((nsp, conn, next) => next(null, name.test(nsp)), parentNsp);
+					this.parentNamespacesFromRegExp.set(name, parentNsp);
+				}
+				if (fn) parentNsp.on("connect", fn);
+				return parentNsp;
 			}
-			String(e)[0] !== "/" && (e = "/" + e);
-			let n = this._nsps.get(e);
-			if (!n) {
-				for (let [t, n] of this.parentNamespacesFromRegExp) if (t.test(e)) return E("attaching namespace %s to parent namespace %s", e, t), n.createChild(e);
-				E("initializing namespace %s", e), n = new h.Namespace(this, e), this._nsps.set(e, n), e !== "/" && this.sockets.emitReserved("new_namespace", n);
+			if (String(name)[0] !== "/") name = "/" + name;
+			let nsp = this._nsps.get(name);
+			if (!nsp) {
+				for (const [regex, parentNamespace] of this.parentNamespacesFromRegExp) if (regex.test(name)) {
+					debug("attaching namespace %s to parent namespace %s", name, regex);
+					return parentNamespace.createChild(name);
+				}
+				debug("initializing namespace %s", name);
+				nsp = new namespace_1.Namespace(this, name);
+				this._nsps.set(name, nsp);
+				if (name !== "/") this.sockets.emitReserved("new_namespace", nsp);
 			}
-			return t && n.on("connect", t), n;
+			if (fn) nsp.on("connect", fn);
+			return nsp;
 		}
-		async close(e) {
-			if (await Promise.allSettled([...this._nsps.values()].map(async (e) => {
-				e.sockets.forEach((e) => {
-					e._onclose("server shutting down");
-				}), await e.adapter.close();
-			})), this.engine.close(), (0, w.restoreAdapter)(), this.httpServer) return new Promise((t) => {
-				this.httpServer.close((n) => {
-					e && e(n), n && E("server was not running"), t();
+		/**
+		* Closes server connection
+		*
+		* @param [fn] optional, called as `fn([err])` on error OR all conns closed
+		*/
+		async close(fn) {
+			await Promise.allSettled([...this._nsps.values()].map(async (nsp) => {
+				nsp.sockets.forEach((socket) => {
+					socket._onclose("server shutting down");
+				});
+				await nsp.adapter.close();
+			}));
+			this.engine.close();
+			(0, uws_1.restoreAdapter)();
+			if (this.httpServer) return new Promise((resolve) => {
+				this.httpServer.close((err) => {
+					fn && fn(err);
+					if (err) debug("server was not running");
+					resolve();
 				});
 			});
-			e && e();
+			else fn && fn();
 		}
-		use(e) {
-			return this.sockets.use(e), this;
+		/**
+		* Registers a middleware, which is a function that gets executed for every incoming {@link Socket}.
+		*
+		* @example
+		* io.use((socket, next) => {
+		*   // ...
+		*   next();
+		* });
+		*
+		* @param fn - the middleware function
+		*/
+		use(fn) {
+			this.sockets.use(fn);
+			return this;
 		}
-		to(e) {
-			return this.sockets.to(e);
+		/**
+		* Targets a room when emitting.
+		*
+		* @example
+		* // the “foo” event will be broadcast to all connected clients in the “room-101” room
+		* io.to("room-101").emit("foo", "bar");
+		*
+		* // with an array of rooms (a client will be notified at most once)
+		* io.to(["room-101", "room-102"]).emit("foo", "bar");
+		*
+		* // with multiple chained calls
+		* io.to("room-101").to("room-102").emit("foo", "bar");
+		*
+		* @param room - a room, or an array of rooms
+		* @return a new {@link BroadcastOperator} instance for chaining
+		*/
+		to(room) {
+			return this.sockets.to(room);
 		}
-		in(e) {
-			return this.sockets.in(e);
+		/**
+		* Targets a room when emitting. Similar to `to()`, but might feel clearer in some cases:
+		*
+		* @example
+		* // disconnect all clients in the "room-101" room
+		* io.in("room-101").disconnectSockets();
+		*
+		* @param room - a room, or an array of rooms
+		* @return a new {@link BroadcastOperator} instance for chaining
+		*/
+		in(room) {
+			return this.sockets.in(room);
 		}
-		except(e) {
-			return this.sockets.except(e);
+		/**
+		* Excludes a room when emitting.
+		*
+		* @example
+		* // the "foo" event will be broadcast to all connected clients, except the ones that are in the "room-101" room
+		* io.except("room-101").emit("foo", "bar");
+		*
+		* // with an array of rooms
+		* io.except(["room-101", "room-102"]).emit("foo", "bar");
+		*
+		* // with multiple chained calls
+		* io.except("room-101").except("room-102").emit("foo", "bar");
+		*
+		* @param room - a room, or an array of rooms
+		* @return a new {@link BroadcastOperator} instance for chaining
+		*/
+		except(room) {
+			return this.sockets.except(room);
 		}
-		send(...e) {
-			return this.sockets.emit("message", ...e), this;
+		/**
+		* Sends a `message` event to all clients.
+		*
+		* This method mimics the WebSocket.send() method.
+		*
+		* @see https://developer.mozilla.org/en-US/docs/Web/API/WebSocket/send
+		*
+		* @example
+		* io.send("hello");
+		*
+		* // this is equivalent to
+		* io.emit("message", "hello");
+		*
+		* @return self
+		*/
+		send(...args) {
+			this.sockets.emit("message", ...args);
+			return this;
 		}
-		write(...e) {
-			return this.sockets.emit("message", ...e), this;
+		/**
+		* Sends a `message` event to all clients. Alias of {@link send}.
+		*
+		* @return self
+		*/
+		write(...args) {
+			this.sockets.emit("message", ...args);
+			return this;
 		}
-		serverSideEmit(e, ...t) {
-			return this.sockets.serverSideEmit(e, ...t);
+		/**
+		* Sends a message to the other Socket.IO servers of the cluster.
+		*
+		* @example
+		* io.serverSideEmit("hello", "world");
+		*
+		* io.on("hello", (arg1) => {
+		*   console.log(arg1); // prints "world"
+		* });
+		*
+		* // acknowledgements (without binary content) are supported too:
+		* io.serverSideEmit("ping", (err, responses) => {
+		*  if (err) {
+		*     // some servers did not acknowledge the event in the given delay
+		*   } else {
+		*     console.log(responses); // one response per server (except the current one)
+		*   }
+		* });
+		*
+		* io.on("ping", (cb) => {
+		*   cb("pong");
+		* });
+		*
+		* @param ev - the event name
+		* @param args - an array of arguments, which may include an acknowledgement callback at the end
+		*/
+		serverSideEmit(ev, ...args) {
+			return this.sockets.serverSideEmit(ev, ...args);
 		}
-		serverSideEmitWithAck(e, ...t) {
-			return this.sockets.serverSideEmitWithAck(e, ...t);
+		/**
+		* Sends a message and expect an acknowledgement from the other Socket.IO servers of the cluster.
+		*
+		* @example
+		* try {
+		*   const responses = await io.serverSideEmitWithAck("ping");
+		*   console.log(responses); // one response per server (except the current one)
+		* } catch (e) {
+		*   // some servers did not acknowledge the event in the given delay
+		* }
+		*
+		* @param ev - the event name
+		* @param args - an array of arguments
+		*
+		* @return a Promise that will be fulfilled when all servers have acknowledged the event
+		*/
+		serverSideEmitWithAck(ev, ...args) {
+			return this.sockets.serverSideEmitWithAck(ev, ...args);
 		}
+		/**
+		* Gets a list of socket ids.
+		*
+		* @deprecated this method will be removed in the next major release, please use {@link Server#serverSideEmit} or
+		* {@link Server#fetchSockets} instead.
+		*/
 		allSockets() {
 			return this.sockets.allSockets();
 		}
-		compress(e) {
-			return this.sockets.compress(e);
+		/**
+		* Sets the compress flag.
+		*
+		* @example
+		* io.compress(false).emit("hello");
+		*
+		* @param compress - if `true`, compresses the sending data
+		* @return a new {@link BroadcastOperator} instance for chaining
+		*/
+		compress(compress) {
+			return this.sockets.compress(compress);
 		}
+		/**
+		* Sets a modifier for a subsequent event emission that the event data may be lost if the client is not ready to
+		* receive messages (because of network slowness or other issues, or because they’re connected through long polling
+		* and is in the middle of a request-response cycle).
+		*
+		* @example
+		* io.volatile.emit("hello"); // the clients may or may not receive it
+		*
+		* @return a new {@link BroadcastOperator} instance for chaining
+		*/
 		get volatile() {
 			return this.sockets.volatile;
 		}
+		/**
+		* Sets a modifier for a subsequent event emission that the event data will only be broadcast to the current node.
+		*
+		* @example
+		* // the “foo” event will be broadcast to all connected clients on this node
+		* io.local.emit("foo", "bar");
+		*
+		* @return a new {@link BroadcastOperator} instance for chaining
+		*/
 		get local() {
 			return this.sockets.local;
 		}
-		timeout(e) {
-			return this.sockets.timeout(e);
+		/**
+		* Adds a timeout in milliseconds for the next operation.
+		*
+		* @example
+		* io.timeout(1000).emit("some-event", (err, responses) => {
+		*   if (err) {
+		*     // some clients did not acknowledge the event in the given delay
+		*   } else {
+		*     console.log(responses); // one response per client
+		*   }
+		* });
+		*
+		* @param timeout
+		*/
+		timeout(timeout) {
+			return this.sockets.timeout(timeout);
 		}
+		/**
+		* Returns the matching socket instances.
+		*
+		* Note: this method also works within a cluster of multiple Socket.IO servers, with a compatible {@link Adapter}.
+		*
+		* @example
+		* // return all Socket instances
+		* const sockets = await io.fetchSockets();
+		*
+		* // return all Socket instances in the "room1" room
+		* const sockets = await io.in("room1").fetchSockets();
+		*
+		* for (const socket of sockets) {
+		*   console.log(socket.id);
+		*   console.log(socket.handshake);
+		*   console.log(socket.rooms);
+		*   console.log(socket.data);
+		*
+		*   socket.emit("hello");
+		*   socket.join("room1");
+		*   socket.leave("room2");
+		*   socket.disconnect();
+		* }
+		*/
 		fetchSockets() {
 			return this.sockets.fetchSockets();
 		}
-		socketsJoin(e) {
-			return this.sockets.socketsJoin(e);
+		/**
+		* Makes the matching socket instances join the specified rooms.
+		*
+		* Note: this method also works within a cluster of multiple Socket.IO servers, with a compatible {@link Adapter}.
+		*
+		* @example
+		*
+		* // make all socket instances join the "room1" room
+		* io.socketsJoin("room1");
+		*
+		* // make all socket instances in the "room1" room join the "room2" and "room3" rooms
+		* io.in("room1").socketsJoin(["room2", "room3"]);
+		*
+		* @param room - a room, or an array of rooms
+		*/
+		socketsJoin(room) {
+			return this.sockets.socketsJoin(room);
 		}
-		socketsLeave(e) {
-			return this.sockets.socketsLeave(e);
+		/**
+		* Makes the matching socket instances leave the specified rooms.
+		*
+		* Note: this method also works within a cluster of multiple Socket.IO servers, with a compatible {@link Adapter}.
+		*
+		* @example
+		* // make all socket instances leave the "room1" room
+		* io.socketsLeave("room1");
+		*
+		* // make all socket instances in the "room1" room leave the "room2" and "room3" rooms
+		* io.in("room1").socketsLeave(["room2", "room3"]);
+		*
+		* @param room - a room, or an array of rooms
+		*/
+		socketsLeave(room) {
+			return this.sockets.socketsLeave(room);
 		}
-		disconnectSockets(e = !1) {
-			return this.sockets.disconnectSockets(e);
+		/**
+		* Makes the matching socket instances disconnect.
+		*
+		* Note: this method also works within a cluster of multiple Socket.IO servers, with a compatible {@link Adapter}.
+		*
+		* @example
+		* // make all socket instances disconnect (the connections might be kept alive for other namespaces)
+		* io.disconnectSockets();
+		*
+		* // make all socket instances in the "room1" room disconnect and close the underlying connections
+		* io.in("room1").disconnectSockets(true);
+		*
+		* @param close - whether to close the underlying connection
+		*/
+		disconnectSockets(close = false) {
+			return this.sockets.disconnectSockets(close);
 		}
 	};
-	e.Server = A, Object.keys(m.EventEmitter.prototype).filter(function(e) {
-		return typeof m.EventEmitter.prototype[e] == "function";
-	}).forEach(function(e) {
-		A.prototype[e] = function() {
-			return this.sockets[e].apply(this.sockets, arguments);
+	exports.Server = Server;
+	Object.keys(events_1.EventEmitter.prototype).filter(function(key) {
+		return typeof events_1.EventEmitter.prototype[key] === "function";
+	}).forEach(function(fn) {
+		Server.prototype[fn] = function() {
+			return this.sockets[fn].apply(this.sockets, arguments);
 		};
-	}), t.exports = (e, t) => new A(e, t), t.exports.Server = A, t.exports.Namespace = h.Namespace, t.exports.Socket = S.Socket;
-})))(), 1)).default, vt = new ht(3e3, { cors: { origin: "*" } }), yt = e(import.meta.url), bt = a.dirname(i(import.meta.url)), xt = yt("loudness"), St = yt("fs"), Ct = "0.0.1";
-process.env.APP_ROOT = a.join(bt, "..");
-var Q = process.env.VITE_DEV_SERVER_URL, wt = a.join(process.env.APP_ROOT, "dist-electron"), Tt = a.join(process.env.APP_ROOT, "dist");
-process.env.VITE_PUBLIC = Q ? a.join(process.env.APP_ROOT, "public") : Tt;
-var $;
-function Et() {
-	$ = new t({
-		fullscreen: !0,
-		frame: !1,
-		autoHideMenuBar: !0,
-		icon: a.join(process.env.VITE_PUBLIC, "icon.ico"),
-		webPreferences: { preload: a.join(bt, "preload.mjs") }
-	}), $.once("ready-to-show", () => {
-		$?.show(), $?.focus();
-	}), $.maximize(), $.webContents.on("did-finish-load", () => {
-		$?.webContents.send("main-process-message", (/* @__PURE__ */ new Date()).toLocaleString());
-	}), Q ? $.loadURL(Q) : $.loadFile(a.join(Tt, "index.html"));
+	});
+	module.exports = (srv, opts) => new Server(srv, opts);
+	module.exports.Server = Server;
+	module.exports.Namespace = namespace_1.Namespace;
+	module.exports.Socket = socket_1.Socket;
+})))(), 1)).default;
+//#endregion
+//#region electron/main.ts
+var io = new Server(3e3, { cors: { origin: "*" } });
+var require$1 = createRequire(import.meta.url);
+var __dirname$1 = path.dirname(fileURLToPath(import.meta.url));
+var loudness = require$1("loudness");
+var fs = require$1("fs");
+var FRONTEND_VERSION = "0.0.1";
+process.env.APP_ROOT = path.join(__dirname$1, "..");
+var VITE_DEV_SERVER_URL = process.env["VITE_DEV_SERVER_URL"];
+var MAIN_DIST = path.join(process.env.APP_ROOT, "dist-electron");
+var RENDERER_DIST = path.join(process.env.APP_ROOT, "dist");
+process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL ? path.join(process.env.APP_ROOT, "public") : RENDERER_DIST;
+var win;
+function createWindow() {
+	win = new BrowserWindow({
+		fullscreen: true,
+		frame: false,
+		autoHideMenuBar: true,
+		icon: path.join(process.env.VITE_PUBLIC, "icon.ico"),
+		webPreferences: { preload: path.join(__dirname$1, "preload.mjs") }
+	});
+	win.once("ready-to-show", () => {
+		win?.show();
+		win?.focus();
+	});
+	win.maximize();
+	win.webContents.on("did-finish-load", () => {
+		win?.webContents.send("main-process-message", (/* @__PURE__ */ new Date()).toLocaleString());
+	});
+	if (VITE_DEV_SERVER_URL) win.loadURL(VITE_DEV_SERVER_URL);
+	else win.loadFile(path.join(RENDERER_DIST, "index.html"));
 }
-r.handle("get-usb-dir", () => {
+ipcMain.handle("get-usb-dir", () => {
 	try {
 		if (process.platform === "linux") {
-			let e = St.readFileSync("/media/"), t = JSON.parse(e);
-			return console.log(t), t;
+			let rawdata = fs.readFileSync("/media/");
+			let installInfo = JSON.parse(rawdata);
+			console.log(installInfo);
+			return installInfo;
+		} else if (process.platform === "win32") {
+			let rawdata = fs.readFileSync("C:\\USB\\info.json");
+			let installInfo = JSON.parse(rawdata);
+			console.log(installInfo);
+			return installInfo;
 		}
-		if (process.platform === "win32") {
-			let e = St.readFileSync("C:\\USB\\info.json"), t = JSON.parse(e);
-			return console.log(t), t;
-		}
-	} catch {
-		return console.error("usb not connected"), null;
+	} catch (err) {
+		console.error("usb not connected");
+		return null;
 	}
-}), r.handle("get-volume", async () => await xt.getVolume()), r.handle("set-volume", async (e, t) => {
-	await xt.setVolume(t);
-}), vt.on("connection", (e) => {
-	console.log("C# Connected"), r.on("start-game", (t, n) => {
-		console.log("Received from React:", n), e.emit("start-game", {
-			Name: n.name,
-			ProcessName: n.processName,
-			ExePath: n.exePath,
-			Args: n.args
+});
+ipcMain.handle("get-volume", async () => {
+	return await loudness.getVolume();
+});
+ipcMain.handle("set-volume", async (_, value) => {
+	await loudness.setVolume(value);
+});
+io.on("connection", (socket) => {
+	console.log("C# Connected");
+	ipcMain.on("start-game", (_event, gameData) => {
+		console.log("Received from React:", gameData);
+		socket.emit("start-game", {
+			Name: gameData.name,
+			ProcessName: gameData.processName,
+			ExePath: gameData.exePath,
+			Args: gameData.args
 		});
-	}), r.on("check-status", () => {
-		e.emit("status", {});
-	}), r.on("close-game", (t, n) => {
-		console.log("Received from React:", n), e.emit("close-game", { ProcessName: n.processName });
-	}), e.on("game-closed", (e) => {
-		console.log("C# says:", e), $?.webContents.send("game-closed", e), $?.show();
-	}), e.on("game-started", (e) => {
-		console.log("C# says:", e), $?.webContents.send("game-started", e), setTimeout(() => {
-			$?.hide();
-		}, 3e3);
-	}), e.on("controller-ps-home", () => {
-		$?.isVisible() ? $?.hide() : $?.show();
-	}), e.on("ethernet-status", (e) => {
-		$?.webContents.send("ethernet-status", e);
-	}), e.on("get-storage", (e) => {
-		console.log(e), $?.webContents.send("get-storage", e);
-	}), e.on("get-version", (e) => {
-		console.log(e);
-		let t = {
-			frontend: Ct,
-			backend: e.backend
-		};
-		console.log(t), $?.webContents.send("get-version", t);
-	}), e.on("controller-disconnected", (e) => {
-		$?.webContents.send("controller-disconnected", e);
-	}), e.on("controller-connected", (e) => {
-		$?.webContents.send("controller-connected", e);
 	});
-}), n.on("window-all-closed", () => {
-	process.platform !== "darwin" && (n.quit(), $ = null);
-}), n.on("activate", () => {
-	t.getAllWindows().length === 0 && Et();
-}), n.whenReady().then(Et);
+	ipcMain.on("check-status", () => {
+		socket.emit("status", {});
+	});
+	ipcMain.on("close-game", (_event, gameData) => {
+		console.log("Received from React:", gameData);
+		socket.emit("close-game", {
+			ProcessName: gameData.processName,
+			Type: gameData.type
+		});
+	});
+	socket.on("game-closed", (data) => {
+		console.log("C# says:", data);
+		win?.webContents.send("game-closed", data);
+		win?.show();
+	});
+	socket.on("game-started", (data) => {
+		console.log("C# says:", data);
+		win?.webContents.send("game-started", data);
+		setTimeout(() => {
+			win?.hide();
+		}, 3e3);
+	});
+	socket.on("controller-ps-home", () => {
+		if (win?.isVisible()) win?.hide();
+		else win?.show();
+	});
+	socket.on("ethernet-status", (data) => {
+		win?.webContents.send("ethernet-status", data);
+	});
+	socket.on("get-storage", (data) => {
+		console.log(data);
+		win?.webContents.send("get-storage", data);
+	});
+	socket.on("get-version", (data) => {
+		console.log(data);
+		let versionData = {
+			frontend: FRONTEND_VERSION,
+			backend: data.backend
+		};
+		console.log(versionData);
+		win?.webContents.send("get-version", versionData);
+	});
+	socket.on("controller-disconnected", (data) => {
+		win?.webContents.send("controller-disconnected", data);
+	});
+	socket.on("controller-connected", (data) => {
+		win?.webContents.send("controller-connected", data);
+	});
+});
+app.on("window-all-closed", () => {
+	if (process.platform !== "darwin") {
+		app.quit();
+		win = null;
+	}
+});
+app.on("activate", () => {
+	if (BrowserWindow.getAllWindows().length === 0) createWindow();
+});
+app.whenReady().then(createWindow);
 //#endregion
-export { wt as MAIN_DIST, Tt as RENDERER_DIST, Q as VITE_DEV_SERVER_URL };
+export { MAIN_DIST, RENDERER_DIST, VITE_DEV_SERVER_URL };
