@@ -13,7 +13,7 @@ import "./css/options.css";
 import "./css/settings.css";
 import "./css/addgameusb.css";
 import "./css/systeminfo.css";
-import "./css/selecttheme.css";
+import "./css/usersettings.css";
 import "./css/addgamesteam.css";
 import "./css/restartservices.css";
 

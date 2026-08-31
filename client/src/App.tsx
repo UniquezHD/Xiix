@@ -39,6 +39,8 @@ import HeadphonesOffIcon from "./assets/ui/headphonesoff.svg?react";
 import ServicesIcon from "./assets/ui/services.svg?react";
 import MusicIcon from "./assets/ui/music.svg?react";
 import AddIcon from "./assets/ui/add.svg?react";
+import UserIcon from "./assets/ui/user.svg?react";
+import CheckmarkIcon from "./assets/ui/checkmark-solid.svg?react";
 // https://allsvgicons.com/
 //#endregion
 
@@ -105,6 +107,9 @@ function App() {
 
   const [currentVolume, setCurrentVolume] = useState<number>(0);
 
+  const [themeDropdownOpen, setThemeDropdownOpen] = useState(false);
+  const [selectedTheme, setSelectedTheme] = useState("Solarized");
+
   type ModalTypes =
     | "Add Game"
     | "Music"
@@ -113,9 +118,9 @@ function App() {
     | "Options"
     | "Add Steam Game"
     | "Add USB Game"
-    | "Theme"
     | "System Information"
-    | "Restart Services";
+    | "Restart Services"
+    | "User Settings";
 
   const [modalOpened, setModalOpened] = useState(false);
 
@@ -1015,72 +1020,133 @@ function App() {
                   </>
                 )}
 
-                {currentModelType === "Theme" && (
+                {currentModelType === "User Settings" && (
                   <>
-                    <div className="theme-container">
-                      <div className="theme-header">
-                        <div className="theme-title">
-                          <div className="theme-title-icon">
-                            <BrushIcon />
+                    <div className="usersettings-container">
+                      <div className="usersettings-header">
+                        <div className="usersettings-title">
+                          <div className="usersettings-title-icon">
+                            <UserIcon />
                           </div>
 
                           <div>
-                            <h2>Theme</h2>
-                            <p>Manage theme</p>
+                            <h2>User Settings</h2>
+                            <p>Manage user settings</p>
                           </div>
                         </div>
                       </div>
 
-                      <div className="theme-section">
-                        <div className="theme-section-title">Themes</div>
+                      <div className="usersettings-section">
+                        <div className="usersettings-section-title">Settings</div>
 
-                        <button
-                          className="theme-container-button"
-                          data-controller-focus
-                          data-controller-group="Theme-modal"
-                          onClick={() => {}}
-                        >
-                          <div className="theme-button-icon">
-                            <SolarisIcon />
-                          </div>
+                        <div className="usersettings-dropdown">
+                          <button
+                            className="usersettings-container-button"
+                            data-controller-focus
+                            data-controller-group="User Settings-modal"
+                            onClick={() =>
+                              setThemeDropdownOpen((open) => !open)
+                            }
+                          >
+                            <div className="usersettings-button-icon">
+                              <BrushIcon />
+                            </div>
 
-                          <div className="theme-button-content">
-                            <span>Solarized</span>
-                            <small>Sets theme</small>
-                          </div>
-                        </button>
+                            <div className="usersettings-button-content">
+                              <span>Theme</span>
+                              <small>{selectedTheme}</small>
+                            </div>
 
-                        <button
-                          className="theme-container-button"
-                          data-controller-focus
-                          data-controller-group="Theme-modal"
-                          onClick={() => {}}
-                        >
-                          <div className="theme-button-icon">
-                            <MoonIcon />
-                          </div>
+                            <div
+                              className={`usersettings-button-arrow ${
+                                themeDropdownOpen
+                                  ? "usersettings-button-arrow-open"
+                                  : ""
+                              }`}
+                            >
+                              ›
+                            </div>
+                          </button>
 
-                          <div className="theme-button-content">
-                            <span>Dark</span>
-                            <small>Sets theme</small>
-                          </div>
-                        </button>
+                          {themeDropdownOpen && (
+                            <div className="usersettings-dropdown-menu">
+                              <button
+                                className="usersettings-dropdown-option"
+                                data-controller-focus
+                                data-controller-group="User Settings-modal"
+                                onClick={() => {
+                                  setSelectedTheme("Solarized");
+                                  setThemeDropdownOpen(false);
+                                }}
+                              >
+                                <div className="usersettings-dropdown-icon">
+                                  <SolarisIcon />
+                                </div>
 
-                        <button
-                          className="theme-container-button"
-                          data-controller-focus
-                          data-controller-group="Theme-modal"
-                          onClick={() => {}}
-                        >
-                          <div className="theme-button-icon">
-                            <SunIcon />
-                          </div>
+                                <div className="usersettings-dropdown-content">
+                                  <span>Solarized</span>
+                                  <small>Solarized theme</small>
+                                </div>
 
-                          <div className="theme-button-content">
-                            <span>Light</span>
-                            <small>Sets theme</small>
-                          </div>
-                        </button>
+                                {selectedTheme === "Solarized" && (
+                                  <div className="usersettings-dropdown-check">
+                                   <CheckmarkIcon/>
+                                  </div>
+                                )}
+                              </button>
+
+                              <button
+                                className="usersettings-dropdown-option"
+                                data-controller-focus
+                                data-controller-group="User Settings-modal"
+                                onClick={() => {
+                                  setSelectedTheme("Dark");
+                                  setThemeDropdownOpen(false);
+                                }}
+                              >
+                                <div className="usersettings-dropdown-icon">
+                                  <MoonIcon/>
+                                </div>
+
+                                <div className="usersettings-dropdown-content">
+                                  <span>Dark</span>
+                                  <small>Dark theme</small>
+                                </div>
+
+                                {selectedTheme === "Dark" && (
+                                  <div className="usersettings-dropdown-check">
+                                    <CheckmarkIcon/>
+                                  </div>
+                                )}
+                              </button>
+
+                              <button
+                                className="usersettings-dropdown-option"
+                                data-controller-focus
+                                data-controller-group="User Settings-modal"
+                                onClick={() => {
+                                  setSelectedTheme("Light");
+                                  setThemeDropdownOpen(false);
+                                }}
+                              >
+                                <div className="usersettings-dropdown-icon">
+                                  <SunIcon/>
+                                </div>
+
+                                <div className="usersettings-dropdown-content">
+                                  <span>Light</span>
+                                  <small>Light theme</small>
+                                </div>
+
+                                {selectedTheme === "Light" && (
+                                  <div className="usersettings-dropdown-check">
+                                    <CheckmarkIcon/>
+                                  </div>
+                                )}
+                              </button>
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </>
@@ -1228,21 +1294,23 @@ function App() {
                     </div>
 
                     <div className="settings-section">
-                      <div className="settings-section-title">UI</div>
+                      <div className="settings-section-title">
+                        User Settings
+                      </div>
 
                       <button
                         className="settings-container-button"
                         data-controller-focus
                         data-controller-group="Settings-modal"
-                        onClick={() => setCurrentModalType("Theme")}
+                        onClick={() => setCurrentModalType("User Settings")}
                       >
                         <div className="settings-button-icon">
-                          <BrushIcon />
+                          <UserIcon />
                         </div>
 
                         <div className="settings-button-content">
-                          <span>Theme</span>
-                          <small>Change UI theme</small>
+                          <span>User Settings</span>
+                          <small>Change User settings</small>
                         </div>
                         <div className="settings-button-arrow">›</div>
                       </button>
