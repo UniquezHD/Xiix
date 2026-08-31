@@ -9,10 +9,12 @@ import Logo from "../src/assets/logo-white.png";
 
 //#region Icons
 import SettingsIcon from "./assets/ui/settings.svg?react";
+import SettingsSolidIcon from "./assets/ui/settings-solid.svg?react";
 import RestartIcon from "./assets/ui/restart.svg?react";
 import EthernetIcon from "./assets/ui/ethernet.svg?react";
 import EthernetOffIcon from "./assets/ui/ethernetoff.svg?react";
 import VolumeIcon from "./assets/ui/volume.svg?react";
+import VolumeSolidIcon from "./assets/ui/volume-solid.svg?react";
 import VolumeUpIcon from "./assets/ui/volumeup.svg?react";
 import VolumeDownIcon from "./assets/ui/volumedown.svg?react";
 import VolumeMuteIcon from "./assets/ui/volumemute.svg?react";
@@ -35,12 +37,10 @@ import InfoIcon from "./assets/ui/info.svg?react";
 import HeadphonesIcon from "./assets/ui/headphones.svg?react";
 import HeadphonesOffIcon from "./assets/ui/headphonesoff.svg?react";
 import ServicesIcon from "./assets/ui/services.svg?react";
+import MusicIcon from "./assets/ui/music.svg?react";
+import AddIcon from "./assets/ui/add.svg?react";
 // https://allsvgicons.com/
 //#endregion
-
-import { IoMdSettings } from "react-icons/io";
-import { FaPlus } from "react-icons/fa";
-import { FaVolumeHigh, FaMusic, FaVolumeXmark } from "react-icons/fa6";
 
 import Clock from "./components/Clock";
 import Keyboard from "./components/Keyboard";
@@ -374,7 +374,7 @@ function App() {
                     setModalOpened(true);
                   }}
                 >
-                  <FaPlus />
+                  <AddIcon />
 
                   <span className="top-bar-nav-label">Add Game</span>
                 </button>
@@ -391,7 +391,7 @@ function App() {
                     setModalOpened(true);
                   }}
                 >
-                  <FaMusic />
+                  <MusicIcon />
 
                   <span className="top-bar-nav-label">Music</span>
                 </button>
@@ -408,7 +408,7 @@ function App() {
                     setModalOpened(true);
                   }}
                 >
-                  <FaVolumeHigh />
+                  <VolumeSolidIcon />
 
                   <span className="top-bar-nav-label">Volume</span>
                 </button>
@@ -425,7 +425,7 @@ function App() {
                     setModalOpened(true);
                   }}
                 >
-                  <IoMdSettings />
+                  <SettingsSolidIcon />
 
                   <span className="top-bar-nav-label">Settings</span>
                 </button>
@@ -506,7 +506,7 @@ function App() {
                       className="volume-status"
                     >
                       {isMuted ? (
-                        <FaVolumeXmark />
+                        <VolumeMuteIcon />
                       ) : (
                         <span>{currentVolume}%</span>
                       )}
