@@ -41,6 +41,8 @@ import MusicIcon from "./assets/ui/music.svg?react";
 import AddIcon from "./assets/ui/add.svg?react";
 import UserIcon from "./assets/ui/user.svg?react";
 import CheckmarkIcon from "./assets/ui/checkmark-solid.svg?react";
+import XboxIcon from "./assets/ui/xbox.svg?react";
+import PlaystationIcon from "./assets/ui/playstation.svg?react";
 // https://allsvgicons.com/
 //#endregion
 
@@ -80,6 +82,9 @@ type StorageInfo = {
 
 // Todo: Add storage amount in system information
 
+// Todo: bluetooth controller support
+// Todo: Bootup screen hvor frontend starter backend og backend sender et signal når den skal forsvinde 
+
 function App() {
   const [activeMenuBar, setActiveMenubar] = useState(0);
 
@@ -109,6 +114,9 @@ function App() {
 
   const [themeDropdownOpen, setThemeDropdownOpen] = useState(false);
   const [selectedTheme, setSelectedTheme] = useState("Solarized");
+
+  const [controllerDropdownOpen, setControllerDropdownOpen] = useState(false);
+  const [selectedController, setSelectedController] = useState("PS4");
 
   type ModalTypes =
     | "Add Game"
@@ -1037,7 +1045,93 @@ function App() {
                       </div>
 
                       <div className="usersettings-section">
-                        <div className="usersettings-section-title">Settings</div>
+                        <div className="usersettings-section-title">
+                          Settings
+                        </div>
+
+                        <div className="usersettings-dropdown">
+                          <button
+                            className="usersettings-container-button"
+                            data-controller-focus
+                            data-controller-group="User Settings-modal"
+                            onClick={() =>
+                              setControllerDropdownOpen((open) => !open)
+                            }
+                          >
+                            <div className="usersettings-button-icon">
+                              <ControllerIcon />
+                            </div>
+
+                            <div className="usersettings-button-content">
+                              <span>Controller</span>
+                              <small>{selectedController}</small>
+                            </div>
+
+                            <div
+                              className={`usersettings-button-arrow ${
+                                controllerDropdownOpen
+                                  ? "usersettings-button-arrow-open"
+                                  : ""
+                              }`}
+                            >
+                              ›
+                            </div>
+                          </button>
+
+                          {controllerDropdownOpen && (
+                            <div className="usersettings-dropdown-menu">
+                              <button
+                                className="usersettings-dropdown-option"
+                                data-controller-focus
+                                data-controller-group="User Settings-modal"
+                                onClick={() => {
+                                  setSelectedController("PS4");
+                                  setControllerDropdownOpen(false);
+                                }}
+                              >
+                                <div className="usersettings-dropdown-icon">
+                                  <PlaystationIcon />
+                                </div>
+
+                                <div className="usersettings-dropdown-content">
+                                  <span>PS4</span>
+                                  <small>PS4 Controller</small>
+                                </div>
+
+                                {selectedController === "PS4" && (
+                                  <div className="usersettings-dropdown-check">
+                                    <CheckmarkIcon />
+                                  </div>
+                                )}
+                              </button>
+
+                              <button
+                                className="usersettings-dropdown-option"
+                                data-controller-focus
+                                data-controller-group="User Settings-modal"
+                                onClick={() => {
+                                  setSelectedController("Xbox");
+                                  setControllerDropdownOpen(false);
+                                }}
+                              >
+                                <div className="usersettings-dropdown-icon">
+                                  <XboxIcon />
+                                </div>
+
+                                <div className="usersettings-dropdown-content">
+                                  <span>Xbox</span>
+                                  <small>Xbox Controller</small>
+                                </div>
+
+                                {selectedController === "Xbox" && (
+                                  <div className="usersettings-dropdown-check">
+                                    <CheckmarkIcon />
+                                  </div>
+                                )}
+                              </button>
+                            </div>
+                          )}
+                        </div>
 
                         <div className="usersettings-dropdown">
                           <button
@@ -1090,7 +1184,7 @@ function App() {
 
                                 {selectedTheme === "Solarized" && (
                                   <div className="usersettings-dropdown-check">
-                                   <CheckmarkIcon/>
+                                    <CheckmarkIcon />
                                   </div>
                                 )}
                               </button>
@@ -1105,7 +1199,7 @@ function App() {
                                 }}
                               >
                                 <div className="usersettings-dropdown-icon">
-                                  <MoonIcon/>
+                                  <MoonIcon />
                                 </div>
 
                                 <div className="usersettings-dropdown-content">
@@ -1115,7 +1209,7 @@ function App() {
 
                                 {selectedTheme === "Dark" && (
                                   <div className="usersettings-dropdown-check">
-                                    <CheckmarkIcon/>
+                                    <CheckmarkIcon />
                                   </div>
                                 )}
                               </button>
@@ -1130,7 +1224,7 @@ function App() {
                                 }}
                               >
                                 <div className="usersettings-dropdown-icon">
-                                  <SunIcon/>
+                                  <SunIcon />
                                 </div>
 
                                 <div className="usersettings-dropdown-content">
@@ -1140,7 +1234,7 @@ function App() {
 
                                 {selectedTheme === "Light" && (
                                   <div className="usersettings-dropdown-check">
-                                    <CheckmarkIcon/>
+                                    <CheckmarkIcon />
                                   </div>
                                 )}
                               </button>
