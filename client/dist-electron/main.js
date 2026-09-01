@@ -21434,6 +21434,8 @@ var __dirname$1 = path.dirname(fileURLToPath(import.meta.url));
 var loudness = require$1("loudness");
 var fs = require$1("fs");
 var FRONTEND_VERSION = "0.0.1";
+var APPLICATION_PATH = "C:\\XiiX";
+var USB_PATH = "C:\\USB";
 process.env.APP_ROOT = path.join(__dirname$1, "..");
 var VITE_DEV_SERVER_URL = process.env["VITE_DEV_SERVER_URL"];
 var MAIN_DIST = path.join(process.env.APP_ROOT, "dist-electron");
@@ -21459,6 +21461,15 @@ function createWindow() {
 	if (VITE_DEV_SERVER_URL) win.loadURL(VITE_DEV_SERVER_URL);
 	else win.loadFile(path.join(RENDERER_DIST, "index.html"));
 }
+ipcMain.handle("get-game-data", () => {
+	try {
+		const rawdata = fs.readFileSync(`${APPLICATION_PATH}\\GameData.json`, "utf8");
+		return JSON.parse(rawdata);
+	} catch (err) {
+		console.log(err);
+		return null;
+	}
+});
 ipcMain.handle("get-usb-dir", () => {
 	try {
 		if (process.platform === "linux") {
@@ -21467,7 +21478,7 @@ ipcMain.handle("get-usb-dir", () => {
 			console.log(installInfo);
 			return installInfo;
 		} else if (process.platform === "win32") {
-			let rawdata = fs.readFileSync("C:\\USB\\info.json");
+			let rawdata = fs.readFileSync(`${USB_PATH}\\info.json`);
 			let installInfo = JSON.parse(rawdata);
 			console.log(installInfo);
 			return installInfo;
@@ -21491,8 +21502,24 @@ io.on("connection", (socket) => {
 			Name: gameData.name,
 			ProcessName: gameData.processName,
 			ExePath: gameData.exePath,
-			Args: gameData.args
+			Args: gameData.args,
+			Type: gameData.type,
+			Cover: gameData.cover
 		});
+	});
+	ipcMain.on("install-game", (_event, installGameInfo) => {
+		console.log("InstallGameInfo:", installGameInfo);
+		socket.emit("install-game", {
+			Name: installGameInfo.name,
+			ProcessName: installGameInfo.processName,
+			ExePath: installGameInfo.exePath,
+			Args: installGameInfo.args,
+			Type: installGameInfo.type,
+			Cover: installGameInfo.cover
+		});
+	});
+	socket.on("game-installed-status", (data) => {
+		win?.webContents.send("game-installed-status", data);
 	});
 	ipcMain.on("check-status", () => {
 		socket.emit("status", {});
@@ -21525,7 +21552,7 @@ io.on("connection", (socket) => {
 	});
 	socket.on("get-storage", (data) => {
 		console.log(data);
-		win?.webContents.send("get-storage", data);
+		win?.webContents.send("get-storage", data.storageInfo);
 	});
 	socket.on("get-version", (data) => {
 		console.log(data);

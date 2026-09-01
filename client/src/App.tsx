@@ -3,8 +3,6 @@ import { useControllerNavigation } from "./hooks/useControllerNavigation";
 import { Grid, Modal, Tooltip } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 
-import { GameData } from "./data/GameData";
-
 import Logo from "../src/assets/logo-white.png";
 
 //#region Icons
@@ -41,6 +39,8 @@ import MusicIcon from "./assets/ui/music.svg?react";
 import AddIcon from "./assets/ui/add.svg?react";
 import UserIcon from "./assets/ui/user.svg?react";
 import CheckmarkIcon from "./assets/ui/checkmark-solid.svg?react";
+import XboxIcon from "./assets/ui/xbox.svg?react";
+import PlaystationIcon from "./assets/ui/playstation.svg?react";
 // https://allsvgicons.com/
 //#endregion
 
@@ -57,15 +57,19 @@ type Game = {
   type: string;
 };
 
+type GameData = {
+  games: Game[];
+};
+
 type Version = {
   frontend: string;
   backend: string;
 };
 
 type StorageInfo = {
-  name: string;
-  freeSpace: string;
-  totalFreeSpace: string;
+  Name: string;
+  FreeSpace: string;
+  TotalSpace: string;
   SpaceUsed: string;
 };
 
@@ -80,6 +84,14 @@ type StorageInfo = {
 
 // Todo: Add storage amount in system information
 
+// Todo: bluetooth controller support
+// Todo: Bootup screen hvor frontend starter backend og backend sender et signal når den skal forsvinde
+
+// Todo: prevent duplicate games in GameData.json
+// Todo: delete game from GameData.json
+
+// Todo: add refresh games array under settings 
+
 function App() {
   const [activeMenuBar, setActiveMenubar] = useState(0);
 
@@ -90,16 +102,18 @@ function App() {
   const [isController, setIsController] = useState("disconnected");
   const [isMuted, setIsMuted] = useState(false);
 
+  const [gameData, setGameData] = useState<GameData | null>(null);
+
   const [keyboardOpen, setKeyboardOpen] = useState(false);
 
   const [controllerDiagram, setControllerDiagram] = useState(false);
 
   const [version, setVersion] = useState<Version>();
-  const [_storageInfo, _setStorageInfo] = useState<StorageInfo>();
+  const [storageInfo, setStorageInfo] = useState<StorageInfo>();
 
   const [keyboardOutput, setKeyboardOutput] = useState("");
 
-  const [usbDir, setUsbDir] = useState<any>();
+  const [usbDir, setUsbDir] = useState<Game>();
 
   const [currentPlaying, setCurrentPlaying] = useState<Game | null>(null);
 
@@ -109,6 +123,9 @@ function App() {
 
   const [themeDropdownOpen, setThemeDropdownOpen] = useState(false);
   const [selectedTheme, setSelectedTheme] = useState("Solarized");
+
+  const [controllerDropdownOpen, setControllerDropdownOpen] = useState(false);
+  const [selectedController, setSelectedController] = useState("PS4");
 
   type ModalTypes =
     | "Add Game"
@@ -179,9 +196,10 @@ function App() {
   };
 
   useEffect(() => {
-    window.volumeAPI.get().then(setCurrentVolume);
+    window.electron.volumeAPI.get().then(setCurrentVolume);
 
     CheckStatus();
+    GetGames();
   }, []);
 
   useEffect(() => {
@@ -200,8 +218,23 @@ function App() {
 
   useEffect(() => {
     window.electron.on("get-storage", (data) => {
-      /* setStorageInfo(data); */
+      setStorageInfo(data as StorageInfo);
       console.log("Storage: ", data);
+    });
+  }, []);
+
+  useEffect(() => {
+    window.electron.on("game-installed-status", (data) => {
+      if ((data as { message: string }).message === "success") {
+        ShowNotification(`Game Installed`);
+        GetGames();
+        setModalOpened(false);
+      } else {
+        ShowNotification(`Game Failed to Install`, "Error");
+        setModalOpened(false);
+      }
+
+      console.log("Game installed: ", data);
     });
   }, []);
 
@@ -246,11 +279,11 @@ function App() {
       if (newMuted) {
         setPreviousVolume(currentVolume);
 
-        window.volumeAPI.set(1);
+        window.electron.volumeAPI.set(1);
         setCurrentVolume(1);
         ShowNotification(`Muted`);
       } else {
-        window.volumeAPI.set(previousVolume);
+        window.electron.volumeAPI.set(previousVolume);
         setCurrentVolume(previousVolume);
         ShowNotification(`Unmuted`);
       }
@@ -266,7 +299,7 @@ function App() {
       amount = 0;
     }
 
-    window.volumeAPI.set(amount);
+    window.electron.volumeAPI.set(amount);
     setCurrentVolume(amount);
 
     ShowNotification(`Volume set to ${amount}`);
@@ -275,7 +308,7 @@ function App() {
   const VolumeUp = (amount: number) => {
     const newVolume = Math.min(currentVolume + amount, 100);
 
-    window.volumeAPI.set(newVolume);
+    window.electron.volumeAPI.set(newVolume);
     setCurrentVolume(newVolume);
 
     ShowNotification(`Volume set to ${newVolume}`);
@@ -284,7 +317,7 @@ function App() {
   const VolumeDown = (amount: number) => {
     const newVolume = Math.max(currentVolume - amount, 0);
 
-    window.volumeAPI.set(newVolume);
+    window.electron.volumeAPI.set(newVolume);
     setCurrentVolume(newVolume);
 
     ShowNotification(`Volume set to ${newVolume}`);
@@ -301,11 +334,31 @@ function App() {
     //steam.exe -applaunch 3527290
   }; */
 
+  const InstallGame = (
+    name?: string,
+    processName?: string,
+    exePath?: string,
+    args?: string,
+    cover?: string,
+    type?: string,
+  ) => {
+    //usbDir?.name, usbDir?.exePath, usbDir?.cover, usbDir?.type
+    window.electron.send("install-game", {
+      name,
+      processName,
+      args,
+      exePath,
+      cover,
+      type,
+    });
+  };
+
   const StartGame = (
     name: string,
     processName: string,
     exePath: string,
     args: string,
+    cover: string,
     type: string,
   ) => {
     if (currentPlaying == null) {
@@ -314,6 +367,7 @@ function App() {
         processName,
         exePath,
         args,
+        cover,
         type,
       });
     } else {
@@ -322,9 +376,16 @@ function App() {
   };
 
   const GetUsbDir = () => {
-    window.directory.get().then((dir) => {
+    window.electron.directory.get().then((dir) => {
       setUsbDir(dir);
       console.log(dir);
+    });
+  };
+
+  const GetGames = () => {
+    window.electron.gameData.get().then((games) => {
+      setGameData(games);
+      console.log("Games: ", games);
     });
   };
 
@@ -552,38 +613,57 @@ function App() {
               rowGap="xl"
               columnGap="lg"
             >
-              {GameData.map((item: Game) => (
-                <Grid.Col key={item.name} className="games-grid-col" span={1.5}>
-                  <button
-                    className="game-container"
-                    style={{
-                      backgroundImage: `url(${item.cover})`,
-                    }}
-                    data-controller-focus
-                    data-controller-group="games"
-                    onClick={() => {
-                      StartGame(
-                        item.name,
-                        item.processName,
-                        item.exePath,
-                        item.args,
-                        item.type,
-                      );
-                    }}
-                    onFocus={() => setFocusedGame(item)}
-                  >
-                    {currentPlaying?.name === item.name && (
-                      <div className="game-container-playing-icon">
-                        <div className="wave-effect" />
+              {gameData && gameData.games.length > 0 ? (
+                <>
+                  {gameData &&
+                    gameData.games.map((item: Game) => (
+                      <Grid.Col
+                        key={item.name}
+                        className="games-grid-col"
+                        span={1.5}
+                      >
+                        <button
+                          className="game-container"
+                          style={{
+                            backgroundImage: `url(${item.cover})`,
+                          }}
+                          data-controller-focus
+                          data-controller-group="games"
+                          onClick={() => {
+                            StartGame(
+                              item.name,
+                              item.processName,
+                              item.exePath,
+                              item.args,
+                              item.cover,
+                              item.type,
+                            );
+                          }}
+                          onFocus={() => setFocusedGame(item)}
+                        >
+                          {currentPlaying?.name === item.name && (
+                            <div className="game-container-playing-icon">
+                              <div className="wave-effect" />
 
-                        <ControllerIcon /* size={25} */ />
-                      </div>
-                    )}
+                              <ControllerIcon />
+                            </div>
+                          )}
 
-                    <div className="game-container-titlebar">{item.name}</div>
-                  </button>
-                </Grid.Col>
-              ))}
+                          <div className="game-container-titlebar">
+                            {item.name}
+                          </div>
+                        </button>
+                      </Grid.Col>
+                    ))}
+                </>
+              ) : (
+                <>
+                  <div className="no-games">
+                    <h2>No Games found</h2>
+                    <span>Click the <AddIcon /> icon to add games</span>
+                  </div>
+                </>
+              )}
             </Grid>
 
             <Modal
@@ -683,6 +763,7 @@ function App() {
                             focusedGame.processName,
                             focusedGame.exePath,
                             focusedGame.args,
+                            focusedGame.cover,
                             focusedGame.type,
                           );
 
@@ -837,7 +918,16 @@ function App() {
                           className="addgameusb-container-button"
                           data-controller-focus
                           data-controller-group="Add USB Game-modal"
-                          onClick={() => {}}
+                          onClick={() => {
+                            InstallGame(
+                              usbDir?.name,
+                              usbDir?.processName,
+                              usbDir?.exePath,
+                              usbDir?.args,
+                              usbDir?.cover,
+                              usbDir?.type,
+                            );
+                          }}
                         >
                           <div className="addgameusb-button-icon">
                             <InstallIcon />
@@ -1037,7 +1127,93 @@ function App() {
                       </div>
 
                       <div className="usersettings-section">
-                        <div className="usersettings-section-title">Settings</div>
+                        <div className="usersettings-section-title">
+                          Settings
+                        </div>
+
+                        <div className="usersettings-dropdown">
+                          <button
+                            className="usersettings-container-button"
+                            data-controller-focus
+                            data-controller-group="User Settings-modal"
+                            onClick={() =>
+                              setControllerDropdownOpen((open) => !open)
+                            }
+                          >
+                            <div className="usersettings-button-icon">
+                              <ControllerIcon />
+                            </div>
+
+                            <div className="usersettings-button-content">
+                              <span>Controller</span>
+                              <small>{selectedController}</small>
+                            </div>
+
+                            <div
+                              className={`usersettings-button-arrow ${
+                                controllerDropdownOpen
+                                  ? "usersettings-button-arrow-open"
+                                  : ""
+                              }`}
+                            >
+                              ›
+                            </div>
+                          </button>
+
+                          {controllerDropdownOpen && (
+                            <div className="usersettings-dropdown-menu">
+                              <button
+                                className="usersettings-dropdown-option"
+                                data-controller-focus
+                                data-controller-group="User Settings-modal"
+                                onClick={() => {
+                                  setSelectedController("PS4");
+                                  setControllerDropdownOpen(false);
+                                }}
+                              >
+                                <div className="usersettings-dropdown-icon">
+                                  <PlaystationIcon />
+                                </div>
+
+                                <div className="usersettings-dropdown-content">
+                                  <span>PS4</span>
+                                  <small>PS4 Controller</small>
+                                </div>
+
+                                {selectedController === "PS4" && (
+                                  <div className="usersettings-dropdown-check">
+                                    <CheckmarkIcon />
+                                  </div>
+                                )}
+                              </button>
+
+                              <button
+                                className="usersettings-dropdown-option"
+                                data-controller-focus
+                                data-controller-group="User Settings-modal"
+                                onClick={() => {
+                                  setSelectedController("Xbox");
+                                  setControllerDropdownOpen(false);
+                                }}
+                              >
+                                <div className="usersettings-dropdown-icon">
+                                  <XboxIcon />
+                                </div>
+
+                                <div className="usersettings-dropdown-content">
+                                  <span>Xbox</span>
+                                  <small>Xbox Controller</small>
+                                </div>
+
+                                {selectedController === "Xbox" && (
+                                  <div className="usersettings-dropdown-check">
+                                    <CheckmarkIcon />
+                                  </div>
+                                )}
+                              </button>
+                            </div>
+                          )}
+                        </div>
 
                         <div className="usersettings-dropdown">
                           <button
@@ -1090,7 +1266,7 @@ function App() {
 
                                 {selectedTheme === "Solarized" && (
                                   <div className="usersettings-dropdown-check">
-                                   <CheckmarkIcon/>
+                                    <CheckmarkIcon />
                                   </div>
                                 )}
                               </button>
@@ -1105,7 +1281,7 @@ function App() {
                                 }}
                               >
                                 <div className="usersettings-dropdown-icon">
-                                  <MoonIcon/>
+                                  <MoonIcon />
                                 </div>
 
                                 <div className="usersettings-dropdown-content">
@@ -1115,7 +1291,7 @@ function App() {
 
                                 {selectedTheme === "Dark" && (
                                   <div className="usersettings-dropdown-check">
-                                    <CheckmarkIcon/>
+                                    <CheckmarkIcon />
                                   </div>
                                 )}
                               </button>
@@ -1130,7 +1306,7 @@ function App() {
                                 }}
                               >
                                 <div className="usersettings-dropdown-icon">
-                                  <SunIcon/>
+                                  <SunIcon />
                                 </div>
 
                                 <div className="usersettings-dropdown-content">
@@ -1140,7 +1316,7 @@ function App() {
 
                                 {selectedTheme === "Light" && (
                                   <div className="usersettings-dropdown-check">
-                                    <CheckmarkIcon/>
+                                    <CheckmarkIcon />
                                   </div>
                                 )}
                               </button>
@@ -1182,11 +1358,19 @@ function App() {
                           <ul className="systeminfo-info">
                             <li>
                               <span>Installed Games</span>{" "}
-                              <span>{GameData.length}</span>
+                              <span>{gameData && gameData.games.length}</span>
                             </li>
                             <li>
-                              <span>System Storage</span>{" "}
-                              <span>{/* system storage */}</span>
+                              <span>Total System Storage</span>{" "}
+                              <span>{storageInfo?.TotalSpace}</span>
+                            </li>
+                            <li>
+                              <span>Space Used</span>{" "}
+                              <span>{storageInfo?.SpaceUsed}</span>
+                            </li>
+                            <li>
+                              <span>Free Space</span>{" "}
+                              <span>{storageInfo?.FreeSpace}</span>
                             </li>
                             <li>
                               <span>Internet Status</span>{" "}
