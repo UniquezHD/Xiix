@@ -219,3 +219,8 @@
   color: rgba(255, 255, 255, 0.4);
   font-size: 0.75rem;
 }
+
+.addgameusb-button-loading{
+  height: 30px;
+  color: #8d98f0;
+}

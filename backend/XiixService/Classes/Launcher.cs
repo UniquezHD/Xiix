@@ -21,5 +21,17 @@ namespace XiixService.Classes
 
             return Process.Start(startInfo);
         }
+
+        public static Process LaunchPowershell(string scriptPath, string args)
+        {
+            var startInfo = new ProcessStartInfo
+            {
+                FileName = "powershell.exe",
+                Arguments = $"-ExecutionPolicy Bypass -File \"{scriptPath}\" {args}",
+                UseShellExecute = false
+            };
+
+            return Process.Start(startInfo);
+        }
     }
 }

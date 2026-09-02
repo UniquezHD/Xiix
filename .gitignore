@@ -5,3 +5,4 @@ backend/XiixService/bin
 backend/XiixService/obj
 client/release
 client/electron/games.json
+steam.txt

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Text;
+using System.Text.Json;
 using XiixService.Models;
 
 namespace XiixService.Classes
@@ -25,6 +26,7 @@ namespace XiixService.Classes
 
                 Log.Info($"StartGame received: {gameData.Name}, {gameData.ExePath}, {gameData.Args}, {gameData.ProcessName}");
 
+                // Todo: handle invalid launch
                 var process = Launcher.Launch(gameData.ExePath, gameData.Args, gameData.Name);
                 Watcher.Watch(gameData.Name, process);
 
@@ -54,11 +56,28 @@ namespace XiixService.Classes
 
             });
 
+            _socket.On("install-steam-game", async ctx =>
+            {
+                var obj = ctx.GetValue<JsonElement>(0);
+                var appID = obj.GetProperty("appID").GetInt32();
+
+                // Todo: get username from config.json after first steam setup 
+
+                Game.InstallSteam(appID, "UniquezHD");
+            });
+
             _socket.On("install-game", async ctx =>
             {
                 var installGameData = ctx.GetValue<GameModel>(0)!;
 
                 Game.InstallCustom(installGameData);
+            });
+
+            _socket.On("uninstall-game", async ctx =>
+            {
+                var uninstallGameData = ctx.GetValue<GameModel>(0)!;
+
+                Game.Uninstall(uninstallGameData);
             });
 
             _socket.On("restart", async ctx =>

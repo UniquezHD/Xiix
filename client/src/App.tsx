@@ -42,6 +42,9 @@ import CheckmarkIcon from "./assets/ui/checkmark-solid.svg?react";
 import XboxIcon from "./assets/ui/xbox.svg?react";
 import PlaystationIcon from "./assets/ui/playstation.svg?react";
 import DeleteIcon from "./assets/ui/delete.svg?react";
+
+import LoadingPacman from "./assets/ui/loading-pacman.svg?react";
+
 // https://allsvgicons.com/
 //#endregion
 
@@ -94,6 +97,7 @@ function App() {
   const [isEthernet, setIsEthernet] = useState(true);
   const [isController, setIsController] = useState("disconnected");
   const [isMuted, setIsMuted] = useState(false);
+  const [isInstalling, setIsInstalling] = useState(false);
 
   const [gameData, setGameData] = useState<GameData | null>(null);
 
@@ -218,16 +222,45 @@ function App() {
 
   useEffect(() => {
     window.electron.on("game-installed-status", (data) => {
-      if ((data as { message: string }).message === "success") {
-        ShowNotification(`Game Installed`);
-        GetGames();
-        setModalOpened(false);
-      } else {
-        ShowNotification(`Game Failed to Install`, "Error");
-        setModalOpened(false);
+      switch ((data as { message: string }).message) {
+        case "success":
+          ShowNotification(`Game Installed`);
+          GetGames();
+          setModalOpened(false);
+          break;
+
+        case "failed":
+          ShowNotification(`Game Failed to Install`, "Error");
+          setModalOpened(false);
+          break;
+
+        case "already-exists":
+          ShowNotification(`Game Already Installed`, "Error");
+          setModalOpened(false);
+          break;
+
+        default:
+          break;
       }
 
       console.log("Game installed: ", data);
+    });
+  }, []);
+
+  useEffect(() => {
+    window.electron.on("game-uninstalled-status", (data) => {
+      switch ((data as { message: string }).message) {
+        case "success":
+          ShowNotification(`Game Uninstalled`);
+          GetGames();
+          setModalOpened(false);
+          break;
+
+        case "failed":
+          break;
+        default:
+          break;
+      }
     });
   }, []);
 
@@ -258,6 +291,16 @@ function App() {
       console.log("game-closed:", data);
 
       ShowNotification("Game closed");
+    });
+  }, []);
+
+  useEffect(() => {
+    window.electron.on("install-steam-game-finished", (data) => {
+      console.log("install-steam-game-finished:", data);
+
+      setIsInstalling(false);
+
+      ShowNotification("Steam game installed");
     });
   }, []);
 
@@ -323,9 +366,15 @@ function App() {
     });
   };
 
-  /*  const InstallSteamGame = (id: number) => {
-    //steam.exe -applaunch 3527290
-  }; */
+  const InstallSteamGame = (appID: number) => {
+    // add steam username and password in settings for first setup
+
+    setIsInstalling(true);
+
+    window.electron.send("install-steam-game", {
+      appID,
+    });
+  };
 
   const InstallGame = (
     name?: string,
@@ -335,8 +384,25 @@ function App() {
     cover?: string,
     type?: string,
   ) => {
-    //usbDir?.name, usbDir?.exePath, usbDir?.cover, usbDir?.type
     window.electron.send("install-game", {
+      name,
+      processName,
+      args,
+      exePath,
+      cover,
+      type,
+    });
+  };
+
+  const UninstallGame = (
+    name?: string,
+    processName?: string,
+    exePath?: string,
+    args?: string,
+    cover?: string,
+    type?: string,
+  ) => {
+    window.electron.send("uninstall-game", {
       name,
       processName,
       args,
@@ -622,6 +688,10 @@ function App() {
                           }}
                           data-controller-focus
                           data-controller-group="games"
+                          onContextMenu={() => {
+                            setCurrentModalType("Options");
+                            setModalOpened(true);
+                          }}
                           onClick={() => {
                             StartGame(
                               item.name,
@@ -824,7 +894,18 @@ function App() {
                         data-controller-group="game-modal"
                         data-controller-focus
                         onClick={() => {
-                          console.log("Delete game");
+                          if (!focusedGame) return;
+
+                          UninstallGame(
+                            focusedGame.name,
+                            focusedGame.processName,
+                            focusedGame.exePath,
+                            focusedGame.args,
+                            focusedGame.cover,
+                            focusedGame.type,
+                          );
+
+                          setModalOpened(false);
                         }}
                       >
                         <div className="options-button-icon">
@@ -936,6 +1017,7 @@ function App() {
                           className="addgameusb-container-button"
                           data-controller-focus
                           data-controller-group="Add USB Game-modal"
+                          /* disabled={isInstalling} */
                           onClick={() => {
                             InstallGame(
                               usbDir?.name,
@@ -955,7 +1037,11 @@ function App() {
                             <span>Install</span>
                             <small>Install game</small>
                           </div>
-                          <div className="addgameusb-button-arrow">›</div>
+                          {isInstalling && (
+                            <>
+                              <LoadingPacman className="addgameusb-button-loading"/>
+                            </>
+                          )}
                         </button>
                       </div>
                     </div>
@@ -993,7 +1079,10 @@ function App() {
                           className="addgamesteam-container-button"
                           data-controller-focus
                           data-controller-group="Add Steam Game-modal"
-                          onClick={() => {}}
+                          disabled={isInstalling}
+                          onClick={() => {
+                            InstallSteamGame(parseInt(keyboardOutput));
+                          }}
                         >
                           <div className="addgamesteam-button-icon">
                             <InstallIcon />
@@ -1003,7 +1092,11 @@ function App() {
                             <span>Install</span>
                             <small>Install game</small>
                           </div>
-                          <div className="addgamesteam-button-arrow">›</div>
+                          {isInstalling && (
+                            <>
+                              <LoadingPacman className="addgamesteam-button-loading"/>
+                            </>
+                          )}
                         </button>
                       </div>
                     </div>

@@ -21507,6 +21507,9 @@ io.on("connection", (socket) => {
 			Cover: gameData.cover
 		});
 	});
+	ipcMain.on("install-steam-game", (_event, appID) => {
+		socket.emit("install-steam-game", appID);
+	});
 	ipcMain.on("install-game", (_event, installGameInfo) => {
 		console.log("InstallGameInfo:", installGameInfo);
 		socket.emit("install-game", {
@@ -21518,8 +21521,22 @@ io.on("connection", (socket) => {
 			Cover: installGameInfo.cover
 		});
 	});
+	ipcMain.on("uninstall-game", (_event, uninstallGameInfo) => {
+		console.log("UninstallGameInfo:", uninstallGameInfo);
+		socket.emit("uninstall-game", {
+			Name: uninstallGameInfo.name,
+			ProcessName: uninstallGameInfo.processName,
+			ExePath: uninstallGameInfo.exePath,
+			Args: uninstallGameInfo.args,
+			Type: uninstallGameInfo.type,
+			Cover: uninstallGameInfo.cover
+		});
+	});
 	socket.on("game-installed-status", (data) => {
 		win?.webContents.send("game-installed-status", data);
+	});
+	socket.on("game-uninstalled-status", (data) => {
+		win?.webContents.send("game-uninstalled-status", data);
 	});
 	ipcMain.on("check-status", () => {
 		socket.emit("status", {});
@@ -21534,6 +21551,10 @@ io.on("connection", (socket) => {
 	socket.on("game-closed", (data) => {
 		console.log("C# says:", data);
 		win?.webContents.send("game-closed", data);
+		win?.show();
+	});
+	socket.on("install-steam-game-finished", (data) => {
+		win?.webContents.send("install-steam-game-finished", data);
 		win?.show();
 	});
 	socket.on("game-started", (data) => {

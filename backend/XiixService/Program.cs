@@ -13,8 +13,9 @@ class Program
 
     public static string CurrentlyPlaying { get; set; }
 
-    // Todo: prevent duplicate games in GameData.json
-    // Todo: delete game from GameData.json
+    // Todo: handle invalid launch 
+
+    // Todo: get username from config.json after first steam setup 
 
     static async Task Main()
     {

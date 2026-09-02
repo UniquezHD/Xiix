@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
+using System.Xml.Linq;
 
 namespace XiixService.Classes
 {
@@ -21,6 +22,23 @@ namespace XiixService.Classes
                 {
                     name,
                     status = "closed"
+                });
+            };
+        }
+
+        public static void WatchPowershell(Process process)
+        {
+            process.EnableRaisingEvents = true;
+
+            process.Exited += async (_, __) =>
+            {
+                Log.Success($"Powershell script finished", "Watcher");
+
+                Restart.RestartSteam();
+
+                await Program.Socket.SendToElectron("install-steam-game-finished", new
+                {
+                    status = "success"
                 });
             };
         }
