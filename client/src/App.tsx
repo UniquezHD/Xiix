@@ -301,6 +301,8 @@ function App() {
       setIsInstalling(false);
 
       ShowNotification("Steam game installed");
+
+      GetGames();
     });
   }, []);
 
