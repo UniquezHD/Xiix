@@ -18,14 +18,15 @@ electron.contextBridge.exposeInMainWorld("ipcRenderer", {
 		return electron.ipcRenderer.invoke(channel, ...omit);
 	}
 });
-electron.contextBridge.exposeInMainWorld("volumeAPI", {
-	get: () => electron.ipcRenderer.invoke("get-volume"),
-	set: (value) => electron.ipcRenderer.invoke("set-volume", value)
-});
-electron.contextBridge.exposeInMainWorld("directory", { get: () => electron.ipcRenderer.invoke("get-usb-dir") });
-electron.contextBridge.exposeInMainWorld("windowState", { set: (value) => electron.ipcRenderer.invoke("set-window-state", value) });
 electron.contextBridge.exposeInMainWorld("electron", {
 	send: (channel, data) => electron.ipcRenderer.send(channel, data),
-	on: (channel, callback) => electron.ipcRenderer.on(channel, (_, data) => callback(data))
+	on: (channel, callback) => electron.ipcRenderer.on(channel, (_, data) => callback(data)),
+	volumeAPI: {
+		get: () => electron.ipcRenderer.invoke("get-volume"),
+		set: (value) => electron.ipcRenderer.invoke("set-volume", value)
+	},
+	directory: { get: () => electron.ipcRenderer.invoke("get-usb-dir") },
+	gameData: { get: () => electron.ipcRenderer.invoke("get-game-data") },
+	windowState: { set: (value) => electron.ipcRenderer.invoke("set-window-state", value) }
 });
 //#endregion

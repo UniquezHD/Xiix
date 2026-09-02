@@ -54,6 +54,13 @@ namespace XiixService.Classes
 
             });
 
+            _socket.On("install-game", async ctx =>
+            {
+                var installGameData = ctx.GetValue<GameModel>(0)!;
+
+                Game.InstallCustom(installGameData);
+            });
+
             _socket.On("restart", async ctx =>
             {
                 int restart = ctx.GetValue<int>(0)!;
@@ -66,7 +73,7 @@ namespace XiixService.Classes
                 {
                     Restart.RestartFrontend();
                 }
-            });
+            });  
 
             _socket.On("status", async ctx =>
             {
@@ -75,11 +82,11 @@ namespace XiixService.Classes
 
                 var spaceUsed = Util.ConvertBytes(drives[0].TotalSize - drives[0].TotalFreeSpace);
 
-                var storageInfo = new StorageInfo
+                var storageInfo = new StorageInfoModel
                 {
                     DriveName = drives[0].Name,
-                    FreeSpace = Util.ConvertBytes(drives[0].TotalSize),
-                    TotalFreeSpace = Util.ConvertBytes(drives[0].TotalFreeSpace),
+                    FreeSpace = Util.ConvertBytes(drives[0].TotalFreeSpace),
+                    TotalSpace = Util.ConvertBytes(drives[0].TotalSize),
                     SpaceUsed = spaceUsed,
                 };
 

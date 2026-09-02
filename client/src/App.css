@@ -393,3 +393,10 @@
     opacity: 0;
   }
 }
+
+.no-games{
+  color: #eee;
+  margin-top: 10%;
+  width: 100%;
+  text-align: center;
+}

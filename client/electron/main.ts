@@ -18,6 +18,9 @@ const fs = require("fs");
 
 const FRONTEND_VERSION = "0.0.1";
 
+const APPLICATION_PATH = "C:\\XiiX";
+const USB_PATH = "C:\\USB";
+
 process.env.APP_ROOT = path.join(__dirname, "..");
 
 export const VITE_DEV_SERVER_URL = process.env["VITE_DEV_SERVER_URL"];
@@ -32,9 +35,10 @@ let win: BrowserWindow | null;
 
 type GameData = {
   name: string;
+  processName: string;
   exePath: string;
   args: string;
-  processName: string;
+  cover: string;
   type: string;
 };
 
@@ -72,6 +76,21 @@ function createWindow() {
   }
 }
 
+ipcMain.handle("get-game-data", () => {
+  try {
+    const rawdata = fs.readFileSync(
+      `${APPLICATION_PATH}\\GameData.json`,
+      "utf8",
+    );
+    const gameData = JSON.parse(rawdata);
+
+    return gameData;
+  } catch (err) {
+    console.log(err);
+    return null;
+  }
+});
+
 ipcMain.handle("get-usb-dir", () => {
   try {
     if (process.platform === "linux") {
@@ -83,7 +102,7 @@ ipcMain.handle("get-usb-dir", () => {
 
       return installInfo;
     } else if (process.platform === "win32") {
-      let rawdata = fs.readFileSync("C:\\USB\\info.json");
+      let rawdata = fs.readFileSync(`${USB_PATH}\\info.json`);
 
       let installInfo = JSON.parse(rawdata);
 
@@ -117,7 +136,26 @@ io.on("connection", (socket) => {
       ProcessName: gameData.processName,
       ExePath: gameData.exePath,
       Args: gameData.args,
+      Type: gameData.type,
+      Cover: gameData.cover,
     });
+  });
+
+  ipcMain.on("install-game", (_event, installGameInfo: GameData) => {
+    console.log("InstallGameInfo:", installGameInfo);
+
+    socket.emit("install-game", {
+      Name: installGameInfo.name,
+      ProcessName: installGameInfo.processName,
+      ExePath: installGameInfo.exePath,
+      Args: installGameInfo.args,
+      Type: installGameInfo.type,
+      Cover: installGameInfo.cover,
+    });
+  });
+
+  socket.on("game-installed-status", (data) => {
+    win?.webContents.send("game-installed-status", data);
   });
 
   ipcMain.on("check-status", () => {
@@ -161,20 +199,19 @@ io.on("connection", (socket) => {
   });
 
   socket.on("get-storage", (data) => {
-     console.log(data)
-    win?.webContents.send("get-storage", data);
-  })
+    console.log(data);
+    win?.webContents.send("get-storage", data.storageInfo);
+  });
 
   socket.on("get-version", (data) => {
+    console.log(data);
 
-    console.log(data)
-    
     let versionData: Version = {
       frontend: FRONTEND_VERSION,
       backend: data.backend,
     };
 
-    console.log(versionData)
+    console.log(versionData);
 
     win?.webContents.send("get-version", versionData);
   });
