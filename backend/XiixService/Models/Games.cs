@@ -6,7 +6,7 @@ namespace XiixService.Models
 {
     public class GameDataModel
     {
-        public List<GameModelJson> games { get; set; }
+        public List<GameModelJson?> games { get; set; }
     }
     public class GameModel { 
     

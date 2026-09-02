@@ -20,9 +20,21 @@ namespace XiixService.Classes
 
             GameDataModel gameData = JsonConvert.DeserializeObject<GameDataModel>(rawJson);
 
+
             if (gameData == null)
             {
                 gameData = new GameDataModel { games = new List<GameModelJson>() };
+            }
+
+            foreach (var item in gameData.games)
+            {
+                Log.Info("-------------");
+                Log.Info(item.name);
+                Log.Info(item.processName);
+                Log.Info(item.exePath >);
+                Log.Info(item.cover);
+                Log.Info(item.type);
+                Log.Info("-------------");
             }
 
             var newGame = new GameModelJson

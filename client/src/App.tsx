@@ -41,6 +41,7 @@ import UserIcon from "./assets/ui/user.svg?react";
 import CheckmarkIcon from "./assets/ui/checkmark-solid.svg?react";
 import XboxIcon from "./assets/ui/xbox.svg?react";
 import PlaystationIcon from "./assets/ui/playstation.svg?react";
+import DeleteIcon from "./assets/ui/delete.svg?react";
 // https://allsvgicons.com/
 //#endregion
 
@@ -652,7 +653,9 @@ function App() {
                 <>
                   <div className="no-games">
                     <h2>No Games found</h2>
-                    <span>Click the <AddIcon /> icon to add games</span>
+                    <span>
+                      Click the <AddIcon /> icon to add games
+                    </span>
                   </div>
                 </>
               )}
@@ -722,26 +725,33 @@ function App() {
                     <div className="options-section">
                       <div className="options-section-title">Actions</div>
 
-                      <button
-                        className="options-container-button"
-                        data-controller-group="game-modal"
-                        data-controller-focus
-                        onClick={() => {
-                          if (!focusedGame) return;
+                      {currentPlaying?.name === focusedGame?.name && (
+                        <>
+                          <button
+                            className="options-container-button"
+                            data-controller-group="game-modal"
+                            data-controller-focus
+                            onClick={() => {
+                              if (!focusedGame) return;
 
-                          CloseGame(focusedGame.processName, focusedGame.type);
-                          setModalOpened(false);
-                        }}
-                      >
-                        <div className="options-button-icon">
-                          <CloseIcon />
-                        </div>
+                              CloseGame(
+                                focusedGame.processName,
+                                focusedGame.type,
+                              );
+                              setModalOpened(false);
+                            }}
+                          >
+                            <div className="options-button-icon">
+                              <CloseIcon />
+                            </div>
 
-                        <div className="options-button-content">
-                          <span>Close Game</span>
-                          <small>Close this game</small>
-                        </div>
-                      </button>
+                            <div className="options-button-content">
+                              <span>Close Game</span>
+                              <small>Close this game</small>
+                            </div>
+                          </button>
+                        </>
+                      )}
 
                       <button
                         className="options-container-button"
@@ -807,6 +817,24 @@ function App() {
                           <small>Manage installed mods</small>
                         </div>
                         <div className="options-button-arrow">›</div>
+                      </button>
+
+                      <button
+                        className="options-container-button"
+                        data-controller-group="game-modal"
+                        data-controller-focus
+                        onClick={() => {
+                          console.log("Delete game");
+                        }}
+                      >
+                        <div className="options-button-icon">
+                          <DeleteIcon />
+                        </div>
+
+                        <div className="options-button-content">
+                          <span>Uinstall</span>
+                          <small>Uninstall this game</small>
+                        </div>
                       </button>
                     </div>
                   </div>
@@ -903,8 +931,6 @@ function App() {
 
                       <div className="addgameusb-section">
                         <div className="addgameusb-section-title">Action</div>
-
-                        {/* usb data */}
 
                         <button
                           className="addgameusb-container-button"
