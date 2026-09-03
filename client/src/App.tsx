@@ -42,6 +42,7 @@ import CheckmarkIcon from "./assets/ui/checkmark-solid.svg?react";
 import XboxIcon from "./assets/ui/xbox.svg?react";
 import PlaystationIcon from "./assets/ui/playstation.svg?react";
 import DeleteIcon from "./assets/ui/delete.svg?react";
+import SearchIcon from "./assets/ui/search.svg?react";
 
 import LoadingPacman from "./assets/ui/loading-pacman.svg?react";
 
@@ -51,6 +52,7 @@ import LoadingPacman from "./assets/ui/loading-pacman.svg?react";
 import Clock from "./components/Clock";
 import Keyboard from "./components/Keyboard";
 import ControllerDiagram from "./components/ControllerDiagram";
+import SteamDBLookup from "./components/SteamDBLookup";
 
 type Game = {
   name: string;
@@ -83,10 +85,8 @@ type StorageInfo = {
 // Todo: XiiX logo som controller
 // Todo: language support
 // Todo: Select controller type
-// Todo: InstallSteamGame()
-// Todo: InstallUSBGame()
 
-// Todo: Add storage amount in system information
+// Todo: add steamdb lookup
 
 function App() {
   const [activeMenuBar, setActiveMenubar] = useState(0);
@@ -102,6 +102,8 @@ function App() {
   const [gameData, setGameData] = useState<GameData | null>(null);
 
   const [keyboardOpen, setKeyboardOpen] = useState(false);
+
+  const [steamDBLookupOpen, setSteamDBLookupOpen] = useState(true)
 
   const [controllerDiagram, setControllerDiagram] = useState(false);
 
@@ -458,6 +460,15 @@ function App() {
             setKeyboardOutput(value);
 
             setKeyboardOpen(false);
+          }}
+        />
+      )}
+
+      {steamDBLookupOpen && (
+        <SteamDBLookup
+          onSubmit={(value) => {
+            setKeyboardOutput(value);
+            setSteamDBLookupOpen(false);
           }}
         />
       )}
@@ -1071,12 +1082,31 @@ function App() {
 
                         <input
                           className="addgamesteam-keyboard-input"
-                          placeholder="Game ID"
+                          placeholder="AppID or Game title"
                           value={keyboardOutput}
                           onClick={() => setKeyboardOpen(true)}
                           data-controller-focus
                           data-controller-group="Add Steam Game-modal"
                         />
+
+                        <button
+                          className="addgamesteam-container-button"
+                          data-controller-focus
+                          data-controller-group="Add Steam Game-modal"
+                          onClick={() => {
+                            // show lookup table
+                          }}
+                        >
+                          <div className="addgamesteam-button-icon">
+                            <SearchIcon />
+                          </div>
+
+                          <div className="addgamesteam-button-content">
+                            <span>Search</span>
+                            <small>Search for Steam AppID</small>
+                          </div>
+                        </button>
+
                         <button
                           className="addgamesteam-container-button"
                           data-controller-focus
