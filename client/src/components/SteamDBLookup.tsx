@@ -1,19 +1,26 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useGamepad, type ControllerAction } from "../hooks/useGamepad";
-
-import { SteamData } from "../data/SteamData";
 
 import "../css/steamdblookup.css";
 
+import ButtonPS4Circle from "../assets/buttons_ps/PlayStation_button_C.svg";
+
 type SteamDBLookupProps = {
+  gameName: string;
   onSubmit?: (value: string) => void;
   onCancel?: () => void;
 };
 
-function SteamDBLookup({ onSubmit, onCancel }: SteamDBLookupProps) {
-  const [gameID, setGameID] = useState<string>("");
+type SteamInfo = {
+  name: string;
+  publisher: string;
+  release: string;
+  gameID: string;
+  cover: string;
+};
 
-  let searchQuery = "Game name";
+function SteamDBLookup({ gameName, onSubmit, onCancel }: SteamDBLookupProps) {
+  const [steamList, setSteamList] = useState<SteamInfo[] | null>(null);
 
   useGamepad({
     onAction: (action: ControllerAction) => {
@@ -25,42 +32,88 @@ function SteamDBLookup({ onSubmit, onCancel }: SteamDBLookupProps) {
     },
   });
 
-  const HandleEnter = () => {
-    onSubmit?.("f");
+  const GetSteamData = () => {
+    try {
+      fetch(
+        `/steam/api/storesearch/?term=${encodeURIComponent(gameName)}&cc=us&l=en`,
+      ).then((res) => {
+        res.json().then((json) => {
+          const games: SteamInfo[] = (json.items ?? []).map((game: any) => ({
+            name: game.name,
+            publisher: "",
+            release: "",
+            gameID: String(game.id),
+            cover: game.tiny_image,
+            /* cover: `https://cdn.cloudflare.steamstatic.com/steam/apps/${game.id}/header.jpg`, */
+          }));
+
+          setSteamList(games);
+        });
+      });
+
+      console.log(
+        `https://store.steampowered.com/api/storesearch/?term=${encodeURIComponent(
+          gameName,
+        )}&cc=us&l=en`,
+      );
+    } catch (error) {
+      console.error("Failed to get Steam data:", error);
+      setSteamList(null);
+    } finally {
+    }
   };
 
   const SelectGame = (gameID: string) => {
-    setGameID(gameID);
+    onSubmit?.(gameID);
+    onCancel?.();
   };
+
+  useEffect(() => {
+    GetSteamData();
+  }, [gameName]);
 
   return (
     <>
       <div className="steam-lookup-overlay">
         <div className="steam-lookup-container">
           <div className="steam-lookup-top">
-            <h3>{searchQuery}</h3>
+            <h3>{gameName}</h3>
           </div>
 
           <div className="steam-lookup-list">
-            {/* loop game list */}
+            {steamList?.map((item) => (
+              <button
+                key={item.gameID}
+                className="steam-lookup-list-item"
+                data-controller-focus
+                data-controller-group="steam-lookup"
+                onClick={() => {
+                  SelectGame(item.gameID);
+                }}
+              >
+                <img src={item.cover} alt={item.name} />
 
-            {SteamData.map((item) => {
-              return (
-                <div
-                  className="steam-lookup-list-item"
-                  onClick={() => {
-                    SelectGame(item.gameID);
-                  }}
-                >
-                  <img height={50} src={item.cover} alt="" />
-                  <span>Name: {item.name}</span>
-                  <span>Publisher: {item.publisher}</span>
-                  <span>Release Date: {item.release}</span>
+                <div className="steam-lookup-list-info">
+                  <span>{item.name}</span>
                   <span>ID: {item.gameID}</span>
                 </div>
-              );
-            })}
+              </button>
+            ))}
+
+            {steamList?.length === 0 && (
+              <div className="steam-lookup-no-games-found">No games found</div>
+            )}
+
           </div>
+            <div className="steam-lookup-help">
+              <span>Press</span>
+              <img
+                className="steam-lookup-help-icons"
+                src={ButtonPS4Circle}
+                alt=""
+              />
+              <span>to Exit</span>
+            </div>
         </div>
       </div>
     </>

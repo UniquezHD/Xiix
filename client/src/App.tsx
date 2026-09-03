@@ -103,7 +103,7 @@ function App() {
 
   const [keyboardOpen, setKeyboardOpen] = useState(false);
 
-  const [steamDBLookupOpen, setSteamDBLookupOpen] = useState(true)
+  const [steamDBLookupOpen, setSteamDBLookupOpen] = useState(false);
 
   const [controllerDiagram, setControllerDiagram] = useState(false);
 
@@ -144,13 +144,17 @@ function App() {
     "Options",
   );
 
-  const activeControllerGroup = keyboardOpen
-    ? "keyboard"
-    : modalOpened
-      ? currentModelType === "Options"
-        ? "game-modal"
-        : `${currentModelType}-modal`
-      : undefined;
+  const activeControllerGroup = steamDBLookupOpen
+    ? "steam-lookup"
+    : keyboardOpen
+      ? "keyboard"
+      : modalOpened
+        ? currentModelType === "Options"
+          ? "game-modal"
+          : `${currentModelType}-modal`
+        : undefined;
+
+  console.log("Active group:", activeControllerGroup);
 
   useControllerNavigation({
     modalOpen: modalOpened,
@@ -466,8 +470,12 @@ function App() {
 
       {steamDBLookupOpen && (
         <SteamDBLookup
-          onSubmit={(value) => {
-            setKeyboardOutput(value);
+          gameName={keyboardOutput}
+          onSubmit={(gameID) => {
+            setKeyboardOutput(gameID);
+            console.log("Selected Steam game:", gameID);
+          }}
+          onCancel={() => {
             setSteamDBLookupOpen(false);
           }}
         />
@@ -1052,7 +1060,7 @@ function App() {
                           </div>
                           {isInstalling && (
                             <>
-                              <LoadingPacman className="addgameusb-button-loading"/>
+                              <LoadingPacman className="addgameusb-button-loading" />
                             </>
                           )}
                         </button>
@@ -1094,7 +1102,7 @@ function App() {
                           data-controller-focus
                           data-controller-group="Add Steam Game-modal"
                           onClick={() => {
-                            // show lookup table
+                            setSteamDBLookupOpen(true);
                           }}
                         >
                           <div className="addgamesteam-button-icon">
@@ -1126,7 +1134,7 @@ function App() {
                           </div>
                           {isInstalling && (
                             <>
-                              <LoadingPacman className="addgamesteam-button-loading"/>
+                              <LoadingPacman className="addgamesteam-button-loading" />
                             </>
                           )}
                         </button>

@@ -6,9 +6,19 @@ import svgr from "vite-plugin-svgr";
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  server: {
+    proxy: {
+      "/steam": {
+        target: "https://store.steampowered.com",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/steam/, "")
+      }
+    }
+  },
   plugins: [
     react(),
     svgr(),
+    
     electron({
       
       main: {
