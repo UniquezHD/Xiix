@@ -5,9 +5,14 @@ import "../css/steamdblookup.css";
 
 import ButtonPS4Circle from "../assets/buttons_ps/PlayStation_button_C.svg";
 
+type SteamGameInfo = {
+  gameName: string
+  gameID: string
+}
+
 type SteamDBLookupProps = {
   gameName: string;
-  onSubmit?: (value: string) => void;
+  onSubmit?: (value: SteamGameInfo) => void;
   onCancel?: () => void;
 };
 
@@ -63,8 +68,14 @@ function SteamDBLookup({ gameName, onSubmit, onCancel }: SteamDBLookupProps) {
     }
   };
 
-  const SelectGame = (gameID: string) => {
-    onSubmit?.(gameID);
+  const SelectGame = (gameID: string, gameName: string) => {
+
+    let selectedGame: SteamGameInfo = {
+      gameID: gameID,
+      gameName: gameName,
+    }
+
+    onSubmit?.(selectedGame);
     onCancel?.();
   };
 
@@ -88,7 +99,7 @@ function SteamDBLookup({ gameName, onSubmit, onCancel }: SteamDBLookupProps) {
                 data-controller-focus
                 data-controller-group="steam-lookup"
                 onClick={() => {
-                  SelectGame(item.gameID);
+                  SelectGame(item.gameID, item.name);
                 }}
               >
                 <img src={item.cover} alt={item.name} />

@@ -58,12 +58,22 @@ namespace XiixService.Classes
 
             _socket.On("install-steam-game", async ctx =>
             {
-                var obj = ctx.GetValue<JsonElement>(0);
-                var appID = obj.GetProperty("appID").GetInt32();
+                Log.Info(ctx.GetValue<JsonElement>(0)!.ToString());
+
+                try
+                {
+                    var steamData = ctx.GetValue<SteamGameInfoModel>(0)!;
+                    Log.Info($"{steamData.GameID}, {steamData.GameName}", "install");
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.Message);
+                    throw;
+                }
 
                 // Todo: get username from config.json after first steam setup 
 
-                Game.InstallSteam(appID, "UniquezHD");
+                //Game.InstallSteam(steamData, "UniquezHD");
             });
 
             _socket.On("install-game", async ctx =>

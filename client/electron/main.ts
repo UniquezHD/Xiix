@@ -47,6 +47,11 @@ type Version = {
   backend: string;
 };
 
+type SteamGameInfo = {
+  gameName: string
+  gameID: string
+};
+
 function createWindow() {
   win = new BrowserWindow({
     fullscreen: true,
@@ -141,8 +146,13 @@ io.on("connection", (socket) => {
     });
   });
 
-  ipcMain.on("install-steam-game", (_event, appID: number) => {
-    socket.emit("install-steam-game", appID);
+  ipcMain.on("install-steam-game", (_event, gameData: SteamGameInfo) => {
+    console.log(gameData);
+    console.log("Electron: " + gameData.gameID + " " + gameData.gameName)
+    socket.emit("install-steam-game", {
+      GameID: gameData.gameID,
+      GameName: gameData.gameName
+    });
   });
 
   ipcMain.on("install-game", (_event, installGameInfo: GameData) => {

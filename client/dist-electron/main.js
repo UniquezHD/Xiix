@@ -21507,8 +21507,13 @@ io.on("connection", (socket) => {
 			Cover: gameData.cover
 		});
 	});
-	ipcMain.on("install-steam-game", (_event, appID) => {
-		socket.emit("install-steam-game", appID);
+	ipcMain.on("install-steam-game", (_event, gameData) => {
+		console.log(gameData);
+		console.log("Electron: " + gameData.gameID + " " + gameData.gameName);
+		socket.emit("install-steam-game", {
+			GameID: gameData.gameID,
+			GameName: gameData.gameName
+		});
 	});
 	ipcMain.on("install-game", (_event, installGameInfo) => {
 		console.log("InstallGameInfo:", installGameInfo);

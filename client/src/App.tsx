@@ -79,6 +79,11 @@ type StorageInfo = {
   SpaceUsed: string;
 };
 
+type SteamGameInfo = {
+  gameName: string
+  gameID: string
+};
+
 // Todo: add mulighed for at ;ndre lyden p[ alle processes ]
 // Todo: add game system via usb
 
@@ -104,6 +109,7 @@ function App() {
   const [keyboardOpen, setKeyboardOpen] = useState(false);
 
   const [steamDBLookupOpen, setSteamDBLookupOpen] = useState(false);
+  const [selectedSteamDBLookup, setSelectedSteamDBLookup] = useState<SteamGameInfo | null>(null);
 
   const [controllerDiagram, setControllerDiagram] = useState(false);
 
@@ -374,13 +380,14 @@ function App() {
     });
   };
 
-  const InstallSteamGame = (appID: number) => {
+  const InstallSteamGame = (gameID: number, gameName?: string) => {
     // add steam username and password in settings for first setup
 
     setIsInstalling(true);
 
     window.electron.send("install-steam-game", {
-      appID,
+      gameID: gameID,
+      gameName: gameName
     });
   };
 
@@ -471,9 +478,10 @@ function App() {
       {steamDBLookupOpen && (
         <SteamDBLookup
           gameName={keyboardOutput}
-          onSubmit={(gameID) => {
-            setKeyboardOutput(gameID);
-            console.log("Selected Steam game:", gameID);
+          onSubmit={(gameData) => {
+            setKeyboardOutput(gameData.gameID);
+            setSelectedSteamDBLookup(gameData)
+            console.log("Selected Steam game:", gameData);
           }}
           onCancel={() => {
             setSteamDBLookupOpen(false);
@@ -1121,7 +1129,7 @@ function App() {
                           data-controller-group="Add Steam Game-modal"
                           disabled={isInstalling}
                           onClick={() => {
-                            InstallSteamGame(parseInt(keyboardOutput));
+                            InstallSteamGame(parseInt(keyboardOutput), selectedSteamDBLookup?.gameName);
                           }}
                         >
                           <div className="addgamesteam-button-icon">

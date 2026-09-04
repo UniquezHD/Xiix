@@ -70,14 +70,20 @@ namespace XiixService.Classes
 
         }
 
-        public static void InstallSteam(int appID, string username)
+        public static void InstallSteam(SteamGameInfoModel steamData, string username)
         {
-            Log.Info("AppID: " + appID);
+            Log.Info("GameID: " + steamData.GameID);
+            Log.Info("GameName: " + steamData.GameName);
 
-            var process = Launcher.LaunchPowershell("C:\\Xiix\\SteamInstall.ps1", $"-SteamAppID {appID} -SteamAccName \"{username}\"");
-            Watcher.WatchPowershell(process);
+            //var process = Launcher.LaunchPowershell("C:\\Xiix\\SteamInstall.ps1", $"-SteamAppID {steamData.GameID} -SteamAccName \"{username}\"");
+            //Watcher.WatchPowershell(process);
 
             // save to .json file
+
+            string steamPath = $"C:\\Program Files (x86)\\Steam\\steamapps\\common\\{steamData.GameName}\\{steamData.GameName}.exe";
+            Log.Info(steamPath);
+
+
         }
 
         public static void Uninstall(GameModel gameInfo)

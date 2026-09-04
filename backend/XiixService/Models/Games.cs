@@ -28,4 +28,10 @@ namespace XiixService.Models
         public string cover { get; set; }
         public string type { get; set; }
     }
+
+    public class SteamGameInfoModel
+    {
+        public string GameID { get; set; }
+        public string GameName { get; set; }
+    }
 }
