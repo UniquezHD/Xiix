@@ -21534,7 +21534,8 @@ io.on("connection", (socket) => {
 			ExePath: uninstallGameInfo.exePath,
 			Args: uninstallGameInfo.args,
 			Type: uninstallGameInfo.type,
-			Cover: uninstallGameInfo.cover
+			Cover: uninstallGameInfo.cover,
+			GameID: uninstallGameInfo.gameID
 		});
 	});
 	socket.on("game-installed-status", (data) => {

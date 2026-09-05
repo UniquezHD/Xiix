@@ -10,20 +10,23 @@ namespace XiixService.Classes
     {  
         public static void Watch(string name, Process process)
         {
-            process.EnableRaisingEvents = true;
-
-            process.Exited += async (_, __) =>
+            if(process != null)
             {
-                Log.Success($"{name} has closed");
+                process.EnableRaisingEvents = true;
 
-                Program.CurrentlyPlaying = null;
-
-                await Program.Socket.SendToElectron("game-closed", new
+                process.Exited += async (_, __) =>
                 {
-                    name,
-                    status = "closed"
-                });
-            };
+                    Log.Success($"{name} has closed");
+
+                    Program.CurrentlyPlaying = null;
+
+                    await Program.Socket.SendToElectron("game-closed", new
+                    {
+                        name,
+                        status = "closed"
+                    });
+                };
+            }
         }
 
         public static void WatchPowershell(Process process)

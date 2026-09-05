@@ -40,6 +40,7 @@ type GameData = {
   args: string;
   cover: string;
   type: string;
+  gameID: string;
 };
 
 type Version = {
@@ -178,6 +179,7 @@ io.on("connection", (socket) => {
       Args: uninstallGameInfo.args,
       Type: uninstallGameInfo.type,
       Cover: uninstallGameInfo.cover,
+      GameID: uninstallGameInfo.gameID,
     });
   });
 

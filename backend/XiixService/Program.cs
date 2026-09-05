@@ -19,6 +19,8 @@ class Program
 
     static async Task Main()
     {
+        DotNetEnv.Env.Load();
+
         Log.Info("Starting Socket.IO payload client");
         //Log.Success("Starting Socket.IO payload client");
         //Log.Warning("Starting Socket.IO payload client");

@@ -44,3 +44,5 @@ $ManifestContent = @"
 }
 
 Install-SteamGame -SteamAppID $SteamAppID -SteamAccName $SteamAccName
+
+exit 0

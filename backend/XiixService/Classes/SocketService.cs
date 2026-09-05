@@ -30,13 +30,19 @@ namespace XiixService.Classes
                 var process = Launcher.Launch(gameData.ExePath, gameData.Args, gameData.Name);
                 Watcher.Watch(gameData.Name, process);
 
-                await SendToElectron("game-started", new
+                if(process != null)
                 {
-                    name = gameData.Name,
-                    processName = gameData.ProcessName,
-                    status = "running"
-                });
-
+                    await SendToElectron("game-started", new
+                    {
+                        name = gameData.Name,
+                        processName = gameData.ProcessName,
+                        status = "running"
+                    });
+                } 
+                else
+                {
+                    Log.Warning("Game not installed");
+                }
             });
 
             _socket.On("close-game", async ctx =>
@@ -63,7 +69,7 @@ namespace XiixService.Classes
                 try
                 {
                     var steamData = ctx.GetValue<SteamGameInfoModel>(0)!;
-                    Log.Info($"{steamData.GameID}, {steamData.GameName}", "install");
+                    Game.InstallSteam(steamData, "UniquezHD");
                 }
                 catch (Exception ex)
                 {
@@ -73,21 +79,20 @@ namespace XiixService.Classes
 
                 // Todo: get username from config.json after first steam setup 
 
-                //Game.InstallSteam(steamData, "UniquezHD");
             });
 
             _socket.On("install-game", async ctx =>
             {
                 var installGameData = ctx.GetValue<GameModel>(0)!;
 
-                Game.InstallCustom(installGameData);
+                Game.Install(installGameData);
             });
 
             _socket.On("uninstall-game", async ctx =>
             {
                 var uninstallGameData = ctx.GetValue<GameModel>(0)!;
 
-                Game.Uninstall(uninstallGameData);
+                Game.Uninstall(uninstallGameData, "UniquezHD");
             });
 
             _socket.On("restart", async ctx =>

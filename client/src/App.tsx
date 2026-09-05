@@ -61,6 +61,7 @@ type Game = {
   args: string;
   cover: string;
   type: string;
+  gameID: string;
 };
 
 type GameData = {
@@ -416,6 +417,7 @@ function App() {
     args?: string,
     cover?: string,
     type?: string,
+    gameID?: string
   ) => {
     window.electron.send("uninstall-game", {
       name,
@@ -424,6 +426,7 @@ function App() {
       exePath,
       cover,
       type,
+      gameID
     });
   };
 
@@ -932,6 +935,7 @@ function App() {
                             focusedGame.args,
                             focusedGame.cover,
                             focusedGame.type,
+                            focusedGame.gameID
                           );
 
                           setModalOpened(false);

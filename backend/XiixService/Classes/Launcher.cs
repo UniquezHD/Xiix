@@ -19,7 +19,15 @@ namespace XiixService.Classes
 
             Program.CurrentlyPlaying = name;
 
-            return Process.Start(startInfo);
+            try
+            {
+                return Process.Start(startInfo);
+            }
+            catch (Exception)
+            {
+            
+                return null;
+            }
         }
 
         public static Process LaunchPowershell(string scriptPath, string args)

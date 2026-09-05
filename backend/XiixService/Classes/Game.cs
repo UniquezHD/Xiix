@@ -1,11 +1,12 @@
 ﻿using Newtonsoft.Json;
+using System.Net.Http.Headers;
 using XiixService.Models;
 
 namespace XiixService.Classes
 {
     public class Game
     {
-        public static void InstallCustom(GameModel gameInfo)
+        public static void Install(GameModel gameInfo)
         {
             Log.Info(gameInfo.Name);
             Log.Info(gameInfo.ExePath);
@@ -33,13 +34,6 @@ namespace XiixService.Classes
                     Program.Socket.SendToElectron("game-installed-status", new { message = "already-exists" });
                     return;
                 }
-
-                Log.Info(gameData.games[i].name);
-                Log.Info(gameData.games[i].processName);
-                Log.Info(gameData.games[i].exePath);
-                Log.Info(gameData.games[i].cover);
-                Log.Info(gameData.games[i].type);
-                Log.Info("-------------");
             }
 
             var newGame = new GameModelJson
@@ -49,7 +43,8 @@ namespace XiixService.Classes
                 exePath = gameInfo.ExePath,
                 args = gameInfo.Args,
                 cover = gameInfo.Cover,
-                type = gameInfo.Type
+                type = gameInfo.Type,
+                gameID = gameInfo.GameID,
             };
 
             gameData.games.Add(newGame);
@@ -70,27 +65,63 @@ namespace XiixService.Classes
 
         }
 
-        public static void InstallSteam(SteamGameInfoModel steamData, string username)
+        public static async Task InstallSteam(SteamGameInfoModel steamData, string username)
         {
             Log.Info("GameID: " + steamData.GameID);
             Log.Info("GameName: " + steamData.GameName);
 
-            //var process = Launcher.LaunchPowershell("C:\\Xiix\\SteamInstall.ps1", $"-SteamAppID {steamData.GameID} -SteamAccName \"{username}\"");
-            //Watcher.WatchPowershell(process);
+            var apiKey = Environment.GetEnvironmentVariable("STEAMGRID_API");
 
-            // save to .json file
+            var process = Launcher.LaunchPowershell("C:\\Xiix\\SteamInstall.ps1", $"-SteamAppID {steamData.GameID} -SteamAccName \"{username}\"");
+            Watcher.WatchPowershell(process);
 
-            string steamPath = $"C:\\Program Files (x86)\\Steam\\steamapps\\common\\{steamData.GameName}\\{steamData.GameName}.exe";
+            string steamPath = $"C:\\Program Files (x86)\\Steam\\steamapps\\common\\{steamData.GameName.ToLower()}\\{steamData.GameName}.exe";
             Log.Info(steamPath);
 
+            //https://store.steampowered.com/api/appdetails?appids=
 
+            using var client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
+
+            var response = await client.GetStringAsync(
+                $"https://www.steamgriddb.com/api/v2/grids/steam/{steamData.GameID}"
+            );
+
+            var result = System.Text.Json.JsonSerializer.Deserialize<SteamGridDbResponse>(response);
+
+            var imageUrl = result.data[0].url;
+
+
+            GameModel gameInfo = new GameModel
+            {
+                Name = steamData.GameName,
+                ProcessName = steamData.GameName,
+                Args = "",
+                Cover = imageUrl,
+                Type = "Steam",
+                ExePath = steamPath,
+                GameID = steamData.GameID
+            };
+            
+            Install(gameInfo);
         }
 
-        public static void Uninstall(GameModel gameInfo)
+        public static void Uninstall(GameModel gameInfo, string username)
         {
             string rawJson = File.ReadAllText($"{Program.APPLICATION_PATH}\\GameData.json");
 
             GameDataModel gameData = JsonConvert.DeserializeObject<GameDataModel>(rawJson);
+
+
+            //{
+            //    "name": "PEAK",
+            //    "processName": "PEAK",
+            //    "exePath": "C:\\Program Files (x86)\\Steam\\steamapps\\common\\peak\\PEAK.exe",
+            //    "args": "",
+            //    "cover": "https://cdn2.steamgriddb.com/grid/fbf3321aabbfb52b9361463b92a3b84b.jpg",
+            //    "type": "Steam",
+            //    "gameID": 3527290
+            //}
 
 
             if (gameData == null)
@@ -107,6 +138,25 @@ namespace XiixService.Classes
 
                     try
                     {
+                        switch (gameInfo.Type)
+                        {
+                            case "Exe":
+
+                                break;
+
+                            case "Steam":
+                                    var process = Launcher.LaunchPowershell("C:\\Xiix\\SteamUninstall.ps1", $"-SteamAppID {gameInfo.GameID} -SteamAccName \"{username}\"");
+                                    Watcher.WatchPowershell(process);
+                                break;
+
+                            case "PS2":
+
+                                break;
+
+                            default:
+                                break;
+                        }
+
                         string updatedJson = JsonConvert.SerializeObject(gameData, Formatting.Indented);
                         File.WriteAllText($"{Program.APPLICATION_PATH}\\GameData.json", updatedJson);
 

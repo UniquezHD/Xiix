@@ -16,6 +16,7 @@ namespace XiixService.Models
         public string Args { get; set; }
         public string Cover { get; set; }
         public string Type { get; set; }
+        public int GameID { get; set; }
     }
 
     public class GameModelJson
@@ -27,11 +28,12 @@ namespace XiixService.Models
         public string args { get; set; }
         public string cover { get; set; }
         public string type { get; set; }
+        public int gameID { get; set; }
     }
 
     public class SteamGameInfoModel
     {
-        public string GameID { get; set; }
+        public int GameID { get; set; }
         public string GameName { get; set; }
     }
 }
