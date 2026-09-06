@@ -41,6 +41,11 @@ namespace XiixService.Classes
                 } 
                 else
                 {
+                    await SendToElectron("send-notification", new
+                    {
+                        type = "Error",
+                        message = "Game not installed",
+                    });
                     Log.Warning("Game not installed");
                 }
             });
@@ -52,30 +57,22 @@ namespace XiixService.Classes
                 Log.Info($"close-game ProcessName: {gameData.ProcessName} Type: {gameData.Type}");
 
                 Killer.Kill(gameData.ProcessName, gameData.Type);
-               
+
                 await SendToElectron("closed-game", new
                 {
                     name = "",
                     processName = gameData.ProcessName,
                     status = "closed"
                 });
-
             });
 
             _socket.On("install-steam-game", async ctx =>
             {
-                Log.Info(ctx.GetValue<JsonElement>(0)!.ToString());
+                //Log.Info(ctx.GetValue<JsonElement>(0)!.ToString());
 
-                try
-                {
-                    var steamData = ctx.GetValue<SteamGameInfoModel>(0)!;
-                    Game.InstallSteam(steamData, "UniquezHD");
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex.Message);
-                    throw;
-                }
+                var steamData = ctx.GetValue<SteamGameInfoModel>(0)!;
+
+                Game.InstallSteam(steamData, "UniquezHD");
 
                 // Todo: get username from config.json after first steam setup 
 
@@ -85,14 +82,14 @@ namespace XiixService.Classes
             {
                 var installGameData = ctx.GetValue<GameModel>(0)!;
 
-                Game.Install(installGameData);
+                Game.Install(installGameData);                    
             });
 
             _socket.On("uninstall-game", async ctx =>
             {
                 var uninstallGameData = ctx.GetValue<GameModel>(0)!;
 
-                Game.Uninstall(uninstallGameData, "UniquezHD");
+                Game.Uninstall(uninstallGameData, "UniquezHD");               
             });
 
             _socket.On("restart", async ctx =>

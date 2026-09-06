@@ -16,7 +16,7 @@ namespace XiixService.Classes
 
                 process.Exited += async (_, __) =>
                 {
-                    Log.Success($"{name} has closed");
+                    Log.Success($"{name} has closed", "Watcher");
 
                     Program.CurrentlyPlaying = null;
 

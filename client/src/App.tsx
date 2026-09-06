@@ -81,8 +81,8 @@ type StorageInfo = {
 };
 
 type SteamGameInfo = {
-  gameName: string
-  gameID: string
+  gameName: string;
+  gameID: string;
 };
 
 // Todo: add mulighed for at ;ndre lyden p[ alle processes ]
@@ -110,7 +110,8 @@ function App() {
   const [keyboardOpen, setKeyboardOpen] = useState(false);
 
   const [steamDBLookupOpen, setSteamDBLookupOpen] = useState(false);
-  const [selectedSteamDBLookup, setSelectedSteamDBLookup] = useState<SteamGameInfo | null>(null);
+  const [selectedSteamDBLookup, setSelectedSteamDBLookup] =
+    useState<SteamGameInfo | null>(null);
 
   const [controllerDiagram, setControllerDiagram] = useState(false);
 
@@ -278,6 +279,12 @@ function App() {
   }, []);
 
   useEffect(() => {
+    window.electron.on("send-notification", (data) => {
+      ShowNotification((data as { message: string }).message, (data as { type: string }).type);
+    });
+  }, []);
+
+  useEffect(() => {
     window.electron.on("controller-connected", (data) => {
       setIsController((data as { message: string }).message);
       console.log("Controller: ", data);
@@ -388,7 +395,7 @@ function App() {
 
     window.electron.send("install-steam-game", {
       gameID: gameID,
-      gameName: gameName
+      gameName: gameName,
     });
   };
 
@@ -417,7 +424,7 @@ function App() {
     args?: string,
     cover?: string,
     type?: string,
-    gameID?: string
+    gameID?: string,
   ) => {
     window.electron.send("uninstall-game", {
       name,
@@ -426,7 +433,7 @@ function App() {
       exePath,
       cover,
       type,
-      gameID
+      gameID,
     });
   };
 
@@ -483,7 +490,7 @@ function App() {
           gameName={keyboardOutput}
           onSubmit={(gameData) => {
             setKeyboardOutput(gameData.gameID);
-            setSelectedSteamDBLookup(gameData)
+            setSelectedSteamDBLookup(gameData);
             console.log("Selected Steam game:", gameData);
           }}
           onCancel={() => {
@@ -935,7 +942,7 @@ function App() {
                             focusedGame.args,
                             focusedGame.cover,
                             focusedGame.type,
-                            focusedGame.gameID
+                            focusedGame.gameID,
                           );
 
                           setModalOpened(false);
@@ -1133,7 +1140,10 @@ function App() {
                           data-controller-group="Add Steam Game-modal"
                           disabled={isInstalling}
                           onClick={() => {
-                            InstallSteamGame(parseInt(keyboardOutput), selectedSteamDBLookup?.gameName);
+                            InstallSteamGame(
+                              parseInt(keyboardOutput),
+                              selectedSteamDBLookup?.gameName,
+                            );
                           }}
                         >
                           <div className="addgamesteam-button-icon">

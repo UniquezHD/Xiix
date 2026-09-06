@@ -183,6 +183,10 @@ io.on("connection", (socket) => {
     });
   });
 
+  socket.on("send-notification", (data) => {
+    win?.webContents.send("send-notification", data);
+  });
+
   socket.on("game-installed-status", (data) => {
     win?.webContents.send("game-installed-status", data);
   });

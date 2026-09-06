@@ -13,10 +13,9 @@ class Program
 
     public static string CurrentlyPlaying { get; set; }
 
-    // Todo: handle invalid launch 
-
     // Todo: get username from config.json after first steam setup 
 
+    //Todo: clean up old socket events in Game.cs and switch to send-notification
     static async Task Main()
     {
         DotNetEnv.Env.Load();

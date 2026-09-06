@@ -38,6 +38,7 @@ namespace XiixService.Classes
             }
             catch (Exception)
             {
+                Program.Socket.SendToElectron("send-notification", new { type = "Error", message = $"Failed to close {name}" });
                 Log.Error("Failed to kill process");
             }
         }

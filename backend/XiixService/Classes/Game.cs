@@ -30,8 +30,9 @@ namespace XiixService.Classes
             {
                 if (gameInfo.Name == gameData.games[i].name)
                 {
-                    Log.Error("Game already exits");
+                    Program.Socket.SendToElectron("send-notification", new { type = "Error", message = $"{gameInfo.Name} Already exists" });
                     Program.Socket.SendToElectron("game-installed-status", new { message = "already-exists" });
+                    Log.Error("Game already exits");
                     return;
                 }
             }
@@ -54,11 +55,13 @@ namespace XiixService.Classes
                 string updatedJson = JsonConvert.SerializeObject(gameData, Formatting.Indented);
                 File.WriteAllText($"{Program.APPLICATION_PATH}\\GameData.json", updatedJson);
 
+                Program.Socket.SendToElectron("send-notification", new { type = "Success", message = $"Installed {gameInfo.Name}" });
                 Program.Socket.SendToElectron("game-installed-status", new { message = "success" });
                 Log.Success("Game installed", "Install");
             }
             catch (Exception)
             {
+                Program.Socket.SendToElectron("send-notification", new { type = "Error", message = $"Failed to install {gameInfo.Name}" });
                 Program.Socket.SendToElectron("game-installed-status", new { message = "failed" });
                 Log.Error("Game failed to install", "Install");
             }
@@ -72,8 +75,8 @@ namespace XiixService.Classes
 
             var apiKey = Environment.GetEnvironmentVariable("STEAMGRID_API");
 
-            var process = Launcher.LaunchPowershell("C:\\Xiix\\SteamInstall.ps1", $"-SteamAppID {steamData.GameID} -SteamAccName \"{username}\"");
-            Watcher.WatchPowershell(process);
+            //var process = Launcher.LaunchPowershell("C:\\Xiix\\SteamInstall.ps1", $"-SteamAppID {steamData.GameID} -SteamAccName \"{username}\"");
+            //Watcher.WatchPowershell(process);
 
             string steamPath = $"C:\\Program Files (x86)\\Steam\\steamapps\\common\\{steamData.GameName.ToLower()}\\{steamData.GameName}.exe";
             Log.Info(steamPath);
@@ -160,11 +163,13 @@ namespace XiixService.Classes
                         string updatedJson = JsonConvert.SerializeObject(gameData, Formatting.Indented);
                         File.WriteAllText($"{Program.APPLICATION_PATH}\\GameData.json", updatedJson);
 
+                        Program.Socket.SendToElectron("send-notification", new { type = "Success", message = $"Uninstalled {gameInfo.Name}" });
                         Program.Socket.SendToElectron("game-uninstalled-status", new { message = "success" });
                         Log.Success("Game uninstall", "Uninstall");
                     }
                     catch (Exception)
                     {
+                        Program.Socket.SendToElectron("send-notification", new { type = "Error", message = $"Failed to uninstall {gameInfo.Name}" });
                         Program.Socket.SendToElectron("game-uninstalled-status", new { message = "failed" });
                         Log.Error("Game failed to uninstall", "Uninstall");
                     }
