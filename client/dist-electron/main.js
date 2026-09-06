@@ -21541,12 +21541,6 @@ io.on("connection", (socket) => {
 	socket.on("send-notification", (data) => {
 		win?.webContents.send("send-notification", data);
 	});
-	socket.on("game-installed-status", (data) => {
-		win?.webContents.send("game-installed-status", data);
-	});
-	socket.on("game-uninstalled-status", (data) => {
-		win?.webContents.send("game-uninstalled-status", data);
-	});
 	ipcMain.on("check-status", () => {
 		socket.emit("status", {});
 	});
@@ -21564,6 +21558,10 @@ io.on("connection", (socket) => {
 	});
 	socket.on("install-steam-game-finished", (data) => {
 		win?.webContents.send("install-steam-game-finished", data);
+		win?.show();
+	});
+	socket.on("uninstall-steam-game-finished", (data) => {
+		win?.webContents.send("uninstall-steam-game-finished", data);
 		win?.show();
 	});
 	socket.on("game-started", (data) => {

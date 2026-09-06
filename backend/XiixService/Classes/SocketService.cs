@@ -157,31 +157,34 @@ namespace XiixService.Classes
 
         public async Task StartAsync(int retries = 3, int delay = 2000)
         {
-            int attempt = 0;
+            //int attempt = 0;
+            //
+            //while (attempt < retries)
+            //{
+            //    attempt++;
+            //
+            //    try
+            //    {
+            //        await _socket.ConnectAsync();
+            //        Log.Success("Connected to server");
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        Log.Warning($"Connection failed: {ex.Message}");
+            //
+            //        if (attempt >= retries)
+            //        {
+            //            Log.Fatal("Could not connect to server");
+            //            return;
+            //        }
+            //
+            //        Log.Info($"Retrying");
+            //        await Task.Delay(delay);
+            //    }
+            //}
 
-            while (attempt < retries)
-            {
-                attempt++;
-
-                try
-                {
-                    await _socket.ConnectAsync();
-                    Log.Success("Connected to server");
-                }
-                catch (Exception ex)
-                {
-                    Log.Warning($"Connection failed: {ex.Message}");
-
-                    if (attempt >= retries)
-                    {
-                        Log.Fatal("Could not connect to server");
-                        return;
-                    }
-
-                    Log.Info($"Retrying");
-                    await Task.Delay(delay);
-                }
-            }
+            await _socket.ConnectAsync();
+            Log.Success("Connected to server");
         }
     }
 }

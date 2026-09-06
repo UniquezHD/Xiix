@@ -18,7 +18,7 @@ class Program
     //Todo: clean up old socket events in Game.cs and switch to send-notification
     static async Task Main()
     {
-        DotNetEnv.Env.Load();
+        DotNetEnv.Env.Load(".env");
 
         Log.Info("Starting Socket.IO payload client");
         //Log.Success("Starting Socket.IO payload client");

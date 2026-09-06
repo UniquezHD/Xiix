@@ -29,7 +29,7 @@ namespace XiixService.Classes
             }
         }
 
-        public static void WatchPowershell(Process process)
+        public static void WatchPowershell(Process process, int mode)
         {
             process.EnableRaisingEvents = true;
 
@@ -39,10 +39,20 @@ namespace XiixService.Classes
 
                 Restart.RestartSteam();
 
-                await Program.Socket.SendToElectron("install-steam-game-finished", new
+                if(mode == 0)
                 {
-                    status = "success"
-                });
+                    await Program.Socket.SendToElectron("install-steam-game-finished", new
+                    {
+                        status = "success"
+                    });
+                } 
+                else if(mode == 1)
+                {
+                    await Program.Socket.SendToElectron("uninstall-steam-game-finished", new
+                    {
+                        status = "success"
+                    });
+                }
             };
         }
     }

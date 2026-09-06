@@ -235,50 +235,6 @@ function App() {
   }, []);
 
   useEffect(() => {
-    window.electron.on("game-installed-status", (data) => {
-      switch ((data as { message: string }).message) {
-        case "success":
-          ShowNotification(`Game Installed`);
-          GetGames();
-          setModalOpened(false);
-          break;
-
-        case "failed":
-          ShowNotification(`Game Failed to Install`, "Error");
-          setModalOpened(false);
-          break;
-
-        case "already-exists":
-          ShowNotification(`Game Already Installed`, "Error");
-          setModalOpened(false);
-          break;
-
-        default:
-          break;
-      }
-
-      console.log("Game installed: ", data);
-    });
-  }, []);
-
-  useEffect(() => {
-    window.electron.on("game-uninstalled-status", (data) => {
-      switch ((data as { message: string }).message) {
-        case "success":
-          ShowNotification(`Game Uninstalled`);
-          GetGames();
-          setModalOpened(false);
-          break;
-
-        case "failed":
-          break;
-        default:
-          break;
-      }
-    });
-  }, []);
-
-  useEffect(() => {
     window.electron.on("send-notification", (data) => {
       ShowNotification((data as { message: string }).message, (data as { type: string }).type);
     });
@@ -320,7 +276,21 @@ function App() {
 
       setIsInstalling(false);
 
+      setModalOpened(false);
+
       ShowNotification("Steam game installed");
+
+      GetGames();
+    });
+  }, []);
+
+  useEffect(() => {
+    window.electron.on("uninstall-steam-game-finished", (data) => {
+      console.log("uninstall-steam-game-finished:", data);
+
+      setModalOpened(false);
+
+      ShowNotification("Steam game uninstalled");
 
       GetGames();
     });
