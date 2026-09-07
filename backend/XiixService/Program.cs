@@ -15,7 +15,13 @@ class Program
 
     // Todo: get username from config.json after first steam setup 
 
-    //Todo: clean up old socket events in Game.cs and switch to send-notification
+    // Todo: clean up old socket events in Game.cs and switch to send-notification
+
+    // Todo: do something about steam taking priority of the PSN button
+
+    // Todo: disable input when in steam games
+
+    // Note: Steam controller guide button settings set to OFF
     static async Task Main()
     {
         DotNetEnv.Env.Load(".env");

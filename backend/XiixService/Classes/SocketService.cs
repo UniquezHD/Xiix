@@ -26,7 +26,6 @@ namespace XiixService.Classes
 
                 Log.Info($"StartGame received: {gameData.Name}, {gameData.ExePath}, {gameData.Args}, {gameData.ProcessName}");
 
-                // Todo: handle invalid launch
                 var process = Launcher.Launch(gameData.ExePath, gameData.Args, gameData.Name);
                 Watcher.Watch(gameData.Name, process);
 

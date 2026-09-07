@@ -8,6 +8,7 @@ namespace XiixService.Classes
 {
     public class Watcher
     {  
+        //Todo: if steam game, set watcher for process name after process closed 1 time
         public static void Watch(string name, Process process)
         {
             if(process != null)
