@@ -98,6 +98,14 @@ namespace XiixService.Classes
                 Game.Uninstall(uninstallGameData, "UniquezHD");               
             });
 
+            //_socket.On("boot", async ctx =>
+            //{
+            //    await SendToElectron("boot", new
+            //    {
+            //        status = "Success"
+            //    });
+            //});
+
             _socket.On("restart", async ctx =>
             {
                 int restart = ctx.GetValue<int>(0)!;
