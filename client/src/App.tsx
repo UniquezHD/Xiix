@@ -43,6 +43,7 @@ import XboxIcon from "./assets/ui/xbox.svg?react";
 import PlaystationIcon from "./assets/ui/playstation.svg?react";
 import DeleteIcon from "./assets/ui/delete.svg?react";
 import SearchIcon from "./assets/ui/search.svg?react";
+import HammerIcon from "./assets/ui/hammer.svg?react";
 
 import LoadingPacman from "./assets/ui/loading-pacman.svg?react";
 
@@ -61,7 +62,7 @@ type Game = {
   args: string;
   cover: string;
   type: string;
-  gameID: string;
+  gameID: number;
 };
 
 type GameData = {
@@ -92,12 +93,11 @@ type SteamGameInfo = {
 // Todo: language support
 // Todo: Select controller type
 
-// Todo: add steamdb lookup
-
 function App() {
   const [activeMenuBar, setActiveMenubar] = useState(0);
 
   const [isFirstBoot, _setIsFirstBoot] = useState(false);
+
   const [isHeadphones, _setIsHeadphones] = useState(false);
   const [isUsb, _setIsUsb] = useState(false);
   const [isEthernet, setIsEthernet] = useState(true);
@@ -152,21 +152,31 @@ function App() {
     "Options",
   );
 
-  const activeControllerGroup = steamDBLookupOpen
-    ? "steam-lookup"
-    : keyboardOpen
-      ? "keyboard"
-      : modalOpened
-        ? currentModelType === "Options"
-          ? "game-modal"
-          : `${currentModelType}-modal`
-        : undefined;
+  const ActiveControllerGroup = () => {
+    if (steamDBLookupOpen) {
+      return "steam-lookup";
+    }
 
-  console.log("Active group:", activeControllerGroup);
+    if (keyboardOpen) {
+      return "keyboard";
+    }
+
+    if (modalOpened) {
+      if (currentModelType === "Options") {
+        return "game-modal";
+      } else {
+        return `${currentModelType}-modal`;
+      }
+    }
+
+    return undefined;
+  };
+
+  console.log("Active group:", ActiveControllerGroup());
 
   useControllerNavigation({
     modalOpen: modalOpened,
-    activeGroup: activeControllerGroup,
+    activeGroup: ActiveControllerGroup(),
     controllerDiagram: controllerDiagram,
 
     onOptions: () => {
@@ -236,7 +246,10 @@ function App() {
 
   useEffect(() => {
     window.electron.on("send-notification", (data) => {
-      ShowNotification((data as { message: string }).message, (data as { type: string }).type);
+      ShowNotification(
+        (data as { message: string }).message,
+        (data as { type: string }).type,
+      );
     });
   }, []);
 
@@ -369,6 +382,17 @@ function App() {
     });
   };
 
+  const RepairSteamGame = (gameID: number, gameName?: string) => {
+    // add steam username and password in settings for first setup
+
+    setIsInstalling(true);
+
+    window.electron.send("repair-steam-game", {
+      gameID: gameID,
+      gameName: gameName,
+    });
+  };
+
   const InstallGame = (
     name?: string,
     processName?: string,
@@ -394,7 +418,7 @@ function App() {
     args?: string,
     cover?: string,
     type?: string,
-    gameID?: string,
+    gameID?: number,
   ) => {
     window.electron.send("uninstall-game", {
       name,
@@ -475,6 +499,7 @@ function App() {
         <>
           <div className="boot-screen">
             <img className="boot-screen-logo" src={Logo} alt="" />
+            <LoadingPacman className="boot-screen-loading" />
           </div>
         </>
       ) : (
@@ -888,7 +913,7 @@ function App() {
                         }}
                       >
                         <div className="options-button-icon">
-                          <WrenchIcon />
+                          <HammerIcon />
                         </div>
 
                         <div className="options-button-content">
@@ -897,6 +922,41 @@ function App() {
                         </div>
                         <div className="options-button-arrow">›</div>
                       </button>
+
+                      {focusedGame?.type == "Steam" ? (
+                        <button
+                          className="options-container-button"
+                          data-controller-group="game-modal"
+                          data-controller-focus
+                          onClick={() => {
+                            if (!focusedGame) return;
+
+                            RepairSteamGame(
+                              focusedGame.gameID,
+                              focusedGame.name,
+                            );
+
+                            setIsInstalling(true);
+                          }}
+                        >
+                          <div className="options-button-icon">
+                            <WrenchIcon />
+                          </div>
+
+                          <div className="options-button-content">
+                            <span>Repair</span>
+                            <small>Repair this game</small>
+                          </div>
+
+                          {isInstalling && (
+                            <>
+                              <LoadingPacman className="options-button-loading" />
+                            </>
+                          )}
+                        </button>
+                      ) : (
+                        <></>
+                      )}
 
                       <button
                         className="options-container-button"

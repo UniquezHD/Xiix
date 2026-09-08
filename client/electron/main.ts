@@ -156,6 +156,15 @@ io.on("connection", (socket) => {
     });
   });
 
+   ipcMain.on("repair-steam-game", (_event, gameData: SteamGameInfo) => {
+    console.log(gameData);
+    console.log("Electron: " + gameData.gameID + " " + gameData.gameName)
+    socket.emit("repair-steam-game", {
+      GameID: gameData.gameID,
+      GameName: gameData.gameName
+    });
+  });
+
   ipcMain.on("install-game", (_event, installGameInfo: GameData) => {
     console.log("InstallGameInfo:", installGameInfo);
 

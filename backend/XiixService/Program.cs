@@ -24,8 +24,6 @@ class Program
     // Note: Steam controller guide button settings set to OFF
     static async Task Main()
     {
-        DotNetEnv.Env.Load(".env");
-
         Log.Info("Starting Socket.IO payload client");
         //Log.Success("Starting Socket.IO payload client");
         //Log.Warning("Starting Socket.IO payload client");

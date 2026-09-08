@@ -71,10 +71,17 @@ namespace XiixService.Classes
 
                 var steamData = ctx.GetValue<SteamGameInfoModel>(0)!;
 
-                Game.InstallSteam(steamData, "UniquezHD");
+                Game.Steam.InstallSteam(steamData, "UniquezHD");
 
                 // Todo: get username from config.json after first steam setup 
 
+            });
+
+            _socket.On("repair-steam-game", async ctx =>
+            {
+                var steamData = ctx.GetValue<SteamGameInfoModel>(0)!;
+
+                Game.Steam.Repair(steamData, "UniquezHD");
             });
 
             _socket.On("install-game", async ctx =>

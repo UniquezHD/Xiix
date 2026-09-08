@@ -21515,6 +21515,14 @@ io.on("connection", (socket) => {
 			GameName: gameData.gameName
 		});
 	});
+	ipcMain.on("repair-steam-game", (_event, gameData) => {
+		console.log(gameData);
+		console.log("Electron: " + gameData.gameID + " " + gameData.gameName);
+		socket.emit("repair-steam-game", {
+			GameID: gameData.gameID,
+			GameName: gameData.gameName
+		});
+	});
 	ipcMain.on("install-game", (_event, installGameInfo) => {
 		console.log("InstallGameInfo:", installGameInfo);
 		socket.emit("install-game", {

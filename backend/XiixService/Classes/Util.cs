@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.Marshalling;
 using System.Text;
 
 namespace XiixService.Classes
 {
     public static class Util
     {
+        public static string STEAMGRID_API_KEY()
+        {
+            return File.ReadAllText($"{Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName}\\.env");
+        }
         public static string ConvertBytes(float bytes)
         {
             string[] Group = { "Bytes", "KB", "MB", "GB", "TB" };

@@ -6,6 +6,66 @@ namespace XiixService.Classes
 {
     public class Game
     {
+        public class Steam
+        {
+            public static void Repair(SteamGameInfoModel steamData, string username)
+            {
+                var process = Launcher.LaunchPowershell("C:\\Xiix\\SteamInstall.ps1", $"-SteamAppID {steamData.GameID} -SteamAccName \"{username}\"");
+                Watcher.WatchPowershell(process, 0);
+
+                Log.Info($"Reparing: {steamData.GameName} {steamData.GameID}");
+            }
+
+            public static async Task InstallSteam(SteamGameInfoModel steamData, string username)
+            {
+                Log.Info("GameID: " + steamData.GameID);
+                Log.Info("GameName: " + steamData.GameName);
+
+                // DotNetEnv sucks
+                var apiKey = Util.STEAMGRID_API_KEY();
+
+                var process = Launcher.LaunchPowershell("C:\\Xiix\\SteamInstall.ps1", $"-SteamAppID {steamData.GameID} -SteamAccName \"{username}\"");
+                Watcher.WatchPowershell(process, 0);
+
+                string steamPath = $"C:\\Program Files (x86)\\Steam\\steamapps\\common\\{steamData.GameName.ToLower()}\\{steamData.GameName}.exe";
+                Log.Info(steamPath);
+
+                //https://store.steampowered.com/api/appdetails?appids=
+
+                Log.Warning(apiKey);
+
+                using var client = new HttpClient();
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
+
+                try
+                {
+                    var response = await client.GetStringAsync(
+                    $"https://www.steamgriddb.com/api/v2/grids/steam/{steamData.GameID}");
+                    var result = System.Text.Json.JsonSerializer.Deserialize<SteamGridDbResponse>(response);
+
+                    var imageUrl = result.data[0].url;
+
+                    GameModel gameInfo = new GameModel
+                    {
+                        Name = steamData.GameName,
+                        ProcessName = steamData.GameName,
+                        Args = "",
+                        Cover = imageUrl,
+                        Type = "Steam",
+                        ExePath = steamPath,
+                        GameID = steamData.GameID
+                    };
+
+
+                    Install(gameInfo);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.Message);
+                    throw;
+                }
+            }
+        }
         public static void Install(GameModel gameInfo)
         {
             Log.Info(gameInfo.Name);
@@ -64,53 +124,6 @@ namespace XiixService.Classes
                     Program.Socket.SendToElectron("send-notification", new { type = "Error", message = $"Failed to install {gameInfo.Name}" });
                 }
                 Log.Error("Game failed to install", "Install");
-            }
-        }
-
-        public static async Task InstallSteam(SteamGameInfoModel steamData, string username)
-        {
-            Log.Info("GameID: " + steamData.GameID);
-            Log.Info("GameName: " + steamData.GameName);
-
-            var apiKey = Environment.GetEnvironmentVariable("STEAMGRID_API");
-
-            var process = Launcher.LaunchPowershell("C:\\Xiix\\SteamInstall.ps1", $"-SteamAppID {steamData.GameID} -SteamAccName \"{username}\"");
-            Watcher.WatchPowershell(process, 0);
-
-            string steamPath = $"C:\\Program Files (x86)\\Steam\\steamapps\\common\\{steamData.GameName.ToLower()}\\{steamData.GameName}.exe";
-            Log.Info(steamPath);
-
-            //https://store.steampowered.com/api/appdetails?appids=
-
-            using var client = new HttpClient();
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
-
-            try
-            {
-                var response = await client.GetStringAsync(
-                $"https://www.steamgriddb.com/api/v2/grids/steam/{steamData.GameID}");
-                var result = System.Text.Json.JsonSerializer.Deserialize<SteamGridDbResponse>(response);
-
-                var imageUrl = result.data[0].url;
-
-                GameModel gameInfo = new GameModel
-                {
-                    Name = steamData.GameName,
-                    ProcessName = steamData.GameName,
-                    Args = "",
-                    Cover = imageUrl,
-                    Type = "Steam",
-                    ExePath = steamPath,
-                    GameID = steamData.GameID
-                };
-
-
-                Install(gameInfo);
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex.Message);
-                throw;
             }
         }
 
