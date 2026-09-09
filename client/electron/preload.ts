@@ -32,6 +32,11 @@ contextBridge.exposeInMainWorld("electron", {
     set: (value: number) => ipcRenderer.invoke("set-volume", value),
   },
 
+  config: {
+    get: () => ipcRenderer.invoke("get-config"),
+    set: (value: any) => ipcRenderer.invoke("set-config", value),
+  },
+
   directory: {
     get: () => ipcRenderer.invoke("get-usb-dir"),
   },

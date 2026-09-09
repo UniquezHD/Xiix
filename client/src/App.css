@@ -26,6 +26,8 @@
   width: 100%;
   height: var(--top-bar-height);
   position: relative;
+  /* position: sticky;
+  top: 0; */
   z-index: 99;
   overflow: hidden;
   background: #0b2634;
@@ -236,11 +238,16 @@
 }
 
 .games-grid {
-  padding: 1.5rem;
   min-height: calc(100dvh - var(--top-bar-height));
   background: var(--app-bg);
   box-sizing: border-box;
   transition: padding-top 300ms ease;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  flex-direction: row;
+  gap: 1rem;
+  padding: 1.5rem;
 }
 
 .games-grid.grid-top-bar-expanded {
@@ -249,8 +256,7 @@
 
 .games-grid-col {
   min-width: 280px;
-  display: flex;
-  justify-content: center;
+   
 }
 
 .game-container {

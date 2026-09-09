@@ -9,6 +9,11 @@ declare global {
         set: (value: number) => Promise<void>;
       };
 
+      config: {
+        get: () => Promise<any>;
+        set: (value: any) => Promise<void>;
+      };
+
       directory: {
         get: () => Promise<any>;
       };

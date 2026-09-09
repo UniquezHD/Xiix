@@ -25,14 +25,24 @@ const keysUpperCase = [
   ["Z", "X", "C", "V", "B", "N", "M"],
 ];
 
-type KeyboardProps = {
-  onSubmit?: (value: string) => void;
-  onCancel?: () => void;
+type KeyboardInfoProps = {
+  value: string,
+  isPassword: boolean,
+  valuePassword: string
 };
 
-function Keyboard({ onSubmit, onCancel }: KeyboardProps) {
+type KeyboardProps = {
+  onSubmit?: (value: KeyboardInfoProps) => void;
+  onCancel?: () => void;
+  isPassword: boolean;
+};
+
+function Keyboard({ onSubmit, onCancel, isPassword }: KeyboardProps) {
   const [value, setValue] = useState("");
+  const [valuePassword, setValuePassword] = useState("");
   const [isUpperCase, setIsUpperCase] = useState<boolean>(true);
+
+  console.log("isPassword ", isPassword);
 
   useGamepad({
     onAction: (action: ControllerAction) => {
@@ -66,18 +76,21 @@ function Keyboard({ onSubmit, onCancel }: KeyboardProps) {
 
   const HandleKeyPress = (key: string) => {
     setValue((current) => current + key);
+    setValuePassword((current) => current + "*")
   };
 
   const HandleBackspace = () => {
     setValue((current) => current.slice(0, -1));
+    setValuePassword((current) => current.slice(0, -1))
   };
 
   const HandleSpace = () => {
     setValue((current) => current + " ");
+    setValuePassword((current) => current + " ")
   };
 
   const HandleEnter = () => {
-    onSubmit?.(value);
+    onSubmit?.({value: value, isPassword: isPassword, valuePassword: valuePassword});
   };
 
   return (
@@ -85,7 +98,9 @@ function Keyboard({ onSubmit, onCancel }: KeyboardProps) {
       <div className="keyboard-container">
         <div className="keyboard-header">
           <div className="keyboard-input">
-            {value || <span className="keyboard-placeholder">Search</span>}
+            {isPassword
+              ? valuePassword
+              : value || <span className="keyboard-placeholder">Search</span>}
             <span className="keyboard-cursor" />
           </div>
         </div>
@@ -167,7 +182,6 @@ function Keyboard({ onSubmit, onCancel }: KeyboardProps) {
         </div>
 
         <div className="keyboard-controller-help">
-
           <img
             className="keyboard-controller-help-icons"
             src={ButtonL2}
@@ -201,7 +215,7 @@ function Keyboard({ onSubmit, onCancel }: KeyboardProps) {
             src={ButtonCircle}
             alt=""
           />
-          <span>Cancel</span> 
+          <span>Cancel</span>
 
           <img
             className="keyboard-controller-help-icons"

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useControllerNavigation } from "./hooks/useControllerNavigation";
-import { Grid, Modal, Tooltip } from "@mantine/core";
+import { Modal, Tooltip } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 
 import Logo from "../src/assets/logo-white.png";
@@ -44,17 +44,20 @@ import PlaystationIcon from "./assets/ui/playstation.svg?react";
 import DeleteIcon from "./assets/ui/delete.svg?react";
 import SearchIcon from "./assets/ui/search.svg?react";
 import HammerIcon from "./assets/ui/hammer.svg?react";
-
+import LoginIcon from "./assets/ui/login.svg?react";
 import LoadingPacman from "./assets/ui/loading-pacman.svg?react";
 
 // https://allsvgicons.com/
 //#endregion
 
+//#region Components
 import Clock from "./components/Clock";
 import Keyboard from "./components/Keyboard";
 import ControllerDiagram from "./components/ControllerDiagram";
 import SteamDBLookup from "./components/SteamDBLookup";
+//#endregion Components
 
+//#region Types
 type Game = {
   name: string;
   processName: string;
@@ -86,12 +89,25 @@ type SteamGameInfo = {
   gameID: string;
 };
 
+type KeyboardProps = {
+  isOpen: boolean;
+  isPassword: boolean;
+};
+
+type KeyboardPasswordOutput = {
+  value: string;
+  valuePassword: string;
+};
+//#endregion Types
+
 // Todo: add mulighed for at ;ndre lyden p[ alle processes ]
 // Todo: add game system via usb
 
 // Todo: XiiX logo som controller
 // Todo: language support
 // Todo: Select controller type
+
+// Todo: make Modal a component to avoid multiple .css files and duplicate in app.jsx
 
 function App() {
   const [activeMenuBar, setActiveMenubar] = useState(0);
@@ -107,7 +123,14 @@ function App() {
 
   const [gameData, setGameData] = useState<GameData | null>(null);
 
-  const [keyboardOpen, setKeyboardOpen] = useState(false);
+  const [keyboardOpen, setKeyboardOpen] = useState<KeyboardProps>({
+    isOpen: false,
+    isPassword: false,
+  });
+
+  const [keyboardOutput, setKeyboardOutput] = useState("");
+  const [keyboardPasswordOutput, setKeyboardPasswordOutput] =
+    useState<KeyboardPasswordOutput>();
 
   const [steamDBLookupOpen, setSteamDBLookupOpen] = useState(false);
   const [selectedSteamDBLookup, setSelectedSteamDBLookup] =
@@ -117,8 +140,6 @@ function App() {
 
   const [version, setVersion] = useState<Version>();
   const [storageInfo, setStorageInfo] = useState<StorageInfo>();
-
-  const [keyboardOutput, setKeyboardOutput] = useState("");
 
   const [usbDir, setUsbDir] = useState<Game>();
 
@@ -134,6 +155,8 @@ function App() {
   const [controllerDropdownOpen, setControllerDropdownOpen] = useState(false);
   const [selectedController, setSelectedController] = useState("PS4");
 
+  const [config, setConfig] = useState<any>();
+
   type ModalTypes =
     | "Add Game"
     | "Music"
@@ -144,7 +167,8 @@ function App() {
     | "Add USB Game"
     | "System Information"
     | "Restart Services"
-    | "User Settings";
+    | "User Settings"
+    | "Setup Steam";
 
   const [modalOpened, setModalOpened] = useState(false);
 
@@ -157,7 +181,7 @@ function App() {
       return "steam-lookup";
     }
 
-    if (keyboardOpen) {
+    if (keyboardOpen.isOpen) {
       return "keyboard";
     }
 
@@ -188,7 +212,7 @@ function App() {
 
     onCloseModal: () => {
       if (keyboardOpen) {
-        setKeyboardOpen(false);
+        setKeyboardOpen({ isOpen: false, isPassword: false });
         return;
       }
       setModalOpened(false);
@@ -218,6 +242,8 @@ function App() {
 
   useEffect(() => {
     window.electron.volumeAPI.get().then(setCurrentVolume);
+
+    GetConfig();
 
     CheckStatus();
     GetGames();
@@ -308,6 +334,13 @@ function App() {
       GetGames();
     });
   }, []);
+
+  const GetConfig = () => {
+    window.electron.config.get().then((config) => {
+      setConfig(config);
+      console.log(config);
+    });
+  };
 
   const CheckStatus = () => {
     window.electron.send("check-status", {});
@@ -469,12 +502,20 @@ function App() {
 
   return (
     <>
-      {keyboardOpen && (
+      {keyboardOpen.isOpen && (
         <Keyboard
+          isPassword={keyboardOpen.isPassword}
           onSubmit={(value) => {
-            setKeyboardOutput(value);
+            if (value.isPassword) {
+              setKeyboardPasswordOutput({
+                value: value.value,
+                valuePassword: value.valuePassword,
+              });
+            } else {
+              setKeyboardOutput(value.value);
+            }
 
-            setKeyboardOpen(false);
+            setKeyboardOpen({ isOpen: false, isPassword: false });
           }}
         />
       )}
@@ -700,21 +741,14 @@ function App() {
           </div>
 
           <div>
-            <Grid
+            <div
               className={`games-grid ${activeMenuBar ? "grid-top-bar-expanded" : ""}`}
-              style={{ margin: "0 auto 0" }}
-              rowGap="xl"
-              columnGap="lg"
             >
               {gameData && gameData.games.length > 0 ? (
                 <>
                   {gameData &&
                     gameData.games.map((item: Game) => (
-                      <Grid.Col
-                        key={item.name}
-                        className="games-grid-col"
-                        span={1.5}
-                      >
+                      <div key={item.name} className="games-grid-col">
                         <button
                           className="game-container"
                           style={{
@@ -750,7 +784,7 @@ function App() {
                             {item.name}
                           </div>
                         </button>
-                      </Grid.Col>
+                      </div>
                     ))}
                 </>
               ) : (
@@ -763,7 +797,7 @@ function App() {
                   </div>
                 </>
               )}
-            </Grid>
+            </div>
 
             <Modal
               withCloseButton={false}
@@ -1141,7 +1175,9 @@ function App() {
                           className="addgamesteam-keyboard-input"
                           placeholder="AppID or Game title"
                           value={keyboardOutput}
-                          onClick={() => setKeyboardOpen(true)}
+                          onClick={() =>
+                            setKeyboardOpen({ isOpen: true, isPassword: false })
+                          }
                           data-controller-focus
                           data-controller-group="Add Steam Game-modal"
                         />
@@ -1232,7 +1268,9 @@ function App() {
                           className="volume-keyboard-input"
                           placeholder="Volume"
                           value={keyboardOutput}
-                          onClick={() => setKeyboardOpen(true)}
+                          onClick={() =>
+                            setKeyboardOpen({ isOpen: true, isPassword: false })
+                          }
                           data-controller-focus
                           data-controller-group="Volume-modal"
                         />
@@ -1313,6 +1351,67 @@ function App() {
                   </>
                 )}
 
+                {currentModelType === "Setup Steam" && (
+                  <>
+                    <div className="steamsetup-container">
+                      <div className="steamsetup-header">
+                        <div className="steamsetup-title">
+                          <div className="steamsetup-title-icon">
+                            <SteamIcon />
+                          </div>
+
+                          <div>
+                            <h2>Steam Setup</h2>
+                            <p>Login to steam</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="steamsetup-section">
+                        <div className="steamsetup-section-title">Login</div>
+
+                        <input
+                          className="steamsetup-keyboard-input"
+                          placeholder="Username"
+                          value={keyboardOutput}
+                          onClick={() =>
+                            setKeyboardOpen({ isOpen: true, isPassword: false })
+                          }
+                          data-controller-focus
+                          data-controller-group="Setup Steam-modal"
+                        />
+
+                        <input
+                          className="steamsetup-keyboard-input"
+                          placeholder="Password"
+                          value={keyboardPasswordOutput?.valuePassword}
+                          onClick={() =>
+                            setKeyboardOpen({ isOpen: true, isPassword: true })
+                          }
+                          data-controller-focus
+                          data-controller-group="Setup Steam-modal"
+                        />
+
+                        <button
+                          className="steamsetup-container-button"
+                          data-controller-focus
+                          data-controller-group="Setup Steam-modal"
+                          onClick={() => {}}
+                        >
+                          <div className="steamsetup-button-icon">
+                            <LoginIcon />
+                          </div>
+
+                          <div className="steamsetup-button-content">
+                            <span>Login</span>
+                            <small>Login to steam</small>
+                          </div>
+                        </button>
+                      </div>
+                    </div>
+                  </>
+                )}
+
                 {currentModelType === "User Settings" && (
                   <>
                     <div className="usersettings-container">
@@ -1333,6 +1432,25 @@ function App() {
                         <div className="usersettings-section-title">
                           Settings
                         </div>
+
+                        <button
+                          className="usersettings-container-button"
+                          data-controller-focus
+                          data-controller-group="User Settings-modal"
+                          onClick={() => {
+                            setCurrentModalType("Setup Steam");
+                          }}
+                        >
+                          <div className="usersettings-button-icon">
+                            <SteamIcon />
+                          </div>
+
+                          <div className="usersettings-button-content">
+                            <span>Setup Steam</span>
+                            <small>Login to steam</small>
+                          </div>
+                          <div className="usersettings-button-arrow">›</div>
+                        </button>
 
                         <div className="usersettings-dropdown">
                           <button
@@ -1708,7 +1826,9 @@ function App() {
                         className="settings-container-button"
                         data-controller-focus
                         data-controller-group="Settings-modal"
-                        onClick={() => setKeyboardOpen(true)}
+                        onClick={() =>
+                          setKeyboardOpen({ isOpen: true, isPassword: false })
+                        }
                       >
                         <div className="settings-button-icon">
                           <EthernetIcon />

@@ -21470,6 +21470,19 @@ ipcMain.handle("get-game-data", () => {
 		return null;
 	}
 });
+ipcMain.handle("get-config", () => {
+	try {
+		if (process.platform === "linux") return null;
+		else if (process.platform === "win32") {
+			let rawdata = fs.readFileSync("./electron/config.json");
+			let configInfo = JSON.parse(rawdata);
+			console.log(configInfo);
+			return configInfo;
+		}
+	} catch (err) {
+		console.log("Failed to read config", err);
+	}
+});
 ipcMain.handle("get-usb-dir", () => {
 	try {
 		if (process.platform === "linux") {

@@ -25,6 +25,10 @@ electron.contextBridge.exposeInMainWorld("electron", {
 		get: () => electron.ipcRenderer.invoke("get-volume"),
 		set: (value) => electron.ipcRenderer.invoke("set-volume", value)
 	},
+	config: {
+		get: () => electron.ipcRenderer.invoke("get-config"),
+		set: (value) => electron.ipcRenderer.invoke("set-config", value)
+	},
 	directory: { get: () => electron.ipcRenderer.invoke("get-usb-dir") },
 	gameData: { get: () => electron.ipcRenderer.invoke("get-game-data") },
 	windowState: { set: (value) => electron.ipcRenderer.invoke("set-window-state", value) }
