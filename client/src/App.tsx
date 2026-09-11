@@ -3,50 +3,33 @@ import { useControllerNavigation } from "./hooks/useControllerNavigation";
 import { Tooltip } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 
-import type { ModalTypes, GameType, KeyboardType, GameData, StorageType, VersionType, SteamGameType } from "./types";
+import type {
+  ModalTypes,
+  KeyboardPasswordOutputType,
+  GameType,
+  KeyboardType,
+  GameData,
+  StorageType,
+  VersionType,
+  SteamGameType,
+} from "./types";
 
 import Logo from "../src/assets/logo-white.png";
 
 //#region Icons
-import SettingsIcon from "./assets/ui/settings.svg?react";
 import SettingsSolidIcon from "./assets/ui/settings-solid.svg?react";
-import RestartIcon from "./assets/ui/restart.svg?react";
 import EthernetIcon from "./assets/ui/ethernet.svg?react";
 import EthernetOffIcon from "./assets/ui/ethernetoff.svg?react";
-import VolumeIcon from "./assets/ui/volume.svg?react";
 import VolumeSolidIcon from "./assets/ui/volume-solid.svg?react";
-import VolumeUpIcon from "./assets/ui/volumeup.svg?react";
-import VolumeDownIcon from "./assets/ui/volumedown.svg?react";
 import VolumeMuteIcon from "./assets/ui/volumemute.svg?react";
-import CloseIcon from "./assets/ui/close.svg?react";
-import PlayIcon from "./assets/ui/play.svg?react";
-import WrenchIcon from "./assets/ui/wrench.svg?react";
 import ControllerIcon from "./assets/ui/controller.svg?react";
 import ControllerErrorIcon from "./assets/ui/controllererror.svg?react";
-import EditIcon from "./assets/ui/edit.svg?react";
-import SteamIcon from "./assets/ui/steam.svg?react";
 import USBIcon from "./assets/ui/usb.svg?react";
 import USBOffIcon from "./assets/ui/usboff.svg?react";
-import GameIcon from "./assets/ui/game.svg?react";
-import InstallIcon from "./assets/ui/install.svg?react";
-import BrushIcon from "./assets/ui/brush.svg?react";
-import MoonIcon from "./assets/ui/moon.svg?react";
-import SunIcon from "./assets/ui/sun.svg?react";
-import SolarisIcon from "./assets/ui/solaris.svg?react";
-import InfoIcon from "./assets/ui/info.svg?react";
 import HeadphonesIcon from "./assets/ui/headphones.svg?react";
 import HeadphonesOffIcon from "./assets/ui/headphonesoff.svg?react";
-import ServicesIcon from "./assets/ui/services.svg?react";
 import MusicIcon from "./assets/ui/music.svg?react";
 import AddIcon from "./assets/ui/add.svg?react";
-import UserIcon from "./assets/ui/user.svg?react";
-import CheckmarkIcon from "./assets/ui/checkmark-solid.svg?react";
-import XboxIcon from "./assets/ui/xbox.svg?react";
-import PlaystationIcon from "./assets/ui/playstation.svg?react";
-import DeleteIcon from "./assets/ui/delete.svg?react";
-import SearchIcon from "./assets/ui/search.svg?react";
-import HammerIcon from "./assets/ui/hammer.svg?react";
-import LoginIcon from "./assets/ui/login.svg?react";
 import LoadingPacman from "./assets/ui/loading-pacman.svg?react";
 
 // https://allsvgicons.com/
@@ -59,14 +42,6 @@ import ControllerDiagram from "./components/ControllerDiagram";
 import SteamDBLookup from "./components/SteamDBLookup";
 import { GameModal } from "./components/modal/Modal";
 //#endregion Components
-
-//#region Types
-
-type KeyboardPasswordOutput = {
-  value: string;
-  valuePassword: string;
-};
-//#endregion Types
 
 // Todo: add mulighed for at ;ndre lyden p[ alle processes ]
 // Todo: add game system via usb
@@ -98,7 +73,7 @@ function App() {
 
   const [keyboardOutput, setKeyboardOutput] = useState("");
   const [keyboardPasswordOutput, setKeyboardPasswordOutput] =
-    useState<KeyboardPasswordOutput>();
+    useState<KeyboardPasswordOutputType>();
 
   const [steamDBLookupOpen, setSteamDBLookupOpen] = useState(false);
   const [selectedSteamDBLookup, setSelectedSteamDBLookup] =
@@ -763,7 +738,6 @@ function App() {
               currentModalType={currentModelType}
               setCurrentModalType={setCurrentModalType}
               GetUsbDir={GetUsbDir}
-              
               /* Options */
               focusedGame={focusedGame}
               currentPlaying={currentPlaying}
@@ -821,6 +795,9 @@ function App() {
               themeDropdownOpen={themeDropdownOpen}
               /* User Settings */
 
+              /* User Settings */
+              keyboardPasswordOutput={keyboardPasswordOutput}
+              /* User Settings */
             />
           </div>
         </>

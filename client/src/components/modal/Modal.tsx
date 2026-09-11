@@ -16,9 +16,11 @@ import type {
   StorageType,
   VersionType,
   SteamGameType,
+  KeyboardPasswordOutputType
 } from "../../types";
 import { AddSteamGameModal } from "./AddSteamGameModal";
 import { UserSettingsModal } from "./UserSettingsModal";
+import { SetupSteamGameModal } from "./SetupSteamGame";
 
 type GameModalProps = {
   opened: boolean;
@@ -122,6 +124,10 @@ type GameModalProps = {
   controllerDropdownOpen: boolean;
   themeDropdownOpen: boolean;
   /* User Settings */
+
+  /* Setup Steam */
+  keyboardPasswordOutput: KeyboardPasswordOutputType | undefined;
+  /* Setup Steam */
 };
 
 export function GameModal({
@@ -188,6 +194,11 @@ export function GameModal({
   controllerDropdownOpen,
   themeDropdownOpen,
   /* User Settings */
+  
+  /* Setup Steam */
+  keyboardPasswordOutput
+  /* Setup Steam */
+
 }: GameModalProps) {
   return (
     <Modal
@@ -286,7 +297,15 @@ export function GameModal({
           </>
         )}
 
-        {currentModalType === "Setup Steam" && <></>}
+        {currentModalType === "Setup Steam" && (
+          <>
+            <SetupSteamGameModal
+              keyboardOutput={keyboardOutput}
+              keyboardPasswordOutput={keyboardPasswordOutput}
+              setKeyboardOpen={setKeyboardOpen}
+            />
+          </>
+        )}
 
         {currentModalType === "User Settings" && (
           <>

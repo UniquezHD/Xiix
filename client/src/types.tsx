@@ -27,6 +27,11 @@ export type KeyboardType = {
   isPassword: boolean;
 };
 
+export type KeyboardPasswordOutputType = {
+  value: string;
+  valuePassword: string;
+};
+
 export type GameData = {
   games: GameType[];
 };
