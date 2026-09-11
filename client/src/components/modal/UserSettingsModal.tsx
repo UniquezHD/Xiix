@@ -15,8 +15,8 @@ type UserSettingsModalProps = {
         React.SetStateAction<ModalTypes | null>
       >;
 
-      setControllerDropdownOpen: (open: any) => boolean;
-      setThemeDropdownOpen: (open: any) => boolean;
+      setControllerDropdownOpen: React.Dispatch<React.SetStateAction<boolean>>;
+      setThemeDropdownOpen: React.Dispatch<React.SetStateAction<boolean>>;
 
       setSelectedController: (value: string) => void;
       setSelectedTheme: (value: string) => void;

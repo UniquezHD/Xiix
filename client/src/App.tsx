@@ -46,7 +46,6 @@ import { GameModal } from "./components/modal/Modal";
 // Todo: add mulighed for at ;ndre lyden p[ alle processes ]
 // Todo: add game system via usb
 
-// Todo: XiiX logo som controller
 // Todo: language support
 // Todo: Select controller type
 
@@ -107,15 +106,15 @@ function App() {
   );
 
   const ActiveControllerGroup = () => {
-    if (steamDBLookupOpen) {
+    if (steamDBLookupOpen === true) {
       return "steam-lookup";
     }
 
-    if (keyboardOpen.isOpen) {
+    if (keyboardOpen.isOpen === true) {
       return "keyboard";
     }
 
-    if (modalOpened) {
+    if (modalOpened === true) {
       if (currentModelType === "Options") {
         return "game-modal";
       } else {
@@ -141,7 +140,7 @@ function App() {
     },
 
     onCloseModal: () => {
-      if (keyboardOpen) {
+      if (keyboardOpen.isOpen === true) {
         setKeyboardOpen({ isOpen: false, isPassword: false });
         return;
       }
@@ -335,7 +334,6 @@ function App() {
   };
 
   const InstallSteamGame = (gameID: number, gameName?: string) => {
-    // add steam username and password in settings for first setup
 
     setIsInstalling(true);
 
@@ -346,7 +344,6 @@ function App() {
   };
 
   const RepairSteamGame = (gameID: number, gameName?: string) => {
-    // add steam username and password in settings for first setup
 
     setIsInstalling(true);
 

@@ -16,7 +16,7 @@ import type {
   StorageType,
   VersionType,
   SteamGameType,
-  KeyboardPasswordOutputType
+  KeyboardPasswordOutputType,
 } from "../../types";
 import { AddSteamGameModal } from "./AddSteamGameModal";
 import { UserSettingsModal } from "./UserSettingsModal";
@@ -112,8 +112,8 @@ type GameModalProps = {
   /* Add Steam Game */
 
   /* User Settings */
-  setControllerDropdownOpen: (open: any) => boolean;
-  setThemeDropdownOpen: (open: any) => boolean;
+  setControllerDropdownOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setThemeDropdownOpen: React.Dispatch<React.SetStateAction<boolean>>;
 
   setSelectedController: (value: string) => void;
   setSelectedTheme: (value: string) => void;
@@ -194,11 +194,10 @@ export function GameModal({
   controllerDropdownOpen,
   themeDropdownOpen,
   /* User Settings */
-  
-  /* Setup Steam */
-  keyboardPasswordOutput
-  /* Setup Steam */
 
+  /* Setup Steam */
+  keyboardPasswordOutput,
+  /* Setup Steam */
 }: GameModalProps) {
   return (
     <Modal
@@ -206,7 +205,9 @@ export function GameModal({
       onClose={onClose}
       withCloseButton={false}
       centered
-      title={currentModalType}
+      title={
+        currentModalType == "Options" ? focusedGame?.name : currentModalType
+      }
       size="600px"
       radius="lg"
       styles={{
