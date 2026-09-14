@@ -9,7 +9,8 @@ export type ModalTypes =
   | "System Information"
   | "Restart Services"
   | "User Settings"
-  | "Setup Steam";
+  | "Setup Steam"
+  | "Friends";
 
 
 export type GameType = {

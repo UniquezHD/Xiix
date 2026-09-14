@@ -31,6 +31,7 @@ import HeadphonesOffIcon from "./assets/ui/headphonesoff.svg?react";
 import MusicIcon from "./assets/ui/music.svg?react";
 import AddIcon from "./assets/ui/add.svg?react";
 import LoadingPacman from "./assets/ui/loading-pacman.svg?react";
+import FriendsIcon from "./assets/ui/friends.svg?react";
 
 // https://allsvgicons.com/
 //#endregion
@@ -41,6 +42,7 @@ import Keyboard from "./components/Keyboard";
 import ControllerDiagram from "./components/ControllerDiagram";
 import SteamDBLookup from "./components/SteamDBLookup";
 import { GameModal } from "./components/modal/Modal";
+import Friends from "./components/Friends";
 //#endregion Components
 
 // Todo: add mulighed for at ;ndre lyden p[ alle processes ]
@@ -50,6 +52,8 @@ import { GameModal } from "./components/modal/Modal";
 // Todo: Select controller type
 
 // Todo: make Modal a component to avoid multiple .css files and duplicate in app.jsx
+
+// Todo: add friends tap in topbar with profile and friend view in ps3 style
 
 function App() {
   const [activeMenuBar, setActiveMenubar] = useState(0);
@@ -69,6 +73,8 @@ function App() {
     isOpen: false,
     isPassword: false,
   });
+
+  const [friendsOpen, setFriendsOpen] = useState(false);
 
   const [keyboardOutput, setKeyboardOutput] = useState("");
   const [keyboardPasswordOutput, setKeyboardPasswordOutput] =
@@ -108,6 +114,10 @@ function App() {
   const ActiveControllerGroup = () => {
     if (steamDBLookupOpen === true) {
       return "steam-lookup";
+    }
+
+    if (friendsOpen === true) {
+      return "friends";
     }
 
     if (keyboardOpen.isOpen === true) {
@@ -429,6 +439,10 @@ function App() {
 
   return (
     <>
+      {friendsOpen && (
+        <Friends/>
+      )}
+
       {keyboardOpen.isOpen && (
         <Keyboard
           isPassword={keyboardOpen.isPassword}
@@ -521,6 +535,22 @@ function App() {
                   <MusicIcon />
 
                   <span className="top-bar-nav-label">Music</span>
+                </button>
+
+                <button
+                  data-controller-navigation="topbar"
+                  data-controller-group="topbar"
+                  data-controller-focus
+                  className="top-bar-nav-button"
+                  onBlur={() => setActiveMenubar(0)}
+                  onFocus={() => setActiveMenubar(1)}
+                  onClick={() => {
+                    setFriendsOpen(true)
+                  }}
+                >
+                  <FriendsIcon />
+
+                  <span className="top-bar-nav-label">Friends</span>
                 </button>
 
                 <button
