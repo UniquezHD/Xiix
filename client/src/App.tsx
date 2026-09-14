@@ -548,7 +548,7 @@ function App() {
                     setFriendsOpen(true)
                   }}
                 >
-                  <FriendsIcon />
+                  <FriendsIcon fill="currentColor" /* fix until allsvg is working again */ />
 
                   <span className="top-bar-nav-label">Friends</span>
                 </button>

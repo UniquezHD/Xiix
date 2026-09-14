@@ -248,6 +248,7 @@
   flex-direction: row;
   gap: 1rem;
   padding: 1.5rem;
+  align-content: flex-start;
 }
 
 .games-grid.grid-top-bar-expanded {
