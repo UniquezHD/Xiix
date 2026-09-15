@@ -1,0 +1,9 @@
+go https://github.com/doquangtan/socket.io-golang
+
+rust https://github.com/totodore/socketioxide
+
+typescript ? https://www.npmjs.com/package/socket.io
+python ? https://pypi.org/project/python-socketio/
+
+java x https://github.com/socketio/socket.io-server-java
+php x https://github.com/walkor/phpsocket.io

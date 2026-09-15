@@ -101,11 +101,11 @@
   color: rgba(255, 255, 255, 0.445);
 }
 
-.friends-middle{
-    width: 100%;
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
+.friends-middle {
+  width: 100%;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
 }
 
 .friends-add-friend {
@@ -113,7 +113,7 @@
   height: 50px;
   display: flex;
   outline: none;
-   border: 2px solid rgba(255, 255, 255, 0.08);
+  border: 2px solid rgba(255, 255, 255, 0.08);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
   align-items: center;
   justify-content: center;
@@ -155,20 +155,20 @@
     0 0 25px rgba(168, 180, 255, 0.08);
 }
 
-.friends-input[data-controller-focus]:focus{
-    border: 2px solid var(--app-primary-hover);
+.friends-input[data-controller-focus]:focus {
+  border: 2px solid var(--app-primary-hover);
   background: rgba(111, 123, 217, 0.1);
   box-shadow:
     0 0 0 3px rgba(111, 123, 217, 0.12),
     0 8px 25px rgba(111, 123, 217, 0.1);
 }
 
-.friends-tap{
-    width: 200px;
+.friends-tap {
+  width: 200px;
   height: 50px;
   display: flex;
   outline: none;
-   border: 2px solid rgba(255, 255, 255, 0.08);
+  border: 2px solid rgba(255, 255, 255, 0.08);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
   align-items: center;
   justify-content: center;
@@ -187,10 +187,67 @@
     0 8px 25px rgba(111, 123, 217, 0.1);
 }
 
-.friends-tap-add-friend{
-    margin-left: 1rem;
-    margin-right: 1rem;
-    margin-top: 1rem;
-    display: flex;
-    gap: 1rem;
+.friends-tap-add-friend {
+  margin-left: 1rem;
+  margin-right: 1rem;
+  margin-top: 1rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.friends-request-options {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+}
+
+.friends-request-options-buttons {
+  width: 35px;
+  height: 35px;
+  display: flex;
+  outline: none;
+  border: 2px solid rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  align-items: center;
+  justify-content: center;
+  border-radius: 9px;
+  background: var(--surface);
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 1rem;
+}
+
+.friends-request-options-buttons[data-controller-focus]:focus {
+  color: #8d98f0;
+  border: 2px solid var(--app-primary-hover);
+  background: rgba(111, 123, 217, 0.1);
+  box-shadow:
+    0 0 0 3px rgba(111, 123, 217, 0.12),
+    0 8px 25px rgba(111, 123, 217, 0.1);
+}
+
+.friends-request-list-info {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  color: white;
+  text-align: left;
+  justify-content: space-between;
+}
+
+.friends-online-indicator{
+  height: 20px;
+  width: 24px;
+  position: relative;
+  bottom: 35px;
+  right: 25px;
+  border-radius: 100%;
+  border: 1.5px solid #000;
+}
+
+.online{
+  background-color: rgb(0, 255, 0);
+}
+
+.offline{
+  background-color: rgb(255, 0, 0);
 }

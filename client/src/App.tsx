@@ -344,7 +344,6 @@ function App() {
   };
 
   const InstallSteamGame = (gameID: number, gameName?: string) => {
-
     setIsInstalling(true);
 
     window.electron.send("install-steam-game", {
@@ -354,7 +353,6 @@ function App() {
   };
 
   const RepairSteamGame = (gameID: number, gameName?: string) => {
-
     setIsInstalling(true);
 
     window.electron.send("repair-steam-game", {
@@ -440,7 +438,11 @@ function App() {
   return (
     <>
       {friendsOpen && (
-        <Friends/>
+        <Friends
+          onCancel={() => {
+            setFriendsOpen(false);
+          }}
+        />
       )}
 
       {keyboardOpen.isOpen && (
@@ -545,10 +547,12 @@ function App() {
                   onBlur={() => setActiveMenubar(0)}
                   onFocus={() => setActiveMenubar(1)}
                   onClick={() => {
-                    setFriendsOpen(true)
+                    setFriendsOpen(true);
                   }}
                 >
-                  <FriendsIcon fill="currentColor" /* fix until allsvg is working again */ />
+                  <FriendsIcon
+                    fill="currentColor" /* fix until allsvg is working again */
+                  />
 
                   <span className="top-bar-nav-label">Friends</span>
                 </button>

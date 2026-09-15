@@ -4,10 +4,13 @@ import { fileURLToPath } from "node:url";
 import path from "node:path";
 
 import { Server } from "socket.io";
+import { io as ServerClient } from "socket.io-client";
 
 const io = new Server(3000, {
   cors: { origin: "*" },
 });
+
+const ioClient = ServerClient("http://localhost:3001/");
 
 const require = createRequire(import.meta.url);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -49,8 +52,8 @@ type Version = {
 };
 
 type SteamGameInfo = {
-  gameName: string
-  gameID: string
+  gameName: string;
+  gameID: string;
 };
 
 function createWindow() {
@@ -100,10 +103,8 @@ ipcMain.handle("get-game-data", () => {
 ipcMain.handle("get-config", () => {
   try {
     if (process.platform === "linux") {
-
       return null;
-    } 
-    else if (process.platform === "win32") {
+    } else if (process.platform === "win32") {
       let rawdata = fs.readFileSync("./electron/config.json");
 
       let configInfo = JSON.parse(rawdata);
@@ -113,7 +114,7 @@ ipcMain.handle("get-config", () => {
       return configInfo;
     }
   } catch (err) {
-    console.log("Failed to read config", err)
+    console.log("Failed to read config", err);
   }
 });
 
@@ -151,6 +152,17 @@ ipcMain.handle("set-volume", async (_, value: number) => {
   await loudness.setVolume(value);
 });
 
+
+ioClient.on("connect", () => {
+  console.log("ID: " +  ioClient.id);
+  ioClient.emit("friend-list");
+});
+
+ioClient.on("disconnect", (reason, details) => {
+  console.log(reason, details);
+});
+
+
 io.on("connection", (socket) => {
   console.log("C# Connected");
 
@@ -169,19 +181,19 @@ io.on("connection", (socket) => {
 
   ipcMain.on("install-steam-game", (_event, gameData: SteamGameInfo) => {
     console.log(gameData);
-    console.log("Electron: " + gameData.gameID + " " + gameData.gameName)
+    console.log("Electron: " + gameData.gameID + " " + gameData.gameName);
     socket.emit("install-steam-game", {
       GameID: gameData.gameID,
-      GameName: gameData.gameName
+      GameName: gameData.gameName,
     });
   });
 
-   ipcMain.on("repair-steam-game", (_event, gameData: SteamGameInfo) => {
+  ipcMain.on("repair-steam-game", (_event, gameData: SteamGameInfo) => {
     console.log(gameData);
-    console.log("Electron: " + gameData.gameID + " " + gameData.gameName)
+    console.log("Electron: " + gameData.gameID + " " + gameData.gameName);
     socket.emit("repair-steam-game", {
       GameID: gameData.gameID,
-      GameName: gameData.gameName
+      GameName: gameData.gameName,
     });
   });
 
@@ -240,7 +252,7 @@ io.on("connection", (socket) => {
     win?.show();
   });
 
-   socket.on("uninstall-steam-game-finished", (data) => {
+  socket.on("uninstall-steam-game-finished", (data) => {
     win?.webContents.send("uninstall-steam-game-finished", data);
     win?.show();
   });

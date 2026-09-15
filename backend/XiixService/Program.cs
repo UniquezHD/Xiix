@@ -1,5 +1,4 @@
-﻿using SharpDX.DirectInput;
-using XiixService.Classes;
+﻿using XiixService.Classes;
 
 class Program
 {
