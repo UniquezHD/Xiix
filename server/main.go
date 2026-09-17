@@ -21,6 +21,8 @@ func main() {
 		fmt.Println("/friend-list")
 	})
 
+
+
 	http.Handle("/", io.HttpHandler())
 	http.ListenAndServe(":3001", nil)
 }

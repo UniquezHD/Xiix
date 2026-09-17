@@ -6,9 +6,13 @@ import path from "node:path";
 import { Server } from "socket.io";
 import { io as ServerClient } from "socket.io-client";
 
+import { GameDataType, SteamGameInfoType, VersionType } from "./types";
+
 const io = new Server(3000, {
   cors: { origin: "*" },
 });
+
+//Todo: refactor this file
 
 const ioClient = ServerClient("http://localhost:3001/");
 
@@ -35,26 +39,6 @@ process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL
   : RENDERER_DIST;
 
 let win: BrowserWindow | null;
-
-type GameData = {
-  name: string;
-  processName: string;
-  exePath: string;
-  args: string;
-  cover: string;
-  type: string;
-  gameID: string;
-};
-
-type Version = {
-  frontend: string;
-  backend: string;
-};
-
-type SteamGameInfo = {
-  gameName: string;
-  gameID: string;
-};
 
 function createWindow() {
   win = new BrowserWindow({
@@ -166,7 +150,7 @@ ioClient.on("disconnect", (reason, details) => {
 io.on("connection", (socket) => {
   console.log("C# Connected");
 
-  ipcMain.on("start-game", (_event, gameData: GameData) => {
+  ipcMain.on("start-game", (_event, gameData: GameDataType) => {
     console.log("Received from React:", gameData);
 
     socket.emit("start-game", {
@@ -179,7 +163,7 @@ io.on("connection", (socket) => {
     });
   });
 
-  ipcMain.on("install-steam-game", (_event, gameData: SteamGameInfo) => {
+  ipcMain.on("install-steam-game", (_event, gameData: SteamGameInfoType) => {
     console.log(gameData);
     console.log("Electron: " + gameData.gameID + " " + gameData.gameName);
     socket.emit("install-steam-game", {
@@ -188,7 +172,7 @@ io.on("connection", (socket) => {
     });
   });
 
-  ipcMain.on("repair-steam-game", (_event, gameData: SteamGameInfo) => {
+  ipcMain.on("repair-steam-game", (_event, gameData: SteamGameInfoType) => {
     console.log(gameData);
     console.log("Electron: " + gameData.gameID + " " + gameData.gameName);
     socket.emit("repair-steam-game", {
@@ -197,7 +181,7 @@ io.on("connection", (socket) => {
     });
   });
 
-  ipcMain.on("install-game", (_event, installGameInfo: GameData) => {
+  ipcMain.on("install-game", (_event, installGameInfo: GameDataType) => {
     console.log("InstallGameInfo:", installGameInfo);
 
     socket.emit("install-game", {
@@ -210,7 +194,7 @@ io.on("connection", (socket) => {
     });
   });
 
-  ipcMain.on("uninstall-game", (_event, uninstallGameInfo: GameData) => {
+  ipcMain.on("uninstall-game", (_event, uninstallGameInfo: GameDataType) => {
     console.log("UninstallGameInfo:", uninstallGameInfo);
 
     socket.emit("uninstall-game", {
@@ -232,7 +216,7 @@ io.on("connection", (socket) => {
     socket.emit("status", {});
   });
 
-  ipcMain.on("close-game", (_event, gameData: GameData) => {
+  ipcMain.on("close-game", (_event, gameData: GameDataType) => {
     console.log("Received from React:", gameData);
 
     socket.emit("close-game", {
@@ -286,7 +270,7 @@ io.on("connection", (socket) => {
   socket.on("get-version", (data) => {
     console.log(data);
 
-    let versionData: Version = {
+    let versionData: VersionType = {
       frontend: FRONTEND_VERSION,
       backend: data.backend,
     };

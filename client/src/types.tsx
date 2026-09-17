@@ -12,7 +12,6 @@ export type ModalTypes =
   | "Setup Steam"
   | "Friends";
 
-
 export type GameType = {
   name: string;
   processName: string;
