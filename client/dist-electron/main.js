@@ -25303,7 +25303,6 @@ ipcMain.handle("set-volume", async (_, value) => {
 });
 ioClient.on("connect", () => {
 	console.log("ID: " + ioClient.id);
-	ioClient.emit("friend-list");
 });
 ioClient.on("disconnect", (reason, details) => {
 	console.log(reason, details);

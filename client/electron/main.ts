@@ -138,8 +138,8 @@ ipcMain.handle("set-volume", async (_, value: number) => {
 
 
 ioClient.on("connect", () => {
-  console.log("ID: " +  ioClient.id);
-  ioClient.emit("friend-list");
+  console.log("Connected to Go Server");
+  //ioClient.emit("friends-get-list");
 });
 
 ioClient.on("disconnect", (reason, details) => {
