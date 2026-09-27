@@ -25302,7 +25302,7 @@ ipcMain.handle("set-volume", async (_, value) => {
 	await loudness.setVolume(value);
 });
 ioClient.on("connect", () => {
-	console.log("ID: " + ioClient.id);
+	console.log("Connected to Go Server");
 });
 ioClient.on("disconnect", (reason, details) => {
 	console.log(reason, details);

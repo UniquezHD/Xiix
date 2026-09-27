@@ -237,6 +237,10 @@
   line-height: 1;
 }
 
+.top-bar-profile-img{
+  border-radius: 50%;
+}
+
 .games-grid {
   min-height: calc(100dvh - var(--top-bar-height));
   background: var(--app-bg);

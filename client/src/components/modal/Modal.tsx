@@ -21,6 +21,7 @@ import type {
 import { AddSteamGameModal } from "./AddSteamGameModal";
 import { UserSettingsModal } from "./UserSettingsModal";
 import { SetupSteamGameModal } from "./SetupSteamGame";
+import { LoginModal } from "./LoginModal";
 
 type GameModalProps = {
   opened: boolean;
@@ -128,6 +129,10 @@ type GameModalProps = {
   /* Setup Steam */
   keyboardPasswordOutput: KeyboardPasswordOutputType | undefined;
   /* Setup Steam */
+
+  /* Login */
+   setIsLoggedIn: (value: boolean) => void;
+  /* Login */
 };
 
 export function GameModal({
@@ -198,6 +203,11 @@ export function GameModal({
   /* Setup Steam */
   keyboardPasswordOutput,
   /* Setup Steam */
+
+  /* Login */
+  setIsLoggedIn
+  /* Login */
+  
 }: GameModalProps) {
   return (
     <Modal
@@ -278,6 +288,18 @@ export function GameModal({
               selectedSteamDBLookup={selectedSteamDBLookup}
               setKeyboardOpen={setKeyboardOpen}
               setSteamDBLookupOpen={setSteamDBLookupOpen}
+            />
+          </>
+        )}
+
+         {currentModalType === "Login" && (
+          <>
+            <LoginModal
+              onClose={onClose}
+              keyboardOutput={keyboardOutput}
+              setKeyboardOpen={setKeyboardOpen}
+              keyboardPasswordOutput={keyboardPasswordOutput}
+              setIsLoggedIn={setIsLoggedIn}
             />
           </>
         )}

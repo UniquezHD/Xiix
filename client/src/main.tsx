@@ -7,6 +7,7 @@ import App from './App.tsx'
 import "./App.css";
 import './index.css'
 
+import "./css/login.css";
 import "./css/volume.css";
 import "./css/addgame.css";
 import "./css/options.css";

@@ -10,7 +10,8 @@ export type ModalTypes =
   | "Restart Services"
   | "User Settings"
   | "Setup Steam"
-  | "Friends";
+  | "Friends"
+  | "Login";
 
 export type GameType = {
   name: string;
@@ -29,7 +30,7 @@ export type KeyboardType = {
 
 export type KeyboardPasswordOutputType = {
   value: string;
-  valuePassword: string;
+  valuePassword?: string;
 };
 
 export type GameData = {
