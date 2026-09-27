@@ -19,7 +19,5 @@ func Login() http.HandlerFunc {
 
 		fmt.Println("Login: " + username + " " + password);
 
-		// get friendlist for user
-
 	}
 }

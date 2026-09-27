@@ -42,6 +42,6 @@ func main() {
 	log.Println("Server running at http://localhost:3001")
 
 	http.Handle("/", io.HttpHandler())
-	log.Fatal(http.ListenAndServe(":3001", nil))
+	log.Fatal(http.ListenAndServe("127.0.0.1:3001", nil))
 }
 

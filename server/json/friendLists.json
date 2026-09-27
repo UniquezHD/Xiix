@@ -1,0 +1,59 @@
+[
+  {
+    "user": 48932324,
+    "friendlist": [
+      {
+        "userID": 48932324,
+        "username": "UniquezHD",
+        "activity": "Playing: Plants vs. Zombies™: Replanted",
+        "profilePicture": "",
+        "onlineStatus": true
+      },
+      {
+        "userID": 4325235,
+        "username": "Xiiqaz",
+        "activity": "Playing: The Outlast Trials",
+        "profilePicture": "",
+        "onlineStatus": true
+      },
+      {
+        "userID": 4325235,
+        "username": "Aooosos",
+        "activity": "Main menu",
+        "profilePicture": "",
+        "onlineStatus": false
+      }
+    ]
+  },
+  {
+    "user": 4325235,
+    "friendlist": [
+      {
+        "userID": 48932324,
+        "username": "UniquezHD",
+        "activity": "Playing: Plants vs. Zombies™: Replanted",
+        "profilePicture": "",
+        "onlineStatus": true
+      },
+      {
+        "userID": 4325235,
+        "username": "Aooosos",
+        "activity": "Main menu",
+        "profilePicture": "",
+        "onlineStatus": false
+      }
+    ]
+  },
+  {
+    "user": 6546235,
+    "friendlist": [
+      {
+        "userID": 48932324,
+        "username": "UniquezHD",
+        "activity": "Playing: Plants vs. Zombies™: Replanted",
+        "profilePicture": "",
+        "onlineStatus": true
+      }
+    ]
+  }
+]
