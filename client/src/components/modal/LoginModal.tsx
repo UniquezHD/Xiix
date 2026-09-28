@@ -7,9 +7,13 @@ type LoginModalProps = {
   keyboardPasswordOutput: KeyboardPasswordOutputType | undefined;
   setKeyboardOpen: React.Dispatch<React.SetStateAction<KeyboardType>>;
 
+  setUserID: React.Dispatch<React.SetStateAction<number>>;
+
   setIsLoggedIn: (value: boolean) => void;
 
   onClose: () => void;
+
+  apiUrl: string,
 };
 
 export function LoginModal({
@@ -18,12 +22,9 @@ export function LoginModal({
   setIsLoggedIn,
   keyboardPasswordOutput,
   onClose,
+  setUserID,
+  apiUrl,
 }: LoginModalProps) {
-
-  const api =
-  process.env.NODE_ENV !== "production"
-    ? "http://localhost:3001"
-    : "";
 
   const HandleLogin = (username: string, password?: string) => {
 
@@ -34,12 +35,14 @@ export function LoginModal({
     formData.append("username", username);
     formData.append("password", password);
 
-    fetch(`${api}/api/login`, {
+    fetch(`${apiUrl}/api/login`, {
       method: "post",
       body: formData,
     })
       .then((res) => res.json())
       .then((data) => {
+        setUserID(data)
+        // save userid to localstorage or cookie
         console.log("Data from Go: ", data)
       });
 

@@ -8,6 +8,20 @@ import (
 	"github.com/doquangtan/socketio/v4"
 )
 
+func WithCORS(h http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
+		if r.Method == http.MethodOptions {
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+		h.ServeHTTP(w, r)
+	})
+}
+
 func main() {
 	io := socketio.New()
 
@@ -35,9 +49,15 @@ func main() {
 		})
 	})
 
-	http.Handle("/api/friends/get/list", http.HandlerFunc(routes.GetFriendList()))
+	http.Handle("/api/friends/get/list", WithCORS(http.HandlerFunc(routes.GetFriendList())))
+	
+	http.Handle("/api/friends/request/send", WithCORS(http.HandlerFunc(routes.SendFriendRequest())))
 
-	http.Handle("/api/login", http.HandlerFunc(routes.Login()))
+	http.Handle("/api/friends/request/delete", WithCORS(http.HandlerFunc(routes.DeleteFriend())))
+
+	http.Handle("/api/friends/delete", WithCORS(http.HandlerFunc(routes.DeleteFriend())))
+	
+	http.Handle("/api/login", WithCORS(http.HandlerFunc(routes.Login())))
 
 	log.Println("Server running at http://localhost:3001")
 

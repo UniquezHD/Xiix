@@ -26,6 +26,7 @@ import { LoginModal } from "./LoginModal";
 type GameModalProps = {
   opened: boolean;
   onClose: () => void;
+  apiUrl: string,
 
   currentModalType: ModalTypes | null;
   setCurrentModalType: React.Dispatch<React.SetStateAction<ModalTypes | null>>;
@@ -132,12 +133,14 @@ type GameModalProps = {
 
   /* Login */
    setIsLoggedIn: (value: boolean) => void;
+   setUserID: React.Dispatch<React.SetStateAction<number>>;
   /* Login */
 };
 
 export function GameModal({
   opened,
   onClose,
+  apiUrl,
   currentModalType,
   setCurrentModalType,
 
@@ -205,7 +208,8 @@ export function GameModal({
   /* Setup Steam */
 
   /* Login */
-  setIsLoggedIn
+  setIsLoggedIn,
+  setUserID,
   /* Login */
   
 }: GameModalProps) {
@@ -296,6 +300,8 @@ export function GameModal({
           <>
             <LoginModal
               onClose={onClose}
+              setUserID={setUserID}
+              apiUrl={apiUrl}
               keyboardOutput={keyboardOutput}
               setKeyboardOpen={setKeyboardOpen}
               keyboardPasswordOutput={keyboardPasswordOutput}

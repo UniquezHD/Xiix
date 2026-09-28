@@ -54,10 +54,6 @@ export type SteamGameType = {
   gameID: string;
 };
 
-export type FriendListType = {
-  friends: FriendType[];
-};
-
 export type FriendType = {
   userID: number;
   username: string;

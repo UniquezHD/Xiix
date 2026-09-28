@@ -7,7 +7,7 @@ import (
 )
 
 
-func Login() http.HandlerFunc {
+func DeleteFriend() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != "POST" {
 			http.Error(w, "Invalid method", http.StatusMethodNotAllowed)
@@ -16,16 +16,14 @@ func Login() http.HandlerFunc {
 
 		username := r.FormValue("username")
 
-		password := r.FormValue("password")
+		userID := r.FormValue("userID")
 
-		fmt.Println("Login: " + username + " " + password);
+		fmt.Println("Delete: " + username + " from: " + userID);
 
-		//check login og return userID
-
-		UserID := 48932324
+		//find user from username and remove from frinedlist of userID
 
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(UserID)
+		json.NewEncoder(w).Encode("success")
 
 	}
 }

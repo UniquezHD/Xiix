@@ -7,7 +7,7 @@ import (
 )
 
 
-func Login() http.HandlerFunc {
+func SendFriendRequest() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != "POST" {
 			http.Error(w, "Invalid method", http.StatusMethodNotAllowed)
@@ -16,16 +16,14 @@ func Login() http.HandlerFunc {
 
 		username := r.FormValue("username")
 
-		password := r.FormValue("password")
+		senderUserID := r.FormValue("senderUserID")
 
-		fmt.Println("Login: " + username + " " + password);
+		fmt.Println("Friend request to: " + username + " from: " + senderUserID);
 
-		//check login og return userID
-
-		UserID := 48932324
+		//find userID from username and add senderUserID to (userID/username) request list
 
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(UserID)
+		json.NewEncoder(w).Encode("success")
 
 	}
 }
