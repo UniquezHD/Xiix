@@ -21,9 +21,12 @@ class Program
     // Todo: disable input when in steam games
 
     // Note: Steam controller guide button settings set to OFF
+
+    // Todo: fix client refresh onUninstall
+    // Todo: fix client refresh onInstall
     static async Task Main()
     {
-        Log.Info("Starting Socket.IO payload client");
+        Log.Info(ConsoleColor.Blue, "Starting Socket.io client");
         //Log.Success("Starting Socket.IO payload client");
         //Log.Warning("Starting Socket.IO payload client");
         //Log.Error("Starting Socket.IO payload client");
@@ -36,7 +39,7 @@ class Program
         Socket = new SocketService("http://localhost:3000");
         await Socket.StartAsync();
 
-        Controller.Listen();
+        //Controller.Listen();
 
         await Task.Delay(-1);
     }

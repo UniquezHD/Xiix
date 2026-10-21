@@ -17,6 +17,7 @@ namespace XiixService.Models
         public string Cover { get; set; }
         public string Type { get; set; }
         public int GameID { get; set; }
+        public string FolderName { get; set; }
     }
 
     public class GameModelJson

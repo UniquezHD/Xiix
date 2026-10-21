@@ -113,7 +113,7 @@ ipcMain.handle("get-usb-dir", () => {
 
       return installInfo;
     } else if (process.platform === "win32") {
-      let rawdata = fs.readFileSync(`${USB_PATH}\\info.json`);
+      let rawdata = fs.readFileSync(`${USB_PATH}\\info.json`);  
 
       let installInfo = JSON.parse(rawdata);
 
@@ -191,6 +191,7 @@ io.on("connection", (socket) => {
       Args: installGameInfo.args,
       Type: installGameInfo.type,
       Cover: installGameInfo.cover,
+      FolderName: installGameInfo.folderName,
     });
   });
 

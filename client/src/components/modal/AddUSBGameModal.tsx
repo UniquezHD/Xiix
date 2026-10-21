@@ -3,6 +3,8 @@ import LoadingPacman from "../../assets/ui/loading-pacman.svg?react";
 
 import type { GameType } from "../../types";
 
+const NULL_ID: number = 0;
+
 type AddUSBGameModalModalProps = {
   usbDir: GameType | null;
   isInstalling: boolean;
@@ -14,7 +16,8 @@ type AddUSBGameModalModalProps = {
     args?: string,
     cover?: string,
     type?: string,
-    gameID?: number
+    gameID?: number,
+    folderName?: string,
   ) => void;
 
 };
@@ -60,7 +63,8 @@ export function AddUSBGameModalModal({
               usbDir?.args,
               usbDir?.cover,
               usbDir?.type,
-              0
+              NULL_ID,
+              usbDir?.folderName,
             );
           }}
         >

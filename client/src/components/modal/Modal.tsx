@@ -88,6 +88,7 @@ type GameModalProps = {
     cover?: string,
     type?: string,
     gameID?: number,
+    folderName?: string, 
   ) => void;
 
   usbDir: GameType | null;

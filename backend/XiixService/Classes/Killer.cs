@@ -10,7 +10,7 @@ namespace XiixService.Classes
         public static void Kill(string name, string type)
         {
 
-            Log.Info($"Process name: {name} type: {type}");
+            Log.Info(ConsoleColor.Blue, $"Process name: {name} type: {type}");
 
             try
             {

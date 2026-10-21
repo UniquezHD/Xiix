@@ -13,13 +13,13 @@ namespace XiixService.Classes
                 var process = Launcher.LaunchPowershell("C:\\Xiix\\SteamInstall.ps1", $"-SteamAppID {steamData.GameID} -SteamAccName \"{username}\"");
                 Watcher.WatchPowershell(process, 0);
 
-                Log.Info($"Reparing: {steamData.GameName} {steamData.GameID}");
+                Log.Info(ConsoleColor.Blue, $"Reparing: {steamData.GameName} {steamData.GameID}");
             }
 
             public static async Task InstallSteam(SteamGameInfoModel steamData, string username)
             {
-                Log.Info("GameID: " + steamData.GameID);
-                Log.Info("GameName: " + steamData.GameName);
+                Log.Info(ConsoleColor.Blue, "GameID: " + steamData.GameID);
+                Log.Info(ConsoleColor.Blue, "GameName: " + steamData.GameName);
 
                 // DotNetEnv sucks
                 var apiKey = Util.STEAMGRID_API_KEY();
@@ -28,7 +28,7 @@ namespace XiixService.Classes
                 Watcher.WatchPowershell(process, 0);
 
                 string steamPath = $"C:\\Program Files (x86)\\Steam\\steamapps\\common\\{steamData.GameName.ToLower()}\\{steamData.GameName}.exe";
-                Log.Info(steamPath);
+                Log.Info(ConsoleColor.Blue, steamPath);
 
                 //https://store.steampowered.com/api/appdetails?appids=
 
@@ -68,15 +68,21 @@ namespace XiixService.Classes
         }
         public static void Install(GameModel gameInfo)
         {
-            Log.Info(gameInfo.Name);
-            Log.Info(gameInfo.ExePath);
-            Log.Info(gameInfo.Type);
-            Log.Info(gameInfo.Cover);
+            Log.Info(ConsoleColor.Blue, $"Name: {gameInfo.Name}");
+            Log.Info(ConsoleColor.Blue, $"ProcessName: {gameInfo.ProcessName}");
+            Log.Info(ConsoleColor.Blue, $"ExePath: {gameInfo.ExePath}");
+            Log.Info(ConsoleColor.Blue, $"Args: {gameInfo.Args}");
+            Log.Info(ConsoleColor.Blue, $"Cover: {gameInfo.Cover}");
+            Log.Info(ConsoleColor.Blue, $"Type: {gameInfo.Type}");
+            Log.Info(ConsoleColor.Blue, $"FolderName: {gameInfo.FolderName}");
+
+            string folderPath = $"C:\\USB\\{gameInfo.FolderName}";
+
+            Log.Info(ConsoleColor.Blue, $"Folder Path: {folderPath}");
 
             string rawJson = File.ReadAllText($"{Program.APPLICATION_PATH}\\GameData.json");
 
             GameDataModel gameData = JsonConvert.DeserializeObject<GameDataModel>(rawJson);
-
 
             if (gameData == null)
             {
@@ -93,11 +99,20 @@ namespace XiixService.Classes
                 }
             }
 
+            foreach (var item in Directory.GetDirectories(folderPath))
+            {
+                Log.Info(ConsoleColor.Cyan, $"{gameInfo.FolderName}/ -> {item}");
+            }
+
+            Directory.Move(folderPath, $"C:\\XiiX\\Games\\{gameInfo.FolderName}");
+
+            Log.Success("Moved game folder");
+
             var newGame = new GameModelJson
             {
                 name = gameInfo.Name,
                 processName = gameInfo.ProcessName,
-                exePath = gameInfo.ExePath,
+                exePath = $"C:\\XiiX\\Games\\{gameInfo.ExePath.Split("USB\\")[1]}",
                 args = gameInfo.Args,
                 cover = gameInfo.Cover,
                 type = gameInfo.Type,

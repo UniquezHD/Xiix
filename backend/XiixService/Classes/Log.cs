@@ -6,9 +6,9 @@ namespace XiixService.Classes
 {
     public class Log
     {
-        public static void Info(string message, string tag = "")
+        public static void Info(ConsoleColor color, string message, string tag = "")
         {
-            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.ForegroundColor = color;
             Console.WriteLine($"[{DateTime.Now:HH:mm:ss}][INFO]   [{tag}] {message}");
             Console.ForegroundColor = ConsoleColor.White;
         }

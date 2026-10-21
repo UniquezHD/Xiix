@@ -45,8 +45,6 @@ import { GameModal } from "./components/modal/Modal";
 import Friends from "./components/Friends";
 //#endregion Components
 
-// Todo: add game system via usb
-
 // Todo: language support
 
 // Todo: Select controller type backend
@@ -55,9 +53,7 @@ import Friends from "./components/Friends";
 
 // Todo: switch to onClose in all components
 
-//Todo: fix keyboardPasswordOutput possible undefined
-
-//Todo: save userID to localstorage or cookies
+// Todo: save userID to localstorage or cookies
 
 function App() {
   const api =
@@ -225,6 +221,9 @@ function App() {
         (data as { message: string }).message,
         (data as { type: string }).type,
       );
+
+      //maybe cause problems later needs better solution
+      GetGames();
     });
   }, []);
 
@@ -378,6 +377,8 @@ function App() {
     args?: string,
     cover?: string,
     type?: string,
+    gameID?: number,
+    folderName?: string,
   ) => {
     window.electron.send("install-game", {
       name,
@@ -386,6 +387,8 @@ function App() {
       exePath,
       cover,
       type,
+      gameID,
+      folderName,
     });
   };
 

@@ -21,6 +21,7 @@ export type GameType = {
   cover: string;
   type: string;
   gameID: number;
+  folderName?: string;
 };
 
 export type KeyboardType = {

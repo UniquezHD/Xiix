@@ -14,7 +14,7 @@ namespace XiixService.Classes
             bool lastPsState = false;
             isConnected = false;
 
-            Log.Info("Waiting for controller");
+            Log.Info(ConsoleColor.Blue, "Waiting for controller");
 
             while (true)
             {
@@ -58,7 +58,7 @@ namespace XiixService.Classes
 
                     if (psPressed && !lastPsState && Program.CurrentlyPlaying != null)
                     {
-                        Log.Info("PS Button Pressed");
+                        Log.Info(ConsoleColor.Blue, "PS Button Pressed");
                         Program.Socket.SendToElectron("controller-ps-home", null);
                     }
 

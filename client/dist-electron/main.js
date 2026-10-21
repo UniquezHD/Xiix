@@ -25344,7 +25344,8 @@ io.on("connection", (socket) => {
 			ExePath: installGameInfo.exePath,
 			Args: installGameInfo.args,
 			Type: installGameInfo.type,
-			Cover: installGameInfo.cover
+			Cover: installGameInfo.cover,
+			FolderName: installGameInfo.folderName
 		});
 	});
 	ipcMain.on("uninstall-game", (_event, uninstallGameInfo) => {

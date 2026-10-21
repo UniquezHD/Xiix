@@ -24,7 +24,7 @@ namespace XiixService.Classes
             {
                 var gameData = ctx.GetValue<GameModel>(0)!;
 
-                Log.Info($"StartGame received: {gameData.Name}, {gameData.ExePath}, {gameData.Args}, {gameData.ProcessName}");
+                Log.Info(ConsoleColor.Blue, $"StartGame received: {gameData.Name}, {gameData.ExePath}, {gameData.Args}, {gameData.ProcessName}");
 
                 var process = Launcher.Launch(gameData.ExePath, gameData.Args, gameData.Name);
                 Watcher.Watch(gameData.Name, process);
@@ -43,9 +43,9 @@ namespace XiixService.Classes
                     await SendToElectron("send-notification", new
                     {
                         type = "Error",
-                        message = "Game not installed",
+                        message = "Game not correctly",
                     });
-                    Log.Warning("Game not installed");
+                    Log.Warning("Game not installed correctly");
                 }
             });
 
@@ -53,7 +53,7 @@ namespace XiixService.Classes
             {
                 var gameData = ctx.GetValue<GameModel>(0)!;
 
-                Log.Info($"close-game ProcessName: {gameData.ProcessName} Type: {gameData.Type}");
+                Log.Info(ConsoleColor.Blue, $"close-game ProcessName: {gameData.ProcessName} Type: {gameData.Type}");
 
                 Killer.Kill(gameData.ProcessName, gameData.Type);
 

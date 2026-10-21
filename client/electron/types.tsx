@@ -6,6 +6,7 @@ export type GameDataType = {
   cover: string;
   type: string;
   gameID: string;
+  folderName: string;
 };
 
 export type VersionType = {
