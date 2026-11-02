@@ -45,7 +45,7 @@ function Friends({ onCancel, apiUrl, userID }: FriendsProps) {
         console.log("Delete friend status: ", data);
       });
 
-      console.log("Delete friend", userID, username)
+    console.log("Delete friend", userID, username);
   };
 
   const AcceptFriendRequest = () => {};
@@ -87,7 +87,12 @@ function Friends({ onCancel, apiUrl, userID }: FriendsProps) {
 
   return (
     <>
-      <div className="friends-overlay">
+      <div
+        className="friends-overlay"
+        onContextMenu={() => {
+          onCancel?.();
+        }}
+      >
         <div className="friends-container">
           <div className="friends-top">
             <h3>{currentTap}</h3>
@@ -203,9 +208,7 @@ function Friends({ onCancel, apiUrl, userID }: FriendsProps) {
                 <input
                   className="friends-input"
                   placeholder="Enter Username"
-                  onClick={() => {
-
-                  }}
+                  onClick={() => {}}
                   data-controller-focus
                   data-controller-group="friends"
                 />

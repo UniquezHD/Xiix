@@ -85,7 +85,9 @@ function SteamDBLookup({ gameName, onSubmit, onCancel }: SteamDBLookupProps) {
 
   return (
     <>
-      <div className="steam-lookup-overlay">
+      <div className="steam-lookup-overlay" onContextMenu={() => {
+        onCancel?.();
+      }}>
         <div className="steam-lookup-container">
           <div className="steam-lookup-top">
             <h3>{gameName}</h3>

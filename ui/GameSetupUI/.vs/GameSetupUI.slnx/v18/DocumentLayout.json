@@ -1,0 +1,37 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\cecilie\\Desktop\\Xiix\\ui\\GameSetupUI\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{AA557638-73F3-4BEA-9D04-B8222B96821D}|GameSetupUI\\GameSetupUI.csproj|c:\\users\\cecilie\\desktop\\xiix\\ui\\gamesetupui\\gamesetupui\\mauiprogram.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AA557638-73F3-4BEA-9D04-B8222B96821D}|GameSetupUI\\GameSetupUI.csproj|solutionrelative:gamesetupui\\mauiprogram.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "MauiProgram.cs",
+              "DocumentMoniker": "C:\\Users\\cecilie\\Desktop\\Xiix\\ui\\GameSetupUI\\GameSetupUI\\MauiProgram.cs",
+              "RelativeDocumentMoniker": "GameSetupUI\\MauiProgram.cs",
+              "ToolTip": "C:\\Users\\cecilie\\Desktop\\Xiix\\ui\\GameSetupUI\\GameSetupUI\\MauiProgram.cs",
+              "RelativeToolTip": "GameSetupUI\\MauiProgram.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-29T10:38:44.375Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

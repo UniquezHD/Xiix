@@ -55,6 +55,8 @@ import Friends from "./components/Friends";
 
 // Todo: save userID to localstorage or cookies
 
+// Todo: UI to generate info.json and folder structure
+
 function App() {
   const api =
     process.env.NODE_ENV !== "production" ? "http://localhost:3001" : "";
@@ -224,6 +226,7 @@ function App() {
 
       //maybe cause problems later needs better solution
       GetGames();
+      setModalOpened(false);
     });
   }, []);
 
@@ -462,6 +465,9 @@ function App() {
 
       {keyboardOpen.isOpen && (
         <Keyboard
+          onCancel={() => {
+            setKeyboardOpen({ isOpen: false, isPassword: false });
+          }}
           isPassword={keyboardOpen.isPassword}
           onSubmit={(value) => {
             if (value.isPassword) {
@@ -723,7 +729,10 @@ function App() {
                       data-controller-navigation="topbar"
                       data-controller-group="topbar"
                       data-controller-focus
-                      style={{ backgroundImage: "url('https://image.api.playstation.com/cdn/UP9000/BCUS98472_00/rvTHLOPJRQnUudrK71ynjnAuVwZajuPX.png')"}}
+                      style={{
+                        backgroundImage:
+                          "url('https://image.api.playstation.com/cdn/UP9000/BCUS98472_00/rvTHLOPJRQnUudrK71ynjnAuVwZajuPX.png')",
+                      }}
                     ></button>
                   )}
                 </div>

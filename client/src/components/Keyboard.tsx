@@ -94,7 +94,9 @@ function Keyboard({ onSubmit, onCancel, isPassword }: KeyboardProps) {
   };
 
   return (
-    <div className="keyboard-overlay">
+    <div className="keyboard-overlay" onContextMenu={() => {
+      onCancel?.();
+    }}>
       <div className="keyboard-container">
         <div className="keyboard-header">
           <div className="keyboard-input">
