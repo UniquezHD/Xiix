@@ -57,6 +57,8 @@ import Friends from "./components/Friends";
 
 // Todo: UI to generate info.json and folder structure
 
+//Todo: focus game window on ps button hide UI
+
 function App() {
   const api =
     process.env.NODE_ENV !== "production" ? "http://localhost:3001" : "";

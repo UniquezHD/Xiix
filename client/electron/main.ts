@@ -254,6 +254,7 @@ io.on("connection", (socket) => {
   socket.on("controller-ps-home", () => {
     if (win?.isVisible()) {
       win?.hide();
+      //Todo: focus game window on ps button hide UI
     } else {
       win?.show();
     }

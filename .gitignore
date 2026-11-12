@@ -5,4 +5,6 @@ backend/XiixService/bin
 backend/XiixService/obj
 client/release
 backend/XiixService/.env
-ui/GameSetupUI/
+GameSetupUI/UI.ui
+GameSetupUI/.venv
+GameSetupUI/__pycache__

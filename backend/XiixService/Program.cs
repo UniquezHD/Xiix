@@ -39,7 +39,7 @@ class Program
         Socket = new SocketService("http://localhost:3000");
         await Socket.StartAsync();
 
-        //Controller.Listen();
+        Controller.Listen();
 
         await Task.Delay(-1);
     }
